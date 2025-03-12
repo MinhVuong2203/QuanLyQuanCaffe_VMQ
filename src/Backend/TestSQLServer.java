@@ -8,7 +8,7 @@ import java.sql.Statement;
 
 public class TestSQLServer {
     public static void main(String[] args) {
-        try {
+        try { 
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             String url = "jdbc:sqlserver://localhost:1433;databaseName=CaffeVMQ;encrypt=false";
             String username = "sa";
