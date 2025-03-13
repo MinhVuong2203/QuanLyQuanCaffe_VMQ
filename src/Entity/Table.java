@@ -5,9 +5,7 @@ public class Table {
     private String tableName;
     private String status;
 
-    public Table() {
-
-    }
+    public Table() {}
 
     public Table(int tableID, String tableName, String status) {
         this.tableID = tableID;

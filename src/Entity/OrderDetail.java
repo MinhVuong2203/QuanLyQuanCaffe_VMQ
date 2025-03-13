@@ -7,9 +7,7 @@ public class OrderDetail {
     private int quantity;
     private double price;
 
-    public OrderDetail() {
-
-    }
+    public OrderDetail(){}
 
     public int getOrderDetailID() {
         return orderDetailID;

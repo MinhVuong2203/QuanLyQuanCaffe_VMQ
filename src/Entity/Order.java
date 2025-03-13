@@ -9,9 +9,7 @@ public class Order {
     private double totalPrice;
     private Date orderDate;
 
-    public Order() {
-
-    }
+    public Order(){}
 
     public Order(int orderID, int userID, int customerID, double totalPrice, Date orderDate) {
         this.orderID = orderID;
