@@ -10,7 +10,9 @@ public class TestSQLServer {
     public static void main(String[] args) {
         try { 
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-            String url = "jdbc:sqlserver://localhost:1433;databaseName=CaffeVMQ;encrypt=false";
+            // String url = "jdbc:sqlserver://localhost:1433;databaseName=CaffeVMQ;encrypt=false";
+            String url = "jdbc:sqlserver://192.168.155.223:1433;databaseName=CaffeVMQ;user=sa;password=123456789;encrypt=false;trustServerCertificate=true;";
+
             String username = "sa";
             String password = "123456789";
             Connection conn = DriverManager.getConnection(url, username, password);
@@ -22,9 +24,6 @@ public class TestSQLServer {
             }
             rs.close();
             stmt.close();
-    
-            
-
             conn.close();
         } catch (Exception e) {
             e.printStackTrace();
