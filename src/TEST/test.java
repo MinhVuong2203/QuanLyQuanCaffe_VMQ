@@ -1,8 +1,7 @@
 package TEST;
 
+import Fontend.Sign_Window;
 import javax.swing.UIManager;
-
-import Entity.Sign_Window;
 
 public class test { // Cái gì test thì các bạn test ở đây
     public static void main(String[] args) {
