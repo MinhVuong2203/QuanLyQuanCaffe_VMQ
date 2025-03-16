@@ -10,7 +10,7 @@ public class TestSQLServer {
     public static void main(String[] args) {
         try { 
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-             String url = "jdbc:sqlserver://localhost:1433;databaseName=CaffeVMQ;encrypt=false";
+            String url = "jdbc:sqlserver://localhost:1433;databaseName=CaffeVMQ;encrypt=false";
             // String url = "jdbc:sqlserver://192.168.155.223:1433;databaseName=CaffeVMQ;user=sa;password=123456789;encrypt=false;trustServerCertificate=true;";
 
             String username = "sa";
