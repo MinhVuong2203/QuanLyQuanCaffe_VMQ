@@ -1,6 +1,9 @@
 package TEST;
 
 import Fontend.Sign_Window;
+import Fontend.WelcomeScreen;
+
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
 public class test { // Cái gì test thì các bạn test ở đây
@@ -13,9 +16,9 @@ public class test { // Cái gì test thì các bạn test ở đây
             // UIManager.setLookAndFeel("com.sun.java.swing.plaf.motif.MotifLookAndFeel");
             // set là giao diện mặc định của hệ thống
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-//            new staff_Sign();
-            new Sign_Window(); 
-            // new Staff_Sign();
+            
+            SwingUtilities.invokeLater(() -> new WelcomeScreen());  // WelcomeScrren
+            
             
         } catch (Exception e) {
             // TODO: handle exception

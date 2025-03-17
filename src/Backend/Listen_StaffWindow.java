@@ -2,8 +2,12 @@ package Backend;
 
 import Fontend.Sign_Window;
 import Fontend.Staff_Sign;
+import Fontend.WelcomeScreen;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+import javax.swing.SwingUtilities;
 
 public class Listen_StaffWindow implements ActionListener {
     private Staff_Sign action;
@@ -19,7 +23,7 @@ public class Listen_StaffWindow implements ActionListener {
          String str = e.getActionCommand();
         if (str.equals("Quay lại")) {
             action.dispose();
-            new Sign_Window();
+            SwingUtilities.invokeLater(() -> new WelcomeScreen().setVisible(true));
         }
     }
 

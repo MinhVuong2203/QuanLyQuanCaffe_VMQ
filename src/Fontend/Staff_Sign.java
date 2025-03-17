@@ -26,16 +26,18 @@ public class Staff_Sign extends JFrame {
         this.setTitle("Staff Sign");
         this.setSize(600, 400);
         this.setLocationRelativeTo(null);
+        setResizable(false); // Ngắn thay đổi kích thướt
+        
         contentPane = new JPanel();
         contentPane.setForeground(new Color(255, 255, 255));
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         setContentPane(contentPane);
         contentPane.setLayout(null);
 
-        JLabel lblNewLabel = new JLabel("Nhân Viên");
+        JLabel lblNewLabel = new JLabel("Đăng nhập");
         lblNewLabel.setBackground(new Color(255, 255, 255));
         lblNewLabel.setFont(new Font("Arial", Font.BOLD | Font.ITALIC, 24));
-        lblNewLabel.setBounds(157, 101, 118, 29);
+        lblNewLabel.setBounds(157, 101, 200, 29);
         contentPane.add(lblNewLabel);
 
         JButton btnNewButton = new JButton("Sign");
