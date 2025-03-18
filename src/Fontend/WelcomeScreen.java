@@ -1,13 +1,11 @@
 package Fontend;
 
+import Backend.Listen_WelcomScreen;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
 import java.util.List;
 import javax.swing.*;
-
-import Backend.Listen_SignWindow;
-import Backend.Listen_WelcomScreen;
 
 public class WelcomeScreen extends JFrame {
     private JLabel imageLabel;
