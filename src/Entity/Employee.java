@@ -3,8 +3,8 @@ public class Employee extends Person{
     protected String role;
     protected double hourlyWage;
 
-    public Employee(String name, String phone, String role, double hourlyWage) {
-        super(name, phone);
+    public Employee(int id, String name, String phone, String role, double hourlyWage) {
+        super(id, name, phone);
         this.role = role;
         this.hourlyWage = hourlyWage;
     }

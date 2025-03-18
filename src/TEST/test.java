@@ -1,8 +1,6 @@
 package TEST;
 
-import Fontend.Sign_Window;
 import Fontend.WelcomeScreen;
-
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
@@ -18,7 +16,7 @@ public class test { // Cái gì test thì các bạn test ở đây
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             
             SwingUtilities.invokeLater(() -> new WelcomeScreen());  // WelcomeScrren
-            
+        
             
         } catch (Exception e) {
             // TODO: handle exception

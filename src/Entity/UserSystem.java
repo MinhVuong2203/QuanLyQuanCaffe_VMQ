@@ -4,8 +4,8 @@ public class UserSystem extends Person{
     private String password;
     private String role;
 
-    public UserSystem(String name, String phone, String username, String password, String role) {
-        super(name, phone);
+    public UserSystem(int id, String name, String phone, String username, String password, String role) {
+        super(id, name, phone);
         this.username = username;
         this.password = password;
         this.role = role;

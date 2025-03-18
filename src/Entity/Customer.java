@@ -1,15 +1,14 @@
 package Entity;
 public class Customer extends Person {
     private int points;
-
-    public Customer(String name, String phone, int points) {
-        super(name, phone);
-        this.points = points;
-    }
-
-    public Customer(int id, String name, String phone, int points) {
+    private String username;
+    private String password;
+   
+    public Customer(int id, String name, String phone, int points, String username, String password) {
         super(id, name, phone);
         this.points = points;
+        this.username = username;
+        this.password = password;
     }
 
     public int getPoints() {
@@ -20,12 +19,26 @@ public class Customer extends Person {
         this.points = points;
     }
 
-    @Override
-    public String toString() {
-        return "Customer{" + "id=" + id + ", name=" + name + ", phone=" + phone + ", points=" + points + '}';
+    public String getUsername() {
+        return username;
     }
 
-    public static Customer getGuestCustomer() {  // Khi có khách vãng lai
-        return new Customer(10000, "Guest", "", 0);
+    public void setUsername(String username) {
+        this.username = username;
     }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    @Override
+    public String toString() {
+        return "Customer{" + "id=" + id + ", name=" + name + ", phone=" + phone + ", points=" + points + ", username=" + username + ", password=" + password + '}';
+    }
+
+    
 }

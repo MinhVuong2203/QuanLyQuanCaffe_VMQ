@@ -1,8 +1,8 @@
 package Entity;
 public class Manager extends  Employee{
 
-    public Manager(String name, String phone, String role) {
-        super(name, phone, role, 0);
+    public Manager(int id, String name, String phone, String role, double hourlyWage) {
+        super(id, name, phone, role, hourlyWage);
     }
 
     @Override

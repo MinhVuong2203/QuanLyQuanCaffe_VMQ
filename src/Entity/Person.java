@@ -3,16 +3,9 @@ public abstract class Person {
     protected int id;
     protected String name;
     protected String phone;
-    protected int id_auto = 10000; // Cho id bắt đầu từ 10000 
 
-    public Person(int id, String name, String phone) {  // Phục vụ cho khách hàng vãi lai, sẽ cho id ảo là 10000
+    public Person(int id, String name, String phone) {  
         this.id = id;
-        this.name = name;
-        this.phone = phone;
-    }
-
-    public Person(String name, String phone) {
-        this.id = ++id_auto;
         this.name = name;
         this.phone = phone;
     }
