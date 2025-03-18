@@ -1,68 +1,54 @@
 package Entity;
 
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Order {
     private int orderID;
-    private int userID;
-    private int customerID;
+    private int employeeID; // Người tạo đơn
+    private int customerID; // Khách hàng (hoặc null nếu là khách vãng lai)
     private double totalPrice;
-    private Date orderDate;
+    private String status; // "Pending", "Paid", "Cancelled"
+    private List<OrderDetail> orderDetails;
 
-    public Order(){}
-
-    public Order(int orderID, int userID, int customerID, double totalPrice, Date orderDate) {
+    public Order(int orderID, int employeeID, int customerID) {
         this.orderID = orderID;
-        this.userID = userID;
+        this.employeeID = employeeID;
         this.customerID = customerID;
-        this.totalPrice = totalPrice;
-        this.orderDate = orderDate;
+        this.totalPrice = 0.0;
+        this.status = "Pending";
+        this.orderDetails = new ArrayList<>();
     }
 
-    public int getOrderID() {
-        return orderID;
+    public void addOrderDetail(OrderDetail detail) {
+        orderDetails.add(detail);
+        totalPrice += detail.getTotalPrice(); // Cập nhật tổng tiền
     }
 
-    public int getUserID() {
-        return userID;
+    public void removeOrderDetail(int productID) {
+        orderDetails.removeIf(detail -> detail.getProduct().getProductID() == productID);
+        recalculateTotalPrice();
     }
 
-    public int getCustomerID() {
-        return customerID;
+    private void recalculateTotalPrice() {
+        totalPrice = 0.0;
+        for (OrderDetail detail : orderDetails) {
+            totalPrice += detail.getTotalPrice();
+        }
     }
 
-    public double getTotalPrice() {
-        return totalPrice;
+    public void completeOrder() {
+        this.status = "Paid";
     }
 
-    public Date getOrderDate() {
-        return orderDate;
+    public void cancelOrder() {
+        this.status = "Cancelled";
     }
 
-    public void setOrderID(int orderID) {
-        this.orderID = orderID;
-    }
-
-    public void setUserID(int userID) {
-        this.userID = userID;
-    }
-
-    public void setCustomerID(int customerID) {
-        this.customerID = customerID;
-    }
-
-    public void setTotalPrice(double totalPrice) {
-        this.totalPrice = totalPrice;
-    }
-
-    public void setOrderDate(Date orderDate) {
-        this.orderDate = orderDate;
-    }
-
-    @Override
-    public String toString() {
-        return "Order [orderID = " + orderID + ", userID = " + userID + ", customerID = " + customerID
-                + ", totalPrice = "
-                + totalPrice + ", orderDate = " + orderDate + "]";
-    }
+    // Getter
+    public int getOrderID() { return orderID; }
+    public double getTotalPrice() { return totalPrice; }
+    public String getStatus() { return status; }
+    public List<OrderDetail> getOrderDetails() { return orderDetails; }
 }
+

@@ -1,9 +1,6 @@
 package TEST;
 
 
-import Entity.Customer;
-import Entity.Employee;
-import Entity.Person;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -31,11 +28,7 @@ public class TestSQLServer {
             }
              
 
-            Person p = new Employee(id_Max++, "Nguyen Van A", "0123456789", "Nhân viên", 100000);
-            System.out.println(p);
-
-            Person cus = new Customer(10000, "", "", 0, "", "");
-            System.out.println(cus);
+    
 
 
             // while (rs.next()) {

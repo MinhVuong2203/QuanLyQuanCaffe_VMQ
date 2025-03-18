@@ -1,10 +1,10 @@
 package Entity;
-public class UserSystem extends Person{
-    private String username;
-    private String password;
-    private String role;
+public class User extends Person{
+    protected  String username;
+    protected String password;
+    protected String role;
 
-    public UserSystem(int id, String name, String phone, String username, String password, String role) {
+    public User(int id, String name, String phone, String username, String password, String role) {
         super(id, name, phone);
         this.username = username;
         this.password = password;
