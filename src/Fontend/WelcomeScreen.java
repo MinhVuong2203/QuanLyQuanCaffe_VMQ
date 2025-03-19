@@ -52,7 +52,7 @@ public class WelcomeScreen extends JFrame {
         startButton = new JButton("VÀO QUÁN");
         startButton.addActionListener(action);
         startButton.setFont(new Font("Arial", Font.BOLD, 16));
-        startButton.setBackground(new Color(85, 107, 47));
+        startButton.setBackground(new Color(179, 129, 115));
         startButton.setForeground(Color.WHITE);
         startButton.setFocusPainted(false);
         startButton.setBorderPainted(false);
