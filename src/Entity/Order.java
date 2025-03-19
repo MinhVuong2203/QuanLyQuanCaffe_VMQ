@@ -1,51 +1,76 @@
 package Entity;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Order {
+    //Phương thức để khởi tạo
     private int orderID;
     private int employeeID;
     private int customerID;
-    private double totalPrice;
-    private String status; // "Pending", "Paid", "Cancelled"
-    private List<Payment> payments;
+    private int tableID;
+    private String status; // "Đang chờ", "Đã thanh toán", "Đã hủy"
+    
+    //Phương thức để add
+    Map<Product, Integer> products;
+    private Payment payments;
 
-    public Order(int orderID, int employeeID, int customerID, double totalPrice) {
+    public Order(int orderID, int employeeID, int customerID, int tableID, String status) {
         this.orderID = orderID;
         this.employeeID = employeeID;
         this.customerID = customerID;
-        this.totalPrice = totalPrice;
-        this.status = "Pending";
-        this.payments = new ArrayList<>();
+    
+        this.status = status;
+        this.products = new HashMap<>();
     }
 
-    public boolean addPayment(Payment payment) {
-        if (getTotalPaid() + payment.getAmount() > totalPrice) {
-            System.out.println("⚠ Số tiền thanh toán vượt quá tổng đơn hàng!");
-            return false;
-        }
-        payments.add(payment);
+    //Thêm sản phẩm vào đơn hàng
+    public void addOderDeTailProduct(Product product, int quantity) {
+        products.put(product, products.getOrDefault(product, 0) + quantity);
+    }
 
-        if (getTotalPaid() == totalPrice) {
-            this.status = "Paid"; // Đơn hàng được thanh toán đủ
+    // Tính tổng tiền của đơn hàng
+    public void getTotalPrice() {
+        double totalPrice = 0;
+        for (Map.Entry<Product, Integer> entry : this.products.entrySet()) {
+            totalPrice = entry.getKey().getPrice() * entry.getValue();
+            System.out.println(entry.getKey().getName()+ " " + entry.getKey().getSize() + ": "+ totalPrice);
         }
+    }
 
-        return true;
+
+    //Thêm Thanh toán cho đơn hàng
+    public void addPayment(Payment payment) {
+        this.payments = payment;
+    }
+
+    public void cancelOrder() {
+        if (!this.status.equals("Đang chờ")) {
+            System.out.println("Không thể hủy đơn hàng (đã hoàn tất hoặc đã hủy).");
+            return;
+        }
+        this.status = "Đã hủy";
+        System.out.println("Đơn hàng #" + orderID + " đã bị hủy.");
+    }
+
+    public void completeOrder() {
+        if (!this.status.equals("Đang chờ")) {
+            System.out.println("Không thể hoàn tất đơn hàng (đã hủy hoặc đã hoàn tất).");
+            return;
+        }
+        this.status = "Đã thanh toán";
+        System.out.println("Đơn hàng #" + orderID + " đã được thanh toán.");
     }
 
     public double getTotalPaid() {
-        return payments.stream().mapToDouble(Payment::getAmount).sum();
+        return payments.getAmount();
     }
 
-    public boolean isFullyPaid() {
-        return getTotalPaid() >= totalPrice;
-    }
-
-    // Getter
     public int getOrderID() { return orderID; }
+    public int getEmployeeID() { return employeeID; }
+    public int getCustomerID() { return customerID; }
     public String getStatus() { return status; }
-    public List<Payment> getPayments() { return payments; }
+    public Payment getPayments() { return payments; }   
 }
 
 

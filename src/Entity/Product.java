@@ -7,11 +7,13 @@ public class Product {
     private int productID;
     private String name;
     private double price;
+    private String size;
     private Map<Ingredient, Integer> ingredientList; // Nguyên liệu & số lượng cần cho 1 sản phẩm
 
-    public Product(int productID, String name, double price) {
+    public Product(int productID, String name, String size, double price) {
         this.productID = productID;
         this.name = name;
+        this.size = size;
         this.price = price;
         this.ingredientList = new HashMap<>();
     }
@@ -42,6 +44,7 @@ public class Product {
     // Getter
     public int getProductID() { return productID; }
     public String getName() { return name; }
+    public String getSize() { return size; }
     public double getPrice() { return price; }
 }
 

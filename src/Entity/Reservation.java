@@ -24,21 +24,21 @@ public class Reservation {
     // Hủy đặt bàn
     public void cancelReservation() {
         if (!this.status.equals("Confirmed")) {
-            System.out.println("⚠ Không thể hủy đặt bàn (đã hoàn tất hoặc đã hủy).");
+            System.out.println("Không thể hủy đặt bàn (đã hoàn tất hoặc đã hủy).");
             return;
         }
         this.status = "Cancelled";
-        System.out.println("❌ Đặt bàn #" + reservationID + " đã bị hủy.");
+        System.out.println("Đặt bàn #" + reservationID + " đã bị hủy.");
     }
 
     // Đánh dấu đã sử dụng
     public void completeReservation() {
         if (!this.status.equals("Confirmed")) {
-            System.out.println("⚠ Không thể hoàn tất đặt bàn (đã hủy hoặc chưa đặt).");
+            System.out.println("Không thể hoàn tất đặt bàn (đã hủy hoặc chưa đặt).");
             return;
         }
         this.status = "Completed";
-        System.out.println("✅ Đặt bàn #" + reservationID + " đã được sử dụng.");
+        System.out.println("Đặt bàn #" + reservationID + " đã được sử dụng.");
     }
 
     // Getter
