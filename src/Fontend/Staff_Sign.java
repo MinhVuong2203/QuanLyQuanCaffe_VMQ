@@ -2,6 +2,7 @@ package Fontend;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Toolkit;
 import java.awt.event.ActionListener;
 
 import javax.swing.ImageIcon;
@@ -42,6 +43,7 @@ public class Staff_Sign extends JFrame {
     public Staff_Sign() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setTitle("Staff Sign");
+        setIconImage(Toolkit.getDefaultToolkit().getImage("src\\image\\Quán Caffe MVQ _ Icon.png"));
         this.setSize(600, 400);
         this.setLocationRelativeTo(null);
         setResizable(false); // Ngắn thay đổi kích thướt

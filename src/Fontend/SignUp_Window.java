@@ -2,6 +2,7 @@ package Fontend;
 
 import Backend.Listen_SignUpWindow;
 import java.awt.Font;
+import java.awt.Toolkit;
 import java.awt.event.ActionListener;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -53,6 +54,7 @@ public class SignUp_Window extends JFrame {
     public SignUp_Window() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setTitle("Sign In");
+		setIconImage(Toolkit.getDefaultToolkit().getImage("src\\image\\Quán Caffe MVQ _ Icon.png"));
 		this.setSize(600, 400);
 		this.setResizable(false);
 		this.setLocationRelativeTo(null);
