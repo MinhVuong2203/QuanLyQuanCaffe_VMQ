@@ -1,68 +1,76 @@
 package Entity;
 
-import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Order {
+    //Phương thức để khởi tạo
     private int orderID;
-    private int userID;
+    private int employeeID;
     private int customerID;
-    private double totalPrice;
-    private Date orderDate;
+    private int tableID;
+    private String status; // "Đang chờ", "Đã thanh toán", "Đã hủy"
+    
+    //Phương thức để add
+    Map<Product, Integer> products;
+    private Payment payments;
 
-    public Order(){}
-
-    public Order(int orderID, int userID, int customerID, double totalPrice, Date orderDate) {
+    public Order(int orderID, int employeeID, int customerID, int tableID, String status) {
         this.orderID = orderID;
-        this.userID = userID;
+        this.employeeID = employeeID;
         this.customerID = customerID;
-        this.totalPrice = totalPrice;
-        this.orderDate = orderDate;
+    
+        this.status = status;
+        this.products = new HashMap<>();
     }
 
-    public int getOrderID() {
-        return orderID;
+    //Thêm sản phẩm vào đơn hàng
+    public void addOderDeTailProduct(Product product, int quantity) {
+        products.put(product, products.getOrDefault(product, 0) + quantity);
     }
 
-    public int getUserID() {
-        return userID;
+    // Tính tổng tiền của đơn hàng
+    public void getTotalPrice() {
+        double totalPrice = 0;
+        for (Map.Entry<Product, Integer> entry : this.products.entrySet()) {
+            totalPrice = entry.getKey().getPrice() * entry.getValue();
+            System.out.println(entry.getKey().getName()+ " " + entry.getKey().getSize() + ": "+ totalPrice);
+        }
     }
 
-    public int getCustomerID() {
-        return customerID;
+
+    //Thêm Thanh toán cho đơn hàng
+    public void addPayment(Payment payment) {
+        this.payments = payment;
     }
 
-    public double getTotalPrice() {
-        return totalPrice;
+    public void cancelOrder() {
+        if (!this.status.equals("Đang chờ")) {
+            System.out.println("Không thể hủy đơn hàng (đã hoàn tất hoặc đã hủy).");
+            return;
+        }
+        this.status = "Đã hủy";
+        System.out.println("Đơn hàng #" + orderID + " đã bị hủy.");
     }
 
-    public Date getOrderDate() {
-        return orderDate;
+    public void completeOrder() {
+        if (!this.status.equals("Đang chờ")) {
+            System.out.println("Không thể hoàn tất đơn hàng (đã hủy hoặc đã hoàn tất).");
+            return;
+        }
+        this.status = "Đã thanh toán";
+        System.out.println("Đơn hàng #" + orderID + " đã được thanh toán.");
     }
 
-    public void setOrderID(int orderID) {
-        this.orderID = orderID;
+    public double getTotalPaid() {
+        return payments.getAmount();
     }
 
-    public void setUserID(int userID) {
-        this.userID = userID;
-    }
-
-    public void setCustomerID(int customerID) {
-        this.customerID = customerID;
-    }
-
-    public void setTotalPrice(double totalPrice) {
-        this.totalPrice = totalPrice;
-    }
-
-    public void setOrderDate(Date orderDate) {
-        this.orderDate = orderDate;
-    }
-
-    @Override
-    public String toString() {
-        return "Order [orderID = " + orderID + ", userID = " + userID + ", customerID = " + customerID
-                + ", totalPrice = "
-                + totalPrice + ", orderDate = " + orderDate + "]";
-    }
+    public int getOrderID() { return orderID; }
+    public int getEmployeeID() { return employeeID; }
+    public int getCustomerID() { return customerID; }
+    public String getStatus() { return status; }
+    public Payment getPayments() { return payments; }   
 }
+
+

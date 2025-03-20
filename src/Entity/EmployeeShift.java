@@ -1,26 +1,25 @@
 package Entity;
-import java.util.Date;
+import java.time.Duration;
+import java.time.LocalDateTime;
 public class EmployeeShift {
     private int shiftID;
     private int employeeID;
-    private Date startTime;
-    private Date endTime;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
     private double hourWorked;
     private double salary;
     public EmployeeShift(){}
-    public EmployeeShift(int shiftID, int employeeID, Date startTime, Date endTime, double salary) {
+   
+    public EmployeeShift(int shiftID, int employeeID, LocalDateTime startTime, LocalDateTime endTime, double hourlyWage) {
         this.shiftID = shiftID;
         this.employeeID = employeeID;
         this.startTime = startTime;
         this.endTime = endTime;
-        this.hourWorked = dateDiff(startTime, endTime);
-        this.salary = salary;
+        this.hourWorked = Duration.between(startTime, endTime).toHours();
+        this.salary = hourlyWage * hourWorked;
     }
 
-    private double dateDiff(Date startTime, Date endTime) {
-        long diffInMillies = endTime.getTime() - startTime.getTime();
-        return (double) diffInMillies / (1000 * 60 * 60);
-    }
+    
     public int getShiftID() {
         return shiftID;
     }
@@ -28,10 +27,10 @@ public class EmployeeShift {
     public int getEmployeeID() {
         return employeeID;
     }
-    public Date getStartTime() {
+    public LocalDateTime getStartTime() {
         return startTime;
     }
-    public Date getEndTime() {
+    public LocalDateTime getEndTime() {
         return endTime;
     }
     public double getHourWorked() {
@@ -46,10 +45,10 @@ public class EmployeeShift {
     public void setEmployeeID(int employeeID) {
         this.employeeID = employeeID;
     }
-    public void setStartTime(Date startTime) {
+    public void setStartTime(LocalDateTime startTime) {
         this.startTime = startTime;
     }
-    public void setEndTime(Date endTime) {
+    public void setEndTime(LocalDateTime endTime) {
         this.endTime = endTime;
     }
     public void setHourWorked(double hourWorked) {

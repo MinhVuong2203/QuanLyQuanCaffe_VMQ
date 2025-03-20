@@ -1,68 +1,50 @@
 package Entity;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Product {
     private int productID;
     private String name;
     private double price;
-    private int categoryID;
-    private String image;
+    private String size;
+    private Map<Ingredient, Integer> ingredientList; // Nguyên liệu & số lượng cần cho 1 sản phẩm
 
-    public Product() {
-
-    }
-
-    public Product(int productID, String name, double price, int categoryID, String image) {
+    public Product(int productID, String name, String size, double price) {
         this.productID = productID;
         this.name = name;
+        this.size = size;
         this.price = price;
-        this.categoryID = categoryID;
-        this.image = image;
+        this.ingredientList = new HashMap<>();
     }
 
-    public int getProductID() {
-        return productID;
+    public void addIngredient(Ingredient ingredient, int quantity) {
+        ingredientList.put(ingredient, quantity);
     }
 
-    public String getName() {
-        return name;
+    public boolean canMakeProduct() {
+        for (Map.Entry<Ingredient, Integer> entry : ingredientList.entrySet()) {
+            if (entry.getKey().getStockQuantity() < entry.getValue()) {
+                return false; // Không đủ nguyên liệu
+            }
+        }
+        return true;
     }
 
-    public double getPrice() {
-        return price;
+    public boolean makeProduct() {
+        if (!canMakeProduct()) return false;
+
+        // Trừ nguyên liệu sau khi làm sản phẩm
+        for (Map.Entry<Ingredient, Integer> entry : ingredientList.entrySet()) {
+            entry.getKey().useStock(entry.getValue());
+        }
+        return true;
     }
 
-    public int getCategoryID() {
-        return categoryID;
-    }
-
-    public String getImage() {
-        return image;
-    }
-
-    public void setProductID(int productID) {
-        this.productID = productID;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
-    public void setCategoryID(int categoryID) {
-        this.categoryID = categoryID;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
-
-    @Override
-    public String toString() {
-        return "Product [productID = " + productID + ", name = " + name + ", price = " + price + ", categoryID = "
-                + categoryID
-                + ", image = " + image + "]";
-    }
+    // Getter
+    public int getProductID() { return productID; }
+    public String getName() { return name; }
+    public String getSize() { return size; }
+    public double getPrice() { return price; }
 }
+

@@ -1,4 +1,4 @@
-package Backend;
+package TEST;
 
 
 import java.sql.Connection;
@@ -17,11 +17,23 @@ public class TestSQLServer {
             String password = "123456789";
             Connection conn = DriverManager.getConnection(url, username, password);
             Statement stmt = conn.createStatement();
-            String sql = "SELECT * FROM UserSystem";
+
+
+            String sql = "SELECT MAX(id) FROM UserSystem";
+            // Muốn thêm nhân viên, thêm khách hàng đều phải truy xuất id max
             ResultSet rs = stmt.executeQuery(sql);
+            int id_Max = 0;
             while (rs.next()) {
-                System.out.println(rs.getInt(1) + " " + rs.getString(2) + " " + rs.getString(3) + " " + rs.getString(4) + rs.getString(5) + " " + rs.getString(6));
+                id_Max = rs.getInt(1) + 1;
             }
+             
+
+    
+
+
+            // while (rs.next()) {
+            //     // System.out.println(rs.getInt(1) + " " + rs.getString(2) + " " + rs.getString(3) + " " + rs.getString(4) + rs.getString(5) + " " + rs.getString(6));
+            // }
             rs.close();
             stmt.close();
             conn.close();

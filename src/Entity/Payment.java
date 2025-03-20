@@ -1,51 +1,29 @@
 package Entity;
 
+import java.time.LocalDateTime;
+
 public class Payment {
     private int paymentID;
     private int orderID;
-    private String paymentMethod;
+    private String paymentMethod; // Tiền mặt, thẻ, ví điện tử
     private double amount;
-    private double PaymentTime;
-    public Payment(){}
-    public Payment(int paymentID, int orderID, String paymentMethod, double amount, double PaymentTime) {
+    private LocalDateTime paymentTime;
+   
+
+    public Payment(int paymentID, int orderID, String paymentMethod, double amount, LocalDateTime paymentTime) {
         this.paymentID = paymentID;
         this.orderID = orderID;
         this.paymentMethod = paymentMethod;
         this.amount = amount;
-        this.PaymentTime = PaymentTime;
+        this.paymentTime = paymentTime;
+      
     }
-    public int getPaymentID() {
-        return paymentID;
-    }
-    public int getOrderID() {
-        return orderID;
-    }
-    public String getPaymentMethod() {
-        return paymentMethod;
-    }
-    public double getAmount() {
-        return amount;
-    }
-    public double getPaymentTime() {
-        return PaymentTime;
-    }
-    public void setPaymentID(int paymentID) {
-        this.paymentID = paymentID;
-    }
-    public void setOrderID(int orderID) {
-        this.orderID = orderID;
-    }
-    public void setPaymentMethod(String paymentMethod) {
-        this.paymentMethod = paymentMethod;
-    }
-    public void setAmount(double amount) {
-        this.amount = amount;
-    }
-    public void setPaymentTime(double PaymentTime) {
-        this.PaymentTime = PaymentTime;
-    }
-    @Override
-    public String toString() {
-        return "Payment{" + "paymentID=" + paymentID + ", orderID=" + orderID + ", paymentMethod=" + paymentMethod + ", amount=" + amount + ", PaymentTime=" + PaymentTime + '}';
-    }
+
+    // Getter
+    public int getPaymentID() { return paymentID; }
+    public int getOrderID() { return orderID; }
+    public String getPaymentMethod() { return paymentMethod; }
+    public double getAmount() { return amount; }
+    public LocalDateTime getPaymentTime() { return paymentTime; }
 }
+

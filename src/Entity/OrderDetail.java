@@ -1,57 +1,18 @@
 package Entity;
 
 public class OrderDetail {
-    private int orderDetailID;
-    private int orderID;
-    private int productID;
-    private int quantity;
-    private double price;
+    private Product product;
+    private int quanlity; // Số lượng sản phẩm
+    private double price; // Giá của từng sản phẩm
 
-    public OrderDetail(){}
-
-    public int getOrderDetailID() {
-        return orderDetailID;
+    public OrderDetail(Product product, int quanlity) {
+        this.product = product;
+        this.quanlity = quanlity; // Lấy số lượng từ sản phẩm
+        this.price = product.getPrice(); // Lấy giá từ sản phẩm
     }
-
-    public int getOrderID() {
-        return orderID;
-    }
-
-    public int getProductID() {
-        return productID;
-    }
-
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public void setOrderDetailID(int orderDetailID) {
-        this.orderDetailID = orderDetailID;
-    }
-
-    public void setOrderID(int orderID) {
-        this.orderID = orderID;
-    }
-
-    public void setProductID(int productID) {
-        this.productID = productID;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
-    @Override
-    public String toString() {
-        return "OrderDetail [orderDetailID = " + orderDetailID + ", orderID = " + orderID + ", productID = " + productID
-                + ", quantity = " + quantity + ", price = " + price + "]";
-    }
+    // Getter
+    public Product getProduct() { return product; }
+    public int getQuanlity() { return quanlity; }
+    public double getPrice() { return price; }
 }
+
