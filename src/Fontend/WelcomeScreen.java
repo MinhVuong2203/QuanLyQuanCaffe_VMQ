@@ -23,6 +23,7 @@ public class WelcomeScreen extends JFrame {
     public WelcomeScreen() {
         setTitle("WELCOME TO VMQ COFFEE");
         setSize(800, 500);
+        setIconImage(Toolkit.getDefaultToolkit().getImage("src\\image\\Quán Caffe MVQ _ Icon.png"));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false); // Ngắn thay đổi kích thướt
@@ -50,7 +51,7 @@ public class WelcomeScreen extends JFrame {
 
         ImageIcon icon = new ImageIcon("src\\image\\Welcome_Screen_image\\Store.png"); 
    
-        startButton = new JButton("VÀO QUÁN",icon);
+        startButton = new JButton("",icon);
         startButton.addActionListener(action);
         startButton.setFont(new Font("Arial", Font.BOLD, 16));
         startButton.setBackground(new Color(179, 129, 115));

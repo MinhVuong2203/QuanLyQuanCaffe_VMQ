@@ -8,13 +8,14 @@ public class Order {
     private int orderID;
     private int employeeID;
     private int customerID;
-    private int tableID;
+    private int tableID;  // Nếu tableID = 0 thì là đơn hàng giao hàng
+
     private String status; // "Đang chờ", "Đã thanh toán", "Đã hủy"
     
     //Phương thức để add
     Map<Product, Integer> products;
     private Payment payments;
-
+    
     public Order(int orderID, int employeeID, int customerID, int tableID, String status) {
         this.orderID = orderID;
         this.employeeID = employeeID;
