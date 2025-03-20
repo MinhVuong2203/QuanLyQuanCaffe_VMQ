@@ -16,7 +16,7 @@ public class Listen_WelcomScreen implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		String cm = e.getActionCommand();
-		if (cm.equals("VÀO QUÁN")) {
+		if (cm.equals("")) {
 			WS.dispose();
 			new Staff_Sign();
 		}
