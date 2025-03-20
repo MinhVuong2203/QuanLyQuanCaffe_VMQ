@@ -48,16 +48,21 @@ public class WelcomeScreen extends JFrame {
         imageLabel.setBounds(0, 0, 800, 500);
         layeredPane.add(imageLabel, JLayeredPane.DEFAULT_LAYER);
 
+        ImageIcon icon = new ImageIcon("src\\image\\Welcome_Screen_image\\Store.png"); 
    
-        startButton = new JButton("VÀO QUÁN");
+        startButton = new JButton("VÀO QUÁN",icon);
         startButton.addActionListener(action);
         startButton.setFont(new Font("Arial", Font.BOLD, 16));
         startButton.setBackground(new Color(179, 129, 115));
         startButton.setForeground(Color.WHITE);
+        startButton.setOpaque(false);
         startButton.setFocusPainted(false);
         startButton.setBorderPainted(false);
-        
-        startButton.setBounds(660, 420, 120, 40);  
+
+        // startButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage(WelcomeScreen.class.getResource("src\\image\\Welcome_Screen_image\\Store.png"))));  // Thêm icon cho đối tượng i1, cách này ghi tắc cho nó nhanh
+		
+
+        startButton.setBounds(660, 400, 140, 60);  
 
         layeredPane.add(startButton, JLayeredPane.PALETTE_LAYER);
        

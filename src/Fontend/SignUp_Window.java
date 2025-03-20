@@ -1,7 +1,8 @@
 package Fontend;
 
+import Backend.Listen_SignUpWindow;
 import java.awt.Font;
-
+import java.awt.event.ActionListener;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -11,9 +12,6 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
-
-import Backend.Listen_SignUpWindow;
-import java.awt.event.ActionListener;
 
 public class SignUp_Window extends JFrame {
     private static final long serialVersionUID = 1L;

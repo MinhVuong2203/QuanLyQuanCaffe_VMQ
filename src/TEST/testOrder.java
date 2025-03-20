@@ -13,6 +13,7 @@ public class testOrder {
 			Product product_CaPheSua_S = new Product(101, "Cà phê sữa", "S", 15000);
 			Product product_CaPheSua_X = new Product(102, "Cà phê sữa", "X", 20000);
 			Product product_CaPheSua_XL = new Product(103, "Cà phê sữa", "XL", 25000);
+			
 			Product product_CaPheDen_S = new Product(104, "Cà phê đen", "S", 15000);
 			Product product_CaPheDen_X = new Product(105, "Cà phê đen", "X", 15000);
 			Product product_CaPheDen_XL = new Product(106, "Cà phê đen", "XL", 15000);
