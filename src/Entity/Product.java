@@ -8,6 +8,7 @@ public class Product {
     private String name;
     private double price;
     private String size;
+
     private Map<Ingredient, Integer> ingredientList; // Nguyên liệu & số lượng cần cho 1 sản phẩm
 
     public Product(int productID, String name, String size, double price) {

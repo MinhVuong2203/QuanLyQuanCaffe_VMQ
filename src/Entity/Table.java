@@ -1,11 +1,9 @@
 package Entity;
 
 public class Table {
-    private int tableID;
+    private int tableID;  // Nếu tableID = 0 thì là đơn hàng giao hàng
     private String tableName;
-    private String status;
-
-    public Table() {}
+    private String status; // Nếu Bàn trống thì status = "Trống", Bàn đã có người thì status = "Đã có người"
 
     public Table(int tableID, String tableName, String status) {
         this.tableID = tableID;
