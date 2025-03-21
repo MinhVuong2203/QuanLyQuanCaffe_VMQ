@@ -75,7 +75,7 @@ public class SignUp_Window extends JFrame {
 		SignIn.setBounds(146, 37, 80, 28);
 		contentPane.add(SignIn);
 		
-		JLabel Label_NV = new JLabel("Tên nhân viên:");
+		JLabel Label_NV = new JLabel("Họ và tên:");
 		Label_NV.setFont(new Font("Arial", Font.PLAIN, 16));
 		Label_NV.setBounds(53, 88, 102, 22);
 		contentPane.add(Label_NV);
@@ -97,9 +97,9 @@ public class SignUp_Window extends JFrame {
 		contentPane.add(textField_MNV);
 		textField_MNV.setColumns(10);
 		
-		JLabel Label_TK = new JLabel("Tài khoản:");
+		JLabel Label_TK = new JLabel("Tên đăng nhập:");
 		Label_TK.setFont(new Font("Arial", Font.PLAIN, 16));
-		Label_TK.setBounds(79, 165, 73, 22);
+		Label_TK.setBounds(53, 165, 150, 22);
 		contentPane.add(Label_TK);
 		
 		textField_TK = new JTextField();

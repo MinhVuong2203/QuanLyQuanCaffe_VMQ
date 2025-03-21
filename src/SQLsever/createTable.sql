@@ -1,4 +1,4 @@
-
+﻿
     CREATE TABLE UserAccount(
     ID int PRIMARY KEY,
     username char(20) NOT NULL,
@@ -109,6 +109,20 @@ CREATE TABLE DeliveryOrders ( -- Giao hàng
     FOREIGN KEY (customerID) REFERENCES Customer(customerID)
 );
 --Insert data
+-- userAccount
+INSERT INTO UserAccount (ID, username, password, role) VALUES  -- Tên đăng nhập >6 ký tự, mật khẩu >8 ký tự gồm chữ chữ, số và kí tự đặc biệt
+(1, 'quy123', 'quy1234@', N'Quản lí'),
+(2, 'minh123', 'minh123@', N'Quản lí'),
+(3, 'vuong123', 'vuong123@', N'Quản lí'),
+(4, 'duypham123', 'pass1234@', N'thu ngân'),
+(5, 'maitrinh123', 'trinh1234@@', N'thu ngân'),
+(7, 'trangngo12', 'pass12341234', N'pha chế'),
+(10, 'lanvu123', 'pass12344321', N'phục vụ')
+
+
+
+--Employee
+
 --Product
 INSERT INTO Product (ProductID, name, price,size) VALUES
 -- Coffee (categoryID = 1)
@@ -148,7 +162,7 @@ INSERT INTO Product (ProductID, name, price,size) VALUES
 (30, N'Bánh Taramisu', 35000,'M'),
 (31, N'Bánh Chuối', 35000,'M');
 
---Table
+--TableCaffe
 INSERT INTO TableCaffe(TableID, status, tableName) VALUES
 (1, N'available', N'Bàn 1'),
 (2, N'available', N'Bàn 2'),
@@ -180,6 +194,7 @@ INSERT INTO TableCaffe(TableID, status, tableName) VALUES
 (28, N'available', N'Bàn 28'),
 (29, N'available', N'Bàn 29'),
 (30, N'available', N'Bàn 30');
+
 --UserSystem
 INSERT INTO UserAccount (ID, username, password, role) VALUES
 (1, 'quy', 'password', N'Quản lí'),
@@ -199,6 +214,7 @@ INSERT INTO UserAccount (ID, username, password, role) VALUES
 (16,   'huyendo', 'pass1234', N'thu ngân'),
 (17,   'tuankieu', 'pass1234', N'pha chế'),
 (18,  'nhungla', 'pass1234', N'phục vụ');
+
 --Ingredient
 INSERT INTO Ingredient (IngredientID, name, unit, stockQuantity) VALUES
 (1, N'Cà phê hạt rang', N'gram', 750),
