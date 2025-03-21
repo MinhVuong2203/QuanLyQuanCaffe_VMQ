@@ -19,7 +19,7 @@ public class TestSQLServer {
             Statement stmt = conn.createStatement();
 
 
-            String sql = "SELECT MAX(id) FROM UserSystem";
+            String sql = "SELECT MAX(id) FROM UserAcount";
             // Muốn thêm nhân viên, thêm khách hàng đều phải truy xuất id max
             ResultSet rs = stmt.executeQuery(sql);
             int id_Max = 0;
