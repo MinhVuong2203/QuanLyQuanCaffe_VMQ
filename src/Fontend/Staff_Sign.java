@@ -1,10 +1,10 @@
 package Fontend;
 
+import Backend.Listen_StaffWindow;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionListener;
-
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -15,8 +15,6 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-import Backend.Listen_StaffWindow;
-
 public class Staff_Sign extends JFrame {
     private static final long serialVersionUID = 1L;
     private JPanel contentPane;
@@ -26,6 +24,10 @@ public class Staff_Sign extends JFrame {
 
     public JPasswordField getPasswordField() {
         return passwordField;
+    }
+
+    public JTextField getTextField() {
+        return textField;
     }
 
     public JCheckBox getShowMK() {
@@ -66,6 +68,7 @@ public class Staff_Sign extends JFrame {
 		btnNewButton.setFont(new Font("Arial", Font.PLAIN, 16));
 		btnNewButton.setBounds(93, 212, 111, 26);
 		contentPane.add(btnNewButton);
+        btnNewButton.addActionListener(ac);
 
         textField = new JTextField();
         textField.setBounds(129, 140, 172, 26);
