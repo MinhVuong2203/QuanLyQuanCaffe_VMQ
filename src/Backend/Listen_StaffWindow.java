@@ -10,6 +10,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import javax.swing.JCheckBox;
+import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.SwingUtilities;
 
@@ -34,7 +35,6 @@ public class Listen_StaffWindow implements ActionListener {
         }
 
         else if (str.equals("Đăng Nhập")) {
-            System.out.println("Đăng nhập");
             // Đăng nhập
              try { 
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
@@ -55,17 +55,14 @@ public class Listen_StaffWindow implements ActionListener {
             boolean check = false;
             while (rs.next()) {
                 if (userName.equals(rs.getString(2).trim()) && passWord.equals(rs.getString(3).trim())) {
-                    System.out.println("Đăng nhập thành công");
+                    JOptionPane.showMessageDialog(null, "Đăng nhập thành công", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
                     check = true;
                     break;
                 }
             }
             if (check == false) {
-                // JOptionPane.showMessageDialog(Staff_Sign, "Sai tên đăng nhập hoặc mật khẩu");
+                JOptionPane.showMessageDialog(null, "Sai tên đăng nhập hoặc mật khẩu", "Thông báo", JOptionPane.ERROR_MESSAGE);
             }
-
-
-           
              
             rs.close();
             stmt.close();
