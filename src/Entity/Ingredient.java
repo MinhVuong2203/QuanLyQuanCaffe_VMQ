@@ -29,5 +29,29 @@ public class Ingredient {
     public int getIngredientID() { return ingredientID; }
     public String getName() { return name; }
     public int getStockQuantity() { return stockQuantity; }
+
+    // Setter
+    public void setIngredientID(int ingredientID) { this.ingredientID = ingredientID; }
+    public void setName(String name) { this.name = name; }
+    public void setStockQuantity(int stockQuantity) { this.stockQuantity = stockQuantity; }
+
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
+    }
+
+    @Override
+    public String toString() {
+        return "Ingredient{" +
+                "ingredientID=" + ingredientID +
+                ", name='" + name + '\'' +
+                ", unit='" + unit + '\'' +
+                ", stockQuantity=" + stockQuantity +
+                '}';
+    }
+    
 }
 

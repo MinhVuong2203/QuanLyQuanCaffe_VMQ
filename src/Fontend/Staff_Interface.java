@@ -1,22 +1,18 @@
 package Fontend;
 
-import javax.swing.*;
-
+import Dao.ProductDao;
+import Entity.Product;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.lang.reflect.Array;
-//import java.sql.Array;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-//import java.awt.EventQueue;
-
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 public class Staff_Interface extends JFrame {
     private JPanel contentPane;
@@ -49,6 +45,12 @@ public class Staff_Interface extends JFrame {
      * Create the frame.
      */
     public Staff_Interface() {
+
+        ProductDao productDao = new ProductDao();
+        List<Product> products = productDao.getArrayListProductFromSQL();  // Lấy được các sản phẩm ở cơ sở dữ liệu
+        
+
+
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setSize(1920, 1080);
@@ -242,7 +244,8 @@ public class Staff_Interface extends JFrame {
         });
     }
 
-    private void addData() {
+    private void addData() {  
+        // Không cần thiết phải thêm dữ liệu tay, chỉ cần lấy dữ liệu từ cơ sở dữ liệu
         String[] coffeeItems = { "Americano", "Espresso", "Caramel Macchiato", "Mocha Macchiato", "Late", "Cappuccino",
                 "Cold Brew", "Cold Brew Đào", "Matcha Late" };
         double[] coffeePrices = { 40, 35, 50, 55, 45, 50, 45, 55, 69 };
@@ -360,4 +363,16 @@ public class Staff_Interface extends JFrame {
 
         textArea_Bill.setText(bill.toString());
     }
+
+
+    public static void main(String[] args) {
+        new Staff_Interface();
+        ProductDao productDao = new ProductDao();
+        List<Product> products = productDao.getArrayListProductFromSQL();  // Lấy được các sản phẩm ở cơ sở dữ liệu
+
+        for (Product product : products) {
+            System.out.println(product);
+        }
+    }
+
 }

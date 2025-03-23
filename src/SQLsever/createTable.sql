@@ -51,6 +51,7 @@ create table [Product](
     name nvarchar(50) NOT NULL,
     price decimal(10,2) NOT NULL,
     size nvarchar(10) NOT NULL,
+	image nvarchar(10) NOT NULL
 )
 
 CREATE TABLE OrderDetail (
@@ -98,16 +99,6 @@ create table Import(
 	foreign key (ingredientID) references Ingredient(ingredientID)
 )
 
-CREATE TABLE DeliveryOrders ( -- Giao hàng
-	deliveryID INT PRIMARY KEY,
-    orderID INT NOT NULL, 
-    customerID INT NOT NULL,
-    deliveryAddress NVARCHAR(255) NOT NULL,
-    deliveryStatus NVARCHAR(50) NOT NULL DEFAULT 'Chưa giải quyết', -- Trạng thái
-    deliveryTime DATETIME NULL,  -- Thời gian dự kiến
-    FOREIGN KEY (orderID) REFERENCES Orders(orderID),
-    FOREIGN KEY (customerID) REFERENCES Customer(customerID)
-);
 --Insert data
 -- userAccount
 INSERT INTO UserAccount (ID, username, password, role) VALUES  -- Tên đăng nhập >6 ký tự, mật khẩu >8 ký tự gồm chữ chữ, số và kí tự đặc biệt
@@ -124,43 +115,39 @@ INSERT INTO UserAccount (ID, username, password, role) VALUES  -- Tên đăng nh
 --Employee
 
 --Product
-INSERT INTO Product (ProductID, name, price,size) VALUES
+INSERT INTO Product (ProductID, name, price,size, image) VALUES
 -- Coffee (categoryID = 1)
-(1, N'Americano ', 49000,'M'),
-(2, N'Americano ', 55000, 'L'),
-(3, N'Espresso ', 49000, 'M'),
-(4, N'Espresso ', 55000, 'L'),
-(5, N'Caramel Macchiato ', 79000,'M'),
-(6, N'Caramel Macchiato ', 85000, 'L'),
-(7, N'Matcha Macchiato MD', 79000, 'M'),
-(8, N'Matcha Macchiato LG', 85000, 'L'),
-(9, N'Latte MD', 75000, 'M'),
-(10, N'Latte LG', 79000, 'L'),
-(11, N'Cappuchino ', 75000, 'M'),
-(12, N'Cappuchino ', 79000, 'L'),
-(13, N'Cold Brew', 69000, 'L'),
-(14, N'Cold Brew Đào', 79000, 'L'),
-
-
-(15, N'Matcha Latte ', 49000,'M'),
-(16, N'Matcha Latte ', 55000, 'L'),
-(17, N'Trà Thạch Vải ', 55000, 'M'),
-(18, N'Trà Thạch Vải ', 65000, 'L'),
-(19, N'Trà Thanh Đào ', 55000, 'M'),
-(20, N'Trà Thanh Đào ', 65000, 'L'),
-(21, N'Trà Sen Vàng ', 55000,'M'),
-(22, N'Trà Sen Vàng ', 65000,'L'),
-(23, N'Trà Xanh Đậu Đỏ ', 55000,'M'),
-(24, N'Trà Xanh Đậu Đỏ ', 65000,'L'),
-
-
-(25, N'Bánh Croissant', 29000,'M'),
-(26, N'Bánh Mì Que Bò Sốt Phô Mai', 19000,'M'),
-(27, N'Bánh Mì Que Gà Sốt Phô Mai', 19000,'M'),
-(28, N'Bánh Mousse Đào', 35000,'M'),
-(29, N'Bánh Mousse CaCao', 35000,'M'),
-(30, N'Bánh Taramisu', 35000,'M'),
-(31, N'Bánh Chuối', 35000,'M');
+(1, N'Americano ', 49000,'M', 'src\\image\\Product_image\\Americano.png'),
+(2, N'Americano ', 55000, 'L', 'src\\image\\Product_image\\Americano.png'),
+(3, N'Espresso ', 49000, 'M', 'src\\image\\Product_image\\Espresso.png'),
+(4, N'Espresso ', 55000, 'L', 'src\\image\\Product_image\\Espresso.png'),
+(5, N'Caramel Macchiato', 79000,'M', 'src\\image\\Product_image\\Caramel Macchiato.png'),
+(6, N'Caramel Macchiato ', 85000, 'L', 'src\\image\\Product_image\\Caramel Macchiato.png'),
+(7, N'Matcha Macchiato MD', 79000, 'M', 'src\\image\\Product_image\\Matcha Macchiato MD.png'),
+(8, N'Matcha Macchiato LG', 85000, 'L', 'src\\image\\Product_image\\Matcha Macchiato LG.png'),
+(9, N'Latte', 75000, 'M', 'src\\image\\Product_image\\Latte.png'),
+(10, N'Latte', 79000, 'L', 'src\\image\\Product_image\\Latte.png'),
+(11, N'Cappuchino ', 75000, 'M','src\\image\\Product_image\\Cappuchino.png'),
+(12, N'Cappuchino ', 79000, 'L', 'src\\image\\Product_image\\Cappuchino.png'),
+(13, N'Cold Brew', 69000, 'M', 'src\\image\\Product_image\\Cold Brew.png'),
+(14, N'Cold Brew', 79000, 'L', 'src\\image\\Product_image\\Cold Brew.png'),
+(15, N'Matcha Latte ', 49000,'M', 'src\\image\\Product_image\\Matcha Latte.png'),
+(16, N'Matcha Latte ', 55000, 'L', 'src\\image\\Product_image\\Matcha Latt.png'),
+(17, N'Trà Thạch Vải ', 55000, 'M', N'src\\image\\Product_image\\Trà Thạch Vải.png'),
+(18, N'Trà Thạch Vải ', 65000, 'L', N'src\\image\\Product_image\\Trà Thạch Vải.png'),
+(19, N'Trà Thanh Đào ', 55000, 'M',N'src\\image\\Product_image\\Trà Thanh Đào.png'),
+(20, N'Trà Thanh Đào ', 65000, 'L', N'src\\image\\Product_image\\Trà Thanh Đào.png'),
+(21, N'Trà Sen Vàng ', 55000,'M', N'src\\image\\Product_image\\Trà Sen Vàng.png'),
+(22, N'Trà Sen Vàng ', 65000,'L', N'src\\image\\Product_image\\Trà Sen Vàng.png'),
+(23, N'Trà Xanh Đậu Đỏ ', 55000,'M', N'src\\image\\Product_image\\Trà Xanh Đậu Đỏ.png'),
+(24, N'Trà Xanh Đậu Đỏ ', 65000,'L', N'src\\image\\Product_image\\Trà Xanh Đậu Đỏ.png'),
+(25, N'Bánh Croissant', 29000,'M', N'src\\image\\Product_image\\Bánh Croissant.png'),
+(26, N'Bánh Mì Que Bò Sốt Phô Mai', 19000,'M', N'src\\image\\Product_image\\Bánh Mì Que Bò Sốt Phô Mai.png'),
+(27, N'Bánh Mì Que Gà Sốt Phô Mai', 29000,'L', N'src\\image\\Product_image\\Bánh Mì Que Gà Sốt Phô Mai.png'),
+(28, N'Bánh Mousse Đào', 35000,'M', N'src\\image\\Product_image\\Bánh Mousse Đào.png'),
+(29, N'Bánh Mousse CaCao', 35000,'M', N'src\\image\\Product_image\\Bánh Mousse CaCao.png'),
+(30, N'Bánh Taramisu', 35000,'M', N'src\\image\\Product_image\\Bánh Taramisu.png'),
+(31, N'Bánh Chuối', 35000,'M', N'src\\image\\Product_image\\Bánh Chuối.png');
 
 --TableCaffe
 INSERT INTO TableCaffe(TableID, status, tableName) VALUES
@@ -237,3 +224,86 @@ INSERT INTO Ingredient (IngredientID, name, unit, stockQuantity) VALUES
 (20, N'Đường', N'gram', 900),
 (21, N'Sô cô la', N'gram', 500),
 (22, N'Chuối', N'Trái',50);
+
+-- ProductIngredient
+INSERT INTO ProductIngredient (productID, ingredientID, quantity, unit) VALUES				
+(1, 1, 50, N'gram'), -- Americano
+(2, 1, 60, N'gram'),
+
+(3, 1, 30, N'gram'), -- Espresso
+(4, 1, 40, N'gram'),
+
+(5, 1, 40, N'gram'), -- Caramel Macchiato
+(5, 2, 100, N'ml'),
+(5, 4, 20, N'ml'),
+(6, 1, 50, N'gram'),
+(6, 2, 120, N'ml'),
+(6, 4, 30, N'ml'),
+
+(7, 7, 30, N'gram'), -- Matcha Macchiato
+(7, 2, 150, N'ml'),
+(8, 7, 40, N'gram'),
+(8, 2, 180, N'ml'),
+
+(9, 1, 30, N'gram'), -- Latte
+(9, 2, 120, N'ml'),
+(10, 1, 40, N'gram'),
+(10, 2, 150, N'ml'),
+
+(11, 1, 40, N'gram'), -- Cappuccino
+(11, 2, 120, N'ml'),
+(12, 1, 50, N'gram'),
+(12, 2, 150, N'ml'),
+
+(13, 1, 50, N'gram'), -- Cold Brew
+(13, 12, 100, N'gram'),
+(14, 1, 60, N'gram'),
+(14, 12, 120, N'gram'),
+
+(15, 7, 30, N'gram'), -- Matcha Latte
+(15, 2, 120, N'ml'),
+(16, 7, 40, N'gram'),
+(16, 2, 150, N'ml'),
+
+(17, 6, 30, N'ml'), -- Trà Thạch Vải
+(17, 10, 40, N'gram'),
+(18, 6, 40, N'ml'),
+(18, 10, 50, N'gram'),
+
+(19, 5, 30, N'ml'), -- Trà Thanh Đào
+(19, 9, 40, N'gram'),
+(20, 5, 40, N'ml'),
+(20, 9, 50, N'gram'),
+
+(21, 10, 40, N'gram'), -- Trà Sen Vàng
+(22, 10, 50, N'gram'),
+
+
+(23, 11, 40, N'gram'), -- Trà Xanh Đậu Đỏ
+(24, 11, 50, N'gram'),
+
+(25, 14, 100, N'gram'), -- Bánh Croissant
+(25, 15, 50, N'gram'),
+
+(26, 14, 80, N'gram'), -- Bánh Mì Que
+(26, 15, 30, N'gram'),
+(26, 16, 1, N'quả'),
+(26, 17, 30, N'gram'),
+
+(28, 14, 80, N'gram'), -- Bánh Mousse Đào
+(28, 15, 30, N'gram'),
+(28, 5, 20, N'ml'),
+
+(29, 14, 80, N'gram'), -- Bánh Mousse CaCao
+(29, 15, 30, N'gram'),
+(29, 13, 20, N'gram'),
+
+(30, 14, 80, N'gram'), -- Bánh Tiramisu
+(30, 15, 30, N'gram'),
+(30, 13, 20, N'gram'),
+
+(31, 14, 80, N'gram'), -- Bánh Chuối
+(31, 15, 30, N'gram'),
+(31, 22, 1, N'Trái');
+
+

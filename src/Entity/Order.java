@@ -13,7 +13,7 @@ public class Order {
     private String status; // "Đang chờ", "Đã thanh toán", "Đã hủy"
     
     //Phương thức để add
-    Map<Product, Integer> products;
+    Map<Product, Integer> products;  // Sản phẩm và số lượng
     private Payment payments;
     
     public Order(int orderID, int employeeID, int customerID, int tableID, String status) {

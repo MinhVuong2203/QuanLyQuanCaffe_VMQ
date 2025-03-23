@@ -1,7 +1,9 @@
 package TEST;
 
-import Fontend.WelcomeScreen;
-import javax.swing.SwingUtilities;
+import Entity.Product;
+import Fontend.Staff_Interface;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.UIManager;
 
 public class test { // Cái gì test thì các bạn test ở đây
@@ -14,8 +16,10 @@ public class test { // Cái gì test thì các bạn test ở đây
             // UIManager.setLookAndFeel("com.sun.java.swing.plaf.motif.MotifLookAndFeel");
             // set là giao diện mặc định của hệ thống
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-            
-            SwingUtilities.invokeLater(() -> new WelcomeScreen());  // WelcomeScrren
+
+
+             new Staff_Interface();
+            // SwingUtilities.invokeLater(() -> new WelcomeScreen());  // WelcomeScrren
         
             
         } catch (Exception e) {
