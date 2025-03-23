@@ -2,6 +2,7 @@ package Backend;
 
 import Dao.UserAccountDao;
 import Fontend.SignUp_Window;
+import Fontend.Staff_Interface;
 import Fontend.Staff_Sign;
 import Fontend.WelcomeScreen;
 import java.awt.event.ActionEvent;
@@ -39,6 +40,8 @@ public class Listen_StaffWindow implements ActionListener {
                 String role = userAccountDao.getRoleFromID(id);
                 System.out.println(role);
             }
+            action.dispose();
+            new Staff_Interface();
             userAccountDao.closeConnection();
         }
         
