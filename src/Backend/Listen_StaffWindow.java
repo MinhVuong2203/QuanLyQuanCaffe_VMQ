@@ -2,6 +2,7 @@ package Backend;
 
 import Dao.UserAccountDao;
 import Fontend.SignUp_Window;
+import Fontend.Staff_Interface;
 import Fontend.Staff_Sign;
 import Fontend.WelcomeScreen;
 import java.awt.event.ActionEvent;
@@ -32,15 +33,17 @@ public class Listen_StaffWindow implements ActionListener {
 
         else if (str.equals("Đăng Nhập")) {
             // Đăng nhập
-            UserAccountDao userAccountDao = new UserAccountDao(action); // Tạo đối tượng UserAccountDao để lấy dữ liệu từ database
-            String id = userAccountDao.login();  // thực hiện đăng nhập và trả về id
+            UserAccountDao userAccountDao = new UserAccountDao(); // Tạo đối tượng UserAccountDao để lấy dữ liệu từ database
+            String userName = action.getTextField().getText(); // Lấy tên đăng nhập từ TextField
+            String password = new String(action.getPasswordField().getPassword()); // Lấy mật khẩu từ PasswordField
+            String id = userAccountDao.login(userName, password);  // thực hiện đăng nhập và trả về id
             System.out.println(id);
             if (id != null){ // Nếu đăng nhập thành công thì lấy role
                 String role = userAccountDao.getRoleFromID(id);
                 System.out.println(role);
+                action.dispose();
+                new Staff_Interface(); // Mở giao diện Staff_Interface
             }
-            action.dispose();
-            // new Staff_Interface();
             userAccountDao.closeConnection();
         }
         

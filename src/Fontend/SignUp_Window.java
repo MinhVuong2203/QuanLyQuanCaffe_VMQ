@@ -17,8 +17,8 @@ import javax.swing.border.EmptyBorder;
 public class SignUp_Window extends JFrame {
     private static final long serialVersionUID = 1L;
     private JPanel contentPane;
-    private JTextField NV_textField;
-    private JTextField textField_MNV;
+    private JTextField textField_Ten;
+    private JTextField textField_SDT;
     private JTextField textField_TK;
     private JPasswordField passwordField;
     private JPasswordField passwordField_CF;
@@ -47,6 +47,41 @@ public class SignUp_Window extends JFrame {
     public JCheckBox getShowCFMK() {
         return showCFMK;
     }
+
+	public JTextField getTextField_Ten() {
+		return textField_Ten;
+	}
+
+	public void setTextField_Ten(JTextField textField_Ten) {
+		this.textField_Ten = textField_Ten;
+	}
+
+	public JTextField getTextField_SDT() {
+		return textField_SDT;
+	}
+
+	public void setTextField_SDT(JTextField textField_SDT) {	
+		this.textField_SDT = textField_SDT;
+	}
+
+	public JTextField getTextField_TK() {
+		return textField_TK;
+	}
+
+	public void setTextField_TK(JTextField textField_TK) {
+		this.textField_TK = textField_TK;
+	}
+
+	public void setAll(String name, String phone, String username, String password, String password_CF) {  // Dùng để đặt các giá trị vào các ô text khi ta nhấn đăng kí, để có gì sai thì cũng không mất dữ liệu hiện có trong các ô text
+		textField_Ten.setText(name);
+		textField_SDT.setText(phone);
+		textField_TK.setText(username);
+		passwordField.setText(password);
+		passwordField_CF.setText(password_CF);
+
+	}
+
+
 
     /**
      * Create the frame.
@@ -80,22 +115,22 @@ public class SignUp_Window extends JFrame {
 		Label_NV.setBounds(53, 88, 102, 22);
 		contentPane.add(Label_NV);
 		
-		NV_textField = new JTextField();
-		NV_textField.setFont(new Font("Arial", Font.PLAIN, 16));
-		NV_textField.setBounds(168, 88, 168, 28);
-		contentPane.add(NV_textField);
-		NV_textField.setColumns(10);
+		textField_Ten = new JTextField();
+		textField_Ten.setFont(new Font("Arial", Font.PLAIN, 16));
+		textField_Ten.setBounds(168, 88, 168, 28);
+		contentPane.add(textField_Ten);
+		textField_Ten.setColumns(10);
 		
-		JLabel Label_MNV = new JLabel("Mã nhân viên:");
-		Label_MNV.setFont(new Font("Arial", Font.PLAIN, 16));
-		Label_MNV.setBounds(56, 128, 102, 22);
-		contentPane.add(Label_MNV);
+		JLabel Label_SDT = new JLabel("Số điện thoại:");
+		Label_SDT.setFont(new Font("Arial", Font.PLAIN, 16));
+		Label_SDT.setBounds(56, 128, 102, 22);
+		contentPane.add(Label_SDT);
 		
-		textField_MNV = new JTextField();
-		textField_MNV.setFont(new Font("Arial", Font.PLAIN, 16));
-		textField_MNV.setBounds(168, 126, 168, 28);
-		contentPane.add(textField_MNV);
-		textField_MNV.setColumns(10);
+		textField_SDT = new JTextField();
+		textField_SDT.setFont(new Font("Arial", Font.PLAIN, 16));
+		textField_SDT.setBounds(168, 126, 168, 28);
+		contentPane.add(textField_SDT);
+		textField_SDT.setColumns(10);
 		
 		JLabel Label_TK = new JLabel("Tên đăng nhập:");
 		Label_TK.setFont(new Font("Arial", Font.PLAIN, 16));
@@ -113,7 +148,7 @@ public class SignUp_Window extends JFrame {
 		Label_MK.setBounds(82, 204, 70, 22);
 		contentPane.add(Label_MK);
 		
-		JLabel Lable_CFMK = new JLabel("Xác nhận mât khẩu:");
+		JLabel Lable_CFMK = new JLabel("Xác nhận mật khẩu:");
 		Lable_CFMK.setFont(new Font("Arial", Font.PLAIN, 16));
 		Lable_CFMK.setBounds(13, 241, 138, 22);
 		contentPane.add(Lable_CFMK);
@@ -151,6 +186,7 @@ public class SignUp_Window extends JFrame {
 		btnNewButton.setFont(new Font("Arial", Font.PLAIN, 16));
 		btnNewButton.setBounds(208, 279, 91, 28);
 		contentPane.add(btnNewButton);
+		btnNewButton.addActionListener(ac);
 		
 		JLabel background = new JLabel("");
 		background.setFont(new Font("Arial", Font.PLAIN, 16));

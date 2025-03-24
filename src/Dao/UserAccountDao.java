@@ -10,9 +10,10 @@ import javax.swing.JOptionPane;
 
 public class UserAccountDao {
     private Connection conn;
-    private Staff_Sign action;
-    public UserAccountDao(Staff_Sign action) {
-        this.action = action;
+    private Staff_Sign staff_Sign;
+
+
+    public UserAccountDao() {
          try { 
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             String url = "jdbc:sqlserver://localhost:1433;databaseName=CaffeVMQ;encrypt=false";
@@ -27,24 +28,19 @@ public class UserAccountDao {
         }
     }
 
-    public String login(){
+    public String login(String userName, String passWord) {
         // if (conn == null) {
         //     System.out.println("Kết nối thất bại");
         //     return;
         // }
         try {
             Statement stmt = conn.createStatement();
-
             String sql = "SELECT * FROM UserAccount";  // Lấy tất cả bản nhân viên
             ResultSet rs = stmt.executeQuery(sql);
-            String userName = action.getTextField().getText();  // Lấy tên đăng nhập từ giao diện
-            String passWord = new String(action.getPasswordField().getPassword());  // Lấy mật khẩu từ giao diện
-
             String getID = ""; // Lấy ID đúng để biết là ai đăng nhập
             boolean check = false;  
             while (rs.next()) {
                 if (userName.equals(rs.getString(2).trim()) && passWord.equals(rs.getString(3).trim())) {
-                    JOptionPane.showMessageDialog(null, "Đăng nhập thành công", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
                     getID = rs.getString(1);
                     rs.close();
                     stmt.close();
@@ -62,17 +58,51 @@ public class UserAccountDao {
         return null;  // Nếu không đúng thì trả về null
     }
 
-    public void signUp(){ // Chưa đúng
-        try {
+    public int getIDMaxFromSQL(){
+        int id = 0;
+        try{
             Statement stmt = conn.createStatement();
-            String sql = "INSERT INTO UserAccount VALUES ('" + action.getTextField().getText() + "', '" + new String(action.getPasswordField().getPassword()) + "')";
+            String sql = "SELECT MAX(ID) FROM UserAccount";
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()){
+                id = rs.getInt(1);
+            }
+            rs.close();
+            stmt.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return id;
+    }
+
+    public void signUp(String name, String sdt, String userName, String passWord) {
+        try{
+            Statement stmt = conn.createStatement();
+            int IDMax = this.getIDMaxFromSQL() + 1; // Lấy ID lớn nhất trong database và cộng thêm 1 để tạo một id mới
+            String sql= "INSERT INTO UserAccount VALUES (" + IDMax + ", '" + userName + "', '" + passWord + "', '" + "Khách" + "')";
+            String sql2 = "INSERT INTO Customer VALUES (" + IDMax + ", N'" + name + "', '" + sdt + "', " + 0 + ")";
             stmt.executeUpdate(sql);
+            stmt.executeUpdate(sql2);
             JOptionPane.showMessageDialog(null, "Đăng ký thành công", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             stmt.close();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
+    // public void signUp(){ // Chưa đúng
+    //     try {
+    //         Statement stmt = conn.createStatement();
+    //         String sql = "INSERT INTO UserAccount VALUES ('" + action.getTextField().getText() + "', '" + new String(action.getPasswordField().getPassword()) + "')";
+    //         stmt.executeUpdate(sql);
+    //         JOptionPane.showMessageDialog(null, "Đăng ký thành công", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+    //         stmt.close();
+    //     } catch (Exception e) {
+    //         e.printStackTrace();
+    //     }
+    // }
 
 
     public String getRoleFromID(String id){

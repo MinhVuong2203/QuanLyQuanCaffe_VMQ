@@ -105,6 +105,9 @@ create table Import(
 	foreign key (ingredientID) references Ingredient(ingredientID)
 )
 
+
+
+
 --Insert data
 
 -- userAccount

@@ -1,13 +1,13 @@
 package Backend;
 
-import javax.swing.JCheckBox;
-import javax.swing.JPasswordField;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
+import Dao.UserAccountDao;
 import Fontend.SignUp_Window;
 import Fontend.Staff_Sign;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.JCheckBox;
+import javax.swing.JOptionPane;
+import javax.swing.JPasswordField;
 
 public class Listen_SignUpWindow implements ActionListener {
 private SignUp_Window action;
@@ -23,6 +23,29 @@ private SignUp_Window action;
             action.dispose();
             new Staff_Sign();
         }
+        else if (str.equals("Đăng ký")) {
+            // Đăng ký
+            String name = action.getTextField_Ten().getText();
+            String phone = action.getTextField_SDT().getText();
+            String username = action.getTextField_TK().getText();
+            String password = new String(action.getPasswordField().getPassword());
+            String confirmPassword = new String(action.getPasswordField_CF().getPassword());
+
+            this.action.setAll(name, phone, username, password, confirmPassword);
+
+            //Kiểm tra xem mật khẩu nhập lại có khớp không
+            if (confirmPassword.equals(password)) {
+                System.out.println("Tên: " + name + " SĐT: " + phone + " TK: " + username + " MK: " + password);
+                //Thêm vào database
+                UserAccountDao userAccountDao = new UserAccountDao();
+                userAccountDao.signUp(name, phone, username, password);
+                action.dispose();
+                new Staff_Sign();
+            } else {
+                JOptionPane.showMessageDialog(action, "Mật khẩu không khớp", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+
 		if (e.getSource() instanceof JCheckBox) {
             JCheckBox checkBox = (JCheckBox) e.getSource();
             
