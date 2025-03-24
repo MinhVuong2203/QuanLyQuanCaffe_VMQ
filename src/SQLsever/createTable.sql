@@ -1,12 +1,10 @@
 ﻿
-    CREATE TABLE UserAccount(
+CREATE TABLE UserAccount(
     ID int PRIMARY KEY,
     username char(20) NOT NULL,
     password char(20) NOT NULL,
     role nvarchar(50) NOT NULL
 )
-
-
 
 CREATE TABLE Employee(
     employeeID int NOT NULL,
@@ -15,16 +13,24 @@ CREATE TABLE Employee(
     name nvarchar(50) NOT NULL,
     phone char(10) NOT NULL CHECK (phone LIKE '[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]'),
     hourWage int NOT NULL,
+	CCCD CHAR(12) NOT NULL CHECK (CCCD LIKE '[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]'),
+	birthDate DATE NOT NULL,
+	gender NVARCHAR(10) NOT NULL CHECK (gender IN (N'Nam', N'Nữ'))
 )
+
+
 
 CREATE TABLE Customer(
     customerID int NOT NULL,
 	foreign key (customerID) references UserAccount(ID),
 	PRIMARY KEY (customerID),
     name nvarchar(50) NOT NULL,
-    phone char(10) NOT NULL CHECK (phone LIKE '[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]'),
+    phone char(10) NULL CHECK (phone LIKE '[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]'),
     point int NOT NULL CHECK(point>=0),
 )
+
+
+
 
 CREATE TABLE TableCaffe (
     TableID int PRIMARY KEY,
@@ -100,19 +106,34 @@ create table Import(
 )
 
 --Insert data
+
 -- userAccount
 INSERT INTO UserAccount (ID, username, password, role) VALUES  -- Tên đăng nhập >6 ký tự, mật khẩu >8 ký tự gồm chữ chữ, số và kí tự đặc biệt
-(1, 'quy123', 'quy1234@', N'Quản lí'),
-(2, 'minh123', 'minh123@', N'Quản lí'),
-(3, 'vuong123', 'vuong123@', N'Quản lí'),
-(4, 'duypham123', 'pass1234@', N'thu ngân'),
-(5, 'maitrinh123', 'trinh1234@@', N'thu ngân'),
-(7, 'trangngo12', 'pass12341234', N'pha chế'),
-(10, 'lanvu123', 'pass12344321', N'phục vụ')
-
+(100000, '','',N'Khách vãng lai'), -- Để phục vụ cho khách vãng lai (khách nào vãng lai thì lấy ID này, nhân viên có chức năng tạo khách vãng lai bằng một nút bấm cho thao tác nhanh hơn, không cần nhập ID khách)
+(100001, 'quy123', 'quy1234@', N'Quản lí'),
+(100002, 'minh123', 'minh123@', N'Quản lí'),
+(100003, 'vuong123', 'vuong123@', N'Quản lí'),
+(100004, 'duypham123', 'pass1234@', N'thu ngân'),
+(100005, 'maitrinh123', 'trinh1234@@', N'thu ngân'),
+(100006, 'trangngo12', 'pass12341234', N'pha chế'),
+(100007, 'lanvu123', 'pass12344321', N'phục vụ')
 
 
 --Employee
+INSERT INTO Employee (employeeID, name, phone, hourWage, CCCD, birthDate, gender)
+VALUES
+(100001, N'Nguyễn Ngọc Quý', '0912345678', 0, '012345678901', '1990-05-12', N'Nam'),
+(100002, N'Nguyễn Bình Minh', '0923456789', 0, '023456789012', '1992-07-25', N'Nam'),
+(100003, N'Nguyễn Minh Vương', '0818214849', 0, '034567890123', '1988-03-18', N'Nam'),
+(100004, N'Phạm Duy', '0945678901', 40000, '045678901234', '1995-11-02', N'Nam'),
+(100005, N'Mai Trinh', '0956789012', 40000, '056789012345', '1997-09-14', N'Nữ'),
+(100006, N'Ngô Trang', '0967890123', 45000, '067890123456', '2000-12-22', N'Nữ'),
+(100007, N'Vũ Lan', '0978901234', 32000, '078901234567', '1999-06-30', N'Nữ');
+
+-- Customer
+INSERT INTO [dbo].[Customer]([customerID],[name],[phone],[point])
+VALUES (100000, N'Khách vãng lai', '0000000000',0)
+
 
 --Product
 INSERT INTO Product (ProductID, name, price,size, image) VALUES
@@ -150,57 +171,38 @@ INSERT INTO Product (ProductID, name, price,size, image) VALUES
 (31, N'Bánh Chuối', 35000,'M', N'src\\image\\Product_image\\Bánh Chuối.png');
 
 --TableCaffe
-INSERT INTO TableCaffe(TableID, status, tableName) VALUES
-(1, N'available', N'Bàn 1'),
-(2, N'available', N'Bàn 2'),
-(3, N'available', N'Bàn 3'),
-(4, N'available', N'Bàn 4'),
-(5, N'available', N'Bàn 5'),
-(6, N'available', N'Bàn 6'),
-(7, N'available', N'Bàn 7'),
-(8, N'available', N'Bàn 8'),
-(9, N'available', N'Bàn 9'),
-(10, N'available', N'Bàn 10'),
-(11, N'available', N'Bàn 11'),
-(12, N'available', N'Bàn 12'),
-(13, N'available', N'Bàn 13'),
-(14, N'available', N'Bàn 14'),
-(15, N'available', N'Bàn 15'),
-(16, N'available', N'Bàn 16'),
-(17, N'available', N'Bàn 17'),
-(18, N'available', N'Bàn 18'),
-(19, N'available', N'Bàn 19'),
-(20, N'available', N'Bàn 20'),
-(21, N'available', N'Bàn 21'),
-(22, N'available', N'Bàn 22'),
-(23, N'available', N'Bàn 23'),
-(24, N'available', N'Bàn 24'),
-(25, N'available', N'Bàn 25'),
-(26, N'available', N'Bàn 26'),
-(27, N'available', N'Bàn 27'),
-(28, N'available', N'Bàn 28'),
-(29, N'available', N'Bàn 29'),
-(30, N'available', N'Bàn 30');
-
---UserSystem
-INSERT INTO UserAccount (ID, username, password, role) VALUES
-(1, 'quy', 'password', N'Quản lí'),
-(2, 'minh', 'password', N'Quản lí'),
-(3, 'vuong', 'password', N'Quản lí'),
-(4, 'duypham', 'pass1234', N'thu ngân'),
-(5, 'maitrinh', 'pass1234', N'thu ngân'),
-(6,  'sonle', 'pass1234', N'thu ngân'),
-(7, 'trangngo', 'pass1234', N'pha chế'),
-(8, 'khangtong', 'pass1234', N'pha chế'),
-(9, 'habui', 'pass1234', N'pha chế'),
-(10,  'lanvu', 'pass1234', N'phục vụ'),
-(11, 'toanhuynh', 'pass1234', N'phục vụ'),
-(12,  'kimta', 'pass1234', N'phục vụ'),
-(13, 'hangcao', 'pass1234', N'pha chế'),
-(15, 'tailuong', 'pass1234', N'phục vụ'),
-(16,   'huyendo', 'pass1234', N'thu ngân'),
-(17,   'tuankieu', 'pass1234', N'pha chế'),
-(18,  'nhungla', 'pass1234', N'phục vụ');
+INSERT INTO TableCaffe (TableID, status, tableName) VALUES
+(1, N'Trống', N'Bàn 1'),
+(2, N'Trống', N'Bàn 2'),
+(3, N'Trống', N'Bàn 3'),
+(4, N'Trống', N'Bàn 4'),
+(5, N'Trống', N'Bàn 5'),
+(6, N'Trống', N'Bàn 6'),
+(7, N'Trống', N'Bàn 7'),
+(8, N'Trống', N'Bàn 8'),
+(9, N'Trống', N'Bàn 9'),
+(10, N'Trống', N'Bàn 10'),
+(11, N'Trống', N'Bàn 11'),
+(12, N'Trống', N'Bàn 12'),
+(13, N'Trống', N'Bàn 13'),
+(14, N'Trống', N'Bàn 14'),
+(15, N'Trống', N'Bàn 15'),
+(16, N'Trống', N'Bàn 16'),
+(17, N'Trống', N'Bàn 17'),
+(18, N'Trống', N'Bàn 18'),
+(19, N'Trống', N'Bàn 19'),
+(20, N'Trống', N'Bàn 20'),
+(21, N'Trống', N'Bàn 21'),
+(22, N'Trống', N'Bàn 22'),
+(23, N'Trống', N'Bàn 23'),
+(24, N'Trống', N'Bàn 24'),
+(25, N'Trống', N'Bàn 25'),
+(26, N'Trống', N'Bàn 26'),
+(27, N'Trống', N'Bàn 27'),
+(28, N'Trống', N'Bàn 28'),
+(29, N'Trống', N'Bàn 29'),
+(30, N'Trống', N'Bàn 30');
+-- Có bàn có khách thì ghi N'Có khách'
 
 --Ingredient
 INSERT INTO Ingredient (IngredientID, name, unit, stockQuantity) VALUES
@@ -306,4 +308,50 @@ INSERT INTO ProductIngredient (productID, ingredientID, quantity, unit) VALUES
 (31, 15, 30, N'gram'),
 (31, 22, 1, N'Trái');
 
+-- Import
+INSERT INTO Import (importID, ingredientID, quantity, unitPrice, importDate, totalCost) 
+VALUES
+(1, 1, 500, 0.50, '2025-03-24 08:30:00', 250.00),
+(2, 2, 1000, 0.20, '2025-03-24 09:00:00', 200.00),
+(3, 3, 800, 0.25, '2025-03-24 09:30:00', 200.00),
+(4, 4, 500, 0.30, '2025-03-24 10:00:00', 150.00),
+(5, 5, 400, 0.35, '2025-03-24 10:30:00', 140.00),
+(6, 6, 600, 0.40, '2025-03-24 11:00:00', 240.00),
+(7, 7, 700, 0.45, '2025-03-24 11:30:00', 315.00),
+(8, 8, 600, 0.50, '2025-03-24 12:00:00', 300.00),
+(9, 9, 400, 0.55, '2025-03-24 12:30:00', 220.00),
+(10, 10, 350, 0.60, '2025-03-24 13:00:00', 210.00),
+(11, 11, 500, 0.65, '2025-03-24 13:30:00', 325.00),
+(12, 12, 1500, 0.10, '2025-03-24 14:00:00', 150.00),
+(13, 13, 900, 0.55, '2025-03-24 14:30:00', 495.00),
+(14, 14, 1000, 0.30, '2025-03-24 15:00:00', 300.00),
+(15, 15, 600, 0.75, '2025-03-24 15:30:00', 450.00),
+(16, 16, 500, 0.50, '2025-03-24 16:00:00', 250.00),
+(17, 17, 550, 0.80, '2025-03-24 16:30:00', 440.00),
+(18, 20, 1200, 0.20, '2025-03-24 17:00:00', 240.00),
+(19, 21, 700, 0.90, '2025-03-24 17:30:00', 630.00),
+(20, 22, 100, 1.00, '2025-03-24 18:00:00', 100.00);
 
+-- Order
+INSERT INTO Orders (orderID, tableID, employeeID, customerID, orderTime, totalPrice, [status]) 
+VALUES
+(1, 1, 100004, 100000, '2025-03-24 08:45:00', 49000.00, N'Đã thanh toán'),  -- status sẽ nhận các giá trị: Đang chuẩn bị , Hoàn thành, Đã thanh toán
+(2, 2, 100004, 100000, '2025-03-24 09:15:00', 55000.00, N'Đã thanh toán'),
+(3, 3, 100005, 100000, '2025-03-24 09:30:00', 49000.00, N'Đã thanh toán'),
+(4, 4, 100005, 100000, '2025-03-24 10:00:00', 55000.00, N'Đã thanh toán');
+
+-- OrderDetail
+INSERT INTO OrderDetail (orderDetailID, orderID, productID, quantity, price) 
+VALUES
+(1, 1, 1, 1, 49000.00),
+(2, 2, 2, 1, 55000.00),
+(3, 3, 3, 1, 49000.00),
+(4, 4, 4, 1, 55000.00);
+
+-- Payment
+INSERT INTO Payment (paymentID, orderID, paymentMethod, amount, paymentTime) 
+VALUES
+(1, 1, N'Tiền mặt', 49000.00, '2025-03-24 09:00:00'),
+(2, 2, N'Thẻ tín dụng', 55000.00, '2025-03-24 09:20:00'),
+(3, 3, N'Ví điện tử', 49000.00, '2025-03-24 09:45:00'),
+(4, 4, N'Tiền mặt', 55000.00, '2025-03-24 10:15:00');
