@@ -7,34 +7,27 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.Arrays;
+import java.text.DateFormat;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 public class Staff_Interface extends JFrame {
+    private Locale VN = new Locale("vi", "VN");
+
     private JPanel contentPane;
 
     // DefaultListModel để quản lý danh sách
-    private DefaultListModel<String> coffeeModel;
-    private DefaultListModel<String> teaModel;
-    private DefaultListModel<String> cakeModel;
+    private DefaultListModel<String> menuModel;
     private DefaultListModel<String> placedModel;
 
     // JList để hiển thị dữ liệu
-    private JList<String> listCoffee;
-    private JList<String> listTea;
-    private JList<String> listCakes;
+    private JList<String> listMenu;
     private JList<String> list_dishSelected;
 
-    private List<String> list_ImgCoffee = Arrays.asList("src/images/caramel_macchiato.png",
-            "src/images/caramel_macchiato.png", "src/images/caramel_macchiato.png", "src/images/caramel_macchiato.png");
-    private List<String> list_ImgTea = Arrays.asList("src/images/caramel_macchiato.png",
-            "src/images/caramel_macchiato.png", "src/images/caramel_macchiato.png", "src/images/caramel_macchiato.png");
-    private List<String> list_ImgCakes = Arrays.asList("src/images/caramel_macchiato.png",
-            "src/images/caramel_macchiato.png", "src/images/caramel_macchiato.png", "src/images/caramel_macchiato.png");
     private JTextField textField_TKKH;
     private JTextField total_monney;
     private Map<String, Double> priceMap;
@@ -46,10 +39,10 @@ public class Staff_Interface extends JFrame {
      */
     public Staff_Interface() {
 
-        ProductDao productDao = new ProductDao();
-        List<Product> products = productDao.getArrayListProductFromSQL();  // Lấy được các sản phẩm ở cơ sở dữ liệu
-        productDao.closeConnection(); // Đóng kết nối
-
+        // ProductDao productDao = new ProductDao();
+        // List<Product> products = productDao.getArrayListProductFromSQL(); // Lấy được
+        // các sản phẩm ở cơ sở dữ liệu
+        // productDao.closeConnection(); // Đóng kết nối
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -62,9 +55,7 @@ public class Staff_Interface extends JFrame {
         setContentPane(contentPane);
         contentPane.setLayout(null);
 
-        coffeeModel = new DefaultListModel<>();
-        teaModel = new DefaultListModel<>();
-        cakeModel = new DefaultListModel<>();
+        menuModel = new DefaultListModel<>();
         priceMap = new HashMap<>();
 
         addData();
@@ -108,80 +99,27 @@ public class Staff_Interface extends JFrame {
         order.add(Button_Pay);
         Button_Pay.addActionListener(e -> printBill());
 
-        JLabel Label_Coffee = new JLabel("Coffee");
-        Label_Coffee.setFont(new Font("Arial", Font.BOLD, 20));
-        Label_Coffee.setBounds(42, 72, 76, 37);
-        Label_Coffee.setForeground(new Color(105, 43, 26));
-        contentPane.add(Label_Coffee);
+        JScrollPane scrollPane_Menu = new JScrollPane();
+        scrollPane_Menu.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane_Menu.setBounds(0, 0, 1000, 845);
+        contentPane.add(scrollPane_Menu);
 
-        listCoffee = createHorizontalList(coffeeModel);
-        setColor_Select(listCoffee);
-        JScrollPane scrollPane_Coffee = new JScrollPane(listCoffee);
-        scrollPane_Coffee.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-        scrollPane_Coffee.setBounds(0, 108, 1000, 180);
-        contentPane.add(scrollPane_Coffee);
-
-        listCoffee.addMouseListener(new MouseAdapter() {
+        listMenu = createHorizontalList(menuModel);
+        setColor_Select(listMenu);
+        listMenu.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 2) {
-                    String selectedDish = listCoffee.getSelectedValue();
+                    String selectedDish = listMenu.getSelectedValue();
                     if (selectedDish != null) {
                         addToOrder(selectedDish);
+                        updateTotalMoney();
                     }
                 }
             }
         });
 
-        JLabel Label_Tea = new JLabel("Trà");
-        Label_Tea.setFont(new Font("Arial", Font.BOLD, 20));
-        Label_Tea.setBounds(42, 318, 50, 24);
-        Label_Tea.setForeground(new Color(105, 43, 26));
-        contentPane.add(Label_Tea);
-
-        listTea = createHorizontalList(teaModel);
-        setColor_Select(listTea);
-        JScrollPane scrollPane_Tea = new JScrollPane(listTea);
-        scrollPane_Tea.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-        scrollPane_Tea.setBounds(0, 345, 1000, 180);
-        contentPane.add(scrollPane_Tea);
-
-        listTea.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() == 2) {
-                    String selectedDish = listTea.getSelectedValue();
-                    if (selectedDish != null) {
-                        addToOrder(selectedDish);
-                    }
-                }
-            }
-        });
-
-        JLabel Label_Cakes = new JLabel("Bánh");
-        Label_Cakes.setFont(new Font("Arial", Font.BOLD, 20));
-        Label_Cakes.setBounds(42, 557, 62, 24);
-        Label_Cakes.setForeground(new Color(105, 43, 26));
-        contentPane.add(Label_Cakes);
-
-        listCakes = createHorizontalList(cakeModel);
-        setColor_Select(listCakes);
-        JScrollPane scrollPane_Cakes = new JScrollPane(listCakes);
-        scrollPane_Cakes.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-        scrollPane_Cakes.setBounds(0, 585, 1000, 180);
-        contentPane.add(scrollPane_Cakes);
-
-        listCakes.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() == 2) {
-                    String selectedDish = listCakes.getSelectedValue();
-                    if (selectedDish != null) {
-                        addToOrder(selectedDish);
-                    }
-                }
-            }
-        });
+        scrollPane_Menu.setViewportView(listMenu);
 
         placedModel = new DefaultListModel<>();
         list_dishSelected = new JList(placedModel);
@@ -224,7 +162,10 @@ public class Staff_Interface extends JFrame {
         JList<String> list = new JList<>(model);
         list.setFont(new Font("Arial", Font.PLAIN, 16));
         list.setLayoutOrientation(JList.HORIZONTAL_WRAP);
-        list.setVisibleRowCount(1);
+        // list.setVisibleRowCount(1);
+        list.setVisibleRowCount(0); // Cho phép tự động xuống dòng khi không đủ không gian
+        list.setFixedCellWidth(490); // Thiết lập độ rộng tối đa của mỗi item
+        list.setFixedCellHeight(50); // Thiết lập chiều cao của mỗi item
         return list;
     }
 
@@ -244,32 +185,40 @@ public class Staff_Interface extends JFrame {
         });
     }
 
-    private void addData() {  
+    private void addData() {
         // Không cần thiết phải thêm dữ liệu tay, chỉ cần lấy dữ liệu từ cơ sở dữ liệu
-        String[] coffeeItems = { "Americano", "Espresso", "Caramel Macchiato", "Mocha Macchiato", "Late", "Cappuccino",
-                "Cold Brew", "Cold Brew Đào", "Matcha Late" };
-        double[] coffeePrices = { 40, 35, 50, 55, 45, 50, 45, 55, 69 };
+        // String[] menuItems = {
+        // "Americano", "Espresso", "Caramel Macchiato", "Mocha Macchiato",
+        // "Latte", "Cappuccino", "Cold Brew", "Cold Brew Đào",
+        // "Matcha Latte", "Trà Thạch Vải", "Trà Thanh Đào", "Trà Sen Vàng",
+        // "Trà Xanh Đậu Đỏ", "Bánh Croissant", "Bánh Mì Que Bò Sốt Phô Mai", "Bánh Mì
+        // Que Gà Sốt Phô Mai",
+        // "Bánh Mousse (Đào, CaCao)", "Bánh Tiramisu", "Bánh Chuối"
+        // };
 
-        String[] teaItems = { "Trà Thạch Vải", "Trà Thanh Đào", "Trà Sen Vàng", "Trà Xanh Đậu Đỏ" };
-        double[] teaPrices = { 30, 32, 28, 35 };
+        // double[] prices = {30, 25, 45, 50, 40, 35, 55, 60, 50, 35, 38, 40, 42, 25,
+        // 30, 32, 50, 55, 28};
 
-        String[] cakeItems = { "Bánh Croissant", "Bánh Mì Que Bò Sốt Phô Mai", "Bánh Mì Que Gà Sốt Phô Mai",
-                "Bánh Mousse (Đào, CaCao)", "Bánh Tiramisu", "Bánh Chuối" };
-        double[] cakePrices = { 25, 40, 45, 55, 50, 50 };
+        // for (int i = 0; i < menuItems.length; i++) {
+        // menuModel.addElement(menuItems[i]);
+        // priceMap.put(menuItems[i], prices[i]);
+        // }
+        menuModel.clear(); // Xóa danh sách cũ trước khi thêm mới
+        priceMap.clear(); // Xóa dữ liệu giá cũ
+        ProductDao productDao = new ProductDao();
+        List<Product> products = productDao.getArrayListProductFromSQL(); // Lấy danh sách sản phẩm từ database
+        productDao.closeConnection(); // Đóng kết nối
 
-        for (int i = 0; i < coffeeItems.length; i++) {
-            coffeeModel.addElement(coffeeItems[i]);
-            priceMap.put(coffeeItems[i], coffeePrices[i]);
-        }
+        for (Product product : products) {
+            // Hiển thị "Tên - Size - Giá"
+            String displayText = product.getName().trim() + " - " + product.getSize() + " - " + product.getPrice()
+                    + "đ";
 
-        for (int i = 0; i < teaItems.length; i++) {
-            teaModel.addElement(teaItems[i]);
-            priceMap.put(teaItems[i], teaPrices[i]);
-        }
-
-        for (int i = 0; i < cakeItems.length; i++) {
-            cakeModel.addElement(cakeItems[i]);
-            priceMap.put(cakeItems[i], cakePrices[i]);
+            // Kiểm tra xem dữ liệu đã tồn tại hay chưa để tránh lặp
+            if (!menuModel.contains(displayText)) {
+                menuModel.addElement(displayText);
+                priceMap.put(displayText, product.getPrice());
+            }
         }
     }
 
@@ -282,7 +231,7 @@ public class Staff_Interface extends JFrame {
                 if (qty > 0) {
                     double price = priceMap.get(dishName);
                     double totalItemPrice = price * qty;
-                    placedModel.addElement(dishName + " - Số lượng: " + qty + " - " + totalItemPrice + "K");
+                    placedModel.addElement(dishName + " - Số lượng: " + qty + " - " + totalItemPrice + "đ  ");
                     updateTotalMoney();
                 } else {
                     JOptionPane.showMessageDialog(this, "Số lượng phải lớn hơn 0!", "Lỗi", JOptionPane.ERROR_MESSAGE);
@@ -298,12 +247,19 @@ public class Staff_Interface extends JFrame {
         for (int i = 0; i < placedModel.size(); i++) {
             String item = placedModel.getElementAt(i);
             String[] parts = item.split(" - ");
-            if (parts.length == 3) {
-                String priceStr = parts[2].replace("K", "");
-                total += Double.parseDouble(priceStr);
+            if (parts.length >= 5) {
+                String priceStr = parts[parts.length - 1].replace("đ", "").trim();
+                try {
+                    double itemPrice = Double.parseDouble(priceStr);
+                    total += itemPrice;
+                } catch (NumberFormatException e) {
+                    System.err.println("Error parsing price from item: " + item + " | Price string: " + priceStr);
+                }
+            } else {
+                System.err.println("Invalid item format: " + item);
             }
         }
-        total_monney.setText(String.format("%.1fK", total));
+        total_monney.setText(String.format(VN, "%.1fđ", total));
     }
 
     private void deleteItem(DefaultListModel<String> model, JList<String> list) {
@@ -339,37 +295,36 @@ public class Staff_Interface extends JFrame {
 
     private void printBill() {
         StringBuilder bill = new StringBuilder();
+        updateTotalMoney();
+        DateFormat formatDete = DateFormat.getDateInstance(DateFormat.LONG, VN);
+        DateFormat formatTime = DateFormat.getTimeInstance(DateFormat.LONG, VN);
+        String formattedDate = formatDete.format(new java.util.Date());
+        String formattedTime = formatTime.format(new java.util.Date());
         bill.append("================= HÓA ĐƠN ===================\n");
         bill.append("Khách hàng: ").append(textField_TKKH.getText().isEmpty() ? " " : textField_TKKH.getText())
                 .append("\n");
+        bill.append("Ngày: ").append(formattedDate).append(" ").append(formattedTime).append("\n");
         bill.append("=============================================\n");
-
-        double total = 0.0;
-
+        bill.append("Danh sách\n");
         for (int i = 0; i < placedModel.size(); i++) {
             String item = placedModel.getElementAt(i);
             bill.append(item).append("\n");
-            String[] parts = item.split(" - ");
-            if (parts.length == 3) {
-                String priceStr = parts[2].replace("K", "").trim();
-                total += Double.parseDouble(priceStr);
-            }
         }
 
+        String totalText = total_monney.getText();
         bill.append("=============================================\n");
-        bill.append("TỔNG TIỀN: ").append(String.format("%.1fK", total)).append("\n");
+        bill.append("TỔNG TIỀN: ").append(totalText).append("\n");
         bill.append("=============================================\n");
         bill.append("Cảm ơn quý khách! Hẹn gặp lại!");
 
         textArea_Bill.setText(bill.toString());
     }
 
-
     public static void main(String[] args) {
         new Staff_Interface();
         ProductDao productDao = new ProductDao();
-        productDao.closeConnection(); // Đóng kết nối   
-        List<Product> products = productDao.getArrayListProductFromSQL();  // Lấy được các sản phẩm ở cơ sở dữ liệu
+        productDao.closeConnection(); // Đóng kết nối
+        List<Product> products = productDao.getArrayListProductFromSQL(); // Lấy được các sản phẩm ở cơ sở dữ liệu
 
         for (Product product : products) {
             System.out.println(product);
