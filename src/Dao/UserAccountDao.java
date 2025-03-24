@@ -92,7 +92,7 @@ public class UserAccountDao {
         return role;
     }
 
-    // Hàm đóng database mỗi khi thực hiện xong tất cả các tác vụ
+    // Hàm đóng database mỗi khi thực hiện xong tất cả các tác vụ - Quan trọng phải có và phải gọi sau khi dùng xong
     public void closeConnection(){
         try {
             conn.close();
