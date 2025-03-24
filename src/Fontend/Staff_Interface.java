@@ -48,7 +48,7 @@ public class Staff_Interface extends JFrame {
 
         ProductDao productDao = new ProductDao();
         List<Product> products = productDao.getArrayListProductFromSQL();  // Lấy được các sản phẩm ở cơ sở dữ liệu
-        
+        productDao.closeConnection(); // Đóng kết nối
 
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -368,6 +368,7 @@ public class Staff_Interface extends JFrame {
     public static void main(String[] args) {
         new Staff_Interface();
         ProductDao productDao = new ProductDao();
+        productDao.closeConnection(); // Đóng kết nối   
         List<Product> products = productDao.getArrayListProductFromSQL();  // Lấy được các sản phẩm ở cơ sở dữ liệu
 
         for (Product product : products) {

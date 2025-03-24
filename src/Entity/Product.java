@@ -75,5 +75,10 @@ public class Product {
                 ", ingredientList=" + ingredientList +
                 '}';
     }
+
+    public void addIngredient(int aInt, String string, String string0, int aInt0, int aInt1) {
+        Ingredient ingredient = new Ingredient(aInt, string, string0, aInt0);
+        this.ingredientList.put(ingredient, aInt1); // Add ingredient to
+    }
 }
 

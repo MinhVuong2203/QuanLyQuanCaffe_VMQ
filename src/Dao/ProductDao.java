@@ -31,7 +31,10 @@ public class ProductDao {
         List<Product> list = new ArrayList<>();
         try {
             Statement stmt = conn.createStatement();
-            String sql = "SELECT * FROM Product";
+            String sql = "SELECT P.productID, P.name, P.price, P.size, P.image, IR.IngredientID, IR.name, IR.unit, IR.stockQuantity, PIR.quantity\r\n" + //
+                                "FROM [dbo].[Product] AS P\r\n" + //
+                                "JOIN [dbo].[ProductIngredient] AS PIR ON P.productID = PIR.productID\r\n" + //
+                                "JOIN [dbo].[Ingredient] AS IR ON PIR.ingredientID = IR.IngredientID";
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 Product product = new Product();
@@ -40,18 +43,9 @@ public class ProductDao {
                 product.setPrice(rs.getInt(3));
                 product.setSize(rs.getString(4));
                 product.setImage(rs.getString(5));
+                product.addIngredient(rs.getInt(6), rs.getString(7), rs.getString(8), rs.getInt(9), rs.getInt(10));
                 list.add(product);
             }
-
-            // String sql2 = "SELECT * FROM ProductIngredient";
-            // ResultSet rs2 = stmt.executeQuery(sql2);
-            // while (rs2.next()) {
-            //     for (Product product : list) {
-            //         if (product.getProductID() == rs2.getInt(1)) {
-                        
-            //         }
-            //     }
-            // }
 
             rs.close();
             stmt.close();
@@ -61,4 +55,13 @@ public class ProductDao {
         }
         return null;
     }
+
+    public void closeConnection() {
+        try {
+            conn.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }
