@@ -57,7 +57,7 @@ create table [Product](
     name nvarchar(50) NOT NULL,
     price decimal(10,2) NOT NULL,
     size nvarchar(10) NOT NULL,
-	image nvarchar(10) NOT NULL
+	image nvarchar(100) NOT NULL
 )
 
 CREATE TABLE OrderDetail (
