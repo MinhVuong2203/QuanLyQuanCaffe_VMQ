@@ -3,6 +3,7 @@ package Backend;
 import Dao.UserAccountDao;
 import Fontend.SignUp_Window;
 import Fontend.Staff_Sign;
+import Utils.InputUtils;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JCheckBox;
@@ -25,7 +26,7 @@ private SignUp_Window action;
         }
         else if (str.equals("Đăng ký")) {
             // Đăng ký
-            String name = action.getTextField_Ten().getText();
+            String name = InputUtils.getText(action.getTextField_Ten().getText(), "Họ và tên"); 
             String phone = action.getTextField_SDT().getText();
             String username = action.getTextField_TK().getText();
             String password = new String(action.getPasswordField().getPassword());
@@ -39,6 +40,7 @@ private SignUp_Window action;
                 //Thêm vào database
                 UserAccountDao userAccountDao = new UserAccountDao();
                 userAccountDao.signUp(name, phone, username, password);
+                userAccountDao.closeConnection();
                 action.dispose();
                 new Staff_Sign();
             } else {
