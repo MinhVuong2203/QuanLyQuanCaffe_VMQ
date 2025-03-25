@@ -2,6 +2,7 @@ package Entity;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class Product {
     private int productID;
@@ -80,5 +81,22 @@ public class Product {
         Ingredient ingredient = new Ingredient(aInt, string, string0, aInt0);
         this.ingredientList.put(ingredient, aInt1); // Add ingredient to
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Product product = (Product) obj;
+        return Objects.equals(name, product.name);
+    }
+
+    // Chỉ tạo hashCode dựa trên name để đảm bảo Set nhận diện trùng lặp theo tên
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
+    }
+
+
+
 }
 

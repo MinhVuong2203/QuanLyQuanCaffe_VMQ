@@ -15,8 +15,6 @@ public class test { // Cái gì test thì các bạn test ở đây
             // set là giao diện mặc định của hệ thống
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             SwingUtilities.invokeLater(() -> new WelcomeScreen());  // WelcomeScrren
-        
-            
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();

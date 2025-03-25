@@ -23,6 +23,7 @@ public class UserAccountDao {
             String password = "123456789";
             this.conn = DriverManager.getConnection(url, username, password);
             System.out.println("Kết nối thành công");
+
         } catch (Exception e) {
             e.printStackTrace();
         }

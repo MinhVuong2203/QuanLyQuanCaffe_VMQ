@@ -9,9 +9,10 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.DateFormat;
 import java.util.HashMap;
-import java.util.List;
+
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
@@ -186,33 +187,17 @@ public class Staff_Interface extends JFrame {
     }
 
     private void addData() {
-        // Không cần thiết phải thêm dữ liệu tay, chỉ cần lấy dữ liệu từ cơ sở dữ liệu
-        // String[] menuItems = {
-        // "Americano", "Espresso", "Caramel Macchiato", "Mocha Macchiato",
-        // "Latte", "Cappuccino", "Cold Brew", "Cold Brew Đào",
-        // "Matcha Latte", "Trà Thạch Vải", "Trà Thanh Đào", "Trà Sen Vàng",
-        // "Trà Xanh Đậu Đỏ", "Bánh Croissant", "Bánh Mì Que Bò Sốt Phô Mai", "Bánh Mì
-        // Que Gà Sốt Phô Mai",
-        // "Bánh Mousse (Đào, CaCao)", "Bánh Tiramisu", "Bánh Chuối"
-        // };
-
-        // double[] prices = {30, 25, 45, 50, 40, 35, 55, 60, 50, 35, 38, 40, 42, 25,
-        // 30, 32, 50, 55, 28};
-
-        // for (int i = 0; i < menuItems.length; i++) {
-        // menuModel.addElement(menuItems[i]);
-        // priceMap.put(menuItems[i], prices[i]);
-        // }
+       
         menuModel.clear(); // Xóa danh sách cũ trước khi thêm mới
         priceMap.clear(); // Xóa dữ liệu giá cũ
         ProductDao productDao = new ProductDao();
-        List<Product> products = productDao.getArrayListProductFromSQL(); // Lấy danh sách sản phẩm từ database
+        Set<Product> products = productDao.getArrayListProductFromSQL(); // Lấy danh sách sản phẩm từ database
         productDao.closeConnection(); // Đóng kết nối
 
         for (Product product : products) {
             // Hiển thị "Tên - Size - Giá"
-            String displayText = product.getName().trim() + " - " + product.getSize() + " - " + product.getPrice()
-                    + "đ";
+            String displayText = product.getName().trim();
+                  
 
             // Kiểm tra xem dữ liệu đã tồn tại hay chưa để tránh lặp
             if (!menuModel.contains(displayText)) {
@@ -323,12 +308,12 @@ public class Staff_Interface extends JFrame {
     public static void main(String[] args) {
         new Staff_Interface();
         ProductDao productDao = new ProductDao();
-        productDao.closeConnection(); // Đóng kết nối
-        List<Product> products = productDao.getArrayListProductFromSQL(); // Lấy được các sản phẩm ở cơ sở dữ liệu
-
+        Set<Product> products = productDao.getArrayListProductFromSQL(); // Lấy được các sản phẩm ở cơ sở dữ liệu
+        
         for (Product product : products) {
             System.out.println(product);
         }
+        productDao.closeConnection(); // Đóng kết nối
     }
 
 }

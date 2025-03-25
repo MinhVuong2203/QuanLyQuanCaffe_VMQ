@@ -27,10 +27,6 @@ public class TestSQLServer {
                 id_Max = rs.getInt(1) + 1;
             }
              
-
-    
-
-
             // while (rs.next()) {
             //     // System.out.println(rs.getInt(1) + " " + rs.getString(2) + " " + rs.getString(3) + " " + rs.getString(4) + rs.getString(5) + " " + rs.getString(6));
             // }
