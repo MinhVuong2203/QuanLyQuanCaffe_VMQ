@@ -247,7 +247,7 @@ public class Staff_Interface extends JFrame {
         for (int i = 0; i < placedModel.size(); i++) {
             String item = placedModel.getElementAt(i);
             String[] parts = item.split(" - ");
-            if (parts.length >= 5) {
+            if (parts.length >= 2) {
                 String priceStr = parts[parts.length - 1].replace("đ", "").trim();
                 try {
                     double itemPrice = Double.parseDouble(priceStr);
@@ -268,6 +268,7 @@ public class Staff_Interface extends JFrame {
             String selectedItem = model.get(selectedIndex);
             model.remove(selectedIndex);
             removeItemFromBill(selectedItem); // Xóa khỏi hóa đơn
+            printBill();
             updateTotalMoney();
         } else {
             JOptionPane.showMessageDialog(this, "Vui lòng chọn một món để xóa!");
@@ -311,9 +312,8 @@ public class Staff_Interface extends JFrame {
             bill.append(item).append("\n");
         }
 
-        String totalText = total_monney.getText();
         bill.append("=============================================\n");
-        bill.append("TỔNG TIỀN: ").append(totalText).append("\n");
+        bill.append("TỔNG TIỀN: ").append(total_monney.getText()).append("\n");
         bill.append("=============================================\n");
         bill.append("Cảm ơn quý khách! Hẹn gặp lại!");
 
