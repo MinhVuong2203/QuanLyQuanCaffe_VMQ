@@ -141,30 +141,30 @@ VALUES (100000, N'Khách vãng lai', '0000000000',0)
 --Product
 INSERT INTO Product (ProductID, name, price,size, image) VALUES
 -- Coffee (categoryID = 1)
-(1, N'Americano ', 49000,'M', 'src\\image\\Product_image\\Americano.png'),
-(2, N'Americano ', 55000, 'L', 'src\\image\\Product_image\\Americano.png'),
-(3, N'Espresso ', 49000, 'M', 'src\\image\\Product_image\\Espresso.png'),
-(4, N'Espresso ', 55000, 'L', 'src\\image\\Product_image\\Espresso.png'),
+(1, N'Americano', 49000,'M', 'src\\image\\Product_image\\Americano.png'),
+(2, N'Americano', 55000, 'L', 'src\\image\\Product_image\\Americano.png'),
+(3, N'Espresso', 49000, 'M', 'src\\image\\Product_image\\Espresso.png'),
+(4, N'Espresso', 55000, 'L', 'src\\image\\Product_image\\Espresso.png'),
 (5, N'Caramel Macchiato', 79000,'M', 'src\\image\\Product_image\\Caramel Macchiato.png'),
-(6, N'Caramel Macchiato ', 85000, 'L', 'src\\image\\Product_image\\Caramel Macchiato.png'),
-(7, N'Matcha Macchiato MD', 79000, 'M', 'src\\image\\Product_image\\Matcha Macchiato MD.png'),
-(8, N'Matcha Macchiato LG', 85000, 'L', 'src\\image\\Product_image\\Matcha Macchiato LG.png'),
+(6, N'Caramel Macchiato', 85000, 'L', 'src\\image\\Product_image\\Caramel Macchiato.png'),
+(7, N'Matcha Macchiato', 79000, 'M', 'src\\image\\Product_image\\Matcha Macchiato MD.png'),
+(8, N'Matcha Macchiato', 85000, 'L', 'src\\image\\Product_image\\Matcha Macchiato LG.png'),
 (9, N'Latte', 75000, 'M', 'src\\image\\Product_image\\Latte.png'),
 (10, N'Latte', 79000, 'L', 'src\\image\\Product_image\\Latte.png'),
-(11, N'Cappuchino ', 75000, 'M','src\\image\\Product_image\\Cappuchino.png'),
-(12, N'Cappuchino ', 79000, 'L', 'src\\image\\Product_image\\Cappuchino.png'),
+(11, N'Cappuchino', 75000, 'M','src\\image\\Product_image\\Cappuchino.png'),
+(12, N'Cappuchino', 79000, 'L', 'src\\image\\Product_image\\Cappuchino.png'),
 (13, N'Cold Brew', 69000, 'M', 'src\\image\\Product_image\\Cold Brew.png'),
 (14, N'Cold Brew', 79000, 'L', 'src\\image\\Product_image\\Cold Brew.png'),
-(15, N'Matcha Latte ', 49000,'M', 'src\\image\\Product_image\\Matcha Latte.png'),
-(16, N'Matcha Latte ', 55000, 'L', 'src\\image\\Product_image\\Matcha Latt.png'),
-(17, N'Trà Thạch Vải ', 55000, 'M', N'src\\image\\Product_image\\Trà Thạch Vải.png'),
-(18, N'Trà Thạch Vải ', 65000, 'L', N'src\\image\\Product_image\\Trà Thạch Vải.png'),
-(19, N'Trà Thanh Đào ', 55000, 'M',N'src\\image\\Product_image\\Trà Thanh Đào.png'),
-(20, N'Trà Thanh Đào ', 65000, 'L', N'src\\image\\Product_image\\Trà Thanh Đào.png'),
-(21, N'Trà Sen Vàng ', 55000,'M', N'src\\image\\Product_image\\Trà Sen Vàng.png'),
-(22, N'Trà Sen Vàng ', 65000,'L', N'src\\image\\Product_image\\Trà Sen Vàng.png'),
-(23, N'Trà Xanh Đậu Đỏ ', 55000,'M', N'src\\image\\Product_image\\Trà Xanh Đậu Đỏ.png'),
-(24, N'Trà Xanh Đậu Đỏ ', 65000,'L', N'src\\image\\Product_image\\Trà Xanh Đậu Đỏ.png'),
+(15, N'Matcha Latte', 49000,'M', 'src\\image\\Product_image\\Matcha Latte.png'),
+(16, N'Matcha Latte', 55000, 'L', 'src\\image\\Product_image\\Matcha Latt.png'),
+(17, N'Trà Thạch Vải', 55000, 'M', N'src\\image\\Product_image\\Trà Thạch Vải.png'),
+(18, N'Trà Thạch Vải', 65000, 'L', N'src\\image\\Product_image\\Trà Thạch Vải.png'),
+(19, N'Trà Thanh Đào', 55000, 'M',N'src\\image\\Product_image\\Trà Thanh Đào.png'),
+(20, N'Trà Thanh Đào', 65000, 'L', N'src\\image\\Product_image\\Trà Thanh Đào.png'),
+(21, N'Trà Sen Vàng', 55000,'M', N'src\\image\\Product_image\\Trà Sen Vàng.png'),
+(22, N'Trà Sen Vàng', 65000,'L', N'src\\image\\Product_image\\Trà Sen Vàng.png'),
+(23, N'Trà Xanh Đậu Đỏ', 55000,'M', N'src\\image\\Product_image\\Trà Xanh Đậu Đỏ.png'),
+(24, N'Trà Xanh Đậu Đỏ', 65000,'L', N'src\\image\\Product_image\\Trà Xanh Đậu Đỏ.png'),
 (25, N'Bánh Croissant', 29000,'M', N'src\\image\\Product_image\\Bánh Croissant.png'),
 (26, N'Bánh Mì Que Bò Sốt Phô Mai', 19000,'M', N'src\\image\\Product_image\\Bánh Mì Que Bò Sốt Phô Mai.png'),
 (27, N'Bánh Mì Que Gà Sốt Phô Mai', 29000,'L', N'src\\image\\Product_image\\Bánh Mì Que Gà Sốt Phô Mai.png'),
@@ -172,6 +172,10 @@ INSERT INTO Product (ProductID, name, price,size, image) VALUES
 (29, N'Bánh Mousse CaCao', 35000,'M', N'src\\image\\Product_image\\Bánh Mousse CaCao.png'),
 (30, N'Bánh Taramisu', 35000,'M', N'src\\image\\Product_image\\Bánh Taramisu.png'),
 (31, N'Bánh Chuối', 35000,'M', N'src\\image\\Product_image\\Bánh Chuối.png');
+
+DELETE FROM ProductIngredient
+DELETE FROM OrderDetail
+DELETE FROM [dbo].[Product]
 
 --TableCaffe
 INSERT INTO TableCaffe (TableID, status, tableName) VALUES
