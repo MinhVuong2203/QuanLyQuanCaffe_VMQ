@@ -5,7 +5,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 
@@ -27,9 +29,10 @@ public class ProductDao {
         }
     }
 
-    public Set<Product> getArrayListProductFromSQL() {
+    public List<Product> getArrayListProductFromSQL() {
         // code here
-        Set<Product> list = new LinkedHashSet<>();
+        // Set<Product> list = new LinkedHashSet<>();
+        List<Product> list = new ArrayList<>();
         try {
             Statement stmt = conn.createStatement();
             String sql = "SELECT * FROM Product";
