@@ -2,10 +2,13 @@ package Dao;
 
 
 import Fontend.Staff_Sign;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.Properties;
 import javax.swing.JOptionPane;
 
 public class UserAccountDao {
@@ -14,16 +17,25 @@ public class UserAccountDao {
 
 
     public UserAccountDao() {
-         try { 
-            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-            String url = "jdbc:sqlserver://localhost:1433;databaseName=CaffeVMQ;encrypt=false";
-            // String url = "jdbc:sqlserver://192.168.155.223:1433;databaseName=CaffeVMQ;user=sa;password=123456789;encrypt=false;trustServerCertificate=true;";
+        try { 
+            Properties properties = new Properties();
 
-            String username = "sa";
-            String password = "123456789";
-            this.conn = DriverManager.getConnection(url, username, password);
+            try (FileInputStream fis = new FileInputStream("src/resource/database.properties")) {
+                properties.load(fis);
+            } catch (IOException e) {
+                System.err.println("Không thể đọc file database.properties");
+                e.printStackTrace();
+                return;
+            }
+
+            String url = properties.getProperty("url");
+            String username = properties.getProperty("username");
+            String password = properties.getProperty("password");
+            String driver = properties.getProperty("Driver");
+
+            Class.forName(driver);
+            this.conn = DriverManager.getConnection(url , username, password);
             System.out.println("Kết nối thành công");
-
         } catch (Exception e) {
             e.printStackTrace();
         }
