@@ -198,19 +198,36 @@ public class Staff_Interface extends JFrame {
         ProductDao productDao = new ProductDao();
         Set<Product> products = productDao.getArrayListProductFromSQL(); // Lấy danh sách sản phẩm từ database
         productDao.closeConnection(); // Đóng kết nối
+        // for (Product product : products) {
+        // // String size = product.getSize();
+        // String name = product.getName();
+        // String size = product.getSize();
+        // productMap.put(name, size);
+        // }
         for (Product product : products) {
-            // String size = product.getSize();
-            productMap.put(product.getName(), product.getSize());
-        }
-        for (Product product : products) {
-            String displayText = product.getName().trim();
+            // String displayText = product.getName().trim();
             // String size = product.getSize();
             // productMap.computeIfAbsent(name, k -> new ArrayList<>()).add(product);
             // String key = name + " - " + size;
-            if (!menuModel.contains(displayText)) {
-                menuModel.addElement(displayText);
-                priceMap.put(displayText, product.getPrice());
-            }
+            // if (!menuModel.contains(displayText)) {
+            // menuModel.addElement(displayText);
+            // priceMap.put(displayText, product.getPrice());
+            // }
+            String name = product.getName().trim();
+            String size = product.getSize().trim();
+            double price = product.getPrice();
+
+            // Tạo chuỗi hiển thị bao gồm tên và kích thước để phân biệt
+            String displayText = name + " (" + size + ")";
+
+            // Thêm vào menuModel bất kể trùng tên, vì có size để phân biệt
+            menuModel.addElement(displayText);
+
+            // Lưu giá vào priceMap với key là displayText
+            priceMap.put(displayText, price);
+
+            // Lưu thông tin sản phẩm vào productMap
+            productMap.put(displayText, size);
         }
     }
 
@@ -321,6 +338,10 @@ public class Staff_Interface extends JFrame {
             // set là giao diện mặc định của hệ thống
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             new Staff_Interface();
+            // ProductDao dao = new ProductDao();
+            // Set<Product> products = dao.getArrayListProductFromSQL();
+            // products.forEach(System.out::println);
+            // dao.closeConnection();
             // ProductDao productDao = new ProductDao();
             // Set<Product> products = productDao.getArrayListProductFromSQL(); // Lấy được
             // các sản phẩm ở cơ sở dữ liệu
