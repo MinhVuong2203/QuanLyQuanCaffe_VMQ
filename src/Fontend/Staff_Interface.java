@@ -8,11 +8,13 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.List;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
@@ -32,6 +34,7 @@ public class Staff_Interface extends JFrame {
     private JTextField textField_TKKH;
     private JTextField total_monney;
     private Map<String, Double> priceMap;
+    private Map<String, String> productMap;
 
     private JTextArea textArea_Bill;
 
@@ -58,6 +61,7 @@ public class Staff_Interface extends JFrame {
 
         menuModel = new DefaultListModel<>();
         priceMap = new HashMap<>();
+        productMap = new HashMap<>();
 
         addData();
 
@@ -187,19 +191,22 @@ public class Staff_Interface extends JFrame {
     }
 
     private void addData() {
-       
         menuModel.clear(); // Xóa danh sách cũ trước khi thêm mới
         priceMap.clear(); // Xóa dữ liệu giá cũ
+        productMap.clear(); // Xóa dữ liệu sản phẩm cũ
+
         ProductDao productDao = new ProductDao();
         Set<Product> products = productDao.getArrayListProductFromSQL(); // Lấy danh sách sản phẩm từ database
         productDao.closeConnection(); // Đóng kết nối
-
         for (Product product : products) {
-            // Hiển thị "Tên - Size - Giá"
+            // String size = product.getSize();
+            productMap.put(product.getName(), product.getSize());
+        }
+        for (Product product : products) {
             String displayText = product.getName().trim();
-                  
-
-            // Kiểm tra xem dữ liệu đã tồn tại hay chưa để tránh lặp
+            // String size = product.getSize();
+            // productMap.computeIfAbsent(name, k -> new ArrayList<>()).add(product);
+            // String key = name + " - " + size;
             if (!menuModel.contains(displayText)) {
                 menuModel.addElement(displayText);
                 priceMap.put(displayText, product.getPrice());
@@ -253,7 +260,7 @@ public class Staff_Interface extends JFrame {
             String selectedItem = model.get(selectedIndex);
             model.remove(selectedIndex);
             removeItemFromBill(selectedItem); // Xóa khỏi hóa đơn
-            printBill();
+            // printBill();
             updateTotalMoney();
         } else {
             JOptionPane.showMessageDialog(this, "Vui lòng chọn một món để xóa!");
@@ -275,8 +282,8 @@ public class Staff_Interface extends JFrame {
                 updatedBill.append(line).append("\n");
             }
         }
-
         textArea_Bill.setText(updatedBill.toString().trim());
+        // printBill();
     }
 
     private void printBill() {
@@ -306,14 +313,26 @@ public class Staff_Interface extends JFrame {
     }
 
     public static void main(String[] args) {
-        new Staff_Interface();
-        ProductDao productDao = new ProductDao();
-        Set<Product> products = productDao.getArrayListProductFromSQL(); // Lấy được các sản phẩm ở cơ sở dữ liệu
-        
-        for (Product product : products) {
-            System.out.println(product);
+        try {
+            // com.sun.java.swing.plaf.gtk.GTKLookAndFeel
+            // com.sun.java.swing.plaf.motif.MotifLookAndFeel
+            // com.sun.java.swing.plaf.windows.WindowsLookAndFeel
+            // UIManager.setLookAndFeel("com.sun.java.swing.plaf.motif.MotifLookAndFeel");
+            // set là giao diện mặc định của hệ thống
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            new Staff_Interface();
+            // ProductDao productDao = new ProductDao();
+            // Set<Product> products = productDao.getArrayListProductFromSQL(); // Lấy được
+            // các sản phẩm ở cơ sở dữ liệu
+
+            // for (Product product : products) {
+            // System.out.println(product);
+            // }
+            // productDao.closeConnection(); // Đóng kết nối
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
         }
-        productDao.closeConnection(); // Đóng kết nối
     }
 
 }
