@@ -251,7 +251,7 @@ public class Staff_Interface extends JFrame {
 
     private void addToOrder(String dishName) {
         String selectedSize;
-        String inputSize;
+        int inputSize;
         boolean checkSize = false;
         String displayText;
 
@@ -276,23 +276,18 @@ public class Staff_Interface extends JFrame {
                 }
             }
         } else {
-            do {
-                inputSize = JOptionPane.showInputDialog(this,
-                        "Chọn size cho " + dishName + " (M hoặc L): ",
-                        "Chọn Size", JOptionPane.QUESTION_MESSAGE);
-                if (inputSize == null) {
-                    return;
-                }
+            
+                String[] options = {"M", "L"};
+                inputSize = JOptionPane.showOptionDialog(this,
+                        "Chọn size cho " + dishName,
+                        "Chọn Size", JOptionPane.DEFAULT_OPTION,// Kiểu của hộp thoại (không cần các nút mặc định như YES/NO)
+                        JOptionPane.QUESTION_MESSAGE, // Kiểu biểu tượng hiển thị (dấu chấm hỏi)
+                        null,                      // Icon tùy chỉnh (null để sử dụng mặc định)
+                        options,                   // Mảng các tùy chọn để hiển thị ({"M", "L"})
+                        options[0] );                // Giá trị mặc định được chọn ban đầu ("M")
+                            
 
-                inputSize = inputSize.trim().toUpperCase();
-                checkSize = inputSize.equals("M") || inputSize.equals("L");
-                if (!checkSize) {
-                    JOptionPane.showMessageDialog(this,
-                            "Kích thước không hợp lệ! Chỉ chấp nhận M hoặc L.",
-                            "Lỗi", JOptionPane.ERROR_MESSAGE);
-                }
-            } while (checkSize == false);
-            selectedSize = inputSize;
+            selectedSize = options[inputSize];
             displayText = dishName + " (" + selectedSize + ")";
     
             String quantity = JOptionPane.showInputDialog(this, "Nhập số lượng cho " + displayText + ": ", "Số Lượng",
