@@ -34,7 +34,7 @@ public class Staff_Interface extends JFrame {
     private JTextField textField_TKKH;
     private JTextField total_monney;
     private Map<String, Double> priceMap;
-    private Map<String, String> productMap;
+    private Map<String, String> imgMap;
 
     private JTextArea textArea_Bill;
 
@@ -61,7 +61,7 @@ public class Staff_Interface extends JFrame {
 
         menuModel = new DefaultListModel<>();
         priceMap = new HashMap<>();
-        productMap = new HashMap<>();
+        imgMap = new HashMap<>();
 
         addData();
 
@@ -110,7 +110,7 @@ public class Staff_Interface extends JFrame {
         contentPane.add(scrollPane_Menu);
 
         listMenu = createHorizontalList(menuModel);
-        setColor_Select(listMenu);
+        // setColor_Select(listMenu);
         listMenu.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -171,6 +171,37 @@ public class Staff_Interface extends JFrame {
         list.setVisibleRowCount(0); // Cho phép tự động xuống dòng khi không đủ không gian
         list.setFixedCellWidth(490); // Thiết lập độ rộng tối đa của mỗi item
         list.setFixedCellHeight(50); // Thiết lập chiều cao của mỗi item
+
+        //hien thi hinh anh
+        list.setCellRenderer(new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                JLabel label = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                String dishName = value.toString();
+                String imagePath = imgMap.get(dishName);
+    
+                // Thêm hình ảnh nếu tồn tại
+                if (imagePath != null) {
+                    ImageIcon icon = new ImageIcon(imagePath);
+                    // Điều chỉnh kích thước hình ảnh (ví dụ: 80x80)
+                    Image scaledImage = icon.getImage().getScaledInstance(80, 80, Image.SCALE_SMOOTH);
+                    label.setIcon(new ImageIcon(scaledImage));
+                } else {
+                    label.setIcon(null); // Không có hình ảnh thì để trống
+                    System.out.println("Khong dung duong dan");
+                }
+    
+                label.setText(dishName);
+                label.setHorizontalTextPosition(SwingConstants.RIGHT); // Tên món bên phải hình ảnh
+                label.setIconTextGap(10); // Khoảng cách giữa hình ảnh và chữ
+    
+                if (isSelected) {
+                    label.setBackground(new Color(231, 215, 200));
+                }
+    
+                return label;
+            }
+        });
         return list;
     }
 
@@ -193,60 +224,94 @@ public class Staff_Interface extends JFrame {
     private void addData() {
         menuModel.clear(); // Xóa danh sách cũ trước khi thêm mới
         priceMap.clear(); // Xóa dữ liệu giá cũ
-        productMap.clear(); // Xóa dữ liệu sản phẩm cũ
 
         ProductDao productDao = new ProductDao();
-        Set<Product> products = productDao.getArrayListProductFromSQL(); // Lấy danh sách sản phẩm từ database
+        List<Product> products = productDao.getArrayListProductFromSQL(); // Lấy danh sách sản phẩm từ database
         productDao.closeConnection(); // Đóng kết nối
-        // for (Product product : products) {
-        // // String size = product.getSize();
-        // String name = product.getName();
-        // String size = product.getSize();
-        // productMap.put(name, size);
-        // }
         for (Product product : products) {
-            // String displayText = product.getName().trim();
-            // String size = product.getSize();
-            // productMap.computeIfAbsent(name, k -> new ArrayList<>()).add(product);
-            // String key = name + " - " + size;
-            // if (!menuModel.contains(displayText)) {
-            // menuModel.addElement(displayText);
-            // priceMap.put(displayText, product.getPrice());
-            // }
             String name = product.getName().trim();
             String size = product.getSize().trim();
             double price = product.getPrice();
+            String imgPath = product.getImage();
 
             // Tạo chuỗi hiển thị bao gồm tên và kích thước để phân biệt
-            String displayText = name + " (" + size + ")";
+            // String displayText = name + " (" + size + ")";
+            String displayText = name.toLowerCase().contains("bánh") ? name : name + " (" + size + ")";
 
             // Thêm vào menuModel bất kể trùng tên, vì có size để phân biệt
-            menuModel.addElement(displayText);
+            if (!menuModel.contains(name)) {
+                menuModel.addElement(name);
+            }
 
             // Lưu giá vào priceMap với key là displayText
             priceMap.put(displayText, price);
-
-            // Lưu thông tin sản phẩm vào productMap
-            productMap.put(displayText, size);
+            imgMap.put(displayText, imgPath);
         }
     }
 
     private void addToOrder(String dishName) {
-        String quantity = JOptionPane.showInputDialog(this, "Nhập số lượng cho " + dishName + ": ", "Số Lượng",
-                JOptionPane.QUESTION_MESSAGE);
-        if (quantity != null && !quantity.trim().isEmpty()) {
-            try {
-                int qty = Integer.parseInt(quantity);
-                if (qty > 0) {
-                    double price = priceMap.get(dishName);
-                    double totalItemPrice = price * qty;
-                    placedModel.addElement(dishName + " - Số lượng: " + qty + " - " + totalItemPrice + "đ  ");
-                    updateTotalMoney();
-                } else {
-                    JOptionPane.showMessageDialog(this, "Số lượng phải lớn hơn 0!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        String selectedSize;
+        String inputSize;
+        boolean checkSize = false;
+        String displayText;
+
+        if (dishName.toLowerCase().contains("bánh")) {
+            String quantity = JOptionPane.showInputDialog(this, "Nhập số lượng cho " + dishName + ": ", "Số Lượng",
+                    JOptionPane.QUESTION_MESSAGE);
+            if (quantity != null && !quantity.trim().isEmpty()) {
+                try {
+                    int qty = Integer.parseInt(quantity);
+                    if (qty > 0) {
+                        double price = priceMap.get(dishName);
+                        double totalItemPrice = price * qty;
+                        placedModel.addElement(
+                                dishName + " - " + price + "đ" + " - Số lượng: " + qty + " - " + totalItemPrice + "đ");
+                        updateTotalMoney();
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Số lượng phải lớn hơn 0!", "Lỗi",
+                                JOptionPane.ERROR_MESSAGE);
+                    }
+                } catch (NumberFormatException e) {
+                    JOptionPane.showMessageDialog(this, "Vui lòng nhập số hợp lệ!", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 }
-            } catch (NumberFormatException e) {
-                JOptionPane.showMessageDialog(this, "Vui lòng nhập số hợp lệ!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            do {
+                inputSize = JOptionPane.showInputDialog(this,
+                        "Chọn size cho " + dishName + " (M hoặc L): ",
+                        "Chọn Size", JOptionPane.QUESTION_MESSAGE);
+                if (inputSize == null) {
+                    return;
+                }
+
+                inputSize = inputSize.trim().toUpperCase();
+                checkSize = inputSize.equals("M") || inputSize.equals("L");
+                if (!checkSize) {
+                    JOptionPane.showMessageDialog(this,
+                            "Kích thước không hợp lệ! Chỉ chấp nhận M hoặc L.",
+                            "Lỗi", JOptionPane.ERROR_MESSAGE);
+                }
+            } while (checkSize == false);
+            selectedSize = inputSize;
+            displayText = dishName + " (" + selectedSize + ")";
+    
+            String quantity = JOptionPane.showInputDialog(this, "Nhập số lượng cho " + displayText + ": ", "Số Lượng",
+                    JOptionPane.QUESTION_MESSAGE);
+            if (quantity != null && !quantity.trim().isEmpty()) {
+                try {
+                    int qty = Integer.parseInt(quantity);
+                    if (qty > 0) {
+                        double price = priceMap.get(displayText);
+                        double totalItemPrice = price * qty;
+                        placedModel.addElement(
+                                displayText + " - " + price + "đ" + " - Số lượng: " + qty + " - " + totalItemPrice + "đ");
+                        updateTotalMoney();
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Số lượng phải lớn hơn 0!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                    }
+                } catch (NumberFormatException e) {
+                    JOptionPane.showMessageDialog(this, "Vui lòng nhập số hợp lệ!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                }
             }
         }
     }
