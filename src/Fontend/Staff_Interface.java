@@ -8,12 +8,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.DateFormat;
-import java.util.ArrayList;
 import java.util.HashMap;
-
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 import java.util.List;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -252,7 +249,6 @@ public class Staff_Interface extends JFrame {
     private void addToOrder(String dishName) {
         String selectedSize;
         int inputSize;
-        boolean checkSize = false;
         String displayText;
 
         if (dishName.toLowerCase().contains("bánh")) {
@@ -276,16 +272,14 @@ public class Staff_Interface extends JFrame {
                 }
             }
         } else {
-            
-                String[] options = {"M", "L"};
-                inputSize = JOptionPane.showOptionDialog(this,
-                        "Chọn size cho " + dishName,
-                        "Chọn Size", JOptionPane.DEFAULT_OPTION,// Kiểu của hộp thoại (không cần các nút mặc định như YES/NO)
-                        JOptionPane.QUESTION_MESSAGE, // Kiểu biểu tượng hiển thị (dấu chấm hỏi)
-                        null,                      // Icon tùy chỉnh (null để sử dụng mặc định)
-                        options,                   // Mảng các tùy chọn để hiển thị ({"M", "L"})
-                        options[0] );                // Giá trị mặc định được chọn ban đầu ("M")
-                            
+            String[] options = {"M", "L"}; // Danh sách lựa chọn
+            inputSize = JOptionPane.showOptionDialog(this,
+                    "Chọn size cho " + dishName,
+                    "Chọn Size", JOptionPane.DEFAULT_OPTION,// Kiểu của hộp thoại (không cần các nút mặc định như YES/NO)
+                    JOptionPane.QUESTION_MESSAGE, // Kiểu biểu tượng hiển thị (dấu chấm hỏi)
+                    null,                      // Icon tùy chỉnh (null để sử dụng mặc định)
+                    options,                   // Mảng các tùy chọn để hiển thị ({"M", "L"})
+                    options[0]);                // Giá trị mặc định được chọn ban đầu ("M")                  
 
             selectedSize = options[inputSize];
             displayText = dishName + " (" + selectedSize + ")";
