@@ -266,7 +266,7 @@ public class Staff_Interface extends JFrame {
         String selectedSize;
         int inputSize;
         String displayText;
-
+    
         if (dishName.toLowerCase().contains("bánh")) {
             String quantity = JOptionPane.showInputDialog(this, "Nhập số lượng cho " + dishName + ": ", "Số Lượng",
                     JOptionPane.QUESTION_MESSAGE);
@@ -275,28 +275,24 @@ public class Staff_Interface extends JFrame {
                     int qty = Integer.parseInt(quantity);
                     if (qty > 0) {
                         double price = priceMap.get(dishName);
-                        double totalItemPrice = price * qty;
-                        placedModel.addElement(
-                                dishName + " - " + price + "đ" + " - Số lượng: " + qty + " - " + totalItemPrice + "đ");
+                        updateOrAddItem(dishName, price, qty);
                         updateTotalMoney();
                     } else {
-                        JOptionPane.showMessageDialog(this, "Số lượng phải lớn hơn 0!", "Lỗi",
-                                JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(this, "Số lượng phải lớn hơn 0!", "Lỗi", JOptionPane.ERROR_MESSAGE);
                     }
                 } catch (NumberFormatException e) {
                     JOptionPane.showMessageDialog(this, "Vui lòng nhập số hợp lệ!", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 }
             }
         } else {
-            String[] options = {"M", "L"}; // Danh sách lựa chọn
+            String[] options = {"M", "L"};
             inputSize = JOptionPane.showOptionDialog(this,
                     "Chọn size cho " + dishName,
-                    "Chọn Size", JOptionPane.DEFAULT_OPTION,// Kiểu của hộp thoại (không cần các nút mặc định như YES/NO)
-                    JOptionPane.QUESTION_MESSAGE, // Kiểu biểu tượng hiển thị (dấu chấm hỏi)
-                    null,                      // Icon tùy chỉnh (null để sử dụng mặc định)
-                    options,                   // Mảng các tùy chọn để hiển thị ({"M", "L"})
-                    options[0]);                // Giá trị mặc định được chọn ban đầu ("M")                  
-
+                    "Chọn Size", JOptionPane.DEFAULT_OPTION,
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    options,
+                    options[0]);
             selectedSize = options[inputSize];
             displayText = dishName + " (" + selectedSize + ")";
     
@@ -307,9 +303,7 @@ public class Staff_Interface extends JFrame {
                     int qty = Integer.parseInt(quantity);
                     if (qty > 0) {
                         double price = priceMap.get(displayText);
-                        double totalItemPrice = price * qty;
-                        placedModel.addElement(
-                                displayText + " - " + price + "đ" + " - Số lượng: " + qty + " - " + totalItemPrice + "đ");
+                        updateOrAddItem(displayText, price, qty);
                         updateTotalMoney();
                     } else {
                         JOptionPane.showMessageDialog(this, "Số lượng phải lớn hơn 0!", "Lỗi", JOptionPane.ERROR_MESSAGE);
@@ -319,6 +313,26 @@ public class Staff_Interface extends JFrame {
                 }
             }
         }
+    }
+    
+    private void updateOrAddItem(String displayText, double price, int additionalQty) {
+        String item;
+        double totalItemPrice;
+        for (int i = 0; i < placedModel.size(); i++) {
+            item = placedModel.getElementAt(i);
+            if (item.contains(displayText)) {
+                // Món đã tồn tại, cập nhật số lượng và giá tiền
+                String[] parts = item.split(" - ");
+                int currentQty = Integer.parseInt(parts[2].replace("Số lượng: ", "").trim());
+                int newQty = currentQty + additionalQty;
+                totalItemPrice = price * newQty;
+                placedModel.set(i, displayText + " - " + price + "đ - Số lượng: " + newQty + " - " + totalItemPrice + "đ");
+                return; // Thoát sau khi cập nhật
+            }
+        }
+        // Nếu món chưa tồn tại, thêm mới
+        totalItemPrice = price * additionalQty;
+        placedModel.addElement(displayText + " - " + price + "đ - Số lượng: " + additionalQty + " - " + totalItemPrice + "đ");
     }
 
     private void updateTotalMoney() {
