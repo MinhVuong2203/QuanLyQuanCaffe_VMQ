@@ -327,7 +327,7 @@ public class Staff_Interface extends JFrame {
                 int newQty = currentQty + additionalQty;
                 totalItemPrice = price * newQty;
                 placedModel.set(i, displayText + " - " + price + "đ - Số lượng: " + newQty + " - " + totalItemPrice + "đ");
-                return; // Thoát sau khi cập nhật
+                return;
             }
         }
         // Nếu món chưa tồn tại, thêm mới
