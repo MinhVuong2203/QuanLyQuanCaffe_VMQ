@@ -8,8 +8,11 @@ import Fontend.WelcomeScreen;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JCheckBox;
+import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.SwingUtilities;
+
+import org.mindrot.jbcrypt.BCrypt;
 
 public class Listen_StaffWindow implements ActionListener {
     private Staff_Sign action;
@@ -26,25 +29,29 @@ public class Listen_StaffWindow implements ActionListener {
         if (str.equals("Quay lại")) {
             action.dispose();
             SwingUtilities.invokeLater(() -> new WelcomeScreen().setVisible(true));
-        }else if (str.equals("Đăng Ký")) {
+        }else if (str.equals("Đăng ký")) {
             action.dispose();
             new SignUp_Window();
         }
 
-        else if (str.equals("Đăng Nhập")) {
+        else if (str.equals("Đăng nhập")) {
             // Đăng nhập
-            UserAccountDao userAccountDao = new UserAccountDao(); // Tạo đối tượng UserAccountDao để lấy dữ liệu từ database
             String userName = action.getTextField().getText(); // Lấy tên đăng nhập từ TextField
             String password = new String(action.getPasswordField().getPassword()); // Lấy mật khẩu từ PasswordField
-            String id = userAccountDao.login(userName, password);  // thực hiện đăng nhập và trả về id
-            System.out.println(id);
-            if (id != null){ // Nếu đăng nhập thành công thì lấy role
-                String role = userAccountDao.getRoleFromID(id);
-                System.out.println(role);
-                action.dispose();
-                new Staff_Interface(); // Mở giao diện Staff_Interface
+            if (userName.isEmpty() || password.isEmpty()){
+                JOptionPane.showMessageDialog(action, "Vui lòng nhập đầy đủ tài khoản và mật khẩu!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            } else {
+                UserAccountDao userAccountDao = new UserAccountDao(); // Tạo đối tượng UserAccountDao để lấy dữ liệu từ database
+                String id = userAccountDao.login(userName, password);  // thực hiện đăng nhập và trả về id
+                System.out.println(id);
+                if (id != null){ // Nếu đăng nhập thành công thì lấy role
+                    String role = userAccountDao.getRoleFromID(id);
+                    System.out.println(role);
+                    action.dispose();
+                    new Staff_Interface(); // Mở giao diện Staff_Interface
+                }
+                userAccountDao.closeConnection();
             }
-            userAccountDao.closeConnection();
         }
         
         if (e.getSource() instanceof JCheckBox) {

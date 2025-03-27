@@ -64,7 +64,7 @@ public class Staff_Sign extends JFrame {
 
         ActionListener ac = new Listen_StaffWindow(this);
 
-        JButton btnNewButton = new JButton("Đăng Nhập");
+        JButton btnNewButton = new JButton("Đăng nhập");
 		btnNewButton.setFont(new Font("Arial", Font.PLAIN, 16));
 		btnNewButton.setBounds(93, 212, 111, 26);
 		contentPane.add(btnNewButton);
@@ -81,17 +81,17 @@ public class Staff_Sign extends JFrame {
         passwordField.setFont(new Font("Arial", Font.PLAIN, 16));
 		contentPane.add(passwordField);
 
-        JLabel lblNewLabel_1 = new JLabel("Tài Khoản:");
+        JLabel lblNewLabel_1 = new JLabel("Tài khoản:");
         lblNewLabel_1.setFont(new Font("Arial", Font.PLAIN, 18));
         lblNewLabel_1.setBounds(34, 143, 87, 23);
         contentPane.add(lblNewLabel_1);
 
-        JLabel lblNewLabel_2 = new JLabel("Mật Khẩu:");
+        JLabel lblNewLabel_2 = new JLabel("Mật khẩu:");
         lblNewLabel_2.setFont(new Font("Arial", Font.PLAIN, 18));
         lblNewLabel_2.setBounds(39, 180, 85, 20);
         contentPane.add(lblNewLabel_2);
 
-        JButton btnNewButton_1 = new JButton("Đăng Ký");
+        JButton btnNewButton_1 = new JButton("Đăng ký");
 		btnNewButton_1.setFont(new Font("Arial", Font.PLAIN, 16));
 		btnNewButton_1.setBounds(229, 212, 111, 26);
         btnNewButton_1.addActionListener(ac);

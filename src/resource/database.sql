@@ -1,8 +1,8 @@
 ﻿
 CREATE TABLE UserAccount(
     ID int PRIMARY KEY,
-    username char(20) NOT NULL,
-    password char(20) NOT NULL,
+    username varchar(100) NOT NULL,
+    [password] varchar(100) NOT NULL,
     role nvarchar(50) NOT NULL
 )
 

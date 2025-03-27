@@ -11,6 +11,8 @@ import java.sql.Statement;
 import java.util.Properties;
 import javax.swing.JOptionPane;
 
+import org.mindrot.jbcrypt.BCrypt;
+
 public class UserAccountDao {
     private Connection conn;
     private Staff_Sign staff_Sign;
@@ -53,7 +55,7 @@ public class UserAccountDao {
             String getID = ""; // Lấy ID đúng để biết là ai đăng nhập
             boolean check = false;  
             while (rs.next()) {
-                if (userName.equals(rs.getString(2).trim()) && passWord.equals(rs.getString(3).trim())) {
+                if (userName.equals(rs.getString(2).trim()) && BCrypt.checkpw(passWord, rs.getString(3).trim())){
                     getID = rs.getString(1);
                     rs.close();
                     stmt.close();
@@ -105,19 +107,6 @@ public class UserAccountDao {
         }
     }
 
-    // public void signUp(){ // Chưa đúng
-    //     try {
-    //         Statement stmt = conn.createStatement();
-    //         String sql = "INSERT INTO UserAccount VALUES ('" + action.getTextField().getText() + "', '" + new String(action.getPasswordField().getPassword()) + "')";
-    //         stmt.executeUpdate(sql);
-    //         JOptionPane.showMessageDialog(null, "Đăng ký thành công", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-    //         stmt.close();
-    //     } catch (Exception e) {
-    //         e.printStackTrace();
-    //     }
-    // }
-
-
     public String getRoleFromID(String id){
         String role = "";
         try {
@@ -133,6 +122,20 @@ public class UserAccountDao {
             e.printStackTrace();
         }
         return role;
+    }
+
+    public boolean checkEqualsUserName(String username){
+        try{
+            Statement stmt = conn.createStatement();
+            String sql = "SELECT [username]\r\n" + //
+                        "FROM [UserAccount]\r\n" + //
+                        "WHERE [username] = '" + username + "'";
+            ResultSet rs = stmt.executeQuery(sql);
+            if (rs.next()) return true;
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return false; // Không tồn tại
     }
 
     // Hàm đóng database mỗi khi thực hiện xong tất cả các tác vụ - Quan trọng phải có và phải gọi sau khi dùng xong

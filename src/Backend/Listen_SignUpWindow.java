@@ -1,5 +1,7 @@
 package Backend;
 
+import Dao.CustomerDao;
+import Dao.EmployeeDao;
 import Dao.UserAccountDao;
 import Fontend.SignUp_Window;
 import Fontend.Staff_Sign;
@@ -9,6 +11,8 @@ import java.awt.event.ActionListener;
 import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
+
+import org.mindrot.jbcrypt.BCrypt;
 
 public class Listen_SignUpWindow implements ActionListener {
 private SignUp_Window action;
@@ -32,6 +36,10 @@ private SignUp_Window action;
             String password = new String(action.getPasswordField().getPassword());
             String confirmPassword = new String(action.getPasswordField_CF().getPassword());
 
+            UserAccountDao userAccountDao = new UserAccountDao();
+            CustomerDao customerDao = new CustomerDao();
+            EmployeeDao employeeDao = new EmployeeDao();
+
             if (!ValidationUtils.isNotEmpty(name)) 
                 JOptionPane.showMessageDialog(action, "Họ và tên không được bỏ trống", "Lỗi", JOptionPane.ERROR_MESSAGE);
             else if (!ValidationUtils.isNotEmpty(phone)) 
@@ -46,16 +54,20 @@ private SignUp_Window action;
                 JOptionPane.showMessageDialog(action, "Họ và tên không hợp lệ", "Lỗi", JOptionPane.ERROR_MESSAGE);
             else if (!ValidationUtils.isPhoneNumber(phone))
                 JOptionPane.showMessageDialog(action, "Số điện thoại không hợp lệ", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            else if (customerDao.checkEqualsPhone(phone) || employeeDao.checkEqualsPhone(phone))
+                JOptionPane.showMessageDialog(action, "Số điện thoại đã tồn tại. Không được dùng số điện thoại của người khác nhé!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             else if (!ValidationUtils.isUsername(username))
                 JOptionPane.showMessageDialog(action, "Tên đăng nhập phải ít nhất 8 kí tự gồm: chữ hoa, chữ thường và số", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            else if (userAccountDao.checkEqualsUserName(username))
+                JOptionPane.showMessageDialog(action, "Tên đăng nhập đã tồn tại. Vui lòng suy nghĩ một cái tên khác hay hơn", "Lỗi", JOptionPane.ERROR_MESSAGE);
             else if (!ValidationUtils.isPassword(password))
                 JOptionPane.showMessageDialog(action, "Mật khẩu phải ít nhất 8 kí tự gồm: chữ hoa, chữ thường, số hoặc kí tự đặc biệt", "Lỗi", JOptionPane.ERROR_MESSAGE);
             else if (!password.equals(confirmPassword))
                 JOptionPane.showMessageDialog(action, "Nhập lại mật khẩu không khớp", "Lỗi", JOptionPane.ERROR_MESSAGE);
             else{
-                    System.out.println("Tên: " + name + " SĐT: " + phone + " TK: " + username + " MK: " + password);
-                    UserAccountDao userAccountDao = new UserAccountDao();
-                    userAccountDao.signUp(name, phone, username, password);
+                    String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt(12));  // Mã hóa mật khẩu bằng BCrypt
+                    System.out.println("Tên: " + name + " SĐT: " + phone + " TK: " + username + " MK: " + password + " Mã hóa: " + hashedPassword);
+                    userAccountDao.signUp(name, phone, username, hashedPassword);
                     userAccountDao.closeConnection();
                     action.dispose();
                     new Staff_Sign();
