@@ -167,36 +167,51 @@ public class Staff_Interface extends JFrame {
         // list.setVisibleRowCount(1);
         list.setVisibleRowCount(0); // Cho phép tự động xuống dòng khi không đủ không gian
         list.setFixedCellWidth(490); // Thiết lập độ rộng tối đa của mỗi item
-        list.setFixedCellHeight(50); // Thiết lập chiều cao của mỗi item
+        list.setFixedCellHeight(300); // Thiết lập chiều cao của mỗi item
 
         //hien thi hinh anh
         list.setCellRenderer(new DefaultListCellRenderer() {
             @Override
             public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-                JLabel label = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                JPanel panel = new JPanel();
+                panel.setLayout(new BorderLayout());
+                panel.setBackground(new Color(231, 215, 200));
+    
+                // Tạo nhãn cho hình ảnh
+                JLabel imageLabel = new JLabel();
+                imageLabel.setHorizontalAlignment(SwingConstants.CENTER);
                 String dishName = value.toString();
-                String imagePath = imgMap.get(dishName);
+                String imgPath = imgMap.get(dishName); // Lấy đường dẫn hình ảnh từ imgMap
     
-                // Thêm hình ảnh nếu tồn tại
-                if (imagePath != null) {
-                    ImageIcon icon = new ImageIcon(imagePath);
-                    // Điều chỉnh kích thước hình ảnh (ví dụ: 80x80)
-                    Image scaledImage = icon.getImage().getScaledInstance(80, 80, Image.SCALE_SMOOTH);
-                    label.setIcon(new ImageIcon(scaledImage));
+                if (imgPath != null && !imgPath.isEmpty()) {
+                    try {
+                        ImageIcon icon = new ImageIcon(imgPath); // Tải hình ảnh từ đường dẫn
+                        Image scaledImage = icon.getImage().getScaledInstance(250, 250, Image.SCALE_SMOOTH); // Điều chỉnh kích thước hình ảnh
+                        imageLabel.setIcon(new ImageIcon(scaledImage));
+                        // imageLabel.setText("Tải được ảnh");
+                    } catch (Exception e) {
+                        // imageLabel.setText("Không tải được ảnh");
+                        e.printStackTrace();
+                    }
                 } else {
-                    label.setIcon(null); // Không có hình ảnh thì để trống
-                    System.out.println("Khong dung duong dan");
+                    imageLabel.setText("Không có ảnh");
                 }
     
-                label.setText(dishName);
-                label.setHorizontalTextPosition(SwingConstants.RIGHT); // Tên món bên phải hình ảnh
-                label.setIconTextGap(10); // Khoảng cách giữa hình ảnh và chữ
+                // Tạo nhãn cho tên món
+                JLabel nameLabel = new JLabel(dishName);
+                nameLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+                nameLabel.setHorizontalAlignment(SwingConstants.CENTER);
     
+                // Thêm hình ảnh và tên vào panel
+                panel.add(imageLabel, BorderLayout.CENTER);
+                panel.add(nameLabel, BorderLayout.SOUTH);
+    
+                // Đổi màu nền khi được chọn
                 if (isSelected) {
-                    label.setBackground(new Color(231, 215, 200));
+                    panel.setBackground(new Color(200, 180, 150)); // Màu nền khi được chọn
                 }
     
-                return label;
+                return panel;
             }
         });
         return list;
@@ -221,6 +236,7 @@ public class Staff_Interface extends JFrame {
     private void addData() {
         menuModel.clear(); // Xóa danh sách cũ trước khi thêm mới
         priceMap.clear(); // Xóa dữ liệu giá cũ
+        imgMap.clear();
 
         ProductDao productDao = new ProductDao();
         List<Product> products = productDao.getArrayListProductFromSQL(); // Lấy danh sách sản phẩm từ database
@@ -242,7 +258,7 @@ public class Staff_Interface extends JFrame {
 
             // Lưu giá vào priceMap với key là displayText
             priceMap.put(displayText, price);
-            imgMap.put(displayText, imgPath);
+            imgMap.put(name, imgPath);
         }
     }
 
