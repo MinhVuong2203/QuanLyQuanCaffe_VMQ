@@ -9,9 +9,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.DateFormat;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.List;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
@@ -40,10 +40,6 @@ public class Staff_Interface extends JFrame {
      */
     public Staff_Interface() {
 
-        // ProductDao productDao = new ProductDao();
-        // List<Product> products = productDao.getArrayListProductFromSQL(); // Lấy được
-        // các sản phẩm ở cơ sở dữ liệu
-        // productDao.closeConnection(); // Đóng kết nối
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setExtendedState(JFrame.MAXIMIZED_BOTH);

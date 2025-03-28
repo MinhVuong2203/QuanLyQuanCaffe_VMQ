@@ -1,16 +1,18 @@
 package Backend;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JCheckBox;
+import javax.swing.JOptionPane;
+import javax.swing.JPasswordField;
+
 import Dao.CustomerDao;
 import Dao.EmployeeDao;
 import Dao.UserAccountDao;
 import Fontend.SignUp_Window;
 import Fontend.Staff_Sign;
 import Utils.ValidationUtils;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import javax.swing.JCheckBox;
-import javax.swing.JOptionPane;
-import javax.swing.JPasswordField;
 
 public class Listen_SignUpWindow implements ActionListener {
 private SignUp_Window action;
