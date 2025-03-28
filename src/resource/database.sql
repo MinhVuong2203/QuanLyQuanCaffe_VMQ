@@ -137,26 +137,25 @@ VALUES
 INSERT INTO [dbo].[Customer]([customerID],[name],[phone],[point])
 VALUES (100000, N'Khách vãng lai', '0000000000',0)
 
-
 --Product
 INSERT INTO Product (ProductID, name, price,size, image) VALUES
 -- Coffee (categoryID = 1)
-(1, N'Americano', 49000,'M', 'src\\image\\Product_image\\Americano.png'),
-(2, N'Americano', 55000, 'L', 'src\\image\\Product_image\\Americano.png'),
-(3, N'Espresso', 49000, 'M', 'src\\image\\Product_image\\Espresso.png'),
-(4, N'Espresso', 55000, 'L', 'src\\image\\Product_image\\Espresso.png'),
-(5, N'Caramel Macchiato', 79000,'M', 'src\\image\\Product_image\\Caramel Macchiato.png'),
-(6, N'Caramel Macchiato', 85000, 'L', 'src\\image\\Product_image\\Caramel Macchiato.png'),
-(7, N'Moccha Macchiato', 79000, 'M', 'src\\image\\Product_image\\Moccha Macchiato.png'),
-(8, N'Moccha Macchiato', 85000, 'L', 'src\\image\\Product_image\\Moccha Macchiato.png'),
-(9, N'Latte', 75000, 'M', 'src\\image\\Product_image\\Latte.png'),
-(10, N'Latte', 79000, 'L', 'src\\image\\Product_image\\Latte.png'),
-(11, N'Cappuchino', 75000, 'M','src\\image\\Product_image\\Cappuchino.png'),
-(12, N'Cappuchino', 79000, 'L', 'src\\image\\Product_image\\Cappuchino.png'),
-(13, N'Cold Brew', 69000, 'M', 'src\\image\\Product_image\\Cold Brew.png'),
-(14, N'Cold Brew', 79000, 'L', 'src\\image\\Product_image\\Cold Brew.png'),
-(15, N'Matcha Latte', 49000,'M', 'src\\image\\Product_image\\Matcha Latte.png'),
-(16, N'Matcha Latte', 55000, 'L', 'src\\image\\Product_image\\Matcha Latte.png'),
+(1, N'Americano', 49000,'M', N'src\\image\\Product_image\\Americano.png'),
+(2, N'Americano', 55000, 'L', N'src\\image\\Product_image\\Americano.png'),
+(3, N'Espresso', 49000, 'M', N'src\\image\\Product_image\\Espresso.png'),
+(4, N'Espresso', 55000, 'L', N'src\\image\\Product_image\\Espresso.png'),
+(5, N'Caramel Macchiato', 79000,'M', N'src\\image\\Product_image\\Caramel Macchiato.png'),
+(6, N'Caramel Macchiato', 85000, 'L', N'src\\image\\Product_image\\Caramel Macchiato.png'),
+(7, N'Moccha Macchiato', 79000, 'M', N'src\\image\\Product_image\\Moccha Macchiato.png'),
+(8, N'Moccha Macchiato', 85000, 'L', N'src\\image\\Product_image\\Moccha Macchiato.png'),
+(9, N'Latte', 75000, 'M', N'src\\image\\Product_image\\Latte.png'),
+(10, N'Latte', 79000, 'L', N'src\\image\\Product_image\\Latte.png'),
+(11, N'Cappuchino', 75000, 'M',N'src\\image\\Product_image\\Cappuchino.png'),
+(12, N'Cappuchino', 79000, 'L', N'src\\image\\Product_image\\Cappuchino.png'),
+(13, N'Cold Brew', 69000, 'M', N'src\\image\\Product_image\\Cold Brew.png'),
+(14, N'Cold Brew', 79000, 'L', N'src\\image\\Product_image\\Cold Brew.png'),
+(15, N'Matcha Latte', 49000,'M', N'src\\image\\Product_image\\Matcha Latte.png'),
+(16, N'Matcha Latte', 55000, 'L', N'src\\image\\Product_image\\Matcha Latte.png'),
 (17, N'Trà Thạch Vải', 55000, 'M', N'src\\image\\Product_image\\Trà Thạch Vải.png'),
 (18, N'Trà Thạch Vải', 65000, 'L', N'src\\image\\Product_image\\Trà Thạch Vải.png'),
 (19, N'Trà Thanh Đào', 55000, 'M',N'src\\image\\Product_image\\Trà Thanh Đào.png'),
@@ -172,6 +171,8 @@ INSERT INTO Product (ProductID, name, price,size, image) VALUES
 (29, N'Bánh Mousse CaCao', 35000,'M', N'src\\image\\Product_image\\Bánh Mousse CaCao.png'),
 (30, N'Bánh Taramisu', 35000,'M', N'src\\image\\Product_image\\Bánh Taramisu.png'),
 (31, N'Bánh Chuối', 35000,'M', N'src\\image\\Product_image\\Bánh Chuối.png');
+
+
 
 DELETE FROM ProductIngredient
 DELETE FROM OrderDetail
@@ -362,3 +363,16 @@ VALUES
 (2, 2, N'Thẻ tín dụng', 55000.00, '2025-03-24 09:20:00'),
 (3, 3, N'Ví điện tử', 49000.00, '2025-03-24 09:45:00'),
 (4, 4, N'Tiền mặt', 55000.00, '2025-03-24 10:15:00');
+
+
+
+
+
+
+-- password nè :))
+--  Minh123@
+--  Quy1234@
+--	Vuong123@
+
+-- Khách
+-- 16: taiNguyen1

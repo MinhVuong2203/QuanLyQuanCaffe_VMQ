@@ -12,7 +12,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.SwingUtilities;
 
-import org.mindrot.jbcrypt.BCrypt;
 
 public class Listen_StaffWindow implements ActionListener {
     private Staff_Sign action;

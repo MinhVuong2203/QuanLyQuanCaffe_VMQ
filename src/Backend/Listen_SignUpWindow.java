@@ -12,8 +12,6 @@ import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 
-import org.mindrot.jbcrypt.BCrypt;
-
 public class Listen_SignUpWindow implements ActionListener {
 private SignUp_Window action;
 	public Listen_SignUpWindow(SignUp_Window action) {
@@ -65,7 +63,7 @@ private SignUp_Window action;
             else if (!password.equals(confirmPassword))
                 JOptionPane.showMessageDialog(action, "Nhập lại mật khẩu không khớp", "Lỗi", JOptionPane.ERROR_MESSAGE);
             else{
-                    String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt(12));  // Mã hóa mật khẩu bằng BCrypt
+                    String hashedPassword = PasswordHasherSHA256.hashPassword(password);
                     System.out.println("Tên: " + name + " SĐT: " + phone + " TK: " + username + " MK: " + password + " Mã hóa: " + hashedPassword);
                     userAccountDao.signUp(name, phone, username, hashedPassword);
                     userAccountDao.closeConnection();

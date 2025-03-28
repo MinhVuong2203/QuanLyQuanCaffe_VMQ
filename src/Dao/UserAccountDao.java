@@ -1,6 +1,5 @@
 package Dao;
-
-
+import Backend.PasswordHasherSHA256;
 import Fontend.Staff_Sign;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -11,7 +10,6 @@ import java.sql.Statement;
 import java.util.Properties;
 import javax.swing.JOptionPane;
 
-import org.mindrot.jbcrypt.BCrypt;
 
 public class UserAccountDao {
     private Connection conn;
@@ -55,7 +53,7 @@ public class UserAccountDao {
             String getID = ""; // Lấy ID đúng để biết là ai đăng nhập
             boolean check = false;  
             while (rs.next()) {
-                if (userName.equals(rs.getString(2).trim()) && BCrypt.checkpw(passWord, rs.getString(3).trim())){
+                if (userName.equals(rs.getString(2).trim()) && PasswordHasherSHA256.verifyPassword(passWord, rs.getString(3).trim())){
                     getID = rs.getString(1);
                     rs.close();
                     stmt.close();
