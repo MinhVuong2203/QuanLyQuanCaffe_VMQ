@@ -10,6 +10,7 @@ import javax.swing.*;
 public class Customer_Interface extends JFrame {
     private List<String> pictrueList = new ArrayList<>();
     private Map<Integer, Integer> orderMap = new java.util.HashMap<>();
+    private Map<Integer, Integer> tempOrderMap = new java.util.HashMap<>();
     private Map<String,String> paymentMap = new java.util.HashMap<>();
     private ArrayList<Integer> quantityList = new ArrayList<>();
 	private DefaultListModel<String> menuModel;
@@ -113,7 +114,7 @@ public class Customer_Interface extends JFrame {
             ImageIcon originalIcon = new ImageIcon(imagePath);
             Image originalImage = originalIcon.getImage();
 
-            // Scale ảnh theo kích thước mong muốn (VD: 100x100)
+            // Scale ảnh theo kích thước mong muốn (VD: 250x250)
             Image scaledImage = originalImage.getScaledInstance(250, 250, Image.SCALE_SMOOTH);
             ImageIcon scaledIcon = new ImageIcon(scaledImage);
 
@@ -155,9 +156,9 @@ public class Customer_Interface extends JFrame {
                 textArea.append("--------------------------------\n");
             
                 double totalPrice = 0;
-                for (Integer key : orderMap.keySet()) {
+                for (Integer key : tempOrderMap.keySet()) {
                     String name = menuModel.get(key);
-                    int quantity = orderMap.get(key);
+                    int quantity = tempOrderMap.get(key);
                     Double price = priceMap.get(name); // Kiểm tra giá trị null
                     if (price == null) price = 0.0;
                     double subTotal = price * quantity;
@@ -180,6 +181,9 @@ public class Customer_Interface extends JFrame {
                 inputPanel.add(customerName);
                 inputPanel.add(new JLabel("Phương thức thanh toán:"));
                 inputPanel.add(paymentMethod);
+                String name = customerName.getText();
+                String payment = paymentMethod.getText();
+                paymentMap.put(name, payment);
             
                 // Nút xác nhận
                 JButton button = new JButton("Xác nhận");
@@ -189,7 +193,10 @@ public class Customer_Interface extends JFrame {
                     } else {
                         paymentMap.put(customerName.getText(), paymentMethod.getText());
                         JOptionPane.showMessageDialog(confirmFrame, "Đơn hàng của bạn đã được xác nhận!");
+                        orderMap = tempOrderMap;
+                        tempOrderMap.clear();
                         confirmFrame.dispose();
+                        
                     }
                 });
                 JScrollPane scrollPane1 = new JScrollPane(textArea);
@@ -221,7 +228,7 @@ public class Customer_Interface extends JFrame {
         //Hàm tạo order từ số lượng trong các cell
         for(int i=0;i<quantityList.size();i++){
             if(quantityList.get(i)>0){
-                orderMap.put(i, quantityList.get(i));
+                tempOrderMap.put(i, quantityList.get(i));
             }
         }
     }
