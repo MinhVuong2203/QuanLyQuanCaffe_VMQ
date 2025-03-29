@@ -1,6 +1,9 @@
 package Fontend;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.*;
 
 public class Staff_view extends JFrame {
@@ -94,7 +97,7 @@ public class Staff_view extends JFrame {
         contentPanel.setBackground(Color.LIGHT_GRAY);
 
         // thêm staffInterface
-        staffInterface = new Staff_Interface();
+        Staff_Interface staffInterface = new Staff_Interface();
         contentPanel.add(staffInterface, BorderLayout.CENTER);
 
         // JSplitPane để sidebar có thể thay đổi kích thước
