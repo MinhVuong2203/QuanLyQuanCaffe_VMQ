@@ -1,8 +1,6 @@
 package Fontend;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import javax.swing.*;
 
 public class Staff_view extends JFrame {
@@ -11,13 +9,10 @@ public class Staff_view extends JFrame {
     private JSplitPane splitPane;
     private boolean isSidebarExpanded = true;
     private JButton toggleButton;
-    private Staff_Interface staffInterface; // Add this line
 
     public Staff_view() {
         setTitle("Giao Diện Thu Ngân - Quán Cafe");
         setExtendedState(JFrame.MAXIMIZED_BOTH);
-        setSize(1920, 1080);
-        // setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         getContentPane().setLayout(new BorderLayout());
@@ -83,10 +78,10 @@ public class Staff_view extends JFrame {
         // Khu vực chính hiển thị nội dung
         JPanel contentPanel = new JPanel(new BorderLayout());
         contentPanel.setBackground(Color.LIGHT_GRAY);
+        JLabel welcomeLabel = new JLabel("Chào mừng đến với hệ thống thu ngân!", JLabel.CENTER);
+        welcomeLabel.setFont(new Font("Arial", Font.BOLD, 20));
         
-        //thêm staffInterface
-        staffInterface = new Staff_Interface();
-        contentPanel.add(staffInterface, BorderLayout.CENTER);
+        contentPanel.add(new Staff_Interface(), BorderLayout.CENTER);
 
         // JSplitPane để sidebar có thể thay đổi kích thước
         splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, sidebar, contentPanel);
