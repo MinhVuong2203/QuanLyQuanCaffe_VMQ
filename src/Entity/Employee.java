@@ -3,8 +3,8 @@ public class Employee extends User{
     protected String role;
     protected double hourlyWage;
 
-    public Employee(int id, String name, String phone, String username, String password, double hourlyWage) {
-        super(id, name, phone, username, password, "Nhân viên");
+    public Employee(int id, String name, String phone, String image, String username, String password, double hourlyWage) {
+        super(id, name, phone, image, username, password, "Nhân viên");
         this.hourlyWage = hourlyWage;
     }
 
@@ -19,6 +19,6 @@ public class Employee extends User{
 
     @Override
     public String toString() {
-        return "Employee{" + "id=" + id + ", name=" + name + ", phone=" + phone + ", username=" + username + ", password=" + password + ", role=" + role + ", hourlyWage=" + hourlyWage + '}';
+        return "Employee{" + "id=" + id + ", name=" + name + ", phone=" + phone + ", image=" + image + ", username=" + username + ", password=" + password + ", role=" + role + ", hourlyWage=" + hourlyWage + '}';
     }
 }

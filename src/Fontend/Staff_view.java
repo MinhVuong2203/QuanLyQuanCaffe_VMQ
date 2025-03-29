@@ -1,9 +1,8 @@
 package Fontend;
 
+import Utils.GradientPanel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
+import java.awt.event.*;
 import javax.swing.*;
 
 public class Staff_view extends JFrame {
@@ -11,7 +10,7 @@ public class Staff_view extends JFrame {
     private JPanel sidebar;
     private JSplitPane splitPane;
     private boolean isSidebarExpanded = true;
-    private JButton toggleButton;
+    private Timer mouseTracker;
 
     public Staff_view() {
         setTitle("Giao Diện Thu Ngân - Quán Cafe");
@@ -28,13 +27,13 @@ public class Staff_view extends JFrame {
 
         JLabel lblName = new JLabel("Nguyễn Minh Vương");
         lblName.setFont(new Font("Arial", Font.BOLD, 16));
-        lblName.setBounds(128, 12, 195, 22);
+        lblName.setBounds(103, 12, 195, 22);
         panel.add(lblName);
 
         JLabel lblID = new JLabel("ID: 1234");
         lblID.setForeground(Color.RED);
         lblID.setFont(new Font("Arial", Font.PLAIN, 11));
-        lblID.setBounds(128, 44, 140, 18);
+        lblID.setBounds(103, 44, 140, 18);
         panel.add(lblID);
 
         JLabel lblTime = new JLabel("Thời gian hiện tại:");
@@ -45,29 +44,36 @@ public class Staff_view extends JFrame {
         lblShift.setBounds(780, 50, 150, 30);
         panel.add(lblShift);
 
-        // Nút toggle sidebar
-        toggleButton = new JButton(">");
-        panel.add(toggleButton);
-        toggleButton.setFont(new Font("Tahoma", Font.PLAIN, 12));
-        toggleButton.setFocusPainted(false);
-        toggleButton.setBounds(0, 77, 48, 23);
+        JLabel lblNewLabel = new JLabel();
+        lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        String imgPath = "src\\image\\Employee_Image\\Employee_default.png";
+        if (imgPath != null && !imgPath.isEmpty()){
+            try{
+                ImageIcon icon = new ImageIcon(imgPath);
+                Image scaledImage = icon.getImage().getScaledInstance(60, 60, Image.SCALE_SMOOTH);
+                lblNewLabel.setIcon(new ImageIcon(scaledImage));
+            } catch(Exception e){
+                e.printStackTrace();
+            }
+        }
 
-        JLabel lblNewLabel = new JLabel("ẢNH");
-        lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 34));
-        lblNewLabel.setBounds(21, 12, 97, 57);
+
+        lblNewLabel.setBounds(20, 0, 73, 71);
         panel.add(lblNewLabel);
-        toggleButton.addActionListener(e -> toggleSidebar());
 
         // Sidebar (Thanh menu bên trái)
         sidebar = new JPanel(new BorderLayout());
-        sidebar.setPreferredSize(new Dimension(200, getHeight()));
+        sidebar.setPreferredSize(new Dimension(10, getHeight()));
         sidebar.setBackground(new Color(44, 62, 80));
 
-        // Panel chứa menu
-        JPanel menuPanel = new JPanel(new GridLayout(5, 1, 5, 5));
-        menuPanel.setBackground(new Color(44, 62, 80));
+        
 
-        String[] buttonLabels = { "Tạo hóa đơn", "Danh sách hóa đơn", "Thanh toán", "Điểm danh", "Đăng xuất" };
+        // Panel chứa menu
+        // JPanel menuPanel = new JPanel(new GridLayout(10, 1, 0, 0));
+        GradientPanel menuPanel = new GradientPanel(new Color(27, 94, 32), 	new Color(56, 142, 60));
+        menuPanel.setLayout(new GridLayout(10, 1, 0, 0));
+
+        String[] buttonLabels = { "Tạo hóa đơn", "Danh sách hóa đơn", "Thanh toán", "Điểm danh", "Đăng xuất"};
         for (String label : buttonLabels) {
             JButton button = new JButton(label);
             button.setFocusPainted(false);
@@ -104,26 +110,62 @@ public class Staff_view extends JFrame {
         splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, sidebar, contentPanel);
         splitPane.setDividerSize(5);
         splitPane.setEnabled(false); // Vô hiệu hóa kéo tay
-        splitPane.setDividerLocation(200); // Sidebar mặc định mở
-
+        splitPane.setDividerLocation(10); // Sidebar mặc định mở
         getContentPane().add(splitPane, BorderLayout.CENTER);
-
+        
+        startMouseTracking();
     }
 
-    // Phương thức toggle sidebar
-    private void toggleSidebar() {
-        if (isSidebarExpanded) {
-            sidebar.setPreferredSize(new Dimension(0, getHeight())); // Thu nhỏ sidebar
-            toggleButton.setText("<"); // Đổi icon khi ẩn
-        } else {
-            sidebar.setPreferredSize(new Dimension(200, getHeight())); // Mở rộng sidebar
-            toggleButton.setText(">"); // Đổi icon khi mở
-        }
-        isSidebarExpanded = !isSidebarExpanded;
-        splitPane.setDividerLocation(sidebar.getPreferredSize().width);
-        revalidate(); // Cập nhật lại layout
-        repaint();
+    // Đọc vị trí chuột mỗi 100ms
+    private void startMouseTracking() {
+        mouseTracker = new Timer(100, e -> {
+            Point mousePoint = MouseInfo.getPointerInfo().getLocation();
+            SwingUtilities.convertPointFromScreen(mousePoint, this);
+    
+            int mouseX = mousePoint.x;
+            int sidebarRightEdge = sidebar.getWidth();
+    
+            if (mouseX <= 10 && !isSidebarExpanded) {
+                toggleSidebar(true); // Mở sidebar khi chuột gần mép trái
+            } else if (mouseX > sidebarRightEdge + 50 && isSidebarExpanded) {
+                toggleSidebar(false); // Thu sidebar khi chuột rời xa
+            }
+        });
+    
+        mouseTracker.start();
     }
+    
+    
+    private void toggleSidebar(boolean expand) {
+        int targetWidth = expand ? 180 : 4; // Kích thước mục tiêu
+        int step = (expand ? 60 : -60); // Mỗi lần tăng/giảm 5px
+    
+        Timer timer = new Timer(3, new ActionListener() {
+            int width = sidebar.getWidth();
+    
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                width += step;
+                if ((expand && width >= targetWidth) || (!expand && width <= targetWidth)) {
+                    width = targetWidth; // Đảm bảo không vượt quá mục tiêu
+                    ((Timer) e.getSource()).stop();
+                    isSidebarExpanded = expand;
+                }
+    
+                final int finalWidth = width;
+                SwingUtilities.invokeLater(() -> {
+                    sidebar.setPreferredSize(new Dimension(finalWidth, getHeight()));
+                    splitPane.setDividerLocation(finalWidth);
+                    sidebar.revalidate();
+                    sidebar.repaint();
+                });
+            }
+        });
+    
+        timer.start();
+    }
+    
+    
 
     public static void main(String[] args) {
         try {

@@ -1,5 +1,6 @@
 package Dao;
 
+import Backend.PasswordHasherSHA256;
 import Fontend.Staff_Sign;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -9,7 +10,6 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Properties;
 import javax.swing.JOptionPane;
-import Backend.PasswordHasherSHA256;
 
 
 public class UserAccountDao {
@@ -94,8 +94,9 @@ public class UserAccountDao {
         try{
             Statement stmt = conn.createStatement();
             int IDMax = this.getIDMaxFromSQL() + 1; // Lấy ID lớn nhất trong database và cộng thêm 1 để tạo một id mới
+            String image = "src\\image\\Customer_Image\\Customer_default.png";
             String sql= "INSERT INTO UserAccount VALUES (" + IDMax + ", '" + userName + "', '" + passWord + "', '" + "Khách" + "')";
-            String sql2 = "INSERT INTO Customer VALUES (" + IDMax + ", N'" + name + "', '" + sdt + "', " + 0 + ")";
+            String sql2 = "INSERT INTO Customer VALUES (" + IDMax + ", N'" + name + "', '" + sdt + "', " + 0 + "N'" + image + "'" + ")";
             stmt.executeUpdate(sql);
             stmt.executeUpdate(sql2);
             JOptionPane.showMessageDialog(null, "Đăng ký thành công", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
