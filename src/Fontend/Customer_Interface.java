@@ -121,6 +121,7 @@ public class Customer_Interface extends JFrame {
         }
 
         JScrollPane scrollPane = new JScrollPane(gridPanel);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16); 
         add(scrollPane, BorderLayout.CENTER);
 
         JPanel fixedPanel = new JPanel();
