@@ -10,13 +10,19 @@ CREATE TABLE Employee(
     employeeID int NOT NULL,
     foreign key (employeeID) references UserAccount(ID),
 	PRIMARY KEY (employeeID),
-    name nvarchar(50) NOT NULL,
+    [name] nvarchar(50) NOT NULL,
     phone char(10) NOT NULL CHECK (phone LIKE '[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]'),
     hourWage int NOT NULL,
 	CCCD CHAR(12) NOT NULL CHECK (CCCD LIKE '[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]'),
 	birthDate DATE NOT NULL,
-	gender NVARCHAR(10) NOT NULL CHECK (gender IN (N'Nam', N'Nữ'))
+	gender NVARCHAR(10) NOT NULL CHECK (gender IN (N'Nam', N'Nữ')),
+	[image] NVARCHAR(255)
 )
+
+ALTER TABLE Employee
+ADD [image] NVARCHAR(255)
+ALTER TABLE Customer
+ADD [image] NVARCHAR(255)
 
 
 
@@ -27,6 +33,7 @@ CREATE TABLE Customer(
     name nvarchar(50) NOT NULL,
     phone char(10) NULL CHECK (phone LIKE '[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]'),
     point int NOT NULL CHECK(point>=0),
+	[image] NVARCHAR(255)
 )
 
 
