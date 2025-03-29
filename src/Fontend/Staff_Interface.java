@@ -362,7 +362,7 @@ public class Staff_Interface extends JPanel {
 
     private void printBill() {
         StringBuilder bill = new StringBuilder();
-        if (list_dishSelected.isSelectionEmpty()) {
+        if (placedModel.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Vui lòng chọn món ăn trước khi in hóa đơn!", "Thông báo",
                     JOptionPane.INFORMATION_MESSAGE);
             return;
