@@ -1,4 +1,5 @@
 package Fontend;
+
 import Dao.ProductDao;
 import Entity.Product;
 import java.awt.*;
@@ -11,22 +12,23 @@ public class Customer_Interface extends JFrame {
     private List<String> pictrueList = new ArrayList<>();
     private Map<Integer, Integer> orderMap = new java.util.HashMap<>();
     private Map<Integer, Integer> tempOrderMap = new java.util.HashMap<>();
-    private Map<String,String> paymentMap = new java.util.HashMap<>();
+    private Map<String, String> paymentMap = new java.util.HashMap<>();
     private ArrayList<Integer> quantityList = new ArrayList<>();
-	private DefaultListModel<String> menuModel;
-    
+    private DefaultListModel<String> menuModel;
+
     private Map<String, Double> priceMap = new java.util.HashMap<>();
+
     private void getData() {
         quantityList.clear();
         priceMap.clear();
         pictrueList.clear();
         menuModel = new DefaultListModel<>();
-        
+
         ArrayList<String> menu = new ArrayList<String>();
         ProductDao productDao = new ProductDao();
         List<Product> products = productDao.getArrayListProductFromSQL(); // Lấy danh sách sản phẩm từ database
         productDao.closeConnection(); // Đóng kết nối
-        int i=0;
+        int i = 0;
         for (Product product : products) {
             menu.add(product.getName() + " size " + product.getSize());
             priceMap.put(product.getName() + " size " + product.getSize(), product.getPrice());
@@ -37,17 +39,15 @@ public class Customer_Interface extends JFrame {
             menuModel.addElement(item);
         }
         for (int j = 0; j < menuModel.size(); j++) {
-            quantityList.add(0);  // Mặc định số lượng = 0
+            quantityList.add(0); // Mặc định số lượng = 0
         }
-        
+
     }
-
-    
-
 
     public Customer_Interface() {
         setTitle("Giao diện Cell từ Database");
-        setSize(500, 500);
+        // setSize(500, 500);
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
         menuModel = new DefaultListModel<>();
@@ -65,7 +65,7 @@ public class Customer_Interface extends JFrame {
             final int index = i; // Lưu index hiện tại để sử dụng trong ActionListener
             String name = menuModel.get(index);
             JPanel cell = new JPanel();
-            //Kích thước cell
+            // Kích thước cell
             cell.setPreferredSize(new Dimension(350, 500));
             cell.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
             cell.setBackground(new Color(231, 215, 200));
@@ -79,8 +79,7 @@ public class Customer_Interface extends JFrame {
             btnMinus.setFont(new Font("Arial", Font.BOLD, 12));
 
             // Label hiển thị số lượng
-           
-            
+
             JLabel quantityLabel = new JLabel(String.valueOf(quantityList.get(index)), SwingConstants.CENTER);
             quantityLabel.setPreferredSize(new Dimension(30, 20));
 
@@ -88,13 +87,12 @@ public class Customer_Interface extends JFrame {
             JButton btnPlus = new JButton("+");
             btnPlus.setFont(new Font("Arial", Font.BOLD, 12));
 
-
             btnPlus.addActionListener(e -> {
                 int newQuantity = quantityList.get(index) + 1;
                 quantityList.set(index, newQuantity);
                 quantityLabel.setText(String.valueOf(newQuantity));
             });
-            
+
             btnMinus.addActionListener(e -> {
                 int quantity = quantityList.get(index);
                 if (quantity > 0) {
@@ -102,15 +100,14 @@ public class Customer_Interface extends JFrame {
                     quantityLabel.setText(String.valueOf(quantity - 1));
                 }
             });
-            
 
             // Thêm thành phần vào panel điều khiển
             controlPanel.add(btnMinus);
             controlPanel.add(quantityLabel);
             controlPanel.add(btnPlus);
             cell.add(controlPanel, BorderLayout.SOUTH);
-            //Thêm ảnh vào panel
-            String imagePath = pictrueList.get(i); 
+            // Thêm ảnh vào panel
+            String imagePath = pictrueList.get(i);
             ImageIcon originalIcon = new ImageIcon(imagePath);
             Image originalImage = originalIcon.getImage();
 
@@ -125,9 +122,6 @@ public class Customer_Interface extends JFrame {
 
         JScrollPane scrollPane = new JScrollPane(gridPanel);
         add(scrollPane, BorderLayout.CENTER);
-        
-       
-
 
         JPanel fixedPanel = new JPanel();
         fixedPanel.setBackground(Color.LIGHT_GRAY);
@@ -135,16 +129,16 @@ public class Customer_Interface extends JFrame {
         JButton ConfirmButton = new JButton("Xác nhận");
         ConfirmButton.setFont(new Font("Arial", Font.BOLD, 12));
         ConfirmButton.addActionListener((actionEvent) -> {
-            if(quantityList.stream().anyMatch(i -> i > 0)){
+            if (quantityList.stream().anyMatch(i -> i > 0)) {
                 // Hàm lấy số lượng từ các cell và tạo order
                 createOrder();
-            
+
                 // Tạo JDialog
                 JDialog confirmFrame = new JDialog(this, "Xác nhận đơn hàng", true);
                 confirmFrame.setSize(400, 300);
                 confirmFrame.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
                 confirmFrame.setLayout(new BorderLayout());
-            
+
                 // Tạo JTextArea để hiển thị đơn hàng
                 JTextArea textArea = new JTextArea();
                 textArea.setEditable(false);
@@ -154,27 +148,26 @@ public class Customer_Interface extends JFrame {
                 textArea.setText("Đơn hàng của bạn bao gồm:\n");
                 textArea.append("Sản phẩm             \tSố lượng\tThành tiền\n");
                 textArea.append("--------------------------------\n");
-            
+
                 double totalPrice = 0;
                 for (Integer key : tempOrderMap.keySet()) {
                     String name = menuModel.get(key);
                     int quantity = tempOrderMap.get(key);
                     Double price = priceMap.get(name); // Kiểm tra giá trị null
-                    if (price == null) price = 0.0;
+                    if (price == null)
+                        price = 0.0;
                     double subTotal = price * quantity;
                     totalPrice += subTotal;
                     textArea.append(name + "\t" + quantity + "\t" + subTotal + "\n");
                 }
                 textArea.append("--------------------------------\n");
                 textArea.append("Tổng cộng: " + totalPrice);
-            
-                
-            
+
                 // Panel chứa thông tin nhập
                 JPanel inputPanel = new JPanel();
                 inputPanel.setLayout(new GridLayout(2, 2, 10, 10)); // 2 hàng, 2 cột
                 inputPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-            
+
                 JTextField customerName = new JTextField();
                 JTextField paymentMethod = new JTextField();
                 inputPanel.add(new JLabel("Tên khách hàng:"));
@@ -184,19 +177,20 @@ public class Customer_Interface extends JFrame {
                 String name = customerName.getText();
                 String payment = paymentMethod.getText();
                 paymentMap.put(name, payment);
-            
+
                 // Nút xác nhận
                 JButton button = new JButton("Xác nhận");
                 button.addActionListener(e -> {
                     if (customerName.getText().isEmpty() || paymentMethod.getText().isEmpty()) {
-                        JOptionPane.showMessageDialog(confirmFrame, "Vui lòng nhập đầy đủ thông tin!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(confirmFrame, "Vui lòng nhập đầy đủ thông tin!", "Lỗi",
+                                JOptionPane.ERROR_MESSAGE);
                     } else {
                         paymentMap.put(customerName.getText(), paymentMethod.getText());
                         JOptionPane.showMessageDialog(confirmFrame, "Đơn hàng của bạn đã được xác nhận!");
                         orderMap = tempOrderMap;
                         tempOrderMap.clear();
                         confirmFrame.dispose();
-                        
+
                     }
                 });
                 JScrollPane scrollPane1 = new JScrollPane(textArea);
@@ -206,37 +200,32 @@ public class Customer_Interface extends JFrame {
                 confirmFrame.add(inputPanel, BorderLayout.NORTH);
                 confirmFrame.add(button, BorderLayout.SOUTH);
                 confirmFrame.add(textArea, BorderLayout.CENTER);
-            
+
                 // Hiển thị JDialog
                 confirmFrame.setVisible(true);
-                }
-            else{
+            } else {
                 JOptionPane.showMessageDialog(null, "Vui lòng chọn ít nhất 1 sản phẩm");
             }
         });
-        
+
         fixedPanel.add(ConfirmButton);
         add(fixedPanel, BorderLayout.SOUTH);
 
-       
-        
-        
         setVisible(true);
     }
-    public void createOrder(){
-        //Hàm tạo order từ số lượng trong các cell
-        for(int i=0;i<quantityList.size();i++){
-            if(quantityList.get(i)>0){
+
+    public void createOrder() {
+        // Hàm tạo order từ số lượng trong các cell
+        for (int i = 0; i < quantityList.size(); i++) {
+            if (quantityList.get(i) > 0) {
                 tempOrderMap.put(i, quantityList.get(i));
             }
         }
     }
-    
-
 
     public static void main(String[] args) {
         new Customer_Interface();
-        
+
     }
 
 }

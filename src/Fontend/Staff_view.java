@@ -83,7 +83,7 @@ public class Staff_view extends JFrame {
         JLabel welcomeLabel = new JLabel("Chào mừng đến với hệ thống thu ngân!", JLabel.CENTER);
         welcomeLabel.setFont(new Font("Arial", Font.BOLD, 20));
         
-        contentPanel.add(new Staff_Interface(), BorderLayout.CENTER);
+        contentPanel.add(welcomeLabel, BorderLayout.CENTER);
 
         // JSplitPane để sidebar có thể thay đổi kích thước
         splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, sidebar, contentPanel);
@@ -112,6 +112,12 @@ public class Staff_view extends JFrame {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new Staff_view().setVisible(true));
+        try {
+            // UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            SwingUtilities.invokeLater(() -> new Staff_view().setVisible(true));
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+        }
     }
 }
