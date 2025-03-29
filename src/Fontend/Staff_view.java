@@ -41,14 +41,14 @@ public class Staff_view extends JFrame {
         JLabel lblShift = new JLabel("Ca làm:");
         lblShift.setBounds(780, 50, 150, 30);
         panel.add(lblShift);
-        
+
         // Nút toggle sidebar
         toggleButton = new JButton(">");
         panel.add(toggleButton);
         toggleButton.setFont(new Font("Tahoma", Font.PLAIN, 12));
         toggleButton.setFocusPainted(false);
         toggleButton.setBounds(0, 77, 48, 23);
-        
+
         JLabel lblNewLabel = new JLabel("ẢNH");
         lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 34));
         lblNewLabel.setBounds(21, 12, 97, 57);
@@ -64,13 +64,27 @@ public class Staff_view extends JFrame {
         JPanel menuPanel = new JPanel(new GridLayout(5, 1, 5, 5));
         menuPanel.setBackground(new Color(44, 62, 80));
 
-        String[] buttonLabels = {"Tạo hóa đơn", "Danh sách hóa đơn", "Thanh toán", "Điểm danh", "Đăng xuất"};
+        String[] buttonLabels = { "Tạo hóa đơn", "Danh sách hóa đơn", "Thanh toán", "Điểm danh", "Đăng xuất" };
         for (String label : buttonLabels) {
             JButton button = new JButton(label);
             button.setFocusPainted(false);
             button.setBackground(new Color(52, 73, 94));
             button.setForeground(Color.WHITE);
+            button.setOpaque(true);
+            button.setContentAreaFilled(false);
             button.setFont(new Font("Arial", Font.BOLD, 14));
+            button.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    // Xử lý sự kiện khi nhấn nút
+                    System.out.println(label + " đã nhấn");
+                    // Thay đổi nội dung trong khu vực chính nếu cần
+                    // contentPanel.removeAll();
+                    // contentPanel.add(new JLabel(label + " content"));
+                    // contentPanel.revalidate();
+                    // contentPanel.repaint();
+                }
+            });
             menuPanel.add(button);
         }
         sidebar.add(menuPanel, BorderLayout.CENTER);
@@ -78,10 +92,10 @@ public class Staff_view extends JFrame {
         // Khu vực chính hiển thị nội dung
         JPanel contentPanel = new JPanel(new BorderLayout());
         contentPanel.setBackground(Color.LIGHT_GRAY);
-        JLabel welcomeLabel = new JLabel("Chào mừng đến với hệ thống thu ngân!", JLabel.CENTER);
-        welcomeLabel.setFont(new Font("Arial", Font.BOLD, 20));
-        
-        contentPanel.add(new Staff_Interface(), BorderLayout.CENTER);
+
+        // thêm staffInterface
+        staffInterface = new Staff_Interface();
+        contentPanel.add(staffInterface, BorderLayout.CENTER);
 
         // JSplitPane để sidebar có thể thay đổi kích thước
         splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, sidebar, contentPanel);
@@ -90,8 +104,7 @@ public class Staff_view extends JFrame {
         splitPane.setDividerLocation(200); // Sidebar mặc định mở
 
         getContentPane().add(splitPane, BorderLayout.CENTER);
-        
-        
+
     }
 
     // Phương thức toggle sidebar
@@ -111,7 +124,7 @@ public class Staff_view extends JFrame {
 
     public static void main(String[] args) {
         try {
-            // UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             SwingUtilities.invokeLater(() -> new Staff_view().setVisible(true));
         } catch (Exception e) {
             // TODO: handle exception
