@@ -15,7 +15,7 @@ import java.util.Map;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
-public class Staff_Interface extends JFrame {
+public class Staff_Interface extends JPanel {
     private Locale VN = new Locale("vi", "VN");
 
     private JPanel contentPane;
@@ -36,21 +36,12 @@ public class Staff_Interface extends JFrame {
     private JTextArea textArea_Bill;
 
     /**
-     * Create the frame.
+     * Create the panel.
      */
     public Staff_Interface() {
-
-
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setExtendedState(JFrame.MAXIMIZED_BOTH);
-        setSize(1920, 1080);
-        setResizable(false);
-        contentPane = new JPanel();
-        contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-        contentPane.setBackground(new Color(231, 215, 200));
-
-        setContentPane(contentPane);
-        contentPane.setLayout(null);
+        setBorder(new EmptyBorder(5, 5, 5, 5));
+        setBackground(new Color(231, 215, 200));
+        setLayout(null);
 
         menuModel = new DefaultListModel<>();
         priceMap = new HashMap<>();
@@ -59,8 +50,8 @@ public class Staff_Interface extends JFrame {
         addData();
 
         JPanel order = new JPanel();
-        order.setBounds(1000, 0, 540, 845);
-        contentPane.add(order);
+        order.setBounds(800, 0, 540, 845);
+        add(order);
         order.setLayout(null);
         order.setBackground(new Color(231, 215, 200));
 
@@ -99,11 +90,10 @@ public class Staff_Interface extends JFrame {
 
         JScrollPane scrollPane_Menu = new JScrollPane();
         scrollPane_Menu.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        scrollPane_Menu.setBounds(0, 0, 1000, 845);
-        contentPane.add(scrollPane_Menu);
+        scrollPane_Menu.setBounds(0, 0, 800, 780);
+        add(scrollPane_Menu);
 
         listMenu = createHorizontalList(menuModel);
-        // setColor_Select(listMenu);
         listMenu.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -152,17 +142,14 @@ public class Staff_Interface extends JFrame {
         scrollPane_Bill.setViewportView(textArea_Bill);
         textArea_Bill.setEditable(false);
         textArea_Bill.setFont(new Font("Arial", Font.PLAIN, 20));
-
-        this.setVisible(true);
     }
 
     private JList<String> createHorizontalList(DefaultListModel<String> model) {
         JList<String> list = new JList<>(model);
         list.setFont(new Font("Arial", Font.PLAIN, 16));
         list.setLayoutOrientation(JList.HORIZONTAL_WRAP);
-        // list.setVisibleRowCount(1);
         list.setVisibleRowCount(0); // Cho phép tự động xuống dòng khi không đủ không gian
-        list.setFixedCellWidth(490); // Thiết lập độ rộng tối đa của mỗi item
+        list.setFixedCellWidth(390); // Thiết lập độ rộng tối đa của mỗi item
         list.setFixedCellHeight(300); // Thiết lập chiều cao của mỗi item
 
         //hien thi hinh anh
@@ -184,9 +171,7 @@ public class Staff_Interface extends JFrame {
                         ImageIcon icon = new ImageIcon(imgPath); // Tải hình ảnh từ đường dẫn
                         Image scaledImage = icon.getImage().getScaledInstance(250, 250, Image.SCALE_SMOOTH); // Điều chỉnh kích thước hình ảnh
                         imageLabel.setIcon(new ImageIcon(scaledImage));
-                        // imageLabel.setText("Tải được ảnh");
                     } catch (Exception e) {
-                        // imageLabel.setText("Không tải được ảnh");
                         e.printStackTrace();
                     }
                 } else {
@@ -243,16 +228,12 @@ public class Staff_Interface extends JFrame {
             double price = product.getPrice();
             String imgPath = product.getImage();
 
-            // Tạo chuỗi hiển thị bao gồm tên và kích thước để phân biệt
-            // String displayText = name + " (" + size + ")";
             String displayText = name.toLowerCase().contains("bánh") ? name : name + " (" + size + ")";
 
-            // Thêm vào menuModel bất kể trùng tên, vì có size để phân biệt
             if (!menuModel.contains(name)) {
                 menuModel.addElement(name);
             }
 
-            // Lưu giá vào priceMap với key là displayText
             priceMap.put(displayText, price);
             imgMap.put(name, imgPath);
         }
@@ -317,7 +298,6 @@ public class Staff_Interface extends JFrame {
         for (int i = 0; i < placedModel.size(); i++) {
             item = placedModel.getElementAt(i);
             if (item.contains(displayText)) {
-                // Món đã tồn tại, cập nhật số lượng và giá tiền
                 String[] parts = item.split(" - ");
                 int currentQty = Integer.parseInt(parts[2].replace("Số lượng: ", "").trim());
                 int newQty = currentQty + additionalQty;
@@ -326,7 +306,6 @@ public class Staff_Interface extends JFrame {
                 return;
             }
         }
-        // Nếu món chưa tồn tại, thêm mới
         totalItemPrice = price * additionalQty;
         placedModel.addElement(displayText + " - " + price + "đ - Số lượng: " + additionalQty + " - " + totalItemPrice + "đ");
     }
@@ -356,8 +335,7 @@ public class Staff_Interface extends JFrame {
         if (selectedIndex != -1) {
             String selectedItem = model.get(selectedIndex);
             model.remove(selectedIndex);
-            removeItemFromBill(selectedItem); // Xóa khỏi hóa đơn
-            // printBill();
+            removeItemFromBill(selectedItem);
             updateTotalMoney();
         } else {
             JOptionPane.showMessageDialog(this, "Vui lòng chọn một món để xóa!");
@@ -380,7 +358,6 @@ public class Staff_Interface extends JFrame {
             }
         }
         textArea_Bill.setText(updatedBill.toString().trim());
-        // printBill();
     }
 
     private void printBill() {
@@ -408,32 +385,4 @@ public class Staff_Interface extends JFrame {
 
         textArea_Bill.setText(bill.toString());
     }
-
-    public static void main(String[] args) {
-        try {
-            // com.sun.java.swing.plaf.gtk.GTKLookAndFeel
-            // com.sun.java.swing.plaf.motif.MotifLookAndFeel
-            // com.sun.java.swing.plaf.windows.WindowsLookAndFeel
-            // UIManager.setLookAndFeel("com.sun.java.swing.plaf.motif.MotifLookAndFeel");
-            // set là giao diện mặc định của hệ thống
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-            new Staff_Interface();
-            // ProductDao dao = new ProductDao();
-            // Set<Product> products = dao.getArrayListProductFromSQL();
-            // products.forEach(System.out::println);
-            // dao.closeConnection();
-            // ProductDao productDao = new ProductDao();
-            // Set<Product> products = productDao.getArrayListProductFromSQL(); // Lấy được
-            // các sản phẩm ở cơ sở dữ liệu
-
-            // for (Product product : products) {
-            // System.out.println(product);
-            // }
-            // productDao.closeConnection(); // Đóng kết nối
-        } catch (Exception e) {
-            // TODO: handle exception
-            e.printStackTrace();
-        }
-    }
-
 }
