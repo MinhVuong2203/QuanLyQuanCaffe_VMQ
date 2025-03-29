@@ -215,7 +215,6 @@ public class Customer_Interface extends JFrame {
             }
         });
         
-        ;
         fixedPanel.add(ConfirmButton);
         add(fixedPanel, BorderLayout.SOUTH);
 
