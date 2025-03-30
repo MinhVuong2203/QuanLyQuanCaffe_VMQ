@@ -2,7 +2,6 @@ package Backend;
 
 import Dao.UserAccountDao;
 import Entity.Employee;
-import Fontend.Customer_Interface;
 import Fontend.Login;
 import Fontend.SignUp_Window;
 import Fontend.Staff_view;
@@ -66,7 +65,6 @@ public class Listen_Login implements ActionListener {
                     }
                     else if (role.equals("Khách")){
                         System.out.println("Giao diện khách Chưa sửa");
-                        new Customer_Interface();
                         // try {
                         //     Customer customer = userAccountDao.getEmployeeFromID(id);  // Lấy ra nhân viên khi đăng nhập đúng
                         //     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());

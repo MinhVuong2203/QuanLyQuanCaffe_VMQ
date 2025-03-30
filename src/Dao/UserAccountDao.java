@@ -126,7 +126,6 @@ public class UserAccountDao {
             Statement stmt = conn.createStatement();
             String sql = "SELECT UA.Username, UA.Password, UA.Role,"+// 
                "E.Name, E.Phone, E.hourWage, E.CCCD, E.BirthDate, E.Gender, E.Image" +//  
-                
                 " FROM UserAccount UA" + //
                 " JOIN Employee E ON UA.ID = E.employeeID" +//
                 " WHERE UA.ID = " + id;

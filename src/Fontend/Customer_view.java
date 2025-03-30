@@ -1,7 +1,6 @@
 package Fontend;
 
 import Entity.Customer;
-import Entity.Employee;
 import Utils.GradientPanel;
 import java.awt.*;
 import java.awt.event.*;
@@ -99,10 +98,8 @@ public class Customer_view extends JFrame {
         // Khu vực chính hiển thị nội dung
         JPanel contentPanel = new JPanel(new BorderLayout());
         contentPanel.setBackground(Color.LIGHT_GRAY);
-
-        // thêm staffInterface
-        // Staff_Interface staffInterface = new Staff_Interface();
-        // contentPanel.add(staffInterface, BorderLayout.CENTER);
+        Customer_Interface customer_Interface = new Customer_Interface();
+        contentPanel.add(customer_Interface, BorderLayout.CENTER);
 
         // JSplitPane để sidebar có thể thay đổi kích thước
         splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, sidebar, contentPanel);

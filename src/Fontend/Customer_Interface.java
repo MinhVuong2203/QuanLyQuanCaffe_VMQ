@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import javax.swing.*;
 
-public class Customer_Interface extends JFrame {
+public class Customer_Interface extends JPanel {
     private List<String> pictrueList = new ArrayList<>();
     private Map<Integer, Integer> orderMap = new java.util.HashMap<>();
     private Map<Integer, Integer> tempOrderMap = new java.util.HashMap<>();
@@ -45,10 +45,11 @@ public class Customer_Interface extends JFrame {
     }
 
     public Customer_Interface() {
-        setTitle("Giao diện Cell từ Database");
+
+        // setTitle("Giao diện Cell từ Database");
         // setSize(500, 500);
-        setExtendedState(JFrame.MAXIMIZED_BOTH);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        // setExtendedState(JFrame.MAXIMIZED_BOTH);
+        // setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
         menuModel = new DefaultListModel<>();
         priceMap = new java.util.HashMap<>();
@@ -135,7 +136,9 @@ public class Customer_Interface extends JFrame {
                 createOrder();
 
                 // Tạo JDialog
-                JDialog confirmFrame = new JDialog(this, "Xác nhận đơn hàng", true);
+                JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+                JDialog confirmFrame = new JDialog(parentFrame, "Xác nhận đơn hàng", true);
+                
                 confirmFrame.setSize(400, 300);
                 confirmFrame.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
                 confirmFrame.setLayout(new BorderLayout());
