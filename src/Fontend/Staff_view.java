@@ -11,12 +11,14 @@ public class Staff_view extends JFrame {
     private JSplitPane splitPane;
     private boolean isSidebarExpanded = true;
     private Timer mouseTracker;
+    private Staff_Interface staffInterface;
 
     public Staff_view() {
         setTitle("Giao Diện Thu Ngân - Quán Cafe");
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
+        setResizable(false);
         getContentPane().setLayout(new BorderLayout());
 
         // Panel Header (Thông tin nhân viên)
@@ -32,16 +34,18 @@ public class Staff_view extends JFrame {
 
         JLabel lblID = new JLabel("ID: 1234");
         lblID.setForeground(Color.RED);
-        lblID.setFont(new Font("Arial", Font.PLAIN, 11));
+        lblID.setFont(new Font("Arial", Font.PLAIN, 16));
         lblID.setBounds(103, 44, 140, 18);
         panel.add(lblID);
 
         JLabel lblTime = new JLabel("Thời gian hiện tại:");
         lblTime.setBounds(780, 10, 150, 30);
+        lblTime.setFont(new Font("Arial", Font.PLAIN, 16));
         panel.add(lblTime);
 
         JLabel lblShift = new JLabel("Ca làm:");
         lblShift.setBounds(780, 50, 150, 30);
+        lblShift.setFont(new Font("Arial", Font.PLAIN, 16));
         panel.add(lblShift);
 
         JLabel lblNewLabel = new JLabel();
@@ -103,7 +107,7 @@ public class Staff_view extends JFrame {
         contentPanel.setBackground(Color.LIGHT_GRAY);
 
         // thêm staffInterface
-        Staff_Interface staffInterface = new Staff_Interface();
+        staffInterface = new Staff_Interface();
         contentPanel.add(staffInterface, BorderLayout.CENTER);
 
         // JSplitPane để sidebar có thể thay đổi kích thước
@@ -137,8 +141,8 @@ public class Staff_view extends JFrame {
     
     
     private void toggleSidebar(boolean expand) {
-        int targetWidth = expand ? 180 : 4; // Kích thước mục tiêu
-        int step = (expand ? 60 : -60); // Mỗi lần tăng/giảm 5px
+        int targetWidth = expand ? 180 : 4;//kich thước mục tiêu
+        int step = (expand ? 60 : -60);//mỗi lần tăng/giảm 5px
     
         Timer timer = new Timer(3, new ActionListener() {
             int width = sidebar.getWidth();
@@ -147,7 +151,7 @@ public class Staff_view extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 width += step;
                 if ((expand && width >= targetWidth) || (!expand && width <= targetWidth)) {
-                    width = targetWidth; // Đảm bảo không vượt quá mục tiêu
+                    width = targetWidth;
                     ((Timer) e.getSource()).stop();
                     isSidebarExpanded = expand;
                 }
@@ -158,6 +162,8 @@ public class Staff_view extends JFrame {
                     splitPane.setDividerLocation(finalWidth);
                     sidebar.revalidate();
                     sidebar.repaint();
+                    // Thêm dòng này để điều chỉnh Staff_Interface kích thước
+                    staffInterface.adjustSize(finalWidth);
                 });
             }
         });

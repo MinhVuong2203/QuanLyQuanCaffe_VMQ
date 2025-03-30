@@ -18,8 +18,6 @@ import javax.swing.border.EmptyBorder;
 public class Staff_Interface extends JPanel {
     private Locale VN = new Locale("vi", "VN");
 
-    private JPanel contentPane;
-
     // DefaultListModel để quản lý danh sách
     private DefaultListModel<String> menuModel;
     private DefaultListModel<String> placedModel;
@@ -35,6 +33,9 @@ public class Staff_Interface extends JPanel {
 
     private JTextArea textArea_Bill;
 
+    private JPanel order;
+    private JScrollPane scrollPane_Menu;
+
     /**
      * Create the panel.
      */
@@ -49,7 +50,7 @@ public class Staff_Interface extends JPanel {
 
         addData();
 
-        JPanel order = new JPanel();
+        order = new JPanel();
         order.setBounds(800, 0, 540, 845);
         add(order);
         order.setLayout(null);
@@ -88,7 +89,7 @@ public class Staff_Interface extends JPanel {
         order.add(Button_Pay);
         Button_Pay.addActionListener(e -> printBill());
 
-        JScrollPane scrollPane_Menu = new JScrollPane();
+        scrollPane_Menu = new JScrollPane();
         scrollPane_Menu.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane_Menu.setBounds(0, 0, 800, 780);
         add(scrollPane_Menu);
@@ -135,7 +136,7 @@ public class Staff_Interface extends JPanel {
         order.add(Button_clear);
 
         JScrollPane scrollPane_Bill = new JScrollPane();
-        scrollPane_Bill.setBounds(0, 345, 540, 500);
+        scrollPane_Bill.setBounds(0, 345, 540, 395);
         order.add(scrollPane_Bill);
 
         textArea_Bill = new JTextArea();
@@ -144,32 +145,57 @@ public class Staff_Interface extends JPanel {
         textArea_Bill.setFont(new Font("Arial", Font.PLAIN, 20));
     }
 
+    public void adjustSize(int sidebarWidth) {
+        // Tính toán lại kích thước mới
+        int newWidth = getParent().getWidth() - sidebarWidth;
+        int menuWidth = newWidth - order.getWidth(); // 540 là chiều rộng cố định của panel order
+
+        // Điều chỉnh vị trí panel order
+        order.setBounds(menuWidth, 0, 540, 845);
+
+        // Điều chỉnh kích thước scrollPane_Menu
+        scrollPane_Menu.setBounds(0, 0, menuWidth, 780);
+
+        // Điều chỉnh kích thước list items
+        int itemWidth = (menuWidth / 2) - 10; // Chia 2 cột, trừ đi padding
+        listMenu.setFixedCellWidth(itemWidth);
+        
+
+        revalidate();
+        repaint();
+    }
+
     private JList<String> createHorizontalList(DefaultListModel<String> model) {
         JList<String> list = new JList<>(model);
         list.setFont(new Font("Arial", Font.PLAIN, 16));
         list.setLayoutOrientation(JList.HORIZONTAL_WRAP);
         list.setVisibleRowCount(0); // Cho phép tự động xuống dòng khi không đủ không gian
-        list.setFixedCellWidth(390); // Thiết lập độ rộng tối đa của mỗi item
+        list.setFixedCellWidth(list.getWidth() / 2); // Thiết lập độ rộng tối đa của mỗi item
         list.setFixedCellHeight(300); // Thiết lập chiều cao của mỗi item
 
-        //hien thi hinh anh
+        // hien thi hinh anh
         list.setCellRenderer(new DefaultListCellRenderer() {
             @Override
-            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected,
+                    boolean cellHasFocus) {
                 JPanel panel = new JPanel();
                 panel.setLayout(new BorderLayout());
                 panel.setBackground(new Color(231, 215, 200));
-    
+
                 // Tạo nhãn cho hình ảnh
                 JLabel imageLabel = new JLabel();
                 imageLabel.setHorizontalAlignment(SwingConstants.CENTER);
                 String dishName = value.toString();
                 String imgPath = imgMap.get(dishName); // Lấy đường dẫn hình ảnh từ imgMap
-    
+
                 if (imgPath != null && !imgPath.isEmpty()) {
                     try {
                         ImageIcon icon = new ImageIcon(imgPath); // Tải hình ảnh từ đường dẫn
-                        Image scaledImage = icon.getImage().getScaledInstance(250, 250, Image.SCALE_SMOOTH); // Điều chỉnh kích thước hình ảnh
+                        Image scaledImage = icon.getImage().getScaledInstance(250, 250, Image.SCALE_SMOOTH); // Điều
+                                                                                                             // chỉnh
+                                                                                                             // kích
+                                                                                                             // thước
+                                                                                                             // hình ảnh
                         imageLabel.setIcon(new ImageIcon(scaledImage));
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -177,21 +203,21 @@ public class Staff_Interface extends JPanel {
                 } else {
                     imageLabel.setText("Không có ảnh");
                 }
-    
+
                 // Tạo nhãn cho tên món
                 JLabel nameLabel = new JLabel(dishName);
                 nameLabel.setFont(new Font("Arial", Font.PLAIN, 16));
                 nameLabel.setHorizontalAlignment(SwingConstants.CENTER);
-    
+
                 // Thêm hình ảnh và tên vào panel
                 panel.add(imageLabel, BorderLayout.CENTER);
                 panel.add(nameLabel, BorderLayout.SOUTH);
-    
+
                 // Đổi màu nền khi được chọn
                 if (isSelected) {
                     panel.setBackground(new Color(200, 180, 150)); // Màu nền khi được chọn
                 }
-    
+
                 return panel;
             }
         });
@@ -243,7 +269,7 @@ public class Staff_Interface extends JPanel {
         String selectedSize;
         int inputSize;
         String displayText;
-    
+
         if (dishName.toLowerCase().contains("bánh")) {
             String quantity = JOptionPane.showInputDialog(this, "Nhập số lượng cho " + dishName + ": ", "Số Lượng",
                     JOptionPane.QUESTION_MESSAGE);
@@ -255,14 +281,15 @@ public class Staff_Interface extends JPanel {
                         updateOrAddItem(dishName, price, qty);
                         updateTotalMoney();
                     } else {
-                        JOptionPane.showMessageDialog(this, "Số lượng phải lớn hơn 0!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(this, "Số lượng phải lớn hơn 0!", "Lỗi",
+                                JOptionPane.ERROR_MESSAGE);
                     }
                 } catch (NumberFormatException e) {
                     JOptionPane.showMessageDialog(this, "Vui lòng nhập số hợp lệ!", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 }
             }
         } else {
-            String[] options = {"M", "L"};
+            String[] options = { "M", "L" };
             inputSize = JOptionPane.showOptionDialog(this,
                     "Chọn size cho " + dishName,
                     "Chọn Size", JOptionPane.DEFAULT_OPTION,
@@ -272,7 +299,7 @@ public class Staff_Interface extends JPanel {
                     options[0]);
             selectedSize = options[inputSize];
             displayText = dishName + " (" + selectedSize + ")";
-    
+
             String quantity = JOptionPane.showInputDialog(this, "Nhập số lượng cho " + displayText + ": ", "Số Lượng",
                     JOptionPane.QUESTION_MESSAGE);
             if (quantity != null && !quantity.trim().isEmpty()) {
@@ -283,7 +310,8 @@ public class Staff_Interface extends JPanel {
                         updateOrAddItem(displayText, price, qty);
                         updateTotalMoney();
                     } else {
-                        JOptionPane.showMessageDialog(this, "Số lượng phải lớn hơn 0!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(this, "Số lượng phải lớn hơn 0!", "Lỗi",
+                                JOptionPane.ERROR_MESSAGE);
                     }
                 } catch (NumberFormatException e) {
                     JOptionPane.showMessageDialog(this, "Vui lòng nhập số hợp lệ!", "Lỗi", JOptionPane.ERROR_MESSAGE);
@@ -291,7 +319,7 @@ public class Staff_Interface extends JPanel {
             }
         }
     }
-    
+
     private void updateOrAddItem(String displayText, double price, int additionalQty) {
         String item;
         double totalItemPrice;
@@ -302,12 +330,14 @@ public class Staff_Interface extends JPanel {
                 int currentQty = Integer.parseInt(parts[2].replace("Số lượng: ", "").trim());
                 int newQty = currentQty + additionalQty;
                 totalItemPrice = price * newQty;
-                placedModel.set(i, displayText + " - " + price + "đ - Số lượng: " + newQty + " - " + totalItemPrice + "đ");
+                placedModel.set(i,
+                        displayText + " - " + price + "đ - Số lượng: " + newQty + " - " + totalItemPrice + "đ");
                 return;
             }
         }
         totalItemPrice = price * additionalQty;
-        placedModel.addElement(displayText + " - " + price + "đ - Số lượng: " + additionalQty + " - " + totalItemPrice + "đ");
+        placedModel.addElement(
+                displayText + " - " + price + "đ - Số lượng: " + additionalQty + " - " + totalItemPrice + "đ");
     }
 
     private void updateTotalMoney() {
