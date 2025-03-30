@@ -91,7 +91,7 @@ public class Staff_Interface extends JPanel {
 
         scrollPane_Menu = new JScrollPane();
         scrollPane_Menu.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        scrollPane_Menu.setBounds(0, 0, 800, 780);
+        scrollPane_Menu.setBounds(0, 0, 800, 742);
         add(scrollPane_Menu);
 
         listMenu = createHorizontalList(menuModel);
@@ -154,7 +154,7 @@ public class Staff_Interface extends JPanel {
         order.setBounds(menuWidth, 0, 540, 845);
 
         // Điều chỉnh kích thước scrollPane_Menu
-        scrollPane_Menu.setBounds(0, 0, menuWidth, 780);
+        scrollPane_Menu.setBounds(0, 0, menuWidth, 742);
 
         // Điều chỉnh kích thước list items
         int itemWidth = (menuWidth / 2) - 10; // Chia 2 cột, trừ đi padding
@@ -168,6 +168,7 @@ public class Staff_Interface extends JPanel {
     private JList<String> createHorizontalList(DefaultListModel<String> model) {
         JList<String> list = new JList<>(model);
         list.setFont(new Font("Arial", Font.PLAIN, 16));
+        list.setBackground(new Color(231, 215, 200));
         list.setLayoutOrientation(JList.HORIZONTAL_WRAP);
         list.setVisibleRowCount(0); // Cho phép tự động xuống dòng khi không đủ không gian
         list.setFixedCellWidth(list.getWidth() / 2); // Thiết lập độ rộng tối đa của mỗi item
