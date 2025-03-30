@@ -1,7 +1,8 @@
 package Dao;
 
 import Backend.PasswordHasherSHA256;
-import Fontend.Staff_Sign;
+import Entity.Employee;
+import Fontend.Login;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Connection;
@@ -14,7 +15,7 @@ import javax.swing.JOptionPane;
 
 public class UserAccountDao {
     private Connection conn;
-    private Staff_Sign staff_Sign;
+    private Login staff_Sign;
 
 
     public UserAccountDao() {
@@ -42,20 +43,16 @@ public class UserAccountDao {
         }
     }
 
-    public String login(String userName, String passWord) {
-        // if (conn == null) {
-        //     System.out.println("Kết nối thất bại");
-        //     return;
-        // }
+    public int login(String userName, String passWord) {
         try {
             Statement stmt = conn.createStatement();
             String sql = "SELECT * FROM UserAccount";  // Lấy tất cả bản nhân viên
             ResultSet rs = stmt.executeQuery(sql);
-            String getID = ""; // Lấy ID đúng để biết là ai đăng nhập
+            int getID = -1; // Lấy ID đúng để biết là ai đăng nhập
             boolean check = false;  
             while (rs.next()) {
                 if (userName.equals(rs.getString(2).trim()) && PasswordHasherSHA256.verifyPassword(passWord, rs.getString(3).trim())){
-                    getID = rs.getString(1);
+                    getID = rs.getInt(1);
                     rs.close();
                     stmt.close();
                     return getID;
@@ -69,7 +66,7 @@ public class UserAccountDao {
         catch (Exception e) {
             e.printStackTrace();
         }
-        return null;  // Nếu không đúng thì trả về null
+        return -1;  // Nếu không đúng thì trả về -1
     }
 
     public int getIDMaxFromSQL(){
@@ -107,13 +104,13 @@ public class UserAccountDao {
         }
     }
 
-    public String getRoleFromID(String id){
+    public String getRoleFromID(int id){
         String role = "";
         try {
             Statement stmt = conn.createStatement();
             String sql = "SELECT * FROM UserAccount WHERE ID = " + id;
             ResultSet rs = stmt.executeQuery(sql);
-            while (rs.next()) {
+            if (rs.next()) {
                 role = rs.getString(4);
             }
             rs.close();
@@ -122,6 +119,40 @@ public class UserAccountDao {
             e.printStackTrace();
         }
         return role;
+    }
+
+    public Employee getEmployeeFromID(int id){
+        try {
+            Statement stmt = conn.createStatement();
+            String sql = "SELECT UA.Username, UA.Password, UA.Role,"+// 
+               "E.Name, E.Phone, E.hourWage, E.CCCD, E.BirthDate, E.Gender, E.Image" +//  
+                
+                " FROM UserAccount UA" + //
+                " JOIN Employee E ON UA.ID = E.employeeID" +//
+                " WHERE UA.ID = " + id;
+
+            ResultSet rs = stmt.executeQuery(sql);
+
+            if (rs.next()) {
+                String username = rs.getString("Username");
+                String password = rs.getString("Password");
+                String role = rs.getString("Role");
+                String name = rs.getString("Name");
+                String phone = rs.getString("Phone");
+                double hourlyWage = rs.getDouble("hourWage");
+                String CCCD = rs.getString("CCCD");
+                String birthDate = rs.getString("BirthDate");
+                String gender = rs.getString("Gender");
+                String image = rs.getString("Image");
+                return new Employee(id, name, phone, image, username, password, role, CCCD, birthDate, gender, hourlyWage);
+            }
+            rs.close();
+            stmt.close();
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public boolean checkEqualsUserName(String username){

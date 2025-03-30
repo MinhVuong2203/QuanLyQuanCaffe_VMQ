@@ -1,6 +1,6 @@
 package Backend;
 
-import Fontend.Staff_Sign;
+import Fontend.Login;
 import Fontend.WelcomeScreen;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -18,7 +18,7 @@ public class Listen_WelcomScreen implements ActionListener{
 		String cm = e.getActionCommand();
 		if (cm.equals("")) {
 			WS.dispose();
-			new Staff_Sign();
+			new Login();
 		}
 	}
 	

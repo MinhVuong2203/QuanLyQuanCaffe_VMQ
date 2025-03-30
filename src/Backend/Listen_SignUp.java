@@ -1,22 +1,20 @@
 package Backend;
 
+import Dao.CustomerDao;
+import Dao.EmployeeDao;
+import Dao.UserAccountDao;
+import Fontend.Login;
+import Fontend.SignUp_Window;
+import Utils.ValidationUtils;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 
-import Dao.CustomerDao;
-import Dao.EmployeeDao;
-import Dao.UserAccountDao;
-import Fontend.SignUp_Window;
-import Fontend.Staff_Sign;
-import Utils.ValidationUtils;
-
-public class Listen_SignUpWindow implements ActionListener {
+public class Listen_SignUp implements ActionListener {
 private SignUp_Window action;
-	public Listen_SignUpWindow(SignUp_Window action) {
+	public Listen_SignUp(SignUp_Window action) {
 		this.action = action;
 	}
 
@@ -26,7 +24,7 @@ private SignUp_Window action;
         String str = e.getActionCommand();
         if (str.equals("Quay lại")) {
             action.dispose();
-            new Staff_Sign();
+            new Login();
         }
         else if (str.equals("Đăng ký")) {
             // Đăng ký
@@ -70,7 +68,7 @@ private SignUp_Window action;
                     userAccountDao.signUp(name, phone, username, hashedPassword);
                     userAccountDao.closeConnection();
                     action.dispose();
-                    new Staff_Sign();
+                    new Login();
             }
         }
 

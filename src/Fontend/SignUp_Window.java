@@ -1,6 +1,6 @@
 package Fontend;
 
-import Backend.Listen_SignUpWindow;
+import Backend.Listen_SignUp;
 import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionListener;
@@ -153,7 +153,7 @@ public class SignUp_Window extends JFrame {
 		Lable_CFMK.setBounds(13, 241, 138, 22);
 		contentPane.add(Lable_CFMK);
 		
-		ActionListener ac = new Listen_SignUpWindow(this);
+		ActionListener ac = new Listen_SignUp(this);
 
         JButton Back = new JButton("Quay lại");
 		Back.setFont(new Font("Arial", Font.PLAIN, 16));

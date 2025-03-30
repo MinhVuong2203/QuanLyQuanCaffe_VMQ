@@ -383,3 +383,5 @@ VALUES
 
 -- Khách
 -- 16: taiNguyen1
+
+-- 04: duyPham123       pass: pass1234@           hashpass: xpXHU8l//rn51AqG5/dVU+EV0JogOcj3TxUE04j61rI=

@@ -1,6 +1,6 @@
 package Fontend;
 
-import Backend.Listen_StaffWindow;
+import Backend.Listen_Login;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Toolkit;
@@ -15,7 +15,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-public class Staff_Sign extends JFrame {
+public class Login extends JFrame {
     private static final long serialVersionUID = 1L;
     private JPanel contentPane;
     private JTextField textField;
@@ -42,7 +42,7 @@ public class Staff_Sign extends JFrame {
         this.showMK = showMK;
     }
 
-    public Staff_Sign() {
+    public Login() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setTitle("Staff Sign");
         setIconImage(Toolkit.getDefaultToolkit().getImage("src\\image\\Quán Caffe MVQ _ Icon.png"));
@@ -62,7 +62,7 @@ public class Staff_Sign extends JFrame {
         lblNewLabel.setBounds(157, 101, 200, 29);
         contentPane.add(lblNewLabel);
 
-        ActionListener ac = new Listen_StaffWindow(this);
+        ActionListener ac = new Listen_Login(this);
 
         JButton btnNewButton = new JButton("Đăng nhập");
 		btnNewButton.setFont(new Font("Arial", Font.PLAIN, 16));

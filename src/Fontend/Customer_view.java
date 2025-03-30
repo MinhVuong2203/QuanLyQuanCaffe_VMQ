@@ -1,25 +1,24 @@
 package Fontend;
 
+import Entity.Customer;
 import Entity.Employee;
 import Utils.GradientPanel;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-public class Staff_view extends JFrame {
+public class Customer_view extends JFrame {
     private static final long serialVersionUID = 1L;
     private JPanel sidebar;
     private JSplitPane splitPane;
     private boolean isSidebarExpanded = true;
     private Timer mouseTracker;
-    private Staff_Interface staffInterface;
 
-    public Staff_view(Employee employee) {
-        setTitle("Giao Diện Thu Ngân - Quán Cafe");
+    public Customer_view(Customer customer) {
+        setTitle("Giao Diện Khách hàng - Quán Cafe");
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        setResizable(false);
         getContentPane().setLayout(new BorderLayout());
 
         // Panel Header (Thông tin nhân viên)
@@ -28,31 +27,29 @@ public class Staff_view extends JFrame {
         panel.setPreferredSize(new Dimension(250, 100));
         getContentPane().add(panel, BorderLayout.NORTH);
 
-        JLabel lblName = new JLabel(employee.getName());
+        JLabel lblName = new JLabel(customer.getName());
         lblName.setFont(new Font("Arial", Font.BOLD, 16));
         lblName.setBounds(103, 12, 195, 22);
         panel.add(lblName);
 
-        JLabel lblID = new JLabel("ID: " + employee.getId());
+        JLabel lblID = new JLabel("ID: " + customer.getId());
         lblID.setForeground(Color.RED);
-        lblID.setFont(new Font("Arial", Font.PLAIN, 16));
+        lblID.setFont(new Font("Arial", Font.PLAIN, 11));
         lblID.setBounds(103, 44, 140, 18);
         panel.add(lblID);
 
         JLabel lblTime = new JLabel("Thời gian hiện tại:");
         lblTime.setBounds(780, 10, 150, 30);
-        lblTime.setFont(new Font("Arial", Font.PLAIN, 16));
         panel.add(lblTime);
 
         JLabel lblShift = new JLabel("Ca làm:");
         lblShift.setBounds(780, 50, 150, 30);
-        lblShift.setFont(new Font("Arial", Font.PLAIN, 16));
         panel.add(lblShift);
 
         JLabel lblNewLabel = new JLabel();
         lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
         
-        String imgPath = employee.getImage();
+        String imgPath = customer.getImage();
         System.out.println(imgPath);
         if (imgPath != null && !imgPath.isEmpty()){
             try{
@@ -74,7 +71,7 @@ public class Staff_view extends JFrame {
         GradientPanel menuPanel = new GradientPanel(new Color(27, 94, 32), new Color(56, 142, 60));  //Màu chuyển
         menuPanel.setLayout(new GridLayout(10, 1, 0, 0));
 
-        String[] buttonLabels = { "Tạo hóa đơn", "Danh sách hóa đơn", "Thanh toán", "Điểm danh", "Đăng xuất"};
+        String[] buttonLabels = { "Sản phẩm", "Giỏ hàng", "Thông tin cá nhân", "Game", "Đăng xuất"};
         for (String label : buttonLabels) {
             JButton button = new JButton(label);
             button.setFocusPainted(false);
@@ -104,8 +101,8 @@ public class Staff_view extends JFrame {
         contentPanel.setBackground(Color.LIGHT_GRAY);
 
         // thêm staffInterface
-        staffInterface = new Staff_Interface();
-        contentPanel.add(staffInterface, BorderLayout.CENTER);
+        // Staff_Interface staffInterface = new Staff_Interface();
+        // contentPanel.add(staffInterface, BorderLayout.CENTER);
 
         // JSplitPane để sidebar có thể thay đổi kích thước
         splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, sidebar, contentPanel);
@@ -138,8 +135,8 @@ public class Staff_view extends JFrame {
     
     
     private void toggleSidebar(boolean expand) {
-        int targetWidth = expand ? 180 : 4;//kich thước mục tiêu
-        int step = (expand ? 60 : -60);//mỗi lần tăng/giảm 5px
+        int targetWidth = expand ? 180 : 4; // Kích thước mục tiêu
+        int step = (expand ? 60 : -60); // Mỗi lần tăng/giảm 5px
     
         Timer timer = new Timer(3, new ActionListener() {
             int width = sidebar.getWidth();
@@ -148,7 +145,7 @@ public class Staff_view extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 width += step;
                 if ((expand && width >= targetWidth) || (!expand && width <= targetWidth)) {
-                    width = targetWidth;
+                    width = targetWidth; // Đảm bảo không vượt quá mục tiêu
                     ((Timer) e.getSource()).stop();
                     isSidebarExpanded = expand;
                 }
@@ -159,12 +156,17 @@ public class Staff_view extends JFrame {
                     splitPane.setDividerLocation(finalWidth);
                     sidebar.revalidate();
                     sidebar.repaint();
-                    // Thêm dòng này để điều chỉnh Staff_Interface kích thước
-                    staffInterface.adjustSize(finalWidth);
                 });
             }
         });
     
         timer.start();
     }
+    
+    public static void main(String[] args) throws IllegalAccessException, UnsupportedLookAndFeelException, InstantiationException {
+		Customer customer = new Customer(30000, "Nguyễn Văn Test", "0123454", "img", "user", "pass", "Khách", 9);
+        SwingUtilities.invokeLater(() -> new Customer_view(customer).setVisible(true));
+	}
+    
 }
+
