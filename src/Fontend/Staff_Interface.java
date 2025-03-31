@@ -341,7 +341,7 @@ public class Staff_Interface extends JPanel {
                 displayText + " - " + price + "đ - Số lượng: " + additionalQty + " - " + totalItemPrice + "đ");
     }
 
-    private void updateTotalMoney() {
+    public void updateTotalMoney() {
         double total = 0.0;
         for (int i = 0; i < placedModel.size(); i++) {
             String item = placedModel.getElementAt(i);
@@ -391,7 +391,7 @@ public class Staff_Interface extends JPanel {
         textArea_Bill.setText(updatedBill.toString().trim());
     }
 
-    private void printBill() {
+    public void printBill() {
         StringBuilder bill = new StringBuilder();
         if (placedModel.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Vui lòng chọn món ăn trước khi in hóa đơn!", "Thông báo",
@@ -420,5 +420,77 @@ public class Staff_Interface extends JPanel {
         bill.append("Cảm ơn quý khách! Hẹn gặp lại!");
 
         textArea_Bill.setText(bill.toString());
+    }
+
+    public JList<String> getList_dishSelected() {
+        return list_dishSelected;
+    }
+
+    public void setList_dishSelected(JList<String> list_dishSelected) {
+        this.list_dishSelected = list_dishSelected;
+    }
+
+    public JTextField getTextField_TKKH() {
+        return textField_TKKH;
+    }
+
+    public void setTextField_TKKH(JTextField textField_TKKH) {
+        this.textField_TKKH = textField_TKKH;
+    }
+
+    public JTextField getTotal_monney() {
+        return total_monney;
+    }
+
+    public void setTotal_monney(JTextField total_monney) {
+        this.total_monney = total_monney;
+    }
+
+    public JTextArea getTextArea_Bill() {
+        return textArea_Bill;
+    }
+
+    public void setTextArea_Bill(JTextArea textArea_Bill) {
+        this.textArea_Bill = textArea_Bill;
+    }
+
+    public DefaultListModel<String> getMenuModel() {
+        return menuModel;
+    }
+
+    public void setMenuModel(DefaultListModel<String> menuModel) {
+        this.menuModel = menuModel;
+    }
+
+    public DefaultListModel<String> getPlacedModel() {
+        return placedModel;
+    }
+
+    public void setPlacedModel(DefaultListModel<String> placedModel) {
+        this.placedModel = placedModel;
+    }
+
+    public JList<String> getListMenu() {
+        return listMenu;
+    }
+
+    public void setListMenu(JList<String> listMenu) {
+        this.listMenu = listMenu;
+    }
+
+    public Map<String, Double> getPriceMap() {
+        return priceMap;
+    }
+
+    public void setPriceMap(Map<String, Double> priceMap) {
+        this.priceMap = priceMap;
+    }
+
+    public Map<String, String> getImgMap() {
+        return imgMap;
+    }
+
+    public void setImgMap(Map<String, String> imgMap) {
+        this.imgMap = imgMap;
     }
 }

@@ -51,15 +51,15 @@ public class Staff_view extends JFrame {
 
         JLabel lblNewLabel = new JLabel();
         lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        
+
         String imgPath = employee.getImage();
         System.out.println(imgPath);
-        if (imgPath != null && !imgPath.isEmpty()){
-            try{
+        if (imgPath != null && !imgPath.isEmpty()) {
+            try {
                 ImageIcon icon = new ImageIcon(imgPath);
                 Image scaledImage = icon.getImage().getScaledInstance(70, 70, Image.SCALE_SMOOTH);
                 lblNewLabel.setIcon(new ImageIcon(scaledImage));
-            } catch(Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -71,10 +71,17 @@ public class Staff_view extends JFrame {
         sidebar.setPreferredSize(new Dimension(10, getHeight()));
         sidebar.setBackground(new Color(44, 62, 80));
 
-        GradientPanel menuPanel = new GradientPanel(new Color(27, 94, 32), new Color(56, 142, 60));  //Màu chuyển
+        GradientPanel menuPanel = new GradientPanel(new Color(27, 94, 32), new Color(56, 142, 60)); // Màu chuyển
         menuPanel.setLayout(new GridLayout(10, 1, 0, 0));
 
-        String[] buttonLabels = { "Tạo hóa đơn", "Danh sách hóa đơn", "Thanh toán", "Điểm danh", "Đăng xuất"};
+        JPanel contentPanel = new JPanel(new BorderLayout());
+        contentPanel.setBackground(Color.LIGHT_GRAY);
+
+        // Initialize staffInterface by default
+        staffInterface = new Staff_Interface();
+        contentPanel.add(staffInterface, BorderLayout.CENTER);
+
+        String[] buttonLabels = { "Tạo hóa đơn", "Danh sách hóa đơn", "Thanh toán", "Điểm danh", "Đăng xuất" };
         for (String label : buttonLabels) {
             JButton button = new JButton(label);
             button.setFocusPainted(false);
@@ -86,26 +93,29 @@ public class Staff_view extends JFrame {
             button.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    // Xử lý sự kiện khi nhấn nút
-                    System.out.println(label + " đã nhấn");
-                    // Thay đổi nội dung trong khu vực chính nếu cần
-                    // contentPanel.removeAll();
-                    // contentPanel.add(new JLabel(label + " content"));
-                    // contentPanel.revalidate();
-                    // contentPanel.repaint();
+                    contentPanel.removeAll();
+                    if (e.getActionCommand().equals("Tạo hóa đơn")) {
+                        staffInterface = new Staff_Interface();
+                        contentPanel.add(staffInterface, BorderLayout.CENTER);
+                        contentPanel.revalidate();
+                        contentPanel.repaint();
+                    } else if (e.getActionCommand().equals("Thanh toán")) {
+                        // if (staffInterface.getPlacedModel().isEmpty()) {
+                        //     JOptionPane.showMessageDialog(Staff_view.this, "Vui lòng chọn món ăn trước khi thanh toán!", "Thông báo",
+                        //             JOptionPane.INFORMATION_MESSAGE);
+                        //     return;
+                        // }
+                        Payment_Interface paymentInterface = new Payment_Interface(staffInterface);
+                        paymentInterface.printBill();
+                        contentPanel.add(paymentInterface, BorderLayout.CENTER);
+                        contentPanel.revalidate();
+                        contentPanel.repaint();
+                    }
                 }
             });
             menuPanel.add(button);
         }
         sidebar.add(menuPanel, BorderLayout.CENTER);
-
-        // Khu vực chính hiển thị nội dung
-        JPanel contentPanel = new JPanel(new BorderLayout());
-        contentPanel.setBackground(Color.LIGHT_GRAY);
-
-        // thêm staffInterface
-        staffInterface = new Staff_Interface();
-        contentPanel.add(staffInterface, BorderLayout.CENTER);
 
         // JSplitPane để sidebar có thể thay đổi kích thước
         splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, sidebar, contentPanel);
@@ -113,7 +123,7 @@ public class Staff_view extends JFrame {
         splitPane.setEnabled(false); // Vô hiệu hóa kéo tay
         splitPane.setDividerLocation(10); // Sidebar mặc định mở
         getContentPane().add(splitPane, BorderLayout.CENTER);
-        
+
         startMouseTracking();
     }
 
@@ -122,49 +132,73 @@ public class Staff_view extends JFrame {
         mouseTracker = new Timer(100, e -> {
             Point mousePoint = MouseInfo.getPointerInfo().getLocation();
             SwingUtilities.convertPointFromScreen(mousePoint, this);
-    
+
             int mouseX = mousePoint.x;
             int sidebarRightEdge = sidebar.getWidth();
-    
+
             if (mouseX <= 10 && !isSidebarExpanded) {
                 toggleSidebar(true); // Mở sidebar khi chuột gần mép trái
             } else if (mouseX > sidebarRightEdge + 50 && isSidebarExpanded) {
                 toggleSidebar(false); // Thu sidebar khi chuột rời xa
             }
         });
-    
+
         mouseTracker.start();
     }
-    
-    
+
     private void toggleSidebar(boolean expand) {
-        int targetWidth = expand ? 180 : 4;//kich thước mục tiêu
-        int step = (expand ? 60 : -60);//mỗi lần tăng/giảm 5px
-    
-        Timer timer = new Timer(3, new ActionListener() {
-            int width = sidebar.getWidth();
-    
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                width += step;
-                if ((expand && width >= targetWidth) || (!expand && width <= targetWidth)) {
-                    width = targetWidth;
-                    ((Timer) e.getSource()).stop();
-                    isSidebarExpanded = expand;
+        int targetWidth = expand ? 180 : 4;// kich thước mục tiêu
+        int step = (expand ? 60 : -60);// mỗi lần tăng/giảm 5px
+
+        if (staffInterface != null) { // Thêm kiểm tra null
+            Timer timer = new Timer(3, new ActionListener() {
+                int width = sidebar.getWidth();
+
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    width += step;
+                    if ((expand && width >= targetWidth) || (!expand && width <= targetWidth)) {
+                        width = targetWidth;
+                        ((Timer) e.getSource()).stop();
+                        isSidebarExpanded = expand;
+                    }
+
+                    final int finalWidth = width;
+                    SwingUtilities.invokeLater(() -> {
+                        sidebar.setPreferredSize(new Dimension(finalWidth, getHeight()));
+                        splitPane.setDividerLocation(finalWidth);
+                        sidebar.revalidate();
+                        sidebar.repaint();
+                        // Thêm dòng này để điều chỉnh Staff_Interface kích thước
+                        staffInterface.adjustSize(finalWidth);
+                    });
                 }
-    
-                final int finalWidth = width;
-                SwingUtilities.invokeLater(() -> {
-                    sidebar.setPreferredSize(new Dimension(finalWidth, getHeight()));
-                    splitPane.setDividerLocation(finalWidth);
-                    sidebar.revalidate();
-                    sidebar.repaint();
-                    // Thêm dòng này để điều chỉnh Staff_Interface kích thước
-                    staffInterface.adjustSize(finalWidth);
-                });
-            }
-        });
-    
-        timer.start();
+            });
+            timer.start();
+        } else {
+            Timer timer = new Timer(3, new ActionListener() {
+                int width = sidebar.getWidth();
+
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    width += step;
+                    if ((expand && width >= targetWidth) || (!expand && width <= targetWidth)) {
+                        width = targetWidth;
+                        ((Timer) e.getSource()).stop();
+                        isSidebarExpanded = expand;
+                    }
+
+                    final int finalWidth = width;
+                    SwingUtilities.invokeLater(() -> {
+                        sidebar.setPreferredSize(new Dimension(finalWidth, getHeight()));
+                        splitPane.setDividerLocation(finalWidth);
+                        sidebar.revalidate();
+                        sidebar.repaint();
+                    });
+                }
+            });
+            timer.start();
+        }
+
     }
 }
