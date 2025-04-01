@@ -112,7 +112,8 @@ public class Staff_view extends JFrame {
                         contentPanel.repaint();
                     }
                     else if (e.getActionCommand().equals("Xem bàn")){
-                        contentPanel.add(new Table_JPanel(), BorderLayout.CENTER);
+    
+                        contentPanel.add(new Table_JPanel(),BorderLayout.CENTER);
                         contentPanel.revalidate();
                         contentPanel.repaint();
                     }
