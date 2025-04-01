@@ -146,23 +146,27 @@ public class Staff_Interface extends JPanel {
     }
 
     public void adjustSize(int sidebarWidth) {
-        // Tính toán lại kích thước mới
-        int newWidth = getParent().getWidth() - sidebarWidth;
-        int menuWidth = newWidth - order.getWidth(); // 540 là chiều rộng cố định của panel order
+        if (getParent() != null) { // Kiểm tra nếu có parent
+            // Tính toán lại kích thước mới
+            int newWidth = getParent().getWidth() - sidebarWidth;
+            int menuWidth = newWidth - order.getWidth(); // 540 là chiều rộng cố định của panel order
+            // Điều chỉnh vị trí panel order
+            order.setBounds(menuWidth, 0, 540, 845);
+    
+            // Điều chỉnh kích thước scrollPane_Menu
+            scrollPane_Menu.setBounds(0, 0, menuWidth, 742);
+    
+            // Điều chỉnh kích thước list items
+            int itemWidth = (menuWidth / 2) - 10; // Chia 2 cột, trừ đi padding
+            listMenu.setFixedCellWidth(itemWidth);
+            
+    
+            revalidate();
+            repaint();
+        } else {
+            return;
+        }
 
-        // Điều chỉnh vị trí panel order
-        order.setBounds(menuWidth, 0, 540, 845);
-
-        // Điều chỉnh kích thước scrollPane_Menu
-        scrollPane_Menu.setBounds(0, 0, menuWidth, 742);
-
-        // Điều chỉnh kích thước list items
-        int itemWidth = (menuWidth / 2) - 10; // Chia 2 cột, trừ đi padding
-        listMenu.setFixedCellWidth(itemWidth);
-        
-
-        revalidate();
-        repaint();
     }
 
     private JList<String> createHorizontalList(DefaultListModel<String> model) {
