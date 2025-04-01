@@ -81,7 +81,7 @@ public class Staff_view extends JFrame {
         staffInterface = new Staff_Interface();
         contentPanel.add(staffInterface, BorderLayout.CENTER);
 
-        String[] buttonLabels = { "Tạo hóa đơn", "Danh sách hóa đơn", "Thanh toán", "Điểm danh", "Đăng xuất" };
+        String[] buttonLabels = { "Xem bàn", "Tạo hóa đơn", "Danh sách hóa đơn", "Thanh toán", "Điểm danh", "Đăng xuất" };
         for (String label : buttonLabels) {
             JButton button = new JButton(label);
             button.setFocusPainted(false);
@@ -108,6 +108,11 @@ public class Staff_view extends JFrame {
                         Payment_Interface paymentInterface = new Payment_Interface(staffInterface);
                         paymentInterface.printBill();
                         contentPanel.add(paymentInterface, BorderLayout.CENTER);
+                        contentPanel.revalidate();
+                        contentPanel.repaint();
+                    }
+                    else if (e.getActionCommand().equals("Xem bàn")){
+                        contentPanel.add(new Table_JPanel(), BorderLayout.CENTER);
                         contentPanel.revalidate();
                         contentPanel.repaint();
                     }
