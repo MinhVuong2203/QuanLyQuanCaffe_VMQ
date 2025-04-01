@@ -35,7 +35,6 @@ public class ProductDao {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     public List<Product> getArrayListProductFromSQL() {
