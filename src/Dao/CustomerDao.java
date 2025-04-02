@@ -14,7 +14,7 @@ public class CustomerDao {
         try { 
             Properties properties = new Properties();
 
-            try (FileInputStream fis = new FileInputStream("src/resource/database.properties")) {
+            try (FileInputStream fis = new FileInputStream("resource/database.properties")) {
                 properties.load(fis);
             } catch (IOException e) {
                 System.err.println("Không thể đọc file database.properties");
