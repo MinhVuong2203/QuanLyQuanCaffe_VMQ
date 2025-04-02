@@ -1,12 +1,14 @@
 package View;
 
 import java.awt.*;
+import java.io.IOException;
+import java.sql.SQLException;
 import javax.swing.*;
 
 public class TableFrame extends JFrame {
     private static final long serialVersionUID = 1L;
 
-    public TableFrame() {
+    public TableFrame() throws ClassNotFoundException, SQLException, IOException {
         setTitle("Quản lý bàn cafe");
         setSize(600, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

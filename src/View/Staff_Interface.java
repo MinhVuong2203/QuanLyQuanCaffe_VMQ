@@ -8,6 +8,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.util.HashMap;
 import java.util.List;
@@ -40,7 +42,7 @@ public class Staff_Interface extends JPanel {
     /**
      * Create the panel.
      */
-    public Staff_Interface() {
+    public Staff_Interface() throws IOException, ClassNotFoundException, SQLException {
         setBorder(new EmptyBorder(5, 5, 5, 5));
         setBackground(new Color(231, 215, 200));
         setLayout(null);
@@ -246,14 +248,14 @@ public class Staff_Interface extends JPanel {
         });
     }
 
-    private void addData() {
+    private void addData() throws IOException, ClassNotFoundException, SQLException {
         menuModel.clear(); // Xóa danh sách cũ trước khi thêm mới
         priceMap.clear(); // Xóa dữ liệu giá cũ
         imgMap.clear();
 
         ProductRepository productDao = new ProductRepository();
         List<Product> products = productDao.getArrayListProductFromSQL(); // Lấy danh sách sản phẩm từ database
-        productDao.closeConnection(); // Đóng kết nối
+        
         for (Product product : products) {
             String name = product.getName().trim();
             String size = product.getSize().trim();

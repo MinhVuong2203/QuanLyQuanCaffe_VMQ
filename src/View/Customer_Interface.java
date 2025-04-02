@@ -4,6 +4,8 @@ import Repository.*;
 import Model.Product;
 
 import java.awt.*;
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -19,7 +21,7 @@ public class Customer_Interface extends JPanel {
 
     private Map<String, Double> priceMap = new java.util.HashMap<>();
 
-    private void getData() {
+    private void getData() throws IOException, ClassNotFoundException, SQLException {
         quantityList.clear();
         priceMap.clear();
         pictrueList.clear();
@@ -28,7 +30,7 @@ public class Customer_Interface extends JPanel {
         ArrayList<String> menu = new ArrayList<String>();
         ProductRepository productDao = new ProductRepository();
         List<Product> products = productDao.getArrayListProductFromSQL(); // Lấy danh sách sản phẩm từ database
-        productDao.closeConnection(); // Đóng kết nối
+        
         int i = 0;
         for (Product product : products) {
             menu.add(product.getName() + " size " + product.getSize());
@@ -45,7 +47,7 @@ public class Customer_Interface extends JPanel {
 
     }
 
-    public Customer_Interface() {
+    public Customer_Interface() throws IOException, ClassNotFoundException, SQLException {
 
         // setTitle("Giao diện Cell từ Database");
         // setSize(500, 500);
@@ -227,10 +229,4 @@ public class Customer_Interface extends JPanel {
             }
         }
     }
-
-    public static void main(String[] args) {
-        new Customer_Interface();
-
-    }
-
 }

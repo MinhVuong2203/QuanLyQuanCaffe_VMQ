@@ -6,6 +6,8 @@ import java.awt.event.*;
 import javax.swing.*;
 
 import Model.Customer;
+import java.io.IOException;
+import java.sql.SQLException;
 
 public class Customer_view extends JFrame {
     private static final long serialVersionUID = 1L;
@@ -14,7 +16,7 @@ public class Customer_view extends JFrame {
     private boolean isSidebarExpanded = true;
     private Timer mouseTracker;
 
-    public Customer_view(Customer customer) {
+    public Customer_view(Customer customer) throws IOException, ClassNotFoundException, SQLException {
         setTitle("Giao Diện Khách hàng - Quán Cafe");
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -163,7 +165,13 @@ public class Customer_view extends JFrame {
     
     public static void main(String[] args) throws IllegalAccessException, UnsupportedLookAndFeelException, InstantiationException {
 		Customer customer = new Customer(30000, "Nguyễn Văn Test", "0123454", "img", "user", "pass", "Khách", 9);
-        SwingUtilities.invokeLater(() -> new Customer_view(customer).setVisible(true));
+        SwingUtilities.invokeLater(() -> {
+            try {
+                new Customer_view(customer).setVisible(true);
+            } catch (ClassNotFoundException | IOException | SQLException e) {
+                e.printStackTrace();
+            }
+        });
 	}
     
 }

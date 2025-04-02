@@ -1,11 +1,12 @@
 package View;
 
+import Model.Employee;
 import Utils.GradientPanel;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
+import java.sql.SQLException;
 import javax.swing.*;
-
-import Model.Employee;
 
 public class Staff_view extends JFrame {
     private static final long serialVersionUID = 1L;
@@ -15,7 +16,7 @@ public class Staff_view extends JFrame {
     private Timer mouseTracker;
     private Staff_Interface staffInterface;
 
-    public Staff_view(Employee employee) {
+    public Staff_view(Employee employee) throws IOException, ClassNotFoundException, SQLException {
         setTitle("Giao Diện Thu Ngân - Quán Cafe");
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -96,7 +97,11 @@ public class Staff_view extends JFrame {
                 public void actionPerformed(ActionEvent e) {
                     contentPanel.removeAll();
                     if (e.getActionCommand().equals("Tạo hóa đơn")) {
-                        staffInterface = new Staff_Interface();
+                        try {
+                            staffInterface = new Staff_Interface();
+                        } catch (ClassNotFoundException | IOException | SQLException e1) {
+                            e1.printStackTrace();
+                        }
                         contentPanel.add(staffInterface, BorderLayout.CENTER);
                         contentPanel.revalidate();
                         contentPanel.repaint();
@@ -113,8 +118,11 @@ public class Staff_view extends JFrame {
                         contentPanel.repaint();
                     }
                     else if (e.getActionCommand().equals("Xem bàn")){
-    
-                        contentPanel.add(new Table_JPanel(),BorderLayout.CENTER);
+                        try {
+                            contentPanel.add(new Table_JPanel(),BorderLayout.CENTER);
+                        } catch (ClassNotFoundException | SQLException | IOException e1) {
+                            e1.printStackTrace();
+                        }
                         contentPanel.revalidate();
                         contentPanel.repaint();
                     }

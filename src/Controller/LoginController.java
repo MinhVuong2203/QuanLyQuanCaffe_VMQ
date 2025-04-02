@@ -1,14 +1,15 @@
 package Controller;
 
-import Repository.UserAccountRepository;
 import Model.Employee;
+import Repository.UserAccountRepository;
 import View.Login;
 import View.SignUp_Window;
 import View.Staff_view;
 import View.WelcomeScreen;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.sql.SQLException;
 import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
@@ -44,38 +45,48 @@ public class LoginController implements ActionListener {
             if (userName.isEmpty() || password.isEmpty()){
                 JOptionPane.showMessageDialog(action, "Vui lòng nhập đầy đủ tài khoản và mật khẩu!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             } else {
-                UserAccountRepository userAccountDao = new UserAccountRepository(); // Tạo đối tượng UserAccountDao để lấy dữ liệu từ database
-                int id = userAccountDao.login(userName, password);  // thực hiện đăng nhập và trả về id
-                System.out.println(id);
-                if (id != -1){ // Nếu đăng nhập thành công thì lấy role
-                    String role = userAccountDao.getRoleFromID(id);
-                    System.out.println(role);
-                    action.dispose();
-
-                    // if (role.equals("Quản lí")) System.out.println("Giao diện quản lí"); Tạm thời chưa có giao diện quản lí nên quản lí và nhân viên dùng chung cái này
-                    if (role.equals("Thu ngân") || role.equals("Quản lí")) {
-                        System.out.println("Giao diện thu ngân");
-                        try {
-                            Employee employee = userAccountDao.getEmployeeFromID(id);  // Lấy ra nhân viên khi đăng nhập đúng
-                            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-
-                            SwingUtilities.invokeLater(() -> new Staff_view(employee).setVisible(true));
-                        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException ex) {
-                            ex.printStackTrace();
+                try {
+                    UserAccountRepository userAccountDao = new UserAccountRepository(); // Tạo đối tượng UserAccountDao để lấy dữ liệu từ database
+                    int id = userAccountDao.login(userName, password);  // thực hiện đăng nhập và trả về id
+                    System.out.println(id);
+                    if (id != -1){ // Nếu đăng nhập thành công thì lấy role
+                        String role = userAccountDao.getRoleFromID(id);
+                        System.out.println(role);
+                        action.dispose();
+                        
+                        // if (role.equals("Quản lí")) System.out.println("Giao diện quản lí"); Tạm thời chưa có giao diện quản lí nên quản lí và nhân viên dùng chung cái này
+                        if (role.equals("Thu ngân") || role.equals("Quản lí")) {
+                            System.out.println("Giao diện thu ngân");
+                            try {
+                                Employee employee = userAccountDao.getEmployeeFromID(id);  // Lấy ra nhân viên khi đăng nhập đúng
+                                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+                                
+                                SwingUtilities.invokeLater(() -> {
+                                    try {
+                                        new Staff_view(employee).setVisible(true);
+                                    } catch (ClassNotFoundException | IOException | SQLException e1) {
+                                        e1.printStackTrace();
+                                    }
+                                });
+                            } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException ex) {
+                                ex.printStackTrace();
+                            }
+                        }
+                        else if (role.equals("Khách")){
+                            System.out.println("Giao diện khách Chưa sửa");
+                            // try {
+                            //     Customer customer = userAccountDao.getEmployeeFromID(id);  // Lấy ra nhân viên khi đăng nhập đúng
+                            //     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+                            
+                            //     SwingUtilities.invokeLater(() -> new Customer_view(cus).setVisible(true));
+                            // } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException ex) {
+                            //     ex.printStackTrace();
+                            // }
                         }
                     }
-                    else if (role.equals("Khách")){
-                        System.out.println("Giao diện khách Chưa sửa");
-                        // try {
-                        //     Customer customer = userAccountDao.getEmployeeFromID(id);  // Lấy ra nhân viên khi đăng nhập đúng
-                        //     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-
-                        //     SwingUtilities.invokeLater(() -> new Customer_view(cus).setVisible(true));
-                        // } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException ex) {
-                        //     ex.printStackTrace();
-                        // }
-                    }
-                    userAccountDao.closeConnection();
+                } catch (IOException ex) {
+                } catch (ClassNotFoundException ex) {
+                } catch (SQLException ex) {
                 }
             }
         }

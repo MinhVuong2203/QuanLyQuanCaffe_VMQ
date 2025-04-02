@@ -1,52 +1,28 @@
 package Repository;
 
 import Model.Employee;
+import Utils.JdbcUtils;
 import Utils.PasswordHasherSHA256;
-import View.Login;
-
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Properties;
 import javax.swing.JOptionPane;
 
 
 public class UserAccountRepository {
-    private Connection conn;
-    private Login staff_Sign;
+    private Connection connection;
+    private JdbcUtils jdbcUtils;
 
-
-    public UserAccountRepository() {
-        try { 
-            Properties properties = new Properties();
-
-            try (FileInputStream fis = new FileInputStream("resource/database.properties")) {
-                properties.load(fis);
-            } catch (IOException e) {
-                System.err.println("Không thể đọc file database.properties");
-                e.printStackTrace();
-                return;
-            }
-
-            String url = properties.getProperty("url");
-            String username = properties.getProperty("username");
-            String password = properties.getProperty("password");
-            String driver = properties.getProperty("Driver");
-
-            Class.forName(driver);
-            this.conn = DriverManager.getConnection(url , username, password);
-            System.out.println("Kết nối thành công");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public UserAccountRepository() throws IOException, ClassNotFoundException, SQLException {
+        this.jdbcUtils = new JdbcUtils();
     }
 
-    public int login(String userName, String passWord) {
+    public int login(String userName, String passWord) throws SQLException {
         try {
-            Statement stmt = conn.createStatement();
+            connection = jdbcUtils.connect();
+            Statement stmt = connection.createStatement();
             String sql = "SELECT * FROM UserAccount";  // Lấy tất cả bản nhân viên
             ResultSet rs = stmt.executeQuery(sql);
             int getID = -1; // Lấy ID đúng để biết là ai đăng nhập
@@ -66,14 +42,17 @@ public class UserAccountRepository {
         }
         catch (Exception e) {
             e.printStackTrace();
-        }
+        } finally {
+			connection.close();
+		}
         return -1;  // Nếu không đúng thì trả về -1
     }
 
-    public int getIDMaxFromSQL(){
+    public int getIDMaxFromSQL() throws SQLException{
         int id = 0;
         try{
-            Statement stmt = conn.createStatement();
+            connection = jdbcUtils.connect(); // Phải có để có connection
+            Statement stmt = connection.createStatement();
             String sql = "SELECT MAX(ID) FROM UserAccount";
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()){
@@ -84,13 +63,16 @@ public class UserAccountRepository {
 
         } catch (Exception e) {
             e.printStackTrace();
-        }
+        } finally {
+			connection.close();
+		}
         return id;
     }
 
-    public void signUp(String name, String sdt, String userName, String passWord) {
+    public void signUp(String name, String sdt, String userName, String passWord) throws SQLException {
         try{
-            Statement stmt = conn.createStatement();
+            connection = jdbcUtils.connect(); // Phải có để có connection
+            Statement stmt = connection.createStatement();
             int IDMax = this.getIDMaxFromSQL() + 1; // Lấy ID lớn nhất trong database và cộng thêm 1 để tạo một id mới
             String image = "src\\image\\Customer_Image\\Customer_default.png";
             String sql= "INSERT INTO UserAccount VALUES (" + IDMax + ", '" + userName + "', '" + passWord + "', '" + "Khách" + "')";
@@ -102,13 +84,16 @@ public class UserAccountRepository {
 
         } catch (Exception e) {
             e.printStackTrace();
-        }
+        } finally {
+			connection.close();
+		}
     }
 
-    public String getRoleFromID(int id){
+    public String getRoleFromID(int id) throws SQLException{
         String role = "";
         try {
-            Statement stmt = conn.createStatement();
+            connection = jdbcUtils.connect(); // Phải có để có connection
+            Statement stmt = connection.createStatement();
             String sql = "SELECT * FROM UserAccount WHERE ID = " + id;
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) {
@@ -118,13 +103,16 @@ public class UserAccountRepository {
             stmt.close();
         } catch (Exception e) {
             e.printStackTrace();
-        }
+        } finally {
+			connection.close();
+		}
         return role;
     }
 
-    public Employee getEmployeeFromID(int id){
+    public Employee getEmployeeFromID(int id) throws SQLException{
         try {
-            Statement stmt = conn.createStatement();
+            connection = jdbcUtils.connect(); // Phải có để có connection
+            Statement stmt = connection.createStatement();
             String sql = "SELECT UA.Username, UA.Password, UA.Role,"+// 
                "E.Name, E.Phone, E.hourWage, E.CCCD, E.BirthDate, E.Gender, E.Image" +//  
                 " FROM UserAccount UA" + //
@@ -151,13 +139,16 @@ public class UserAccountRepository {
             
         } catch (Exception e) {
             e.printStackTrace();
-        }
+        } finally {
+			connection.close();
+		}
         return null;
     }
 
-    public boolean checkEqualsUserName(String username){
+    public boolean checkEqualsUserName(String username) throws SQLException{
         try{
-            Statement stmt = conn.createStatement();
+            connection = jdbcUtils.connect(); // Phải có để có connection
+            Statement stmt = connection.createStatement();
             String sql = "SELECT [username]\r\n" + //
                         "FROM [UserAccount]\r\n" + //
                         "WHERE [username] = '" + username + "'";
@@ -165,16 +156,9 @@ public class UserAccountRepository {
             if (rs.next()) return true;
         } catch (Exception e){
             e.printStackTrace();
-        }
+        } finally {
+			connection.close();
+		}
         return false; // Không tồn tại
-    }
-
-    // Hàm đóng database mỗi khi thực hiện xong tất cả các tác vụ - Quan trọng phải có và phải gọi sau khi dùng xong
-    public void closeConnection(){
-        try {
-            conn.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 }

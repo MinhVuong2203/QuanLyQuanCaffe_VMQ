@@ -1,49 +1,29 @@
 package Repository;
 
-import java.io.FileInputStream;
+import Model.Product;
+import Utils.JdbcUtils;
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
-
-import Model.Product;
 
 
 public class ProductRepository {
-    private Connection conn;
-
-    public ProductRepository() {
-        try { 
-            Properties properties = new Properties();
-            try (FileInputStream fis = new FileInputStream("resource/database.properties")) {
-                properties.load(fis);
-            } catch (IOException e) {
-                System.err.println("Không thể đọc file database.properties");
-                e.printStackTrace();
-                return;
-            }
-            String url = properties.getProperty("url");
-            String username = properties.getProperty("username");
-            String password = properties.getProperty("password");
-            String driver = properties.getProperty("Driver");
-            Class.forName(driver);
-            this.conn = DriverManager.getConnection(url , username, password);
-            System.out.println("Kết nối thành công");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    private Connection connection;
+    private JdbcUtils jdbcUtils;
+    public ProductRepository() throws IOException, ClassNotFoundException, SQLException {
+        jdbcUtils = new JdbcUtils();
     }
 
-    public List<Product> getArrayListProductFromSQL() {
-        // code here
-        // Set<Product> list = new LinkedHashSet<>();
+    public List<Product> getArrayListProductFromSQL() throws SQLException {
+        
         List<Product> list = new ArrayList<>();
         try {
-            Statement stmt = conn.createStatement();
+            connection = jdbcUtils.connect(); // Phải có để có connection
+            Statement stmt = connection.createStatement();
             String sql = "SELECT * FROM Product";
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
@@ -55,22 +35,14 @@ public class ProductRepository {
                 product.setImage(rs.getString(5));
                 list.add(product);
             }
-
             rs.close();
             stmt.close();
             return list;
         } catch (Exception e) {
             e.printStackTrace();
-        }
+        } finally {
+			connection.close();
+		}
         return null;
     }
-
-    public void closeConnection() {
-        try {
-            conn.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
 }

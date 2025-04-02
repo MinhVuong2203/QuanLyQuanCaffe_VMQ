@@ -12,6 +12,7 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.ImageIcon;
@@ -21,6 +22,7 @@ import javax.swing.JPanel;
 import javax.swing.JSeparator;
 
 import Controller.TableController;
+import java.io.IOException;
 
 public class Table_JPanel extends JPanel {
 	
@@ -48,14 +50,15 @@ public class Table_JPanel extends JPanel {
 
 	/**
 	 * Create the panel.
+	 * @throws SQLException 
 	 */
-	public Table_JPanel() {
+	public Table_JPanel() throws ClassNotFoundException, SQLException, IOException {
 		setBackground(new Color(255, 255, 255));
 
 		TableRepository tableDao = new TableRepository();
 		listTables = new ArrayList<>();
 		listTables = tableDao.getTableFromSQL();
-		tableDao.closeConnection();
+	
 
 		ActionListener ac = new TableController(this);
 		String imgPath = "src\\image\\Table_image\\table_img.png";
