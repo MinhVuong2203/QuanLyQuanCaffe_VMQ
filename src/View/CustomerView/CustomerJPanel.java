@@ -1,4 +1,4 @@
-package View;
+package View.CustomerView;
 
 import Repository.*;
 import Model.Product;
@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 import javax.swing.*;
 
-public class Customer_Interface extends JPanel {
+public class CustomerJPanel extends JPanel {
     private List<String> pictrueList = new ArrayList<>();
     private Map<Integer, Integer> orderMap = new java.util.HashMap<>();
     private Map<Integer, Integer> tempOrderMap = new java.util.HashMap<>();
@@ -47,7 +47,7 @@ public class Customer_Interface extends JPanel {
 
     }
 
-    public Customer_Interface() throws IOException, ClassNotFoundException, SQLException {
+    public CustomerJPanel() throws IOException, ClassNotFoundException, SQLException {
 
         // setTitle("Giao diện Cell từ Database");
         // setSize(500, 500);

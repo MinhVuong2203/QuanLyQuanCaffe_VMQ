@@ -1,7 +1,8 @@
-package View;
+package View.StaffView;
 
 import Model.Employee;
 import Utils.GradientPanel;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
@@ -14,7 +15,7 @@ public class Staff_view extends JFrame {
     private JSplitPane splitPane;
     private boolean isSidebarExpanded = true;
     private Timer mouseTracker;
-    private Staff_Interface staffInterface;
+    private StaffJPanel staffInterface;
 
     public Staff_view(Employee employee) throws IOException, ClassNotFoundException, SQLException {
         setTitle("Giao Diện Thu Ngân - Quán Cafe");
@@ -80,7 +81,7 @@ public class Staff_view extends JFrame {
         contentPanel.setBackground(Color.LIGHT_GRAY);
 
         // Initialize staffInterface by default
-        staffInterface = new Staff_Interface();
+        staffInterface = new StaffJPanel();
         contentPanel.add(staffInterface, BorderLayout.CENTER);
 
         String[] buttonLabels = { "Xem bàn", "Tạo hóa đơn", "Danh sách hóa đơn", "Thanh toán", "Điểm danh", "Đăng xuất" };
@@ -98,7 +99,7 @@ public class Staff_view extends JFrame {
                     contentPanel.removeAll();
                     if (e.getActionCommand().equals("Tạo hóa đơn")) {
                         try {
-                            staffInterface = new Staff_Interface();
+                            staffInterface = new StaffJPanel();
                         } catch (ClassNotFoundException | IOException | SQLException e1) {
                             e1.printStackTrace();
                         }

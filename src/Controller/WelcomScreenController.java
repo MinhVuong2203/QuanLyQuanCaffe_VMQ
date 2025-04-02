@@ -1,10 +1,9 @@
 package Controller;
 
+import View.Window.Login;
+import View.Window.WelcomeScreen;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
-import View.Login;
-import View.WelcomeScreen;
 
 public class WelcomScreenController implements ActionListener{
 	private WelcomeScreen WS;

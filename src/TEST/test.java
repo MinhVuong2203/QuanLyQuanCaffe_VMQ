@@ -1,6 +1,6 @@
 package TEST;
 
-import View.WelcomeScreen;
+import View.Window.WelcomeScreen;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 

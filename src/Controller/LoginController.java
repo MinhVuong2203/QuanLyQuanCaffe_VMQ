@@ -2,10 +2,10 @@ package Controller;
 
 import Model.Employee;
 import Repository.UserAccountRepository;
-import View.Login;
-import View.SignUp_Window;
-import View.Staff_view;
-import View.WelcomeScreen;
+import View.StaffView.Staff_view;
+import View.Window.Login;
+import View.Window.SignUp_Window;
+import View.Window.WelcomeScreen;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;

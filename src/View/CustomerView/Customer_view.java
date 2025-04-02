@@ -1,4 +1,4 @@
-package View;
+package View.CustomerView;
 
 import Utils.GradientPanel;
 import java.awt.*;
@@ -101,7 +101,7 @@ public class Customer_view extends JFrame {
         // Khu vực chính hiển thị nội dung
         JPanel contentPanel = new JPanel(new BorderLayout());
         contentPanel.setBackground(Color.LIGHT_GRAY);
-        Customer_Interface customer_Interface = new Customer_Interface();
+        CustomerJPanel customer_Interface = new CustomerJPanel();
         contentPanel.add(customer_Interface, BorderLayout.CENTER);
 
         // JSplitPane để sidebar có thể thay đổi kích thước

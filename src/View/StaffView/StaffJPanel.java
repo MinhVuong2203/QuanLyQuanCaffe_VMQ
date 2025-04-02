@@ -1,4 +1,4 @@
-package View;
+package View.StaffView;
 
 import Repository.*;
 import Model.Product;
@@ -18,7 +18,7 @@ import java.util.Map;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
-public class Staff_Interface extends JPanel {
+public class StaffJPanel extends JPanel {
     private Locale VN = new Locale("vi", "VN");
 
     // DefaultListModel để quản lý danh sách
@@ -42,7 +42,7 @@ public class Staff_Interface extends JPanel {
     /**
      * Create the panel.
      */
-    public Staff_Interface() throws IOException, ClassNotFoundException, SQLException {
+    public StaffJPanel() throws IOException, ClassNotFoundException, SQLException {
         setBorder(new EmptyBorder(5, 5, 5, 5));
         setBackground(new Color(231, 215, 200));
         setLayout(null);

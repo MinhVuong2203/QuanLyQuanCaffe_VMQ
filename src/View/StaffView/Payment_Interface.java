@@ -1,11 +1,10 @@
-package View;
+package View.StaffView;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.text.DateFormat;
 import java.util.Locale;
-import java.awt.BorderLayout;
-
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -15,9 +14,9 @@ public class Payment_Interface extends JPanel {
 	private Locale VN = new Locale("vi", "VN");
 
 	private JTextArea textArea_Bill;
-	private Staff_Interface staffInterface; // Tham chiếu đến Staff_Interface
+	private StaffJPanel staffInterface; // Tham chiếu đến Staff_Interface
 
-	public Payment_Interface(Staff_Interface staffInterface) {
+	public Payment_Interface(StaffJPanel staffInterface) {
 		this.staffInterface = staffInterface;
 		setLayout(new BorderLayout());
 		setBackground(new Color(231, 215, 200));

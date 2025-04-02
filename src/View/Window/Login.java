@@ -1,4 +1,4 @@
-package View;
+package View.Window;
 
 import Controller.LoginController;
 import java.awt.Color;

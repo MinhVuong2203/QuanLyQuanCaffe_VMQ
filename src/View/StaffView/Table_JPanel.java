@@ -1,4 +1,4 @@
-package View;
+package View.StaffView;
 
 import Repository.TableRepository;
 import Model.Table;

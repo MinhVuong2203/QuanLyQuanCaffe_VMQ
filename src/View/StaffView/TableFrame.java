@@ -1,4 +1,4 @@
-package View;
+package View.StaffView;
 
 import java.awt.*;
 import java.io.IOException;
