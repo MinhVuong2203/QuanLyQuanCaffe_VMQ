@@ -1,4 +1,4 @@
-package Controller;
+package Controller.Window;
 
 import View.Window.Login;
 import View.Window.WelcomeScreen;

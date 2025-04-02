@@ -1,4 +1,4 @@
-package Controller;
+package Controller.Window;
 
 import Model.Employee;
 import Repository.UserAccountRepository;

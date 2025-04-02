@@ -1,4 +1,4 @@
-package Controller;
+package Controller.Window;
 
 import Repository.*;
 import Utils.PasswordHasherSHA256;

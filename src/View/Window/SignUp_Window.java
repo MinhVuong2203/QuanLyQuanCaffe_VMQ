@@ -1,6 +1,6 @@
 package View.Window;
 
-import Controller.SignUpController;
+import Controller.Window.SignUpController;
 import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionListener;

@@ -1,12 +1,11 @@
 package View.Window;
 
+import Controller.Window.WelcomScreenController;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
 import java.util.List;
 import javax.swing.*;
-
-import Controller.WelcomScreenController;
 
 public class WelcomeScreen extends JFrame {
     private JLabel imageLabel;

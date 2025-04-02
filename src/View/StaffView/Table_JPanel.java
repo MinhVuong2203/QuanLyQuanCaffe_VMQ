@@ -21,7 +21,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 
-import Controller.TableController;
+import Controller.StaffController.TableController;
+
 import java.io.IOException;
 
 public class Table_JPanel extends JPanel {

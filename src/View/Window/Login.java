@@ -1,6 +1,6 @@
 package View.Window;
 
-import Controller.LoginController;
+import Controller.Window.LoginController;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Toolkit;

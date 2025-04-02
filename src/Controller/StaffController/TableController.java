@@ -1,4 +1,4 @@
-package Controller;
+package Controller.StaffController;
 
 import View.StaffView.Table_JPanel;
 import java.awt.event.ActionEvent;

@@ -4,7 +4,7 @@ import View.Window.WelcomeScreen;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
-public class test { // Cái gì test thì các bạn test ở đây
+public class Program { // Cái gì test thì các bạn test ở đây
     public static void main(String[] args) {
         try {
             // com.sun.java.swing.plaf.gtk.GTKLookAndFeel
