@@ -1,9 +1,10 @@
 package TEST;
 
-import Entity.Order;
-import Entity.Payment;
-import Entity.Product;
 import java.time.LocalDateTime;
+
+import Model.Order;
+import Model.Payment;
+import Model.Product;
 
 public class testOrder {
 	    public static void main(String[] args) {

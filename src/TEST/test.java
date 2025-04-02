@@ -1,6 +1,6 @@
 package TEST;
 
-import Fontend.WelcomeScreen;
+import View.WelcomeScreen;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 

@@ -1,6 +1,6 @@
 package TEST;
 
-import Backend.PasswordHasherSHA256;
+import Utils.PasswordHasherSHA256;
 
 
 public class HashMK {
