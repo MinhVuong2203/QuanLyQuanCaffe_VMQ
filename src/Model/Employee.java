@@ -6,7 +6,11 @@ public class Employee extends User{
     protected String birthDate;
     protected String gender;
 
-    public Employee(int id, String name, String phone, String image, String username, String password, String role, String CCCD, String birthDate, String gender, double hourlyWage) {
+    public Employee() {
+		super();
+	}
+
+	public Employee(int id, String name, String phone, String image, String username, String password, String role, String CCCD, String birthDate, String gender, double hourlyWage) {
         super(id, name, phone, image, username, password, role);
         this.hourlyWage = hourlyWage;
         this.CCCD = CCCD;
