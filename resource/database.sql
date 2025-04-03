@@ -37,8 +37,6 @@ CREATE TABLE Customer(
 )
 
 
-
-
 CREATE TABLE TableCaffe (
     TableID int PRIMARY KEY,
     tableName nvarchar(50) NOT NULL,
@@ -85,35 +83,41 @@ CREATE TABLE Payment(
 	paymentTime datetime NOT NULL,
 )
 
-create table Ingredient(
-    IngredientID int PRIMARY KEY,
-    name nvarchar(50) NOT NULL,
-    unit nvarchar(50) NOT NULL ,
-    stockQuantity int NOT NULL CHECK(stockQuantity>=0)
-)
+DROP TABLE EmployeeShift
+CREATE TABLE EmployeeShift (
+    shiftID INT PRIMARY KEY,
+    employeeID INT NOT NULL,
+    startTime DATETIME NOT NULL,
+    endTime DATETIME NOT NULL,
+    hourWorked AS DATEDIFF(MINUTE, startTime, endTime) / 60.0 PERSISTED,
+    salary DECIMAL(10,2) NULL,
+    FOREIGN KEY (employeeID) REFERENCES Employee(employeeID)
+);
 
-create table ProductIngredient(
-    productID int NOT NULL,
-    ingredientID int NOT NULL,
-    quantity decimal(10,2) NOT NULL,
-    unit nvarchar(50) NOT NULL,
-    foreign key (productID) references [Product](ProductID),
-    foreign key (ingredientID) references Ingredient(ingredientID),
-	PRIMARY KEY (productID,ingredientID)
-)
+delete from EmployeeShift
 
-create table Import(
-    importID int PRIMARY KEY,
-    ingredientID int NOT NULL,
-    quantity int NOT NULL,
-    unitPrice decimal(10,2) NOT NULL,
-    importDate datetime NOT NULL,
-    totalCost decimal(10,2) NOT NULL,
-	foreign key (ingredientID) references Ingredient(ingredientID)
-)
-
-
-
+INSERT INTO EmployeeShift (shiftID,employeeID, startTime, endTime)
+VALUES 
+(100, 100004,'2025-04-01 08:00:00', '2025-04-01 12:00:00'),
+(101, 100005 ,'2025-04-02 14:00:00', '2025-04-02 18:00:00'),
+(102, 100006,'2025-04-01 09:00:00', '2025-04-01 15:00:00'),
+(103, 100007,'2025-04-03 07:00:00', '2025-04-03 11:00:00'),
+(104, 100005,'2025-04-02 10:00:00', '2025-04-02 14:00:00');
+INSERT INTO EmployeeShift (shiftID,employeeID, startTime, endTime)
+VALUES 
+(105, 100004,'2025-04-03 11:00:00', '2025-04-03 17:00:00')
+-- Dùng trigger để tự động lấy lương của nhân viên, và tính tiền lương theo ca
+CREATE TRIGGER trg_CalculateSalary
+ON EmployeeShift
+AFTER INSERT, UPDATE
+AS
+BEGIN
+    UPDATE es
+    SET es.salary = es.hourWorked * e.hourWage
+    FROM EmployeeShift es
+    JOIN Employee e ON es.employeeID = e.employeeID
+    WHERE es.salary IS NULL;
+END;
 
 --Insert data
 
@@ -179,9 +183,6 @@ INSERT INTO Product (ProductID, name, price,size, image) VALUES
 (30, N'Bánh Taramisu', 35000,'M', N'src\\image\\Product_image\\Bánh Taramisu.png'),
 (31, N'Bánh Chuối', 35000,'M', N'src\\image\\Product_image\\Bánh Chuối.png');
 
-
-
-DELETE FROM ProductIngredient
 DELETE FROM OrderDetail
 DELETE FROM [dbo].[Product]
 
@@ -219,134 +220,6 @@ INSERT INTO TableCaffe (TableID, status, tableName) VALUES
 (30, N'Trống', N'Bàn 30');
 -- Có bàn có khách thì ghi N'Có khách'
 
---Ingredient
-INSERT INTO Ingredient (IngredientID, name, unit, stockQuantity) VALUES
-(1, N'Cà phê hạt rang', N'gram', 750),
-(2, N'Sữa tươi', N'ml', 900),
-(3, N'Sữa đặc', N'ml', 650),
-(4, N'Syrup Caramel', N'ml', 400),
-(5, N'Syrup Đào', N'ml', 300),
-(6, N'Syrup Vải', N'ml', 500),
-(7, N'Bột Matcha', N'gram', 450),
-(8, N'Trà Xanh', N'gram', 700),
-(9, N'Trà Thanh Đào', N'gram', 350),
-(10, N'Trà Sen Vàng', N'gram', 300),
-(11, N'Trà Xanh Đậu Đỏ', N'gram', 300),
-(12, N'Đá viên', N'gram', 1000),
-(13, N'Bột Cacao', N'gram', 600),
-(14, N'Bột mì', N'gram', 800),
-(15, N'Bơ', N'gram', 500),
-(16, N'Trứng', N'gram', 400),
-(17, N'Phô mai', N'gram', 500),
-(20, N'Đường', N'gram', 900),
-(21, N'Sô cô la', N'gram', 500),
-(22, N'Chuối', N'Trái',50);
-
--- ProductIngredient
-INSERT INTO ProductIngredient (productID, ingredientID, quantity, unit) VALUES				
-(1, 1, 50, N'gram'), -- Americano
-(2, 1, 60, N'gram'),
-
-(3, 1, 30, N'gram'), -- Espresso
-(4, 1, 40, N'gram'),
-
-(5, 1, 40, N'gram'), -- Caramel Macchiato
-(5, 2, 100, N'ml'),
-(5, 4, 20, N'ml'),
-(6, 1, 50, N'gram'),
-(6, 2, 120, N'ml'),
-(6, 4, 30, N'ml'),
-
-(7, 7, 30, N'gram'), -- Matcha Macchiato
-(7, 2, 150, N'ml'),
-(8, 7, 40, N'gram'),
-(8, 2, 180, N'ml'),
-
-(9, 1, 30, N'gram'), -- Latte
-(9, 2, 120, N'ml'),
-(10, 1, 40, N'gram'),
-(10, 2, 150, N'ml'),
-
-(11, 1, 40, N'gram'), -- Cappuccino
-(11, 2, 120, N'ml'),
-(12, 1, 50, N'gram'),
-(12, 2, 150, N'ml'),
-
-(13, 1, 50, N'gram'), -- Cold Brew
-(13, 12, 100, N'gram'),
-(14, 1, 60, N'gram'),
-(14, 12, 120, N'gram'),
-
-(15, 7, 30, N'gram'), -- Matcha Latte
-(15, 2, 120, N'ml'),
-(16, 7, 40, N'gram'),
-(16, 2, 150, N'ml'),
-
-(17, 6, 30, N'ml'), -- Trà Thạch Vải
-(17, 10, 40, N'gram'),
-(18, 6, 40, N'ml'),
-(18, 10, 50, N'gram'),
-
-(19, 5, 30, N'ml'), -- Trà Thanh Đào
-(19, 9, 40, N'gram'),
-(20, 5, 40, N'ml'),
-(20, 9, 50, N'gram'),
-
-(21, 10, 40, N'gram'), -- Trà Sen Vàng
-(22, 10, 50, N'gram'),
-
-
-(23, 11, 40, N'gram'), -- Trà Xanh Đậu Đỏ
-(24, 11, 50, N'gram'),
-
-(25, 14, 100, N'gram'), -- Bánh Croissant
-(25, 15, 50, N'gram'),
-
-(26, 14, 80, N'gram'), -- Bánh Mì Que
-(26, 15, 30, N'gram'),
-(26, 16, 1, N'quả'),
-(26, 17, 30, N'gram'),
-
-(28, 14, 80, N'gram'), -- Bánh Mousse Đào
-(28, 15, 30, N'gram'),
-(28, 5, 20, N'ml'),
-
-(29, 14, 80, N'gram'), -- Bánh Mousse CaCao
-(29, 15, 30, N'gram'),
-(29, 13, 20, N'gram'),
-
-(30, 14, 80, N'gram'), -- Bánh Tiramisu
-(30, 15, 30, N'gram'),
-(30, 13, 20, N'gram'),
-
-(31, 14, 80, N'gram'), -- Bánh Chuối
-(31, 15, 30, N'gram'),
-(31, 22, 1, N'Trái');
-
--- Import
-INSERT INTO Import (importID, ingredientID, quantity, unitPrice, importDate, totalCost) 
-VALUES
-(1, 1, 500, 0.50, '2025-03-24 08:30:00', 250.00),
-(2, 2, 1000, 0.20, '2025-03-24 09:00:00', 200.00),
-(3, 3, 800, 0.25, '2025-03-24 09:30:00', 200.00),
-(4, 4, 500, 0.30, '2025-03-24 10:00:00', 150.00),
-(5, 5, 400, 0.35, '2025-03-24 10:30:00', 140.00),
-(6, 6, 600, 0.40, '2025-03-24 11:00:00', 240.00),
-(7, 7, 700, 0.45, '2025-03-24 11:30:00', 315.00),
-(8, 8, 600, 0.50, '2025-03-24 12:00:00', 300.00),
-(9, 9, 400, 0.55, '2025-03-24 12:30:00', 220.00),
-(10, 10, 350, 0.60, '2025-03-24 13:00:00', 210.00),
-(11, 11, 500, 0.65, '2025-03-24 13:30:00', 325.00),
-(12, 12, 1500, 0.10, '2025-03-24 14:00:00', 150.00),
-(13, 13, 900, 0.55, '2025-03-24 14:30:00', 495.00),
-(14, 14, 1000, 0.30, '2025-03-24 15:00:00', 300.00),
-(15, 15, 600, 0.75, '2025-03-24 15:30:00', 450.00),
-(16, 16, 500, 0.50, '2025-03-24 16:00:00', 250.00),
-(17, 17, 550, 0.80, '2025-03-24 16:30:00', 440.00),
-(18, 20, 1200, 0.20, '2025-03-24 17:00:00', 240.00),
-(19, 21, 700, 0.90, '2025-03-24 17:30:00', 630.00),
-(20, 22, 100, 1.00, '2025-03-24 18:00:00', 100.00);
-
 -- Order
 INSERT INTO Orders (orderID, tableID, employeeID, customerID, orderTime, totalPrice, [status]) 
 VALUES
@@ -370,10 +243,6 @@ VALUES
 (2, 2, N'Thẻ tín dụng', 55000.00, '2025-03-24 09:20:00'),
 (3, 3, N'Ví điện tử', 49000.00, '2025-03-24 09:45:00'),
 (4, 4, N'Tiền mặt', 55000.00, '2025-03-24 10:15:00');
-
-
-
-
 
 
 -- password nè :))

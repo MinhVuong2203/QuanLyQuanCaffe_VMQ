@@ -111,9 +111,8 @@ public class Staff_view extends JFrame {
             button.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    for (Component btn : menuPanel.getComponents()) // menuPanel.getComponents() là trả về một danh sách
-                                                                    // các thành phần trong menuPanel
-                        if (btn instanceof JButton)
+                    for (Component btn : menuPanel.getComponents()) // menuPanel.getComponents() là trả về một danh sách       
+                    if (btn instanceof JButton)                     // các thành phần trong menuPanel
                             btn.setBackground(new Color(39, 174, 96)); // Xét lại màu
                     ((JButton) e.getSource()).setBackground(new Color(88, 214, 141)); // Đặt màu cho button được chọn
 
@@ -184,10 +183,10 @@ public class Staff_view extends JFrame {
     }
 
     private void toggleSidebar(boolean expand) {
-        int targetWidth = expand ? 210 : 4;// kich thước mục tiêu
-        int step = (expand ? 60 : -60);// mỗi lần tăng/giảm 5px
+        int targetWidth = expand ? 210 : 0;// kich thước mục tiêu
+        int step = (expand ? 20 : -20);// mỗi lần tăng/giảm 60px
 
-        Timer timer = new Timer(3, new ActionListener() {
+        Timer timer = new Timer(1, new ActionListener() {
             int width = sidebar.getWidth();
 
             @Override

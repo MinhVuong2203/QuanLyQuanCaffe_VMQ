@@ -19,7 +19,4 @@ public class TableLeftController implements ActionListener{
         this.tableJPanel.updateRight();
         tableJPanel.updateInfo(sourceButton.getText());
     }
-
-
-   
 }

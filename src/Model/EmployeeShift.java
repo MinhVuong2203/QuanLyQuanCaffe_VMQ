@@ -10,7 +10,7 @@ public class EmployeeShift {
     private double salary;
     public EmployeeShift(){}
    
-    public EmployeeShift(int shiftID, int employeeID, LocalDateTime startTime, LocalDateTime endTime, double hourlyWage) {
+    public EmployeeShift(int shiftID, int employeeID, LocalDateTime startTime, LocalDateTime endTime, double hourlyWage){  // hourlyWage là lương theo giờ của nhân viên
         this.shiftID = shiftID;
         this.employeeID = employeeID;
         this.startTime = startTime;
@@ -19,7 +19,6 @@ public class EmployeeShift {
         this.salary = hourlyWage * hourWorked;
     }
 
-    
     public int getShiftID() {
         return shiftID;
     }
