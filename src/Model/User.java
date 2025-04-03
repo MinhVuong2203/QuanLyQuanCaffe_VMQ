@@ -4,6 +4,10 @@ public class User extends Person{
     protected String password;
     protected String role;
 
+    public User() {
+        super();
+    }
+
     public User(int id, String name, String phone, String image, String username, String password, String role) {
         super(id, name, phone, image);
         this.username = username;

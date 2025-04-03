@@ -5,6 +5,9 @@ public abstract class Person {
     protected String phone;
     protected String image;
 
+    public Person() {
+    }
+
     public Person(int id, String name, String phone, String image) {  
         this.id = id;
         this.name = name;
