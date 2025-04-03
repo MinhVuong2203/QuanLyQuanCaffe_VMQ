@@ -1,8 +1,6 @@
 package View.StaffView;
 
 import Model.Employee;
-import Utils.GradientPanel;
-
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
@@ -72,34 +70,53 @@ public class Staff_view extends JFrame {
         // Sidebar (Thanh menu bên trái)
         sidebar = new JPanel(new BorderLayout());
         sidebar.setPreferredSize(new Dimension(10, getHeight()));
-        sidebar.setBackground(new Color(44, 62, 80));
+        sidebar.setBackground(new Color(46, 204, 113));
 
-        GradientPanel menuPanel = new GradientPanel(new Color(27, 94, 32), new Color(56, 142, 60)); // Màu chuyển
+        // GradientPanel menuPanel = new GradientPanel(new Color(27, 94, 32), new Color(56, 142, 60)); // Màu chuyển
+        Panel menuPanel = new Panel();
         menuPanel.setLayout(new GridLayout(10, 1, 0, 0));
 
         JPanel contentPanel = new JPanel(new BorderLayout());
         contentPanel.setBackground(Color.LIGHT_GRAY);
 
         // Initialize staffInterface by default
-        staffInterface = new StaffJPanel();
-        contentPanel.add(staffInterface, BorderLayout.CENTER);
+        // staffInterface = new StaffJPanel();
+        Table_JPanel table_JPanel = new Table_JPanel();
+        contentPanel.add(table_JPanel, BorderLayout.CENTER);
 
-        String[] buttonLabels = { "Xem bàn", "Tạo hóa đơn", "Danh sách hóa đơn", "Thanh toán", "Điểm danh", "Đăng xuất" };
+        String[] buttonLabels = { "BÁN HÀNG", "ĐIỂM DANH", "ĐĂNG XUẤT"};
+        String[] iconButtonLabels = {"src\\image\\SideBar_Image\\Sell.png", "src\\image\\SideBar_Image\\DiemDanh.png", "src\\image\\SideBar_Image\\SignOut.png"};
+        int index_iconButtonLabels = 0;
         for (String label : buttonLabels) {
             JButton button = new JButton(label);
             button.setFocusPainted(false);
-            button.setBackground(new Color(52, 73, 94));
+            button.setBackground(new Color(39, 174, 96));
             button.setForeground(Color.WHITE);
             button.setOpaque(true);
-            button.setContentAreaFilled(false);
+            button.setContentAreaFilled(true);
             button.setFont(new Font("Arial", Font.BOLD, 14));
+            button.setBorderPainted(false);
+            // Thêm icon
+            int width = 64, height = 64;
+            if (index_iconButtonLabels==2){
+                width = height = 42;
+            }
+            ImageIcon iconButton = new ImageIcon(iconButtonLabels[index_iconButtonLabels++]);
+		    Image scale_iconButton = iconButton.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
+		    ImageIcon scaleIcon_first_img = new ImageIcon(scale_iconButton);
+            button.setIcon(scaleIcon_first_img);
+
             button.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
+                    for (Component btn : menuPanel.getComponents()) // menuPanel.getComponents() là trả về một danh sách các thành phần trong menuPanel
+                    if (btn instanceof JButton) btn.setBackground(new Color(39, 174, 96));  // Xét lại màu
+                    ((JButton) e.getSource()).setBackground(new Color(88, 214, 141));    // Đặt màu cho button được chọn
+                
                     contentPanel.removeAll();
-                    if (e.getActionCommand().equals("Tạo hóa đơn")) {
+                    if (e.getActionCommand().equals("ĐIỂM DANH")) {
                         try {
-                            staffInterface = new StaffJPanel();
+                            StaffJPanel staffInterface = new StaffJPanel();
                         } catch (ClassNotFoundException | IOException | SQLException e1) {
                             e1.printStackTrace();
                         }
@@ -112,13 +129,13 @@ public class Staff_view extends JFrame {
                         //             JOptionPane.INFORMATION_MESSAGE);
                         //     return;
                         // }
-                        Payment_Interface paymentInterface = new Payment_Interface(staffInterface);
-                        paymentInterface.printBill();
-                        contentPanel.add(paymentInterface, BorderLayout.CENTER);
-                        contentPanel.revalidate();
-                        contentPanel.repaint();
+                        // Payment_Interface paymentInterface = new Payment_Interface(staffInterface);
+                        // paymentInterface.printBill();
+                        // contentPanel.add(paymentInterface, BorderLayout.CENTER);
+                        // contentPanel.revalidate();
+                        // contentPanel.repaint();
                     }
-                    else if (e.getActionCommand().equals("Xem bàn")){
+                    else if (e.getActionCommand().equals("BÁN HÀNG")){
                         try {
                             contentPanel.add(new Table_JPanel(),BorderLayout.CENTER);
                         } catch (ClassNotFoundException | SQLException | IOException e1) {
@@ -163,7 +180,7 @@ public class Staff_view extends JFrame {
     }
 
     private void toggleSidebar(boolean expand) {
-        int targetWidth = expand ? 180 : 4;// kich thước mục tiêu
+        int targetWidth = expand ? 210 : 4;// kich thước mục tiêu
         int step = (expand ? 60 : -60);// mỗi lần tăng/giảm 5px
 
         if (staffInterface != null) { // Thêm kiểm tra null
