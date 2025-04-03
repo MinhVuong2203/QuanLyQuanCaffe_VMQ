@@ -63,7 +63,7 @@ public class EmployeeRepository {
             EmployeeRepository employeeRepository = new EmployeeRepository();
             List<Employee> employees = employeeRepository.getAllEmployees();
             for (Employee employee : employees) {
-                System.out.println(employee);
+                System.out.println(employee.getImage() + " " + employee.getName());
             }
         } catch (Exception e) {
             e.printStackTrace();
