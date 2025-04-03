@@ -160,7 +160,7 @@ public class StaffJPanel extends JPanel {
         list.setFont(new Font("Arial", Font.PLAIN, 16));
         list.setBackground(new Color(231, 215, 200));
         list.setLayoutOrientation(JList.HORIZONTAL_WRAP);
-        list.setVisibleRowCount(-1);
+        list.setVisibleRowCount(0);
 
         list.setFixedCellHeight(300);
 
