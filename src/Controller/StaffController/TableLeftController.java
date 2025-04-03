@@ -5,10 +5,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
 
-public class TableController implements ActionListener{
+public class TableLeftController implements ActionListener{
     private Table_JPanel tableJPanel;
     
-    public TableController(Table_JPanel tableJPanel) {
+    public TableLeftController(Table_JPanel tableJPanel) {
 		this.tableJPanel = tableJPanel;
 	}
 

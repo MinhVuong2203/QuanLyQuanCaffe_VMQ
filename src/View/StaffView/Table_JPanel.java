@@ -21,7 +21,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 
-import Controller.StaffController.TableController;
+import Controller.StaffController.TableLeftController;
 
 import java.io.IOException;
 
@@ -61,7 +61,7 @@ public class Table_JPanel extends JPanel {
 		listTables = tableDao.getTableFromSQL();
 	
 
-		ActionListener ac = new TableController(this);
+		ActionListener ac = new TableLeftController(this);
 		String imgPath = "src\\image\\Table_image\\table_img.png";
 		
 		// Lớn
