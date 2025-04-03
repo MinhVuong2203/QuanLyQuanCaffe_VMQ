@@ -45,19 +45,17 @@ public class StaffJPanel extends JPanel {
     public StaffJPanel() throws IOException, ClassNotFoundException, SQLException {
         setBorder(new EmptyBorder(5, 5, 5, 5));
         setBackground(new Color(231, 215, 200));
-        setLayout(null);
 
         menuModel = new DefaultListModel<>();
         priceMap = new HashMap<>();
         imgMap = new HashMap<>();
 
         addData();
-
+        // phải
         order = new JPanel();
-        order.setBounds(800, 0, 540, 845);
-        add(order);
-        order.setLayout(null);
+        order.setPreferredSize(new Dimension(540, 845));
         order.setBackground(new Color(231, 215, 200));
+        order.setLayout(null);
 
         JLabel Label_monney = new JLabel("Tổng tiền:");
         Label_monney.setFont(new Font("Arial", Font.BOLD, 16));
@@ -92,27 +90,6 @@ public class StaffJPanel extends JPanel {
         order.add(Button_Pay);
         Button_Pay.addActionListener(e -> printBill());
 
-        scrollPane_Menu = new JScrollPane();
-        scrollPane_Menu.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        scrollPane_Menu.setBounds(0, 0, 800, 742);
-        add(scrollPane_Menu);
-
-        listMenu = createHorizontalList(menuModel);
-        listMenu.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() == 2) {
-                    String selectedDish = listMenu.getSelectedValue();
-                    if (selectedDish != null) {
-                        addToOrder(selectedDish);
-                        updateTotalMoney();
-                    }
-                }
-            }
-        });
-
-        scrollPane_Menu.setViewportView(listMenu);
-
         placedModel = new DefaultListModel<>();
         list_dishSelected = new JList(placedModel);
         list_dishSelected.setFont(new Font("Arial", Font.PLAIN, 20));
@@ -146,30 +123,37 @@ public class StaffJPanel extends JPanel {
         scrollPane_Bill.setViewportView(textArea_Bill);
         textArea_Bill.setEditable(false);
         textArea_Bill.setFont(new Font("Arial", Font.PLAIN, 20));
-    }
 
-    public void adjustSize(int sidebarWidth) {
-        if (getParent() != null) { // Kiểm tra nếu có parent
-            // Tính toán lại kích thước mới
-            int newWidth = getParent().getWidth() - sidebarWidth;
-            int menuWidth = newWidth - order.getWidth(); // 540 là chiều rộng cố định của panel order
-            // Điều chỉnh vị trí panel order
-            order.setBounds(menuWidth, 0, 540, 845);
-    
-            // Điều chỉnh kích thước scrollPane_Menu
-            scrollPane_Menu.setBounds(0, 0, menuWidth, 742);
-    
-            // Điều chỉnh kích thước list items
-            int itemWidth = (menuWidth / 2) - 10; // Chia 2 cột, trừ đi padding
-            listMenu.setFixedCellWidth(itemWidth);
-            
-    
-            revalidate();
-            repaint();
-        } else {
-            return;
-        }
+        // trái
+        JPanel panel_Menu = new JPanel();
+        panel_Menu.setLayout(new BorderLayout());
+        panel_Menu.setPreferredSize(new Dimension(600, 845));
+        panel_Menu.setBackground(new Color(231, 215, 200));
 
+        scrollPane_Menu = new JScrollPane();
+        scrollPane_Menu.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        // scrollPane_Menu.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+
+        listMenu = createHorizontalList(menuModel);
+        listMenu.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) {
+                    String selectedDish = listMenu.getSelectedValue();
+                    if (selectedDish != null) {
+                        addToOrder(selectedDish);
+                        updateTotalMoney();
+                    }
+                }
+            }
+        });
+
+        scrollPane_Menu.setViewportView(listMenu);
+        panel_Menu.add(scrollPane_Menu, BorderLayout.CENTER);
+
+        setLayout(new BorderLayout());
+        add(panel_Menu, BorderLayout.CENTER);
+        add(order, BorderLayout.EAST);
     }
 
     private JList<String> createHorizontalList(DefaultListModel<String> model) {
@@ -177,11 +161,22 @@ public class StaffJPanel extends JPanel {
         list.setFont(new Font("Arial", Font.PLAIN, 16));
         list.setBackground(new Color(231, 215, 200));
         list.setLayoutOrientation(JList.HORIZONTAL_WRAP);
-        list.setVisibleRowCount(0); // Cho phép tự động xuống dòng khi không đủ không gian
-        list.setFixedCellWidth(list.getWidth() / 2); // Thiết lập độ rộng tối đa của mỗi item
-        list.setFixedCellHeight(300); // Thiết lập chiều cao của mỗi item
+        list.setVisibleRowCount(-1);
 
-        // hien thi hinh anh
+        list.setFixedCellHeight(300);
+
+        scrollPane_Menu.addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentResized(java.awt.event.ComponentEvent e) {
+                int width = scrollPane_Menu.getViewport().getWidth();
+                int columns = 2;
+                // int padding = 10;
+                // int itemWidth = (width / columns) - padding;
+                int itemWidth = (width / columns);
+                list.setFixedCellWidth(itemWidth);
+                // scrollPane_Menu.revalidate();
+            }
+        });
+
         list.setCellRenderer(new DefaultListCellRenderer() {
             @Override
             public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected,
@@ -255,7 +250,7 @@ public class StaffJPanel extends JPanel {
 
         ProductRepository productDao = new ProductRepository();
         List<Product> products = productDao.getArrayListProductFromSQL(); // Lấy danh sách sản phẩm từ database
-        
+
         for (Product product : products) {
             String name = product.getName().trim();
             String size = product.getSize().trim();
@@ -305,6 +300,10 @@ public class StaffJPanel extends JPanel {
                     null,
                     options,
                     options[0]);
+            // Thêm kiểm tra
+            if (inputSize == -1) {
+                return; // Thoát khỏi phương thức nếu người dùng đóng hộp thoại
+            }
             selectedSize = options[inputSize];
             displayText = dishName + " (" + selectedSize + ")";
 
