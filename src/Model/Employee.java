@@ -5,7 +5,7 @@ public class Employee extends User{
     protected String CCCD;
     protected String birthDate;
     protected String gender;
-
+	protected EmployeeShift employeeShift = new EmployeeShift(); // Khởi tạo đối tượng EmployeeShift
     public Employee() {
 		super();
 	}
@@ -62,4 +62,12 @@ public class Employee extends User{
     public String toString() {
         return "Employee{" + "id=" + id + ", name=" + name + ", phone=" + phone + ", image=" + image + ", username=" + username + ", password=" + password + ", role=" + role + ", hourlyWage=" + hourlyWage + '}';
     }
+
+	public EmployeeShift getEmployeeShift() {
+		return employeeShift;
+	}
+
+	public void setEmployeeShift(EmployeeShift employeeShift) {
+		this.employeeShift = employeeShift;
+	}
 }

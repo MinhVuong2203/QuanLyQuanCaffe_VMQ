@@ -38,7 +38,9 @@ public class EmployeeRepository {
 
     public List<Employee> getAllEmployees() throws SQLException {
         List<Employee> employees = new ArrayList<>();
-        String sql = "SELECT image, name FROM Employee \r\n" ;
+        String sql = "SELECT image, name, shiftID\r\n" + 
+                " FROM Employee\r\n" + //
+                " JOIN EmployeeShift ON EmployeeShift.employeeID = Employee.employeeID\r\n";
                     // " FROM Employee \r\n";
 
         try (Connection connection = jdbcUtils.connect();
@@ -49,6 +51,7 @@ public class EmployeeRepository {
                 Employee employee = new Employee();
                 employee.setImage(rs.getString("image"));
                 employee.setName(rs.getString("name"));
+                employee.getEmployeeShift().setShiftID(rs.getInt("shiftID"));
                 // employee.setHourlyWage(rs.getDouble("hourlyWage"));
                 employees.add(employee);
             }
@@ -63,7 +66,7 @@ public class EmployeeRepository {
             EmployeeRepository employeeRepository = new EmployeeRepository();
             List<Employee> employees = employeeRepository.getAllEmployees();
             for (Employee employee : employees) {
-                System.out.println(employee.getImage() + " " + employee.getName());
+                System.out.println(employee.getImage() + " " + employee.getName() + " " + employee.getEmployeeShift().getShiftID());
             }
         } catch (Exception e) {
             e.printStackTrace();
