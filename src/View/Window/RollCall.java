@@ -3,8 +3,10 @@ package View.Window;
 import java.awt.*;
 import javax.swing.*;
 import java.util.List;
+import java.util.Locale;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.text.DateFormat;
 
 import Model.Employee;
 import Repository.EmployeeRepository;
@@ -12,6 +14,13 @@ import Repository.EmployeeRepository;
 public class RollCall extends JPanel {
     private EmployeeRepository employeeRepository = new EmployeeRepository();
     private List<Employee> employees = employeeRepository.getAllEmployees();
+
+    private Locale VN = new Locale("vi", "VN");
+    private DateFormat formatTime = DateFormat.getTimeInstance(DateFormat.LONG, VN);
+    private DateFormat formatDate = DateFormat.getDateInstance(DateFormat.LONG, VN);
+    private String formattedTime = formatTime.format(new java.util.Date());
+    private String formattedDate = formatDate.format(new java.util.Date());
+    private String formattedDateTime = formattedDate + " " + formattedTime;
 
     private DefaultListModel<String> Model_Infor;
     private JList<String> listInfor;
