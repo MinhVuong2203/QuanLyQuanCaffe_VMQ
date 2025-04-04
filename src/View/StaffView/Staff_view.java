@@ -7,9 +7,21 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.util.Locale;
+
 import javax.swing.*;
 
 public class Staff_view extends JFrame {
+    private Locale VN = new Locale("vi", "VN");
+    private DateFormat formatTime = DateFormat.getTimeInstance(DateFormat.LONG, VN);
+    private DateFormat formatDate = DateFormat.getDateInstance(DateFormat.LONG, VN);
+
+    private String formattedTime;
+    private String formattedDate;
+
+    JLabel lblTime;
+
     private static final long serialVersionUID = 1L;
     private JPanel sidebar;
     private JSplitPane splitPane;
@@ -42,9 +54,10 @@ public class Staff_view extends JFrame {
         lblID.setBounds(103, 44, 140, 18);
         panel.add(lblID);
 
-        JLabel lblTime = new JLabel("Thời gian hiện tại:");
-        lblTime.setBounds(780, 10, 150, 30);
+        lblTime = new JLabel("");
+        lblTime.setBounds(780, 10, 350, 30);
         lblTime.setFont(new Font("Arial", Font.PLAIN, 16));
+        clock();
         panel.add(lblTime);
 
         JLabel lblShift = new JLabel("Ca làm:");
@@ -113,8 +126,8 @@ public class Staff_view extends JFrame {
             button.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    for (Component btn : menuPanel.getComponents()) // menuPanel.getComponents() là trả về một danh sách       
-                    if (btn instanceof JButton)                     // các thành phần trong menuPanel
+                    for (Component btn : menuPanel.getComponents()) // menuPanel.getComponents() là trả về một danh sách
+                        if (btn instanceof JButton) // các thành phần trong menuPanel
                             btn.setBackground(new Color(39, 174, 96)); // Xét lại màu
                     ((JButton) e.getSource()).setBackground(new Color(88, 214, 141)); // Đặt màu cho button được chọn
 
@@ -185,6 +198,21 @@ public class Staff_view extends JFrame {
         mouseTracker.start();
     }
 
+    public void clock() {
+        // lblTime.setText("Thời gian hiện tại: " +
+        // formatTime.format(java.util.Calendar.getInstance().getTime()));
+        Timer timer = new Timer(1000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Cập nhật thời gian hiện tại
+                formattedDate = formatDate.format(new java.util.Date());
+                formattedTime = formatTime.format(new java.util.Date());
+                lblTime.setText("Thời gian hiện tại: " + formattedTime + " - " + formattedDate);
+            }
+        });
+        timer.start();
+    }
+
     private void toggleSidebar(boolean expand) {
         int targetWidth = expand ? 210 : 0;// kich thước mục tiêu
         int step = (expand ? 20 : -20);// mỗi lần tăng/giảm 60px
@@ -212,5 +240,13 @@ public class Staff_view extends JFrame {
         });
         timer.start();
 
+    }
+
+    public JLabel getLblTime() {
+        return lblTime;
+    }
+
+    public void setLblTime(JLabel lblTime) {
+        this.lblTime = lblTime;
     }
 }
