@@ -129,16 +129,16 @@ public class RollCall extends JPanel {
                 imageLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
                 infoLabel = new JLabel();
-                infoLabel.setBounds(100, 420, 400, 160);
+                infoLabel.setBounds(100, 440, 400, 160);
                 infoLabel.setFont(new Font("Arial", Font.PLAIN, 20));
 
                 Label_Status = new JLabel("Trạng thái: Chưa điểm danh");
                 Label_Status.setForeground(Color.RED);
-                Label_Status.setBounds(100, 545, 400, 30);
+                Label_Status.setBounds(100, 577, 400, 30);
                 Label_Status.setFont(new Font("Arial", Font.PLAIN, 20));
 
                 btnCallRoll = new JButton("Điểm danh");
-                btnCallRoll.setBounds(100, 580, 200, 30);
+                btnCallRoll.setBounds(100, 610, 200, 30);
                 btnCallRoll.setFont(new Font("Arial", Font.BOLD, 20));
                 btnCallRoll.addActionListener(e -> {
                     if (Label_Status.getText().equals("Trạng thái: Chưa điểm danh")) {
@@ -162,7 +162,8 @@ public class RollCall extends JPanel {
                 String info = "<html>Tên: " + selected.getName() +
                         "<br>Ca làm: " + selected.getEmployeeShift().getShiftID() +
                         "<br>Thời gian bắt đầu: " + selected.getEmployeeShift().getStartTime().format(DateTimeFormatter.ofPattern("HH:mm")) +
-                        "<br>Thời gian kết thúc: " + selected.getEmployeeShift().getEndTime().format(DateTimeFormatter.ofPattern("HH:mm")) + "</html>";
+                        "<br>Thời gian kết thúc: " + selected.getEmployeeShift().getEndTime().format(DateTimeFormatter.ofPattern("HH:mm")) + 
+                        "<br>Chức vụ: " + selected.getRole() + "</html>";
                 infoLabel.setText(info);
 
                 callRollPanel.add(imageLabel);
