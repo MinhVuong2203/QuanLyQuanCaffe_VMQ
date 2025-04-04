@@ -7,6 +7,8 @@ import java.util.Locale;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.text.DateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import Model.Employee;
 import Repository.EmployeeRepository;
@@ -16,6 +18,8 @@ public class RollCall extends JPanel {
     private List<Employee> employees = employeeRepository.getAllEmployees();
 
     private Locale VN = new Locale("vi", "VN");
+    private LocalDateTime currentDateTime = LocalDateTime.now();
+
     private DateFormat formatTime = DateFormat.getTimeInstance(DateFormat.LONG, VN);
     private DateFormat formatDate = DateFormat.getDateInstance(DateFormat.LONG, VN);
     private String formattedTime = formatTime.format(new java.util.Date());
@@ -73,11 +77,18 @@ public class RollCall extends JPanel {
 
     public void setInfor() throws ClassNotFoundException, IOException, SQLException {
         Model_Infor.clear();
-        // EmployeeRepository employeeRepository = new EmployeeRepository();
-        // List<Employee> employees = employeeRepository.getAllEmployees();
         for (Employee employee : employees) {
-            Model_Infor.addElement(
-                    "Tên: " + employee.getName() + " - " + "Ca làm: " + employee.getEmployeeShift().getShiftID());
+            LocalDateTime employeeShiftTimeStar = employee.getEmployeeShift().getStartTime();
+            LocalDateTime employeeShiftTimeEnd = employee.getEmployeeShift().getEndTime();
+            // Chuyển đổi LocalDateTime thành String với định dạng "HH:mm:ss"
+            System.out.println("employeeShiftTime: " + employeeShiftTimeStar);
+            System.out.println("currentDateTime: " + currentDateTime);
+            // Compare only the time part
+            if (employeeShiftTimeStar.toLocalTime().isBefore(currentDateTime.toLocalTime()) &&
+                    employeeShiftTimeEnd.toLocalTime().isAfter(currentDateTime.toLocalTime())) {
+                Model_Infor.addElement(
+                        "Tên: " + employee.getName() + " - " + "Ca làm: " + employee.getEmployeeShift().getShiftID());
+            }
         }
     }
 
@@ -98,62 +109,68 @@ public class RollCall extends JPanel {
     }
 
     private void displaySelectedEmployee() throws ClassNotFoundException, IOException, SQLException {
-        // Xóa các components cũ
         callRollPanel.removeAll();
 
-        int index = listInfor.getSelectedIndex();
-        if (index != -1) {
-            // EmployeeRepository employeeRepository = new EmployeeRepository();
-            // List<Employee> employees = employeeRepository.getAllEmployees();
-            Employee selected = employees.get(index);
-
-            imageLabel = new JLabel();
-            imageLabel.setBounds(100, 50, 300, 400);
-            imageLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-
-            infoLabel = new JLabel();
-            infoLabel.setBounds(100, 420, 400, 160);
-            infoLabel.setFont(new Font("Arial", Font.PLAIN, 20));
-
-            Label_Status = new JLabel("Trạng thái: Chưa điểm danh");
-            Label_Status.setForeground(Color.RED);
-            Label_Status.setBounds(100, 520, 400, 30);
-            Label_Status.setFont(new Font("Arial", Font.PLAIN, 20));
-
-            btnCallRoll = new JButton("Điểm danh");
-            btnCallRoll.setBounds(100, 560, 200, 30);
-            btnCallRoll.setFont(new Font("Arial", Font.BOLD, 20));
-            btnCallRoll.addActionListener(e -> {
-                // Thay đổi trạng thái điểm danh
-                if (Label_Status.getText().equals("Trạng thái: Chưa điểm danh")) {
-                    Label_Status.setText("Trạng thái: Đã điểm danh");
-                    Label_Status.setForeground(Color.GREEN);
-                } else {
-                    Label_Status.setText("Trạng thái: Chưa điểm danh");
-                    Label_Status.setForeground(Color.RED);
+        String selectedValue = listInfor.getSelectedValue();
+        if (selectedValue != null) {
+            // Tìm nhân viên được chọn từ danh sách employees
+            Employee selected = null;
+            for (Employee emp : employees) {
+                if (selectedValue.contains(emp.getEmployeeShift().getShiftID() + "")) {
+                    // Tìm thấy nhân viên có ca làm trùng với giá trị được chọn
+                    selected = emp;
+                    break;
                 }
-            });
-
-            // Hiển thị ảnh
-            if (selected.getImage() != null && !selected.getImage().isEmpty()) {
-                ImageIcon icon = new ImageIcon(selected.getImage());
-                Image image = icon.getImage().getScaledInstance(300, 400, Image.SCALE_SMOOTH);
-                imageLabel.setIcon(new ImageIcon(image));
-            } else {
-                imageLabel.setIcon(null);
-                imageLabel.setText("Không có ảnh");
             }
 
-            // Hiển thị thông tin
-            String info = "<html>Tên: " + selected.getName() +
-                    "<br>Ca làm: " + selected.getEmployeeShift().getShiftID() + "</html>";
-            infoLabel.setText(info);
+            if (selected != null) {
+                imageLabel = new JLabel();
+                imageLabel.setBounds(100, 50, 300, 400);
+                imageLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
-            // Add components khi có selection
-            callRollPanel.add(imageLabel);
-            callRollPanel.add(infoLabel);
-            callRollPanel.add(Label_Status);
-            callRollPanel.add(btnCallRoll);
+                infoLabel = new JLabel();
+                infoLabel.setBounds(100, 420, 400, 160);
+                infoLabel.setFont(new Font("Arial", Font.PLAIN, 20));
+
+                Label_Status = new JLabel("Trạng thái: Chưa điểm danh");
+                Label_Status.setForeground(Color.RED);
+                Label_Status.setBounds(100, 545, 400, 30);
+                Label_Status.setFont(new Font("Arial", Font.PLAIN, 20));
+
+                btnCallRoll = new JButton("Điểm danh");
+                btnCallRoll.setBounds(100, 580, 200, 30);
+                btnCallRoll.setFont(new Font("Arial", Font.BOLD, 20));
+                btnCallRoll.addActionListener(e -> {
+                    if (Label_Status.getText().equals("Trạng thái: Chưa điểm danh")) {
+                        Label_Status.setText("Trạng thái: Đã điểm danh");
+                        Label_Status.setForeground(Color.GREEN);
+                    } else {
+                        Label_Status.setText("Trạng thái: Chưa điểm danh");
+                        Label_Status.setForeground(Color.RED);
+                    }
+                });
+
+                if (selected.getImage() != null && !selected.getImage().isEmpty()) {
+                    ImageIcon icon = new ImageIcon(selected.getImage());
+                    Image image = icon.getImage().getScaledInstance(300, 400, Image.SCALE_SMOOTH);
+                    imageLabel.setIcon(new ImageIcon(image));
+                } else {
+                    imageLabel.setIcon(null);
+                    imageLabel.setText("Không có ảnh");
+                }
+
+                String info = "<html>Tên: " + selected.getName() +
+                        "<br>Ca làm: " + selected.getEmployeeShift().getShiftID() +
+                        "<br>Thời gian bắt đầu: " + selected.getEmployeeShift().getStartTime().format(DateTimeFormatter.ofPattern("HH:mm")) +
+                        "<br>Thời gian kết thúc: " + selected.getEmployeeShift().getEndTime().format(DateTimeFormatter.ofPattern("HH:mm")) + "</html>";
+                infoLabel.setText(info);
+
+                callRollPanel.add(imageLabel);
+                callRollPanel.add(infoLabel);
+                callRollPanel.add(Label_Status);
+                callRollPanel.add(btnCallRoll);
+            }
+            
             callRollPanel.revalidate();
             callRollPanel.repaint();
         }
