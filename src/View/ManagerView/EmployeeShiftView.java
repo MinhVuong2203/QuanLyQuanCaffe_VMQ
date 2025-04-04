@@ -1,15 +1,15 @@
 package View.ManagerView;
 
-import javax.swing.JPanel;
-import javax.swing.UIManager;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-
-import javax.swing.JRadioButton;
-import java.awt.Panel;
-import javax.swing.JLabel;
 import java.awt.Font;
+import java.awt.Panel;
 import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
+import com.toedter.calendar.JDateChooser;
+
 
 public class EmployeeShiftView extends JPanel {
 
@@ -32,6 +32,10 @@ public class EmployeeShiftView extends JPanel {
 		lblNewLabel.setBounds(78, 21, 78, 22);
 		panel_top.add(lblNewLabel);
 		
+		JDateChooser fromDateChooser = new JDateChooser();
+		fromDateChooser.setBounds(180, 21, 150, 28);
+		panel_top.add(fromDateChooser);
+		
 		JLabel lblnNgy = new JLabel("Đến ngày:");
 		lblnNgy.setFont(new Font("Arial", Font.BOLD, 18));
 		lblnNgy.setBounds(688, 21, 89, 22);
@@ -41,6 +45,7 @@ public class EmployeeShiftView extends JPanel {
 		FromDay_Label.setFont(new Font("Arial", Font.BOLD, 18));
 		FromDay_Label.setBounds(219, 21, 221, 22);
 		panel_top.add(FromDay_Label);
+		
 		
 		JLabel ToDay_Label = new JLabel("New label");
 		ToDay_Label.setFont(new Font("Arial", Font.BOLD, 18));
@@ -52,6 +57,7 @@ public class EmployeeShiftView extends JPanel {
 		comboBox.setFont(new Font("Arial", Font.BOLD, 16));
 		comboBox.setBounds(525, 18, 89, 28);
 		panel_top.add(comboBox);
+		
 		
 		// Center
 		Panel panel_center = new Panel();
