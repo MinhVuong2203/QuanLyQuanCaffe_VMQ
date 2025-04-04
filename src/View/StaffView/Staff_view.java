@@ -1,6 +1,8 @@
 package View.StaffView;
 
 import Model.Employee;
+import View.Window.RollCall;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
@@ -119,8 +121,9 @@ public class Staff_view extends JFrame {
                     contentPanel.removeAll();
                     if (e.getActionCommand().equals("ĐIỂM DANH")) {
                         try {
-                            StaffJPanel staffInterface = new StaffJPanel();
-                            contentPanel.add(staffInterface, BorderLayout.CENTER);
+                            // staffInterface = new StaffJPanel();
+                            // contentPanel.add(staffInterface, BorderLayout.CENTER);
+                            contentPanel.add(new RollCall(), BorderLayout.CENTER);
                         } catch (ClassNotFoundException | IOException | SQLException e1) {
                             e1.printStackTrace();
                         }
