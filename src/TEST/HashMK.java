@@ -1,12 +1,12 @@
 package TEST;
 
-import Utils.PasswordHasherSHA256;
+import Utils.ConvertInto;
 
 
 public class HashMK {
     public static void main(String[] args) {
         String password = "q";
-        System.out.println(PasswordHasherSHA256.hashPassword(password));
+        System.out.println(ConvertInto.hashPassword(password));
 }
 }
 

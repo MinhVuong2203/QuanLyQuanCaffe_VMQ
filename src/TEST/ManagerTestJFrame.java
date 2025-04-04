@@ -1,12 +1,9 @@
 package TEST;
 
-import Model.Employee;
 import Model.Manager;
 import View.ManagerView.EmployeeShiftView;
 import View.StaffView.StaffJPanel;
 import View.StaffView.Table_JPanel;
-import View.Window.WelcomeScreen;
-
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
@@ -153,7 +150,6 @@ public class ManagerTestJFrame extends JFrame {
                              contentPanel.add(new EmployeeShiftView(), BorderLayout.CENTER);
                     }
                     
-                    
                     contentPanel.revalidate();
                     contentPanel.repaint();
                 }
@@ -192,15 +188,16 @@ public class ManagerTestJFrame extends JFrame {
     }
 
     private void toggleSidebar(boolean expand) {
-        int targetWidth = expand ? 210 : 0;// kich thước mục tiêu
-        int step = (expand ? 20 : -20);// mỗi lần tăng/giảm 60px
+        int targetWidth = expand ? 210 : 0; // Kích thước mục tiêu
+        int step = (expand ? 60 : -60); // Mỗi lần tăng/giảm 60px
 
-        Timer timer = new Timer(1, new ActionListener() {
+        Timer timer = new Timer(4, new ActionListener() { // Tăng thời gian từ 1ms lên 10ms
             int width = sidebar.getWidth();
 
             @Override
             public void actionPerformed(ActionEvent e) {
                 width += step;
+
                 if ((expand && width >= targetWidth) || (!expand && width <= targetWidth)) {
                     width = targetWidth;
                     ((Timer) e.getSource()).stop();
@@ -208,17 +205,23 @@ public class ManagerTestJFrame extends JFrame {
                 }
 
                 final int finalWidth = width;
-                SwingUtilities.invokeLater(() -> {
-                    sidebar.setPreferredSize(new Dimension(finalWidth, getHeight()));
-                    splitPane.setDividerLocation(finalWidth);
-                    sidebar.revalidate();
-                    sidebar.repaint();
-                });
+
+                // Chỉ cập nhật kích thước sidebar sau khi dừng timer
+                if (width == targetWidth) {
+                    // Cập nhật UI sau khi hoàn thành thay đổi
+                    SwingUtilities.invokeLater(() -> {
+                        sidebar.setPreferredSize(new Dimension(finalWidth, getHeight()));
+                        splitPane.setDividerLocation(finalWidth);
+                        sidebar.revalidate();
+                        sidebar.repaint();
+                    });
+                }
             }
         });
         timer.start();
-
     }
+
+
     
     public static void main(String[] args) {
 		try {

@@ -1,8 +1,8 @@
 package Repository;
 
 import Model.Employee;
+import Utils.ConvertInto;
 import Utils.JdbcUtils;
-import Utils.PasswordHasherSHA256;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -28,7 +28,7 @@ public class UserAccountRepository {
             int getID = -1; // Lấy ID đúng để biết là ai đăng nhập
             boolean check = false;  
             while (rs.next()) {
-                if (userName.equals(rs.getString(2).trim()) && PasswordHasherSHA256.verifyPassword(passWord, rs.getString(3).trim())){
+                if (userName.equals(rs.getString(2).trim()) && ConvertInto.verifyPassword(passWord, rs.getString(3).trim())){
                     getID = rs.getInt(1);
                     rs.close();
                     stmt.close();

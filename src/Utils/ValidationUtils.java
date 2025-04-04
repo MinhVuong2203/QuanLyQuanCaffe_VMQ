@@ -1,5 +1,9 @@
 package Utils;
 
+import java.util.Date;
+
+import com.toedter.calendar.JDateChooser;
+
 public class ValidationUtils {
     // INT
     // chuỗi có phải là số nguyên
@@ -42,7 +46,11 @@ public class ValidationUtils {
         if (phoneNumber == null) return false;
         return phoneNumber.matches("^0\\d{9,10}$");
     }
-
+    
+    // Hàm kiểm tra từ ngày đến ngày
+    public static boolean validateDates(JDateChooser fromDateChooser, JDateChooser toDateChooser) {
+		return toDateChooser.getDate().getTime() >= fromDateChooser.getDate().getTime();
+	}
     
     
     

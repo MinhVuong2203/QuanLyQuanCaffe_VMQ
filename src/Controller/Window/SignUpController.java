@@ -1,7 +1,7 @@
 package Controller.Window;
 
 import Repository.*;
-import Utils.PasswordHasherSHA256;
+import Utils.ConvertInto;
 import Utils.ValidationUtils;
 import View.Window.Login;
 import View.Window.SignUp_Window;
@@ -65,7 +65,7 @@ private SignUp_Window action;
                 else if (!password.equals(confirmPassword))
                     JOptionPane.showMessageDialog(action, "Nhập lại mật khẩu không khớp", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 else{
-                    String hashedPassword = PasswordHasherSHA256.hashPassword(password);
+                    String hashedPassword = ConvertInto.hashPassword(password);
                     System.out.println("Tên: " + name + " SĐT: " + phone + " TK: " + username + " MK: " + password + " Mã hóa: " + hashedPassword);
                     userAccountDao.signUp(name, phone, username, hashedPassword);
                     action.dispose();
