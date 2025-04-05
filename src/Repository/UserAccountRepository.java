@@ -113,8 +113,8 @@ public class UserAccountRepository {
         try {
             connection = jdbcUtils.connect(); // Phải có để có connection
             Statement stmt = connection.createStatement();
-            String sql = "SELECT UA.Username, UA.Password, UA.Role,"+// 
-               "E.Name, E.Phone, E.hourWage, E.CCCD, E.BirthDate, E.Gender, E.Image" +//  
+            String sql = "SELECT UA.username, UA.password, UA.role,"+// 
+               "E.name, E.phone, E.hourWage, E.CCCD, E.birthDate, E.gender, E.image" +//  
                 " FROM UserAccount UA" + //
                 " JOIN Employee E ON UA.ID = E.employeeID" +//
                 " WHERE UA.ID = " + id;
@@ -122,16 +122,17 @@ public class UserAccountRepository {
             ResultSet rs = stmt.executeQuery(sql);
 
             if (rs.next()) {
-                String username = rs.getString("Username");
-                String password = rs.getString("Password");
-                String role = rs.getString("Role");
-                String name = rs.getString("Name");
-                String phone = rs.getString("Phone");
+                String username = rs.getString("username");
+                String password = rs.getString("password");
+                String role = rs.getString("role");
+                System.out.println("Hihi " + role);
+                String name = rs.getString("name");
+                String phone = rs.getString("phone");
                 double hourlyWage = rs.getDouble("hourWage");
                 String CCCD = rs.getString("CCCD");
-                String birthDate = rs.getString("BirthDate");
-                String gender = rs.getString("Gender");
-                String image = rs.getString("Image");
+                String birthDate = rs.getString("birthDate");
+                String gender = rs.getString("gender");
+                String image = rs.getString("image");
                 return new Employee(id, name, phone, image, username, password, role, CCCD, birthDate, gender, hourlyWage);
             }
             rs.close();

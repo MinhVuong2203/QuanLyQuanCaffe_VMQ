@@ -1,6 +1,5 @@
 package Model;
 public class Employee extends User{
-    protected String role;
     protected double hourlyWage;
     protected String CCCD;
     protected String birthDate;
@@ -18,13 +17,6 @@ public class Employee extends User{
         this.gender = gender;
     }
     
-    public String getRole() {
-		return role;
-	}
-
-	public void setRole(String role) {
-		this.role = role;
-	}
 
 	public double getHourlyWage() {
 		return hourlyWage;

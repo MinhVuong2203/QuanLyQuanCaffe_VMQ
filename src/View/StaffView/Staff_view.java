@@ -80,6 +80,12 @@ public class Staff_view extends JFrame {
         }
         lblNewLabel.setBounds(20, 10, 70, 70);
         panel.add(lblNewLabel);
+        
+        System.out.println(employee);
+        JLabel roleLabel = new JLabel("Chức vụ: " + employee.getRole());
+        roleLabel.setFont(new Font("Arial", Font.ITALIC, 14));
+        roleLabel.setBounds(103, 67, 220, 19);
+        panel.add(roleLabel);
 
         // Sidebar (Thanh menu bên trái)
         sidebar = new JPanel(new BorderLayout());
