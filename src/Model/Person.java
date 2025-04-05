@@ -23,6 +23,11 @@ public abstract class Person {
         return name;
     }
 
+    public String getOnlyName(){
+        String [] nameParts = name.split(" ");
+        return nameParts[nameParts.length - 1];
+    }
+
     public String getPhone() {
         return phone;
     }

@@ -3,6 +3,8 @@ package Utils;
 import java.util.Date;
 
 import com.toedter.calendar.JDateChooser;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 public class ValidationUtils {
     // INT
@@ -47,12 +49,33 @@ public class ValidationUtils {
         return phoneNumber.matches("^0\\d{9,10}$");
     }
     
-    // Hàm kiểm tra từ ngày đến ngày
+    // Hàm kiểm tra từ ngày đến ngày 
     public static boolean validateDates(JDateChooser fromDateChooser, JDateChooser toDateChooser) {
 		return toDateChooser.getDate().getTime() >= fromDateChooser.getDate().getTime();
 	}
     
+    // Hàm tính số ngày giữa 2 ngày JDateChooser
+    public static int CalculateDate(JDateChooser fromDateChooser, JDateChooser toDateChooser){
+	    if (fromDateChooser.getDate() != null && toDateChooser.getDate() != null) {
+	        long diff = toDateChooser.getDate().getTime() - fromDateChooser.getDate().getTime();        
+	        return (int) (diff / (1000 * 60 * 60 * 24)); 
+	    }
+	    return -1;  // Trả về -1 nếu một trong hai ngày là null
+	} 
     
+    // Hàm tính khoảng cách giữa 2 ngày string, định dạng yyyy-MM-dd, 4-4 đến 4-4 là 0 ngày
+    public static int CalculateDate(String fromDate, String toDate) {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Date startDate = sdf.parse(fromDate);
+            Date endDate = sdf.parse(toDate);
+            long diff = endDate.getTime() - startDate.getTime();
+            return (int) (diff / (1000 * 60 * 60 * 24)); 
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return -1; // Trả về -1 nếu có lỗi xảy ra
+    }
     
     
 }

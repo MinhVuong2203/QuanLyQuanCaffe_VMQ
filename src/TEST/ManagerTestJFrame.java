@@ -88,6 +88,8 @@ public class ManagerTestJFrame extends JFrame {
         Table_JPanel table_JPanel = new Table_JPanel();
         contentPanel.add(table_JPanel, BorderLayout.CENTER);
 
+        EmployeeShiftView employeeShiftView = new EmployeeShiftView();  // Tạo đối tượng EmployeeShiftView để quay lại vẫn còn dữ liệu
+
         String[] buttonLabels = { "BÁN HÀNG", "ĐIỂM DANH", "XẾP LỊCH", "ĐĂNG XUẤT"};
         String[] iconButtonLabels = { "src\\image\\SideBar_Image\\Sell.png", "src\\image\\SideBar_Image\\DiemDanh.png", "src\\image\\SideBar_Image\\calendar.png" ,"src\\image\\SideBar_Image\\SignOut.png" };
         int index_iconButtonLabels = 0;
@@ -140,14 +142,10 @@ public class ManagerTestJFrame extends JFrame {
                         // contentPanel.revalidate();
                         // contentPanel.repaint();
                     } else if (e.getActionCommand().equals("BÁN HÀNG")) {
-                        try {
-                            contentPanel.add(new Table_JPanel(), BorderLayout.CENTER);
-                        } catch (ClassNotFoundException | SQLException | IOException e1) {
-                            e1.printStackTrace();
-                        }
+                        contentPanel.add(table_JPanel, BorderLayout.CENTER);
                     }
                     else if (e.getActionCommand().equals("XẾP LỊCH")) {           
-                             contentPanel.add(new EmployeeShiftView(), BorderLayout.CENTER);
+                            contentPanel.add(employeeShiftView, BorderLayout.CENTER);
                     }
                     
                     contentPanel.revalidate();
