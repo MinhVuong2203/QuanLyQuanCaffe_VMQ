@@ -91,6 +91,7 @@ CREATE TABLE EmployeeShift (
     endTime DATETIME NOT NULL,
     hourWorked AS DATEDIFF(MINUTE, startTime, endTime) / 60.0 PERSISTED,
     salary DECIMAL(10,2) NULL,
+	status NVARCHAR(50) DEFAULT N'chưa điểm danh',
     FOREIGN KEY (employeeID) REFERENCES Employee(employeeID)
 );
 
@@ -106,6 +107,12 @@ VALUES
 INSERT INTO EmployeeShift (shiftID,employeeID, startTime, endTime)
 VALUES 
 (105, 100004,'2025-04-03 11:00:00', '2025-04-03 17:00:00')
+
+ALTER TABLE EmployeeShift
+ADD status NVARCHAR(50) DEFAULT N'chưa điểm danh';
+
+
+
 -- Dùng trigger để tự động lấy lương của nhân viên, và tính tiền lương theo ca
 CREATE TRIGGER trg_CalculateSalary
 ON EmployeeShift
