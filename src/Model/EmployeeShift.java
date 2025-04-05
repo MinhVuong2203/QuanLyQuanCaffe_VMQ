@@ -8,6 +8,7 @@ public class EmployeeShift {
     private LocalDateTime endTime;
     private double hourWorked;
     private double salary;
+    private String status; // trạng thái ca làm việc (đã làm, chưa làm, đã nghỉ)
     public EmployeeShift(){}
    
     public EmployeeShift(int shiftID, int employeeID, LocalDateTime startTime, LocalDateTime endTime, double hourlyWage){  // hourlyWage là lương theo giờ của nhân viên
@@ -17,6 +18,7 @@ public class EmployeeShift {
         this.endTime = endTime;
         this.hourWorked = Duration.between(startTime, endTime).toHours();
         this.salary = hourlyWage * hourWorked;
+
     }
 
     public int getShiftID() {
@@ -56,6 +58,15 @@ public class EmployeeShift {
     public void setSalary(double salary) {
         this.salary = salary;
     }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+    
     @Override
     public String toString() {
         return "EmplyeeShift{" + "shiftID=" + shiftID + ", employeeID=" + employeeID + ", startTime=" + startTime + ", endTime=" + endTime + ", hourWorked=" + hourWorked + ", salary=" + salary + '}';

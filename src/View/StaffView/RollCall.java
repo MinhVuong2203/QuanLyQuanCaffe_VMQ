@@ -1,17 +1,16 @@
-package View.Window;
+package View.StaffView;
 
+import Model.Employee;
+import Repository.EmployeeRepository;
 import java.awt.*;
-import javax.swing.*;
-import java.util.List;
-import java.util.Locale;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-
-import Model.Employee;
-import Repository.EmployeeRepository;
+import java.util.List;
+import java.util.Locale;
+import javax.swing.*;
 
 public class RollCall extends JPanel {
     private EmployeeRepository employeeRepository = new EmployeeRepository();
@@ -158,9 +157,9 @@ public class RollCall extends JPanel {
                     imageLabel.setIcon(null);
                     imageLabel.setText("Không có ảnh");
                 }
-
+                
                 String info = "<html>Tên: " + selected.getName() +
-                        "<br>Ca làm: " + selected.getEmployeeShift().getShiftID() +
+                        "<br>Mã ca làm: " + selected.getEmployeeShift().getShiftID() +
                         "<br>Thời gian bắt đầu: " + selected.getEmployeeShift().getStartTime().format(DateTimeFormatter.ofPattern("HH:mm")) +
                         "<br>Thời gian kết thúc: " + selected.getEmployeeShift().getEndTime().format(DateTimeFormatter.ofPattern("HH:mm")) + 
                         "<br>Chức vụ: " + selected.getRole() + "</html>";
