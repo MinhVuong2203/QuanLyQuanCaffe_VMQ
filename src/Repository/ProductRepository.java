@@ -45,4 +45,28 @@ public class ProductRepository {
 		}
         return null;
     }
+    public Product getProductByID(int id) throws SQLException {
+        Product product = null;
+        try {
+            connection = jdbcUtils.connect(); // Phải có để có connection
+            Statement stmt = connection.createStatement();
+            String sql = "SELECT * FROM Product WHERE ProductID = " + id;
+            ResultSet rs = stmt.executeQuery(sql);
+            if (rs.next()) {
+                product = new Product();
+                product.setProductID(rs.getInt(1));
+                product.setName(rs.getString(2));
+                product.setPrice(rs.getInt(3));
+                product.setSize(rs.getString(4));
+                product.setImage(rs.getString(5));
+            }
+            rs.close();
+            stmt.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            connection.close();}
+        return product;
+
+    }
 }

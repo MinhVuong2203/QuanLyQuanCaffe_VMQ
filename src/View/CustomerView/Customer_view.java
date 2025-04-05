@@ -1,13 +1,12 @@
 package View.CustomerView;
 
+import Model.Customer;
 import Utils.GradientPanel;
 import java.awt.*;
 import java.awt.event.*;
-import javax.swing.*;
-
-import Model.Customer;
 import java.io.IOException;
 import java.sql.SQLException;
+import javax.swing.*;
 
 public class Customer_view extends JFrame {
     private static final long serialVersionUID = 1L;
@@ -23,7 +22,7 @@ public class Customer_view extends JFrame {
         setLocationRelativeTo(null);
         getContentPane().setLayout(new BorderLayout());
 
-        // Panel Header (Thông tin nhân viên)
+        // Panel Header (Thông tin khách hàng)
         JPanel panel = new JPanel();
         panel.setLayout(null);
         panel.setPreferredSize(new Dimension(250, 100));
@@ -44,9 +43,9 @@ public class Customer_view extends JFrame {
         lblTime.setBounds(780, 10, 150, 30);
         panel.add(lblTime);
 
-        JLabel lblShift = new JLabel("Ca làm:");
-        lblShift.setBounds(780, 50, 150, 30);
-        panel.add(lblShift);
+        JLabel lblPoint = new JLabel("Điểm thưởng:"+ customer.getPoints());
+        lblPoint.setBounds(780, 50, 150, 30);
+        panel.add(lblPoint);
 
         JLabel lblNewLabel = new JLabel();
         lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -101,7 +100,7 @@ public class Customer_view extends JFrame {
         // Khu vực chính hiển thị nội dung
         JPanel contentPanel = new JPanel(new BorderLayout());
         contentPanel.setBackground(Color.LIGHT_GRAY);
-        CustomerJPanel customer_Interface = new CustomerJPanel();
+        CustomerJPanel customer_Interface = new CustomerJPanel(customer);
         contentPanel.add(customer_Interface, BorderLayout.CENTER);
 
         // JSplitPane để sidebar có thể thay đổi kích thước
