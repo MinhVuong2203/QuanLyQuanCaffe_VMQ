@@ -21,6 +21,11 @@ public class ValidationUtils {
     public static boolean smallerANumber(String input, int min){
         return Integer.parseInt(input) < min;
     }
+    
+    // Chuỗi nhỏ hơn hoặc bằng một số
+    public static boolean smallerOrEqualsANumber(String input, int min){
+        return Integer.parseInt(input) <= min;
+    }
 
     // STRING
     // Chuỗi không được rỗng
