@@ -1,7 +1,6 @@
 package Controller.CustomerController;
 
 import View.CustomerView.Customer_view;
-
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -25,9 +24,6 @@ public class CustomerController implements ActionListener {
         else if (e.getActionCommand().equals("SẢN PHẨM")){
         	 customerView.contentPanel.add( customerView.customer_Interface, BorderLayout.CENTER);
         }
-
-        
-
         customerView.contentPanel.revalidate();
         customerView.contentPanel.repaint();
     }

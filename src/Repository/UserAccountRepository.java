@@ -1,5 +1,6 @@
 package Repository;
 
+import Model.Customer;
 import Model.Employee;
 import Utils.ConvertInto;
 import Utils.JdbcUtils;
@@ -162,4 +163,48 @@ public class UserAccountRepository {
 		}
         return false; // Không tồn tại
     }
+
+    public Customer getCustomerFromID(int id) throws SQLException {
+        try {
+            connection = jdbcUtils.connect(); // Phải có để có connection
+            Statement stmt = connection.createStatement();
+            String sql = "SELECT U.ID, C.name, C.phone, C.image, U.username, U.password, U.role, C.point \r\n" + //
+                                "FROM UserAccount AS U\r\n" + //
+                                "JOIN Customer AS C ON U.ID = C.customerID\r\n" + //
+                                "WHERE U.ID = " + id;
+            
+            ResultSet rs = stmt.executeQuery(sql);
+            if (rs.next()) {
+                String name = rs.getString("name");
+                String phone = rs.getString("phone");
+                String image = rs.getString("image");
+                double cost = rs.getDouble("point");
+                String username = rs.getString("username");
+                String password = rs.getString("password");
+            return new Customer(id, name, phone, image, username, password, cost);
+            }
+            rs.close();
+            stmt.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+			connection.close();
+		}
+        return null; // Không tồn tại
+    }
+
+    public void updatePoint(int id, double pointNew) throws SQLException {
+        try {
+            connection = jdbcUtils.connect(); // Phải có để có connection
+            Statement stmt = connection.createStatement();
+            String sql = "UPDATE Customer SET point = " + pointNew + " WHERE customerID = " + id;
+            stmt.executeUpdate(sql);
+            stmt.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            connection.close();
+        }
+    }
+
 }

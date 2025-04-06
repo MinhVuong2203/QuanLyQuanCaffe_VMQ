@@ -34,4 +34,8 @@ public class JdbcUtils {
 		return this.connection;
 	}
 
+    public void connectDatabase() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
 }

@@ -2,7 +2,6 @@ package View.CustomerView;
 
 import Controller.CustomerController.CustomerController;
 import Model.Customer;
-import Model.Employee;
 import Utils.GradientPanel;
 import java.awt.*;
 import java.awt.event.*;
@@ -10,7 +9,6 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.text.NumberFormat;
 import java.util.Locale;
-
 import javax.swing.*;
 
 public class Customer_view extends JFrame {
@@ -25,6 +23,8 @@ public class Customer_view extends JFrame {
 	private JButton btnMenu;
 	private ImageIcon iconExpand;
 	private ImageIcon iconCollapse;
+    public JLabel cost;
+    public int id;
 
 
     public Customer_view(Customer customer) throws IOException, ClassNotFoundException, SQLException {
@@ -33,7 +33,7 @@ public class Customer_view extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         getContentPane().setLayout(new BorderLayout());
-
+        this.id = customer.getId();
         ActionListener ac = new CustomerController(this);
         
         // Panel Header (Thông tin khách hàng)
@@ -96,7 +96,7 @@ public class Customer_view extends JFrame {
         panel.add(CostImg);
         
         NumberFormat numberFormat = NumberFormat.getNumberInstance(new Locale("vi", "VN"));
-        JLabel cost = new JLabel(numberFormat.format(customer.getPoints()));
+        cost = new JLabel(numberFormat.format(customer.getPoints()));
         cost.setFont(new Font("Arial", Font.BOLD, 16));
         cost.setBounds(1332, 18, 108,36);
         cost.setHorizontalAlignment(SwingConstants.RIGHT); // Căng phải
@@ -118,7 +118,7 @@ public class Customer_view extends JFrame {
         customer_Interface = new CustomerJPanel(customer);
         contentPanel.add(customer_Interface, BorderLayout.CENTER);
        
-        gamePanel = new GamePanel();
+        gamePanel = new GamePanel(this);
 
         String[] buttonLabels = { "SẢN PHẨM", "GIỎI HÀNG", "GAME", "THÔNG TIN CÁ NHÂN","ĐĂNG XUẤT"};
         for (String label : buttonLabels) {
@@ -195,15 +195,20 @@ public class Customer_view extends JFrame {
         timer.start();
     }
     
-    public static void main(String[] args) throws IllegalAccessException, UnsupportedLookAndFeelException, InstantiationException {
-		Customer customer = new Customer(30000, "Nguyễn Văn Test", "0123454", "src\\image\\Customer_Image\\Customer_Default.png", "user", "pass", "Khách", 1000);
-        SwingUtilities.invokeLater(() -> {
-            try {
-                new Customer_view(customer).setVisible(true);
-            } catch (ClassNotFoundException | IOException | SQLException e) {
-                e.printStackTrace();
-            }
-        });
-	}
+    // public static void main(String[] args) throws IllegalAccessException, UnsupportedLookAndFeelException, InstantiationException {
+	// 	// Customer customer = new Customer(30000, "Nguyễn Văn Test", "0123454", "src\\image\\Customer_Image\\Customer_Default.png", "user", "pass", "Khách", 1000);
+	// 	try {
+	// 		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+	// 		SwingUtilities.invokeLater(() -> {try {
+	// 			new Customer_view(customer).setVisible(true);
+	// 		} catch (ClassNotFoundException | IOException | SQLException e) {
+	// 			e.printStackTrace();
+	// 		}});
+	// 	} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
+	// 			| UnsupportedLookAndFeelException e) {
+	// 		// TODO Auto-generated catch block
+	// 		e.printStackTrace();
+	// 	}
+	// }
 }
 

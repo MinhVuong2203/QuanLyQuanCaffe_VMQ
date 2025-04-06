@@ -1,7 +1,9 @@
 package Controller.Window;
 
+import Model.Customer;
 import Model.Employee;
 import Repository.UserAccountRepository;
+import View.CustomerView.Customer_view;
 import View.StaffView.Staff_view;
 import View.Window.Login;
 import View.Window.SignUp_Window;
@@ -73,15 +75,17 @@ public class LoginController implements ActionListener {
                             }
                         }
                         else if (role.equals("Khách")){
-                            System.out.println("Giao diện khách Chưa sửa");
-                            // try {
-                            //     Customer customer = userAccountDao.getEmployeeFromID(id);  // Lấy ra nhân viên khi đăng nhập đúng
-                            //     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-                            
-                            //     SwingUtilities.invokeLater(() -> new Customer_view(cus).setVisible(true));
-                            // } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException ex) {
-                            //     ex.printStackTrace();
-                            // }
+                            System.out.println("Giao diện khách");
+//                            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+                            Customer customer = userAccountDao.getCustomerFromID(id);
+                            SwingUtilities.invokeLater(() -> {
+                                    try {
+                                        new Customer_view(customer).setVisible(true);
+                                    } catch (ClassNotFoundException | IOException | SQLException e1) {
+                                        // TODO Auto-generated catch block
+                                        e1.printStackTrace();
+                                    }   
+                            });
                         }
                     }
                 } catch (IOException ex) {

@@ -9,7 +9,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.Map;
 import javax.swing.*;
 
@@ -208,16 +207,16 @@ public class CustomerWishList extends JFrame {
         timer.start();
     }
 
-    public static void main(String[] args) {
-        Customer customer = new Customer(1, "John Doe", "12345", "johndoe@example.com", "123 Main St", "image/background.png", "VIP", 5);
-        Map<Integer, Integer> wishList = new HashMap<>();
-        wishList.put(1, 2);
-        wishList.put(2, 1);
-        wishList.put(3, 3);
+    // public static void main(String[] args) {
+    //     Customer customer = new Customer(1, "John Doe", "12345", "johndoe@example.com", "123 Main St", "image/background.png", "VIP", 5);
+    //     Map<Integer, Integer> wishList = new HashMap<>();
+    //     wishList.put(1, 2);
+    //     wishList.put(2, 1);
+    //     wishList.put(3, 3);
 
-        CustomerWishList frame = new CustomerWishList(customer, wishList);
-        frame.setSize(900, 600);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setVisible(true);
-    }
+    //     CustomerWishList frame = new CustomerWishList(customer, wishList);
+    //     frame.setSize(900, 600);
+    //     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    //     frame.setVisible(true);
+    // }
 }

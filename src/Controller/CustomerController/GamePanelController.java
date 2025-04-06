@@ -1,71 +1,139 @@
 package Controller.CustomerController;
 
+import Repository.UserAccountRepository;
+import Utils.ValidationUtils;
+import View.CustomerView.Customer_view;
+import View.CustomerView.GamePanel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.text.NumberFormat;
+import java.util.Locale;
 import java.util.Random;
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 import javax.swing.Timer;
-
-import Utils.ValidationUtils;
-import View.CustomerView.GamePanel;
 
 public class GamePanelController implements ActionListener {
 	private GamePanel gamePanel;
-
-	private Timer timer;
+	private Customer_view customer_view;
+	private int x; // Để tính số lần xuất hiện
+	private Timer timer1;
+	private Timer timer2;
+	private Timer timer3;
 	private int counter = 0;
-	private final int MAX_COUNT = 100; // Số lần đổi hình xúc xắc để tạo hiệu ứng
+	private final int MAX_COUNT = 60; // Số lần đổi hình xúc xắc để tạo hiệu ứng
 	
-	public GamePanelController(GamePanel gamePanel) {
+	public GamePanelController(GamePanel gamePanel, Customer_view customer_view) {
+		this.customer_view = customer_view;
 		this.gamePanel = gamePanel;
-	}
+	}	
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		String command = e.getActionCommand();
 		System.out.println("Chọn " + command);
-		if (command.equals("Lắc")){
+		if (command.equals("Quay")){
+			 
 			Random rand = new Random();
-			int choose = this.gamePanel.selectedDice;
+			int choose = this.gamePanel.selectedDice + 1;
 			
-			if (choose == -1) {
-				System.out.println("Bạn phải chọn xúc sắc");
+			if (choose == 0) {
+				JOptionPane.showMessageDialog(null, "Bạn phải chọn 1 loại", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
 				return;
 			}
+			
+			if (this.gamePanel.bet_text.getText().isEmpty()) {
+				JOptionPane.showMessageDialog(null, "Bạn hãy nhập số xu", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+				return;
+			}
+			
 			if (!ValidationUtils.isNumeric(this.gamePanel.bet_text.getText())) {
-				System.out.println("không hợp lệ");
+				JOptionPane.showMessageDialog(null, "Số xu không hợp lệ", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
 				return;
 			}
-			double price = Double.parseDouble(this.gamePanel.bet_text.getText());
-//			if (!ValidationUtils.smallerOrEqualsANumber(this.gamePanel.bet_text.getText()) {
-//				
-//			}
+			double price = Double.parseDouble(gamePanel.bet_text.getText());
 			
-			System.out.println(choose + " " + price);
+			String cleanedText = this.customer_view.cost.getText().replace(".", "");  // Xóa dấu chấm để không bị 1.000 thành 1.0
+			System.out.println("leanedText" + cleanedText);
+			double cost = Double.parseDouble(cleanedText);
+
+			System.out.println(choose + " " + price + " " + cost);
+			if (price > cost) {
+				JOptionPane.showMessageDialog(null, "Số tiền cược lớn hơn số dư", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+				return;
+			}
 			
-			timer = new Timer(5, new ActionListener() {
+			if (price == 0) {
+				JOptionPane.showMessageDialog(null, "Chơi kì vậy bạn! Đặt tiền cược đi chứ", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+				return;
+			}
+			
+			this.x = 0;
+			int delayBetweenDices = 1100; // delay giữa các xúc xắc (milliseconds)
+
+			for (int i = 0; i < 3; i++) {
+			final int diceIndex = i; // biến final để dùng trong inner class
+			Timer timer = new Timer(delayBetweenDices * i, new ActionListener() {
+				int localCounter = 0;
+				Timer localTimer;
 				@Override
-				public void actionPerformed(ActionEvent evt) {
-					int dice1 = 1 + rand.nextInt(6);
-					int dice2 = 1 + rand.nextInt(6);
-					int dice3 = 1 + rand.nextInt(6);
-					// Hiển thị xúc xắc ngẫu nhiên (hiệu ứng xoay)
-					gamePanel.setImage(dice1, dice2, dice3);
-					counter++;
-					if (counter >= MAX_COUNT) {
-						((Timer) evt.getSource()).stop();
-						counter = 0;
-						// Sau hiệu ứng thì tung kết quả thật
-						int real1 = 1 + rand.nextInt(6);
-						int real2 = 1 + rand.nextInt(6);
-						int real3 = 1 + rand.nextInt(6);
-						System.out.println("Kết quả: " + real1 + " " + real2 + " " + real3);
-						gamePanel.setImage(real1, real2, real3);
-//						if (real1 == )
+				public void actionPerformed(ActionEvent e) {
+					if (localTimer == null) {
+						localTimer = (Timer) e.getSource();
+					}
+					int dice = 1 + rand.nextInt(6);
+					// Hiển thị xúc xắc tương ứng
+					if (diceIndex == 0)
+						gamePanel.setImage(dice, -1, -1);
+					else if (diceIndex == 1)
+						gamePanel.setImage(-1, dice, -1);
+					else
+						gamePanel.setImage(-1, -1, dice);
+					localCounter++;
+					if (localCounter >= MAX_COUNT) {
+						localTimer.stop();
+						int real = 1 + rand.nextInt(6);
+						if (real == choose) x++;
+						// Hiển thị kết quả thực
+						if (diceIndex == 0)
+							gamePanel.setImage(real, -1, -1);
+						else if (diceIndex == 1)
+							gamePanel.setImage(-1, real, -1);
+						else
+							gamePanel.setImage(-1, -1, real);
+						// Nếu là lần cuối (diceIndex == 2) thì xử lý phần thưởng
+						if (diceIndex == 2) {
+							SwingUtilities.invokeLater(() -> {
+								NumberFormat numberFormat = NumberFormat.getNumberInstance(new Locale("vi", "VN"));
+								double newCost;
+								if (x > 0) {
+									JOptionPane.showMessageDialog(null, "Bạn đã thắng " + numberFormat.format(price * x * x) + " xu", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+									newCost = cost + price * x * x;
+									customer_view.cost.setText(numberFormat.format(newCost));
+								} else {
+									JOptionPane.showMessageDialog(null, "Rất tiếc! Chúc bạn may mắn lần sau", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+									newCost = cost - price;
+									customer_view.cost.setText(numberFormat.format(newCost));
+								}
+								try {
+									UserAccountRepository user = new UserAccountRepository();
+									user.updatePoint(customer_view.id, newCost); // Cập nhật lại số dư trong database
+								} catch (IOException ex) {
+								} catch (ClassNotFoundException ex) {
+								} catch (SQLException ex) {
+								}
+							});
+						}
 					}
 				}
 			});
+			timer.setDelay(3);  // tốc độ lắc
 			timer.start();
+		}			
 		}
+			
 		else if (command.equals("Thể lệ")){
 			gamePanel.ProcessingRules();
 		}	

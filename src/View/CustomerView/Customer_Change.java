@@ -7,8 +7,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
 
-
-
 public class Customer_Change extends JFrame {
     private static final long serialVersionUID = 1L;
     private Customer customer;
@@ -269,10 +267,10 @@ public class Customer_Change extends JFrame {
         
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            Customer customer = new Customer(1, "Nguyen Van A", "0123456789", "password123", "email@example.com", "address", "image.jpg", 0);
-            Customer_Change frame = new Customer_Change(customer);
+            // Customer customer = new Customer(1, "Nguyen Van A", "0123456789", "password123", "email@example.com", "address", "image.jpg", 0);
+            // Customer_Change frame = new Customer_Change(customer);
           
-            frame.setVisible(true);
+            // frame.setVisible(true);
         });
     
     

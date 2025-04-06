@@ -1,13 +1,13 @@
 package Model;
 public class Customer extends User {
-    private int points;
+    private double points;
     
-    public Customer(int id, String name, String phone, String image, String username, String password, String role, int points) {
-        super(id, name, phone, image, username, password, "Khách hàng");
+    public Customer(int id, String name, String phone, String image, String username, String password, double points) {
+        super(id, name, phone, image, username, password, "Khách");
         this.points = points;
     }
 
-    public int getPoints() {
+    public double getPoints() {
         return points;
     }
 
