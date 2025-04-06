@@ -112,7 +112,7 @@ ALTER TABLE EmployeeShift
 ADD status NVARCHAR(50) DEFAULT N'chưa điểm danh';
 
 
-
+go
 -- Dùng trigger để tự động lấy lương của nhân viên, và tính tiền lương theo ca
 CREATE TRIGGER trg_CalculateSalary
 ON EmployeeShift

@@ -29,7 +29,7 @@ public class EmployeeRepository {
         jdbcUtils = new JdbcUtils();
     }
 
-    public int getMaxShiftID(){
+    public int getMaxShiftID() {
         String sql = "SELECT MAX(shiftID) FROM EmployeeShift";
         try (Connection connection = jdbcUtils.connect();
                 Statement stmt = connection.createStatement();
@@ -63,7 +63,8 @@ public class EmployeeRepository {
 
     public List<Employee> getAllEmployees() throws SQLException {
         List<Employee> employees = new ArrayList<>();
-        String sql = "SELECT e.image, e.name, es.shiftID, es.startTime, es.endTime, ua.role\r\n" +
+        String sql = "SELECT e.image, e.employeeID, e.name, es.shiftID, es.startTime, es.endTime, ua.role, es.status\r\n"
+                +
                 " FROM Employee e\r\n" + //
                 " JOIN EmployeeShift es ON es.employeeID = e.employeeID\r\n" +
                 " JOIN UserAccount ua ON e.employeeID = ua.ID\r\n";
@@ -77,10 +78,12 @@ public class EmployeeRepository {
                 Employee employee = new Employee();
                 employee.setImage(rs.getString("image"));
                 employee.setName(rs.getString("name"));
+                employee.setId(rs.getInt("employeeID"));
                 employee.getEmployeeShift().setShiftID(rs.getInt("shiftID"));
                 employee.getEmployeeShift().setStartTime(rs.getTimestamp("startTime").toLocalDateTime());
                 employee.getEmployeeShift().setEndTime(rs.getTimestamp("endTime").toLocalDateTime());
                 employee.setRole(rs.getString("role"));
+                employee.getEmployeeShift().setStatus(rs.getString("status"));
                 // employee.setHourlyWage(rs.getDouble("hourlyWage"));
                 employees.add(employee);
             }
@@ -93,8 +96,8 @@ public class EmployeeRepository {
     public List<Employee> getAllEmployeesToManager() throws SQLException {
         Map<Integer, Employee> mapEmployee = new java.util.HashMap<>();
         String sql = "SELECT e.employeeID , e.image, e.name, ua.role "
-                     + "FROM Employee e "
-                     + "JOIN UserAccount ua ON e.employeeID = ua.ID";
+                + "FROM Employee e "
+                + "JOIN UserAccount ua ON e.employeeID = ua.ID";
         // " FROM Employee \r\n";
 
         try (Connection connection = jdbcUtils.connect();
@@ -102,13 +105,14 @@ public class EmployeeRepository {
                 ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
-                if (rs.getString("role").equals("Quản lí")) continue;// bỏ qua quản lý
-                    Employee employee = new Employee();
-                    employee.setId(rs.getInt("employeeID"));
-                    employee.setImage(rs.getString("image"));
-                    employee.setName(rs.getString("name"));
-                    employee.setRole(rs.getString("role"));
-                    mapEmployee.put(employee.getId(), employee);
+                if (rs.getString("role").equals("Quản lí"))
+                    continue;// bỏ qua quản lý
+                Employee employee = new Employee();
+                employee.setId(rs.getInt("employeeID"));
+                employee.setImage(rs.getString("image"));
+                employee.setName(rs.getString("name"));
+                employee.setRole(rs.getString("role"));
+                mapEmployee.put(employee.getId(), employee);
             }
             List<Employee> listEmployee = new ArrayList<>(mapEmployee.values());
             // Sắp xếp theo role
@@ -120,10 +124,34 @@ public class EmployeeRepository {
         return null;
     }
 
-    public String[] getEachEmployeeShift(int id, JDateChooser startDay, JDateChooser endDay){
+    public void setStatusFromSQL(int id, String status) {
+        try (Connection connection = jdbcUtils.connect();
+                Statement stmt = connection.createStatement()) {
+            String sql = "UPDATE EmployeeShift SET status = N'" + status + "' WHERE employeeID = " + id;
+            stmt.executeUpdate(sql);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String getStatusFromSQL(int id) {
+        String sql = "SELECT status FROM EmployeeShift WHERE employeeID = " + id;
+        try (Connection connection = jdbcUtils.connect();
+                Statement stmt = connection.createStatement();
+                ResultSet rs = stmt.executeQuery(sql)) {
+            if (rs.next()) {
+                return rs.getString("status");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public String[] getEachEmployeeShift(int id, JDateChooser startDay, JDateChooser endDay) {
         int n = ValidationUtils.CalculateDate(startDay, endDay) + 1;
-        String []x = new String[n];
-        for (int i = 0; i < n; i++){
+        String[] x = new String[n];
+        for (int i = 0; i < n; i++) {
             x[i] = "";
         }
         // Chuyển JDateChooser thành LocalDate
@@ -133,15 +161,16 @@ public class EmployeeRepository {
         String startDayString = sdf.format(startDate);
         String endDayString = sdf.format(endDate);
         String sql = "SELECT [employeeID], [startTime],[endTime]\r\n" +
-                        "FROM [dbo].[EmployeeShift]\r\n" + //
-                        "WHERE [employeeID] = " + id + " AND [startTime] >= '" + startDayString + "' AND [endTime] < '" + endDayString + "'";
+                "FROM [dbo].[EmployeeShift]\r\n" + //
+                "WHERE [employeeID] = " + id + " AND [startTime] >= '" + startDayString + "' AND [endTime] < '"
+                + endDayString + "'";
         try (Connection connection = jdbcUtils.connect();
                 Statement stmt = connection.createStatement();
                 ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
                 int row = ValidationUtils.CalculateDate(startDayString, rs.getString("startTime")); // Lấy tọa độ
-                String a = rs.getString("startTime").split(" ")[1]; 
-                String b = rs.getString("endTime").split(" ")[1]; 
+                String a = rs.getString("startTime").split(" ")[1];
+                String b = rs.getString("endTime").split(" ")[1];
                 a = a.substring(0, 5);
                 b = b.substring(0, 5);
                 x[row] = a + " - " + b; // Lưu vào mảng
@@ -152,9 +181,10 @@ public class EmployeeRepository {
         return x;
     }
 
-    public void addShiftToSQL(int id, String dateString, String timeRange){
+    public void addShiftToSQL(int id, String dateString, String timeRange) {
         String sql = "INSERT INTO EmployeeShift (shiftID, employeeID, startTime, endTime) " +
-                "VALUES (" + (getMaxShiftID()+1) +", " + id + ", '" + dateString + " " + timeRange.split("-")[0] + ":00', '" + dateString + " " + timeRange.split("-")[1] + ":00')";
+                "VALUES (" + (getMaxShiftID() + 1) + ", " + id + ", '" + dateString + " " + timeRange.split("-")[0]
+                + ":00', '" + dateString + " " + timeRange.split("-")[1] + ":00')";
         try (Connection connection = jdbcUtils.connect();
                 Statement stmt = connection.createStatement()) {
             stmt.executeUpdate(sql);
@@ -164,20 +194,23 @@ public class EmployeeRepository {
     }
 
     public void deleteShiftFromSQL(int id, String dateString) {
-        String sql = "DELETE FROM EmployeeShift WHERE employeeID = " + id + " AND CAST(startTime AS DATE) = '" + dateString + "'";
+        String sql = "DELETE FROM EmployeeShift WHERE employeeID = " + id + " AND CAST(startTime AS DATE) = '"
+                + dateString + "'";
         try (Connection connection = jdbcUtils.connect();
-            Statement stmt = connection.createStatement()) {
+                Statement stmt = connection.createStatement()) {
             stmt.executeUpdate(sql);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void updateShiftToSQL(int id, String dateString, String timeRange, String lastTimeRange){
-       String sql = "UPDATE EmployeeShift SET startTime = '" + dateString + " " + timeRange.split("-")[0] + ":00', endTime = '" + dateString + " " + timeRange.split("-")[1] + ":00' "
-                + "WHERE employeeID = " + id + " AND startTime = '" + dateString + " " + lastTimeRange.split("-")[0] + ":00' AND endTime = '" + dateString + " " + lastTimeRange.split("-")[1] + ":00'";
+    public void updateShiftToSQL(int id, String dateString, String timeRange, String lastTimeRange) {
+        String sql = "UPDATE EmployeeShift SET startTime = '" + dateString + " " + timeRange.split("-")[0]
+                + ":00', endTime = '" + dateString + " " + timeRange.split("-")[1] + ":00' "
+                + "WHERE employeeID = " + id + " AND startTime = '" + dateString + " " + lastTimeRange.split("-")[0]
+                + ":00' AND endTime = '" + dateString + " " + lastTimeRange.split("-")[1] + ":00'";
         try (Connection connection = jdbcUtils.connect();
-            Statement stmt = connection.createStatement()) {
+                Statement stmt = connection.createStatement()) {
             stmt.executeUpdate(sql);
         } catch (Exception e) {
             e.printStackTrace();
@@ -185,34 +218,31 @@ public class EmployeeRepository {
     }
 
     public static void main(String[] args) {
-        // try {
-        //     EmployeeRepository employeeRepository = new EmployeeRepository();
-        //     List<Employee> employees = employeeRepository.getAllEmployees();
-        //     for (Employee employee : employees) {
-        //         System.out.println(employee.getImage() + " " + employee.getName() + " "
-        //                 + employee.getEmployeeShift().getShiftID() + " Thoi gian bat dau: "
-        //                 + employee.getEmployeeShift().getStartTime() + " Thoi gian ket thuc: "
-        //                 + employee.getEmployeeShift().getEndTime());
-        //     }
-        // } catch (Exception e) {
-        //     e.printStackTrace();
-        // }
-
-        try{
+        try {
             EmployeeRepository employeeRepository = new EmployeeRepository();
-            List<Employee> employees = employeeRepository.getAllEmployeesToManager();
+            List<Employee> employees = employeeRepository.getAllEmployees();
             for (Employee employee : employees) {
                 System.out.println(employee.getImage() + " " + employee.getName() + " "
-                        + employee.getRole() + " ID: " + employee.getId());
+                        + employee.getEmployeeShift().getShiftID() + " Thoi gian bat dau: "
+                        + employee.getEmployeeShift().getStartTime() + " Thoi gian ket thuc: "
+                        + employee.getEmployeeShift().getEndTime()
+                        + " " + employee.getRole() + " ID: " + employee.getId() + " Status: "
+                        + employee.getEmployeeShift().getStatus());
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        // try {
+        // EmployeeRepository employeeRepository = new EmployeeRepository();
+        // List<Employee> employees = employeeRepository.getAllEmployeesToManager();
+        // for (Employee employee : employees) {
+        // System.out.println(employee.getImage() + " " + employee.getName() + " "
+        // + employee.getRole() + " ID: " + employee.getId());
+        // }
+        // } catch (Exception e) {
+        // e.printStackTrace();
+        // }
     }
 
-    
-
-  
-
-    
 }

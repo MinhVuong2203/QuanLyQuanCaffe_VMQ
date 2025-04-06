@@ -79,14 +79,12 @@ public class RollCall extends JPanel {
         for (Employee employee : employees) {
             LocalDateTime employeeShiftTimeStar = employee.getEmployeeShift().getStartTime();
             LocalDateTime employeeShiftTimeEnd = employee.getEmployeeShift().getEndTime();
-            // Chuyển đổi LocalDateTime thành String với định dạng "HH:mm:ss"
-            System.out.println("employeeShiftTime: " + employeeShiftTimeStar);
-            System.out.println("currentDateTime: " + currentDateTime);
-            // Compare only the time part
-            if (employeeShiftTimeStar.toLocalTime().isBefore(currentDateTime.toLocalTime()) &&
-                    employeeShiftTimeEnd.toLocalTime().isAfter(currentDateTime.toLocalTime())) {
+
+            // So sánh cả ngày và giờ
+            if (currentDateTime.isAfter(employeeShiftTimeStar) && currentDateTime.isBefore(employeeShiftTimeEnd)) {
                 Model_Infor.addElement(
-                        "Tên: " + employee.getName() + " - " + "Ca làm: " + employee.getEmployeeShift().getShiftID());
+                        "Tên: " + employee.getName() + " - " + "ID: " + employee.getId() + " - " + "Ca làm: "
+                                + employee.getEmployeeShift().getShiftID());
             }
         }
     }
@@ -123,6 +121,7 @@ public class RollCall extends JPanel {
             }
 
             if (selected != null) {
+                final Employee selectedEmployee = selected;
                 imageLabel = new JLabel();
                 imageLabel.setBounds(100, 50, 300, 400);
                 imageLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
@@ -131,21 +130,34 @@ public class RollCall extends JPanel {
                 infoLabel.setBounds(100, 440, 400, 160);
                 infoLabel.setFont(new Font("Arial", Font.PLAIN, 20));
 
-                Label_Status = new JLabel("Trạng thái: Chưa điểm danh");
-                Label_Status.setForeground(Color.RED);
+                Label_Status = new JLabel("Trạng thái: " + selected.getEmployeeShift().getStatus());
                 Label_Status.setBounds(100, 577, 400, 30);
                 Label_Status.setFont(new Font("Arial", Font.PLAIN, 20));
+                if (selected.getEmployeeShift().getStatus().equals("Đã điểm danh")) {
+                    Label_Status.setForeground(Color.GREEN);
+                } else {
+                    Label_Status.setForeground(Color.RED);
+                }
 
                 btnCallRoll = new JButton("Điểm danh");
                 btnCallRoll.setBounds(100, 610, 200, 30);
                 btnCallRoll.setFont(new Font("Arial", Font.BOLD, 20));
+                System.out.println("Trạng thái: " + selected.getEmployeeShift().getStatus() +
+                        "EmployeeID: " + selected.getId());
                 btnCallRoll.addActionListener(e -> {
-                    if (Label_Status.getText().equals("Trạng thái: Chưa điểm danh")) {
-                        Label_Status.setText("Trạng thái: Đã điểm danh");
-                        Label_Status.setForeground(Color.GREEN);
-                    } else {
-                        Label_Status.setText("Trạng thái: Chưa điểm danh");
-                        Label_Status.setForeground(Color.RED);
+                    try {
+                        if (Label_Status.getText().equals("Trạng thái: chưa điểm danh")) {
+                            employeeRepository.setStatusFromSQL(selectedEmployee.getId(), "Đã điểm danh");
+                            Label_Status.setText("Trạng thái: Đã điểm danh");
+                            Label_Status.setForeground(Color.GREEN);
+                        } else {
+                            employeeRepository.setStatusFromSQL(selectedEmployee.getId(), "Chưa điểm danh");
+                            Label_Status.setText("Trạng thái: Chưa điểm danh");
+                            Label_Status.setForeground(Color.RED);
+                        }
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                        JOptionPane.showMessageDialog(null, "Lỗi khi cập nhật trạng thái điểm danh");
                     }
                 });
 
@@ -157,11 +169,13 @@ public class RollCall extends JPanel {
                     imageLabel.setIcon(null);
                     imageLabel.setText("Không có ảnh");
                 }
-                
+
                 String info = "<html>Tên: " + selected.getName() +
                         "<br>Mã ca làm: " + selected.getEmployeeShift().getShiftID() +
-                        "<br>Thời gian bắt đầu: " + selected.getEmployeeShift().getStartTime().format(DateTimeFormatter.ofPattern("HH:mm")) +
-                        "<br>Thời gian kết thúc: " + selected.getEmployeeShift().getEndTime().format(DateTimeFormatter.ofPattern("HH:mm")) + 
+                        "<br>Thời gian bắt đầu: "
+                        + selected.getEmployeeShift().getStartTime().format(DateTimeFormatter.ofPattern("HH:mm")) +
+                        "<br>Thời gian kết thúc: "
+                        + selected.getEmployeeShift().getEndTime().format(DateTimeFormatter.ofPattern("HH:mm")) +
                         "<br>Chức vụ: " + selected.getRole() + "</html>";
                 infoLabel.setText(info);
 
@@ -170,7 +184,7 @@ public class RollCall extends JPanel {
                 callRollPanel.add(Label_Status);
                 callRollPanel.add(btnCallRoll);
             }
-            
+
             callRollPanel.revalidate();
             callRollPanel.repaint();
         }
