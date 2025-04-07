@@ -3,7 +3,6 @@ package View.StaffView;
 import Controller.StaffController.TableLeftController;
 import Model.Table;
 import Repository.TableRepository;
-import View.ManagerView.ManagerTable.TablePanel;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
@@ -86,8 +85,10 @@ public class Table_JPanel extends JPanel {
 					///////////////////////////////////////
 					if (table.getStatus().equalsIgnoreCase("Trống"))
 						Button.setBackground(new Color(144, 238, 144));
-					else
+					else if (table.getStatus().equalsIgnoreCase("Có khách"))
 						Button.setBackground(new Color(236, 112, 99));
+					else if (table.getStatus().equalsIgnoreCase("Bảo trì"))
+						Button.setBackground(new Color(255, 250, 205));
 					Button.addActionListener(ac);
 					tableButtons.add(Button);
 					leftPanel.add(tableButtons.get(tableButtons.size()-1));
@@ -202,11 +203,19 @@ public class Table_JPanel extends JPanel {
 				if (table.getStatus().equals("Trống")) {
 					this.table_people = "src\\image\\Table_image\\Table_Empty.png";	
 					this.btnNewButton.setText("Gọi món");
+					this.rightPanel.setBackground(new Color(144, 238, 144));
 				}
-				else {
+				else if (table.getStatus().equalsIgnoreCase("Có khách")){
 					this.table_people = "src\\image\\Table_image\\Table_People.png"; 
 					this.btnNewButton.setText("Thanh toán");
+					this.rightPanel.setBackground(new Color(236, 112, 99));
 				}
+				else if (table.getStatus().equalsIgnoreCase("Bảo trì")) {
+					this.table_people = "src\\image\\Table_image\\repair_img.png"; 
+					this.btnNewButton.setText("Đang bảo trì");
+					this.rightPanel.setBackground(new Color(254, 250, 220));
+				}
+				
 				ImageIcon img = new ImageIcon(table_people);
 				Image sImg = img.getImage().getScaledInstance(300, 300, Image.SCALE_SMOOTH);
 				ImageIcon sIcon = new ImageIcon(sImg);

@@ -89,7 +89,7 @@ public class ValidationUtils {
     public static int indexListTableID(List<Table> listTable, int id) {
 		for (Table table : listTable)
 			if (table.getTableID() == id)
-				return id;
+				return listTable.indexOf(table);
 		return -1;
 	}
     public static boolean indexListTableName(List<Table> listTable, String name) {

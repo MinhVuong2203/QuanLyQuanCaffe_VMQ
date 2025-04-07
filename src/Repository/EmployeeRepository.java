@@ -219,6 +219,41 @@ public class EmployeeRepository {
         }
     }
 
+    public List<Employee> getAllEmployeesAllAttributes(){
+        String sql = "SELECT e.employeeID, e.name, e.phone, e.image, u.username, u.password, u.role, e.CCCD, e.birthDate, e.gender, e.hourWage " +
+                     "FROM Employee as e " + 
+                     "JOIN UserAccount as u ON e.employeeID = u.ID " +
+                     "WHERE u.role != 'Quản lí'"; // Lọc luôn ở SQL
+        try (Connection connection = jdbcUtils.connect();
+             Statement stmt = connection.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            
+            List<Employee> employees = new ArrayList<>();
+            while(rs.next()){
+                int id = rs.getInt("employeeID");
+                String name = rs.getString("name").trim();
+                String phone = rs.getString("phone") != null ? rs.getString("phone").trim() : "";
+                String image = rs.getString("image") != null ? rs.getString("image").trim() : "";
+                String username = rs.getString("username").trim();
+                String password = rs.getString("password").trim();
+                String role = rs.getString("role").trim();
+                String CCCD = rs.getString("CCCD").trim();
+                String birthDate = rs.getString("birthDate").trim();
+                String gender = rs.getString("gender").trim();
+                double hourWage = rs.getDouble("hourWage");
+        
+                employees.add(new Employee(id, name, phone, image, username, password, role, CCCD, birthDate, gender, hourWage));
+            }   
+            return employees; 
+        } 
+        catch (SQLException | ClassNotFoundException e) {
+            System.err.println("Error executing query: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return new ArrayList<>(); // Trả về danh sách rỗng nếu có lỗi
+    }
+    
+
     public static void main(String[] args) {
         try {
             EmployeeRepository employeeRepository = new EmployeeRepository();

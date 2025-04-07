@@ -53,6 +53,34 @@ public class TableRepository {
                 connection.close(); 
         }
     }
+
+    public void updateTable(int id, String name) throws SQLException, ClassNotFoundException{
+        try {
+            connection = jdbcUtils.connect(); // Phải có để có connection
+            Statement stmt = connection.createStatement();
+            String sql = "UPDATE TableCaffe SET tableName = '" + name + "' WHERE tableID = " + id;
+            stmt.executeUpdate(sql);
+            stmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            connection.close(); // Đóng kết nối
+        }
+    }
     
+    public void updateTableStatus(int tableId, String status) throws SQLException, ClassNotFoundException {
+        try {
+            connection = jdbcUtils.connect(); // Phải có để có connection
+            Statement stmt = connection.createStatement();
+            String sql = "UPDATE TableCaffe SET status = N'" + status + "' WHERE tableID = " + tableId;
+            stmt.executeUpdate(sql);
+            stmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            connection.close(); // Đóng kết nối
+        }
+    }
+
 }
 

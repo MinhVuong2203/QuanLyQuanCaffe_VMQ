@@ -13,6 +13,7 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -54,7 +55,7 @@ public class TablePanel extends JPanel {
 				table.setFont(new Font("Arial", Font.PLAIN, 16));
 				table.setRowHeight(50);
 				table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-
+				
 				// Tùy chỉnh renderer của tiêu đề bảng, do look and feel bị lỗi nên phải viết đoạn này
 				table.getTableHeader().setDefaultRenderer(new javax.swing.table.DefaultTableCellRenderer() {
 				@Override
@@ -105,19 +106,28 @@ public class TablePanel extends JPanel {
 		
 		JButton btnThem = new JButton("Thêm bàn");
 		btnThem.setFont(new Font("Arial", Font.BOLD, 16));
-		btnThem.setPreferredSize(new Dimension(200, 50));
+		btnThem.setPreferredSize(new Dimension(160, 50));
+		btnThem.setIcon(new ImageIcon(new ImageIcon("src\\image\\Manager_Image\\plus.png").getImage().getScaledInstance(45, 45, java.awt.Image.SCALE_SMOOTH)));
+		btnThem.setBorder(null);
+		btnThem.setBackground(new Color(144, 238, 144));
 		btnThem.addActionListener(ac);
 		panel_South.add(btnThem);
 		
 		JButton btnSuaban = new JButton("Sửa bàn");
 		btnSuaban.setFont(new Font("Arial", Font.BOLD, 16));
-		btnSuaban.setPreferredSize(new Dimension(200, 50));
+		btnSuaban.setPreferredSize(new Dimension(160, 50));
+		btnSuaban.setIcon(new ImageIcon(new ImageIcon("src\\image\\Manager_Image\\edit.png").getImage().getScaledInstance(40, 40, java.awt.Image.SCALE_SMOOTH)));
+		btnSuaban.setBorder(null);
+		btnSuaban.setBackground(new Color(255, 128, 128));
 		btnSuaban.addActionListener(ac);
 		panel_South.add(btnSuaban);
 		
 		JButton btnBaotri = new JButton("Bảo trì");
 		btnBaotri.setFont(new Font("Arial", Font.BOLD, 16));
-		btnBaotri.setPreferredSize(new Dimension(200, 50));
+		btnBaotri.setPreferredSize(new Dimension(160, 50));
+		btnBaotri.setIcon(new ImageIcon(new ImageIcon("src\\image\\Manager_Image\\repair.png").getImage().getScaledInstance(55, 55, java.awt.Image.SCALE_SMOOTH)));
+		btnBaotri.setBorder(null);
+		btnBaotri.setBackground(new Color(255, 250, 205));
 		btnBaotri.addActionListener(ac);
 		panel_South.add(btnBaotri);
 	}

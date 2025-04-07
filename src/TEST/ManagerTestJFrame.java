@@ -3,6 +3,7 @@ package TEST;
 import Model.Manager;
 import View.ManagerView.EmployeeShiftPanel;
 import View.ManagerView.ManagerTable.TablePanel;
+import View.ManagerView.StaffManager.StaffManagerJPanel;
 import View.StaffView.RollCall;
 import View.StaffView.StaffJPanel;
 import View.StaffView.Table_JPanel;
@@ -86,13 +87,15 @@ public class ManagerTestJFrame extends JFrame {
         JPanel contentPanel = new JPanel(new BorderLayout());
         contentPanel.setBackground(Color.LIGHT_GRAY);
 
-        // Initialize staffInterface by default
-        // staffInterface = new StaffJPanel();
-        Table_JPanel table_JPanel = new Table_JPanel();
+        Table_JPanel table_JPanel = new Table_JPanel(); // Tạo đối tượng Table_JPanel nhưng do cập nhật trong quản lí nên không tạo
         contentPanel.add(table_JPanel, BorderLayout.CENTER);
 
+
         EmployeeShiftPanel employeeShiftView = new EmployeeShiftPanel();  // Tạo đối tượng EmployeeShiftView để quay lại vẫn còn dữ liệu
+        
         TablePanel tablePanel = new TablePanel();
+
+        StaffManagerJPanel staffManagerJPanel = new StaffManagerJPanel(); // Tạo đối tượng StaffManagerJPanel để quay lại vẫn còn dữ liệu
 
         String[] buttonLabels = { "BÁN HÀNG", "ĐIỂM DANH", "XẾP LỊCH", "BÀN", "NHÂN VIÊN", "DOANH THU","ĐĂNG XUẤT"};
         String[] iconButtonLabels = { "src\\image\\SideBar_Image\\Sell.png", 
@@ -138,25 +141,24 @@ public class ManagerTestJFrame extends JFrame {
                         }
                       
                     } else if (e.getActionCommand().equals("Thanh toán")) {
-                        // if (staffInterface.getPlacedModel().isEmpty()) {
-                        // JOptionPane.showMessageDialog(Staff_view.this, "Vui lòng chọn món ăn trước
-                        // khi thanh toán!", "Thông báo",
-                        // JOptionPane.INFORMATION_MESSAGE);
-                        // return;
-                        // }
-                        // Payment_Interface paymentInterface = new Payment_Interface(staffInterface);
-                        // paymentInterface.printBill();
-                        // contentPanel.add(paymentInterface, BorderLayout.CENTER);
-                        // contentPanel.revalidate();
-                        // contentPanel.repaint();
+                    
                     } else if (e.getActionCommand().equals("BÁN HÀNG")) {
-                        contentPanel.add(table_JPanel, BorderLayout.CENTER);
+                        try {
+                            contentPanel.add(new Table_JPanel(), BorderLayout.CENTER);
+                        } catch (ClassNotFoundException ex) {
+                        } catch (SQLException ex) {
+                        } catch (IOException ex) {
+                        }
+                        
                     }
                     else if (e.getActionCommand().equals("XẾP LỊCH")) {           
                         contentPanel.add(employeeShiftView, BorderLayout.CENTER);
                     }
                     else if (e.getActionCommand().equals("BÀN")) {
                     	contentPanel.add(tablePanel, BorderLayout.CENTER);
+                    }
+                    else if(e.getActionCommand().equals("NHÂN VIÊN")){
+                        contentPanel.add(staffManagerJPanel, BorderLayout.CENTER);
                     }
                     
                     contentPanel.revalidate();

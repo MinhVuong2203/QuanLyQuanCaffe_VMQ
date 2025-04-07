@@ -24,11 +24,8 @@ public class AddTableJDialog extends JDialog {
 	private final JPanel contentPanel = new JPanel();
 	private JTextField idTextField;
 	private JTextField nameTextField;
-	public List<Table> listTable;
 
-	public AddTableJDialog(List<Table> list, TablePanel tablePanel) {
-
-		listTable = list;
+	public AddTableJDialog(List<Table> listTable, TablePanel tablePanel) {
 		setBounds(100, 100, 339, 223);
 		getContentPane().setLayout(new BorderLayout());
 		setTitle("Thêm bàn");
