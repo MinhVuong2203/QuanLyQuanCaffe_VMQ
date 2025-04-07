@@ -20,6 +20,9 @@ import javax.swing.border.EmptyBorder;
 public class StaffJPanel extends JPanel {
     private Locale VN = new Locale("vi", "VN");
 
+    private ProductRepository productDao = new ProductRepository();
+    private List<Product> products = productDao.getArrayListProductFromSQL(); // Lấy danh sách sản phẩm từ database
+
     // DefaultListModel để quản lý danh sách
     private DefaultListModel<String> menuModel;
     private DefaultListModel<String> placedModel;
@@ -37,6 +40,8 @@ public class StaffJPanel extends JPanel {
 
     private JPanel order;
     private JScrollPane scrollPane_Menu;
+
+    private int orderId; // Added orderId for saving order details
 
     /**
      * Create the panel.
@@ -140,7 +145,11 @@ public class StaffJPanel extends JPanel {
                 if (e.getClickCount() == 2) {
                     String selectedDish = listMenu.getSelectedValue();
                     if (selectedDish != null) {
-                        addToOrder(selectedDish);
+                        try {
+                            addToOrder(selectedDish);
+                        } catch (SQLException e1) {
+                            e1.printStackTrace();
+                        }
                         updateTotalMoney();
                     }
                 }
@@ -247,9 +256,6 @@ public class StaffJPanel extends JPanel {
         priceMap.clear(); // Xóa dữ liệu giá cũ
         imgMap.clear();
 
-        ProductRepository productDao = new ProductRepository();
-        List<Product> products = productDao.getArrayListProductFromSQL(); // Lấy danh sách sản phẩm từ database
-
         for (Product product : products) {
             String name = product.getName().trim();
             String size = product.getSize().trim();
@@ -267,7 +273,7 @@ public class StaffJPanel extends JPanel {
         }
     }
 
-    private void addToOrder(String dishName) {
+    private void addToOrder(String dishName) throws SQLException {
         String selectedSize;
         int inputSize;
         String displayText;
@@ -281,6 +287,11 @@ public class StaffJPanel extends JPanel {
                     if (qty > 0) {
                         double price = priceMap.get(dishName);
                         updateOrAddItem(dishName, price, qty);
+                        // Get product ID and save to OrderDetail
+                        // int productId = productDao.getProductIdByName(dishName);
+                        // if (productId != -1) {
+                        //     productDao.addProductToOrder(1, productId, qty, price);
+                        // }
                         updateTotalMoney();
                     } else {
                         JOptionPane.showMessageDialog(this, "Số lượng phải lớn hơn 0!", "Lỗi",
@@ -299,9 +310,8 @@ public class StaffJPanel extends JPanel {
                     null,
                     options,
                     options[0]);
-            // Thêm kiểm tra
             if (inputSize == -1) {
-                return; // Thoát khỏi phương thức nếu người dùng đóng hộp thoại
+                return;
             }
             selectedSize = options[inputSize];
             displayText = dishName + " (" + selectedSize + ")";
@@ -314,6 +324,11 @@ public class StaffJPanel extends JPanel {
                     if (qty > 0) {
                         double price = priceMap.get(displayText);
                         updateOrAddItem(displayText, price, qty);
+                        // Get product ID and save to OrderDetail
+                        // int productId = productDao.getProductIdByNameAndSize(dishName, selectedSize);
+                        // if (productId != -1) {
+                        //     productDao.addProductToOrder(1, productId, qty, price);
+                        // }
                         updateTotalMoney();
                     } else {
                         JOptionPane.showMessageDialog(this, "Số lượng phải lớn hơn 0!", "Lỗi",
