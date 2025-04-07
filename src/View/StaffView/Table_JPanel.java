@@ -5,6 +5,7 @@ import Model.Table;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -104,6 +105,18 @@ public class Table_JPanel extends JPanel {
 				btnNewButton.setFont(new Font("Arial", Font.PLAIN, 20));
 				btnNewButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
+						if (btnNewButton.getText().equals("Gọi món")) {
+							try {
+								StaffJPanel staffPanel = new StaffJPanel();
+								Container parent = Table_JPanel.this.getParent();
+								parent.remove(Table_JPanel.this);
+								parent.add(staffPanel);
+								parent.revalidate();
+								parent.repaint();
+							} catch (Exception ex) {
+								ex.printStackTrace();
+							}
+						}
 					}
 				});
 				btnNewButton.setBounds(263, 461, 159, 42);
