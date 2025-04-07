@@ -38,6 +38,21 @@ public class TableRepository {
 			connection.close();
 		}
         return null;
-    } 
+    }
+    
+    public void insertTable(Table table) throws SQLException, ClassNotFoundException{
+        try {
+            connection = jdbcUtils.connect(); // Phải có để có connection
+            Statement stmt = connection.createStatement();
+            String sql = "INSERT INTO TableCaffe (tableID, tableName, status) VALUES (" + table.getTableID() + ", '" + table.getTableName() + "', N'" + table.getStatus() + "')";
+            stmt.executeUpdate(sql);
+            stmt.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } finally {
+                connection.close(); 
+        }
+    }
+    
 }
 

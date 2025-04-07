@@ -37,14 +37,14 @@ import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import javax.swing.JButton;
 
-public class EmployeeShiftView extends JPanel {
+public class EmployeeShiftPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Create the panel.
 	 */
-	public EmployeeShiftView() {
+	public EmployeeShiftPanel() {
 		setLayout(new BorderLayout(0, 0));
 		
 		// Top
@@ -93,7 +93,6 @@ public class EmployeeShiftView extends JPanel {
 						toDateChooser.setDate(toDay);	
 				}
 			}
-			
 		});
 		panel_top.add(comboBox);
 		

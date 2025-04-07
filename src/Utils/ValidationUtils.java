@@ -1,8 +1,12 @@
 package Utils;
 
 import java.util.Date;
+import java.util.List;
 
 import com.toedter.calendar.JDateChooser;
+
+import Model.Table;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
@@ -82,5 +86,16 @@ public class ValidationUtils {
         return -1; // Trả về -1 nếu có lỗi xảy ra
     }
     
-    
+    public static int indexListTableID(List<Table> listTable, int id) {
+		for (Table table : listTable)
+			if (table.getTableID() == id)
+				return id;
+		return -1;
+	}
+    public static boolean indexListTableName(List<Table> listTable, String name) {
+		for (Table table : listTable)
+			if (table.getTableName().equals(name))
+				return true;
+		return false;
+	}
 }

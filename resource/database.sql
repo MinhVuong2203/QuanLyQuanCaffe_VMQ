@@ -66,15 +66,14 @@ create table [Product](
 )
 
 CREATE TABLE OrderDetail (
-	orderDetailID int PRIMARY KEY,
     orderID int NOT NULL,
     productID int NOT NULL,
     quantity int NOT NULL CHECK (quantity > 0),
     price decimal(10,2) NOT NULL,
     foreign key (orderID) references Orders(orderID),
-    foreign key (productID) references [Product](productID)
+    foreign key (productID) references [Product](productID),
+	PRIMARY KEY (orderID, productID)
 )
-
 CREATE TABLE Payment(
 	paymentID int PRIMARY KEY,
 	orderID int NOT NULL,
@@ -235,13 +234,15 @@ VALUES
 (3, 3, 100005, 100000, '2025-03-24 09:30:00', 49000.00, N'Đã thanh toán'),
 (4, 4, 100005, 100000, '2025-03-24 10:00:00', 55000.00, N'Đã thanh toán');
 
+DROP TABLE OrderDetail
+
 -- OrderDetail
-INSERT INTO OrderDetail (orderDetailID, orderID, productID, quantity, price) 
+INSERT INTO OrderDetail (orderID, productID, quantity, price) 
 VALUES
-(1, 1, 1, 1, 49000.00),
-(2, 2, 2, 1, 55000.00),
-(3, 3, 3, 1, 49000.00),
-(4, 4, 4, 1, 55000.00);
+(1, 1, 1, 49000.00),
+(1, 2, 1, 55000.00),
+(3, 3, 1, 49000.00),
+(3, 4, 1, 55000.00);
 
 -- Payment
 INSERT INTO Payment (paymentID, orderID, paymentMethod, amount, paymentTime) 

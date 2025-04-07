@@ -1,18 +1,19 @@
 package View.StaffView;
 
-import Repository.TableRepository;
+import Controller.StaffController.TableLeftController;
 import Model.Table;
-
+import Repository.TableRepository;
+import View.ManagerView.ManagerTable.TablePanel;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,10 +22,6 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
-
-import Controller.StaffController.TableLeftController;
-
-import java.io.IOException;
 
 public class Table_JPanel extends JPanel {
 	
@@ -60,6 +57,7 @@ public class Table_JPanel extends JPanel {
 		TableRepository tableDao = new TableRepository();
 		listTables = new ArrayList<>();
 		listTables = tableDao.getTableFromSQL();
+		
 	
 
 		ActionListener ac = new TableLeftController(this);

@@ -1,7 +1,9 @@
 package TEST;
 
 import Model.Manager;
-import View.ManagerView.EmployeeShiftView;
+import View.ManagerView.EmployeeShiftPanel;
+import View.ManagerView.ManagerTable.TablePanel;
+import View.StaffView.RollCall;
 import View.StaffView.StaffJPanel;
 import View.StaffView.Table_JPanel;
 import java.awt.*;
@@ -17,6 +19,7 @@ public class ManagerTestJFrame extends JFrame {
     private boolean isSidebarExpanded = true;
     private Timer mouseTracker;
     private StaffJPanel staffInterface;
+  
 
     public ManagerTestJFrame(Manager manager) throws IOException, ClassNotFoundException, SQLException {
         setTitle("Giao Diện Thu Ngân - Quán Cafe");
@@ -88,10 +91,17 @@ public class ManagerTestJFrame extends JFrame {
         Table_JPanel table_JPanel = new Table_JPanel();
         contentPanel.add(table_JPanel, BorderLayout.CENTER);
 
-        EmployeeShiftView employeeShiftView = new EmployeeShiftView();  // Tạo đối tượng EmployeeShiftView để quay lại vẫn còn dữ liệu
+        EmployeeShiftPanel employeeShiftView = new EmployeeShiftPanel();  // Tạo đối tượng EmployeeShiftView để quay lại vẫn còn dữ liệu
+        TablePanel tablePanel = new TablePanel();
 
-        String[] buttonLabels = { "BÁN HÀNG", "ĐIỂM DANH", "XẾP LỊCH", "ĐĂNG XUẤT"};
-        String[] iconButtonLabels = { "src\\image\\SideBar_Image\\Sell.png", "src\\image\\SideBar_Image\\DiemDanh.png", "src\\image\\SideBar_Image\\calendar.png" ,"src\\image\\SideBar_Image\\SignOut.png" };
+        String[] buttonLabels = { "BÁN HÀNG", "ĐIỂM DANH", "XẾP LỊCH", "BÀN", "NHÂN VIÊN", "DOANH THU","ĐĂNG XUẤT"};
+        String[] iconButtonLabels = { "src\\image\\SideBar_Image\\Sell.png", 
+                                      "src\\image\\SideBar_Image\\DiemDanh.png", 
+                                      "src\\image\\SideBar_Image\\calendar.png", 
+                                      "src\\image\\Table_image\\table_img.png", 
+                                      "src\\image\\Employee_Image\\Employee_default.png", 
+                                      "src\\image\\SideBar_Image\\\\Revenue.png",
+                                      "src\\image\\SideBar_Image\\SignOut.png"};
         int index_iconButtonLabels = 0;
         for (String label : buttonLabels) {
             JButton button = new JButton(label);
@@ -102,11 +112,9 @@ public class ManagerTestJFrame extends JFrame {
             button.setContentAreaFilled(true);
             button.setFont(new Font("Arial", Font.BOLD, 14));
             button.setBorderPainted(false);
+            button.setHorizontalAlignment(SwingConstants.LEFT);
             // Thêm icon
-            int width = 64, height = 64;
-            if (index_iconButtonLabels == 3 || index_iconButtonLabels == 2) {
-                width = height = 42;
-            }
+            int width = 42, height = 42;
             ImageIcon iconButton = new ImageIcon(iconButtonLabels[index_iconButtonLabels++]);
             Image scale_iconButton = iconButton.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
             ImageIcon scaleIcon_first_img = new ImageIcon(scale_iconButton);
@@ -123,8 +131,8 @@ public class ManagerTestJFrame extends JFrame {
                     contentPanel.removeAll();
                     if (e.getActionCommand().equals("ĐIỂM DANH")) {
                         try {
-                            StaffJPanel staffInterface = new StaffJPanel();
-                            contentPanel.add(staffInterface, BorderLayout.CENTER);
+                      
+                            contentPanel.add(new RollCall(), BorderLayout.CENTER);
                         } catch (ClassNotFoundException | IOException | SQLException e1) {
                             e1.printStackTrace();
                         }
@@ -145,7 +153,10 @@ public class ManagerTestJFrame extends JFrame {
                         contentPanel.add(table_JPanel, BorderLayout.CENTER);
                     }
                     else if (e.getActionCommand().equals("XẾP LỊCH")) {           
-                            contentPanel.add(employeeShiftView, BorderLayout.CENTER);
+                        contentPanel.add(employeeShiftView, BorderLayout.CENTER);
+                    }
+                    else if (e.getActionCommand().equals("BÀN")) {
+                    	contentPanel.add(tablePanel, BorderLayout.CENTER);
                     }
                     
                     contentPanel.revalidate();
