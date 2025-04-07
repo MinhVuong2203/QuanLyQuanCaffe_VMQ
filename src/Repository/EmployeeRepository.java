@@ -185,10 +185,10 @@ public class EmployeeRepository {
         String sql = "INSERT INTO EmployeeShift (shiftID, employeeID, startTime, endTime) " +
                 "VALUES (" + (getMaxShiftID() + 1) + ", " + id + ", '" + dateString + " " + timeRange.split("-")[0]
                 + ":00', '" + dateString + " " + timeRange.split("-")[1] + ":00')";
-                System.out.println("Lỗi tới đây rồi nè 2");
+                
         try {
             Connection connection = jdbcUtils.connect();
-            System.out.println("Lỗi tới đây rồi nè 3");
+           
             Statement stmt = connection.createStatement();
             stmt.executeUpdate(sql);
         } catch (Exception e) {
