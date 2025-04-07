@@ -152,7 +152,7 @@ public class EmployeeShiftView extends JPanel {
 					String[] x = employeeRepository.getEachEmployeeShift(employee.getId(), fromDateChooser, toDateChooser);
 					for (int k=0; k<x.length; k++) data[i][k+3] = x[k]; // Lấy dữ liệu ca làm việc cho từng nhân viên và ngày
 				}
-
+				
 				// Tạo bảng
 				JTable shiftTable = new JTable();
 				shiftTable.setModel(new DefaultTableModel(data, columnNames)); // Tạo bảng với số cột tương ứng với số ngày
@@ -164,7 +164,7 @@ public class EmployeeShiftView extends JPanel {
 					}
 				};
 				shiftTable.setModel(model);
-
+				
 
 				shiftTable.setFont(new Font("Arial", Font.PLAIN, 14));
 				shiftTable.setRowHeight(30);
@@ -177,7 +177,7 @@ public class EmployeeShiftView extends JPanel {
 				shiftTable.getColumnModel().getColumn(2).setMinWidth(90); // cột role
 				for (int i = 3; i < numDays; i++)
 					shiftTable.getColumnModel().getColumn(i).setMinWidth(140); // Chiều rộng cột dữ liệu
-			    
+					System.out.println("Tạo bảng thành công!");
 				// Sự kiện double click vào ô ca làm việc
 				EmployeeShiftController.attachShiftSelectionHandler(shiftTable, columnNames);
 

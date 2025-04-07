@@ -49,9 +49,9 @@ public class EmployeeShiftController {
                         String dateString = Title.substring(Title.indexOf('(') + 1, Title.indexOf(')'));
                         String timeRange = selectedShift.substring(selectedShift.indexOf("(") + 1, selectedShift.indexOf(")"));
                         System.out.println(id + " " + dateString + " " + timeRange);
-
+                        
                     if (selectedShift != null) {
-                        if (!selectedShift.isEmpty()){  // Nếu nó không rỗng thì xóa hoặc update ca làm việc
+                        if (!last.isEmpty()){  // Nếu nó không rỗng thì xóa hoặc update ca làm việc
                             if (selectedShift.equals("Xoá ca (Trống)")) {
                                 target.setValueAt("", row, column);
                                 employeeRepository.deleteShiftFromSQL(id, dateString);
