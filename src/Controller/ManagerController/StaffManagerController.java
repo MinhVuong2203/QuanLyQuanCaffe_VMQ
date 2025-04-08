@@ -1,6 +1,6 @@
 package Controller.ManagerController;
 
-import View.ManagerView.StaffManager.StaffManagerJPanel;
+import View.ManagerView.ManagerStaff.StaffManagerJPanel;
 import java.awt.event.ActionListener;
 
 public class StaffManagerController implements ActionListener {
@@ -17,7 +17,7 @@ public class StaffManagerController implements ActionListener {
             String atb = (String) staffManagerJPanel.comboBox.getSelectedItem();
             String value = staffManagerJPanel.textField.getText();
             System.out.println("Attribute: " + atb + ", Value: " + value);
-            this.staffManagerJPanel.showStaff(atb, value);
+       
 
         } else if (command.equals("Remove Staff")) {
             // Code to remove staff

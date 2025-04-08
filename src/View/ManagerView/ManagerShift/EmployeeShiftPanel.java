@@ -1,4 +1,4 @@
-package View.ManagerView;
+package View.ManagerView.ManagerShift;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;

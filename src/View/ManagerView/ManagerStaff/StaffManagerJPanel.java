@@ -1,5 +1,6 @@
-package View.ManagerView.StaffManager;
+package View.ManagerView.ManagerStaff;
 
+import Controller.ManagerController.FilterDocumentListener;
 import Controller.ManagerController.StaffManagerController;
 import Model.Employee;
 import Repository.EmployeeRepository;
@@ -13,12 +14,14 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import java.awt.GridLayout;
+import javax.swing.JButton;
+import javax.swing.JLabel;
 
 public class StaffManagerJPanel extends JPanel {
 
@@ -108,78 +111,53 @@ public class StaffManagerJPanel extends JPanel {
 		add(topPanel, BorderLayout.NORTH);
 		topPanel.setLayout(new FlowLayout( FlowLayout.CENTER ,10, 14));
 		
+		JLabel lblNewLabel = new JLabel("Tìm kiếm:");
+		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		topPanel.add(lblNewLabel);
+		
 		comboBox = new JComboBox();
 		comboBox.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		comboBox.setModel(new DefaultComboBoxModel(new String[] {"", "Mã nhân viên", "Tên nhân viên", "Số điện thoại", "username", "password", "Chức vụ", "CCCD", "Ngày sinh", "Giới tính", "Lương theo giờ"}));
+		comboBox.setModel(new DefaultComboBoxModel(new String[] {"Chọn thuộc tính", "Mã nhân viên", "Tên nhân viên", "Số điện thoại", "username", "password", "Chức vụ", "CCCD", "Ngày sinh", "Giới tính", "Lương theo giờ"}));
 		topPanel.add(comboBox);
 		
 		textField = new JTextField();
+		// Tạo cái tìm kiếm đa chức năng
+		FilterDocumentListener fd = new FilterDocumentListener<Employee>(comboBox, table, textField, listEmployee, columnNames, 
+																		new FilterDocumentListener.RowDataMapper<Employee>(){
+																			@Override
+																			public Object[] mapRow(Employee emp){
+																				return new Object[]{emp.getId(), emp.getName(), emp.getPhone(), emp.getUsername(),
+																					emp.getPassword(), emp.getRole(), emp.getCCCD(),
+																					emp.getBirthDate(), emp.getGender(), emp.getHourlyWage()};
+																			}
+																		});
+
 		textField.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		textField.setPreferredSize(new Dimension(80, 30));
-		topPanel.add(textField);
 		textField.setColumns(10);
-		textField.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
-			public void insertUpdate(javax.swing.event.DocumentEvent e) {
-				triggerFilter();
-			}
-			public void removeUpdate(javax.swing.event.DocumentEvent e) {
-				triggerFilter();
-			}
-			public void changedUpdate(javax.swing.event.DocumentEvent e) {
-				triggerFilter();
-			}
-			private void triggerFilter() {
-				String selected = comboBox.getSelectedItem().toString();
-				String keyword = textField.getText().trim();
-				showStaff(selected, keyword);
-			}
-		});
-		
-		
-		JButton btnNewButton = new JButton("Tìm");
-		btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		btnNewButton.addActionListener(ac);
-		topPanel.add(btnNewButton);
-		
+		textField.getDocument().addDocumentListener(fd);
+		topPanel.add(textField);
+			
 		// WEST		
 		JPanel westPanel = new JPanel();
 		westPanel.setBounds(0, 0, 100, 525);
-		westPanel.setPreferredSize(new Dimension(100,200));
+		westPanel.setPreferredSize(new Dimension(120, 200));
 		this.add(westPanel, BorderLayout.WEST);
+		westPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 20));
+		
+		JButton btnThem = new JButton("Thêm");
+		btnThem.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		btnThem.setPreferredSize(new Dimension(110, 40));
+		westPanel.add(btnThem);
+		
+		JButton btnSua = new JButton("Cập nhật");
+		btnSua.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		btnSua.setPreferredSize(new Dimension(110, 40));
+		westPanel.add(btnSua);
+		
+		JButton btnNghi = new JButton("Nghỉ việc");
+		btnNghi.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		btnNghi.setPreferredSize(new Dimension(110, 40));
+		westPanel.add(btnNghi);
 	}
-
-    public void showStaff(String atb, String value) {
-		int column = 0;
-		for (int i=0; i<this.columnNames.length; i++) {
-			if (columnNames[i].equals(atb)) {
-				column = i;
-				break;
-			}
-		}
-		javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) table.getModel();
-    	model.setRowCount(0); // Xóa toàn bộ dữ liệu hiện tại
-
-		for (Employee emp : listEmployee) {
-			Object[] row = new Object[] {
-				emp.getId(),
-				emp.getName(),
-				emp.getPhone(),
-				emp.getUsername(),
-				emp.getPassword(),
-				emp.getRole(),
-				emp.getCCCD(),
-				emp.getBirthDate(),
-				emp.getGender(),
-				emp.getHourlyWage()
-			};
-			
-			// Lọc: nếu value trống, hiển thị tất cả. Ngược lại thì khớp 1 phần (contains).
-			if (value == null || value.trim().isEmpty() || 
-				row[column] != null && row[column].toString().toLowerCase().contains(value.toLowerCase())) {
-				model.addRow(row);
-			}
-		}
-
-        
-    }
 }

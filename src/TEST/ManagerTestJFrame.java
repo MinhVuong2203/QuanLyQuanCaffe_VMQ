@@ -1,9 +1,9 @@
 package TEST;
 
 import Model.Manager;
-import View.ManagerView.EmployeeShiftPanel;
+import View.ManagerView.ManagerShift.EmployeeShiftPanel;
+import View.ManagerView.ManagerStaff.StaffManagerJPanel;
 import View.ManagerView.ManagerTable.TablePanel;
-import View.ManagerView.StaffManager.StaffManagerJPanel;
 import View.StaffView.RollCall;
 import View.StaffView.StaffJPanel;
 import View.StaffView.Table_JPanel;
