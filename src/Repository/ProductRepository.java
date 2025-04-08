@@ -87,6 +87,24 @@ public class ProductRepository {
             connection.close();
         }
     }
+
+    public void updateOrder(int orderId, int productId, int quantity, double price) throws SQLException {
+        try {
+            connection = jdbcUtils.connect();
+            String sql = "UPDATE OrderDetail SET quantity = ?, price = ? WHERE orderID = ? AND productID = ?";
+            var stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, quantity);
+            stmt.setDouble(2, price);
+            stmt.setInt(3, orderId);
+            stmt.setInt(4, productId);
+            stmt.executeUpdate();
+            stmt.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            connection.close();
+        }
+    }
     
     public int getProductIdByNameAndSize(String name, String size) throws SQLException {
         try {
