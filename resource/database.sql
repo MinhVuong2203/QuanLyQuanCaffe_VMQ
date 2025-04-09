@@ -57,6 +57,13 @@ CREATE TABLE Orders(
     foreign key (customerID) references Customer(customerID)
 )
 
+ALTER TABLE Orders
+ADD deliveryAddress NVARCHAR(255) NULL,
+    deliveryFee DECIMAL(10,2) NULL
+
+	
+
+
 create table [Product](
     productID int PRIMARY KEY,
     name nvarchar(50) NOT NULL,
