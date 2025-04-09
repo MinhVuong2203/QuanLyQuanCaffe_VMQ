@@ -26,6 +26,7 @@ public class TableRepository {
             String sql = "SELECT * FROM TableCaffe";
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()){
+                if (rs.getInt(1) == 0) continue; // Bỏ qua tableID = 0
                 listTables.add(new Table(rs.getInt(1), rs.getString(2), rs.getString(3)));
             }
             rs.close();
