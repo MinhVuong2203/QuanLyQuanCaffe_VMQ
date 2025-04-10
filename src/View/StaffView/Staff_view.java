@@ -54,7 +54,7 @@ public class Staff_view extends JFrame {
         panel.add(lblID);
 
         lblTime = new JLabel("");
-        lblTime.setBounds(780, 10, 350, 30);
+        lblTime.setBounds(780, 10, 450, 30);
         lblTime.setFont(new Font("Arial", Font.PLAIN, 16));
         clock();
         panel.add(lblTime);

@@ -287,11 +287,15 @@ public class StaffJPanel extends JPanel {
                     if (qty > 0) {
                         double price = priceMap.get(dishName);
                         updateOrAddItem(dishName, price, qty);
-                        // Get product ID and save to OrderDetail
-                        // int productId = productDao.getProductIdByName(dishName);
-                        // if (productId != -1) {
-                        //     productDao.addProductToOrder(1, productId, qty, price);
-                        // }
+                        int productId = productDao.getProductIdByName(dishName);
+                        if (productId != -1) {
+                            // Check if product exists in order
+                            if (orderContainsProduct(dishName)) {
+                                productDao.updateOrder(orderId, productId, qty, price * qty);
+                            } else {
+                                productDao.addProductToOrder(orderId, productId, qty, price * qty);
+                            }
+                        }
                         updateTotalMoney();
                     } else {
                         JOptionPane.showMessageDialog(this, "Số lượng phải lớn hơn 0!", "Lỗi",
@@ -324,11 +328,14 @@ public class StaffJPanel extends JPanel {
                     if (qty > 0) {
                         double price = priceMap.get(displayText);
                         updateOrAddItem(displayText, price, qty);
-                        // Get product ID and save to OrderDetail
-                        // int productId = productDao.getProductIdByNameAndSize(dishName, selectedSize);
-                        // if (productId != -1) {
-                        //     productDao.addProductToOrder(1, productId, qty, price);
-                        // }
+                        int productId = productDao.getProductIdByNameAndSize(dishName, selectedSize);
+                        if (productId != -1) {
+                            if (orderContainsProduct(displayText)) {
+                                productDao.updateOrder(orderId, productId, qty, price * qty);
+                            } else {
+                                productDao.addProductToOrder(orderId, productId, qty, price * qty);
+                            }
+                        }
                         updateTotalMoney();
                     } else {
                         JOptionPane.showMessageDialog(this, "Số lượng phải lớn hơn 0!", "Lỗi",
@@ -339,6 +346,16 @@ public class StaffJPanel extends JPanel {
                 }
             }
         }
+    }
+
+    private boolean orderContainsProduct(String productName) {
+        for (int i = 0; i < placedModel.size(); i++) {
+            String item = placedModel.getElementAt(i);
+            if (item.startsWith(productName)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void updateOrAddItem(String displayText, double price, int additionalQty) {
