@@ -37,7 +37,7 @@ public class UserAccountRepository {
                 }
             }
             // Nếu không đúng giá trị thì thông báo lỗi
-            JOptionPane.showMessageDialog(null, "Sai tên đăng nhập hoặc mật khẩu", "Thông báo", JOptionPane.ERROR_MESSAGE);
+            // JOptionPane.showMessageDialog(null, "Sai tên đăng nhập hoặc mật khẩu", "Thông báo", JOptionPane.ERROR_MESSAGE);
             rs.close();
             stmt.close();
         }

@@ -3,13 +3,14 @@ public class User extends Person{
     protected  String username;
     protected String password;
     protected String role;
+    protected String image;
 
     public User() {
         super();
     } 
 
     public User(int id, String name, String phone, String image, String username, String password, String role) {
-        super(id, name, phone, image);
+        super(id, name, phone);
         this.username = username;
         this.password = password;
         this.role = role;

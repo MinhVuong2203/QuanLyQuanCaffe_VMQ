@@ -1,6 +1,7 @@
 package View.Window;
 
 import Controller.Window.LoginController;
+import Model.User;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Toolkit;
@@ -10,6 +11,7 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
@@ -116,4 +118,18 @@ public class Login extends JFrame {
         contentPane.add(lblNewLabel_3);
         this.setVisible(true);
     }
+
+    public User getUser() {
+        String username = textField.getText();
+        String password = new String(passwordField.getPassword());
+        return new User(0, "", "","", username,password, "");
+    }
+
+    public void thongBao(String msg) {
+        JOptionPane.showMessageDialog(this, msg);
+    }
+
+
+
+
 }

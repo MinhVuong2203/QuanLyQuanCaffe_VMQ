@@ -1,9 +1,9 @@
 package Model;
-public class Customer extends User {
+public class Customer extends Person{
     private double points;
     
-    public Customer(int id, String name, String phone, String image, String username, String password, double points) {
-        super(id, name, phone, image, username, password, "Khách");
+    public Customer(int id, String name, String phone, double points) {
+        super(id, name, phone);
         this.points = points;
     }
 
@@ -17,7 +17,7 @@ public class Customer extends User {
 
     @Override
     public String toString() {
-        return "Customer{" + "id=" + id + ", name=" + name + ", phone=" + phone + ", image=" + image +  ", username=" + username + ", password=" + password + ", role=" + role + ", points=" + points + '}';
+        return "Customer{" + "id=" + id + ", name=" + name + ", phone=" + phone + ", points=" + points + '}';
     }
 
    
