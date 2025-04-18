@@ -2,7 +2,8 @@ package View.StaffView;
 
 import Controller.StaffController.TableLeftController;
 import Model.Table;
-import Repository.TableRepository;
+import Repository.Table.ITableRespository;
+import Repository.Table.TableRepository;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
@@ -53,12 +54,10 @@ public class Table_JPanel extends JPanel {
 	public Table_JPanel() throws ClassNotFoundException, SQLException, IOException {
 		setBackground(new Color(255, 255, 255));
 
-		TableRepository tableDao = new TableRepository();
+		ITableRespository tableRepository = new TableRepository();
 		listTables = new ArrayList<>();
-		listTables = tableDao.getTableFromSQL();
+		listTables = tableRepository.getTableFromSQL();
 		
-	
-
 		ActionListener ac = new TableLeftController(this);
 		String imgPath = "src\\image\\Table_image\\table_img.png";
 		

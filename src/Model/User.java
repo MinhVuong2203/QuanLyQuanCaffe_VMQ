@@ -1,5 +1,5 @@
 package Model;
-public class User extends Person{
+public class User extends Person {
     protected  String username;
     protected String password;
     protected String role;
@@ -14,6 +14,7 @@ public class User extends Person{
         this.username = username;
         this.password = password;
         this.role = role;
+        this.image = image;
     }
 
     public String getUsername() {

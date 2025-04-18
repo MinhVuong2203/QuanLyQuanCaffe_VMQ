@@ -1,6 +1,5 @@
-package Repository;
+package Repository.Product;
 
-import Model.Order;
 import Model.Product;
 import Utils.JdbcUtils;
 import java.io.IOException;
@@ -11,13 +10,14 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProductRepository {
+public class ProductRespository implements IProductRespository{
     private Connection connection;
     private JdbcUtils jdbcUtils;
-    public ProductRepository() throws IOException, ClassNotFoundException, SQLException {
+    public ProductRespository() throws IOException, ClassNotFoundException, SQLException {
         jdbcUtils = new JdbcUtils();
     }
-
+    
+    @Override
     public List<Product> getArrayListProductFromSQL() throws SQLException {
         
         List<Product> list = new ArrayList<>();
@@ -45,6 +45,8 @@ public class ProductRepository {
 		}
         return null;
     }
+
+    @Override
     public Product getProductByID(int id) throws SQLException {
         Product product = null;
         try {
@@ -70,6 +72,7 @@ public class ProductRepository {
 
     }
     
+    @Override
     public void addProductToOrder(int orderId, int productId, int quantity, double price) throws SQLException {
         try {
             connection = jdbcUtils.connect();
@@ -88,6 +91,7 @@ public class ProductRepository {
         }
     }
 
+    @Override
     public void updateOrder(int orderId, int productId, int quantity, double price) throws SQLException {
         try {
             connection = jdbcUtils.connect();
@@ -106,6 +110,7 @@ public class ProductRepository {
         }
     }
     
+    @Override
     public int getProductIdByNameAndSize(String name, String size) throws SQLException {
         try {
             connection = jdbcUtils.connect();
@@ -127,6 +132,7 @@ public class ProductRepository {
         return -1; // Return -1 if no product found
     }
     
+    @Override
     public int getProductIdByName(String name) throws SQLException {
         try {
             connection = jdbcUtils.connect();

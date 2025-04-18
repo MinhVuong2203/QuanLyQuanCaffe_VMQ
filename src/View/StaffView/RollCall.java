@@ -1,7 +1,8 @@
 package View.StaffView;
 
 import Model.Employee;
-import Repository.EmployeeRepository;
+import Repository.Employee.EmployeeRespository;
+import Repository.Employee.IEmployeeRespository;
 import java.awt.*;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -13,7 +14,7 @@ import java.util.Locale;
 import javax.swing.*;
 
 public class RollCall extends JPanel {
-    private EmployeeRepository employeeRepository = new EmployeeRepository();
+    private IEmployeeRespository employeeRepository = new EmployeeRespository();
     private List<Employee> employees = employeeRepository.getAllEmployees();
 
     private Locale VN = new Locale("vi", "VN");

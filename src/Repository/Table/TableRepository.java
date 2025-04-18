@@ -1,4 +1,4 @@
-package Repository;
+package Repository.Table;
 
 import Model.Table;
 import Utils.JdbcUtils;
@@ -10,14 +10,15 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TableRepository {
+public class TableRepository implements ITableRespository{
     private Connection connection;
     private JdbcUtils jdbcUtils;
 
     public TableRepository() throws ClassNotFoundException, IOException, SQLException {
         this.jdbcUtils = new JdbcUtils();
     }
-
+    
+    @Override
     public List<Table> getTableFromSQL() throws SQLException, ClassNotFoundException{
         List<Table> listTables = new ArrayList<>();
         try {
@@ -41,6 +42,7 @@ public class TableRepository {
         return null;
     }
     
+    @Override
     public void insertTable(Table table) throws SQLException, ClassNotFoundException{
         try {
             connection = jdbcUtils.connect(); // Phải có để có connection
@@ -55,6 +57,7 @@ public class TableRepository {
         }
     }
 
+    @Override
     public void updateTable(int id, String name) throws SQLException, ClassNotFoundException{
         try {
             connection = jdbcUtils.connect(); // Phải có để có connection
@@ -69,6 +72,7 @@ public class TableRepository {
         }
     }
     
+    @Override
     public void updateTableStatus(int tableId, String status) throws SQLException, ClassNotFoundException {
         try {
             connection = jdbcUtils.connect(); // Phải có để có connection

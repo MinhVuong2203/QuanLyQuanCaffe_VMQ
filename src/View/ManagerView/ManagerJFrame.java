@@ -1,10 +1,10 @@
-package TEST;
+package View.ManagerView;
 
+import Controller.ManagerController.ManagerJFrameController;
 import Model.Manager;
 import View.ManagerView.ManagerShift.EmployeeShiftPanel;
 import View.ManagerView.ManagerStaff.StaffManagerJPanel;
 import View.ManagerView.ManagerTable.TablePanel;
-import View.StaffView.RollCall;
 import View.StaffView.StaffJPanel;
 import View.StaffView.Table_JPanel;
 import java.awt.*;
@@ -13,16 +13,17 @@ import java.io.IOException;
 import java.sql.SQLException;
 import javax.swing.*;
 
-public class ManagerTestJFrame extends JFrame {
+public class ManagerJFrame extends JFrame {
     private static final long serialVersionUID = 1L;
     private JPanel sidebar;
     private JSplitPane splitPane;
     private boolean isSidebarExpanded = true;
     private Timer mouseTracker;
     private StaffJPanel staffInterface;
+    private Panel menuPanel;
   
 
-    public ManagerTestJFrame(Manager manager) throws IOException, ClassNotFoundException, SQLException {
+    public ManagerJFrame(Manager manager) throws IOException, ClassNotFoundException, SQLException {
         setTitle("Giao Diện Thu Ngân - Quán Cafe");
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -81,7 +82,7 @@ public class ManagerTestJFrame extends JFrame {
 
         // GradientPanel menuPanel = new GradientPanel(new Color(27, 94, 32), new
         // Color(56, 142, 60)); // Màu chuyển
-        Panel menuPanel = new Panel();
+        menuPanel = new Panel();
         menuPanel.setLayout(new GridLayout(10, 1, 0, 0));
 
         JPanel contentPanel = new JPanel(new BorderLayout());
@@ -123,48 +124,10 @@ public class ManagerTestJFrame extends JFrame {
             ImageIcon scaleIcon_first_img = new ImageIcon(scale_iconButton);
             button.setIcon(scaleIcon_first_img);
 
-            button.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    for (Component btn : menuPanel.getComponents()) // menuPanel.getComponents() là trả về một danh sách       
-                    if (btn instanceof JButton)                     // các thành phần trong menuPanel
-                            btn.setBackground(new Color(39, 174, 96)); // Xét lại màu
-                    ((JButton) e.getSource()).setBackground(new Color(88, 214, 141)); // Đặt màu cho button được chọn
+            ManagerJFrameController controller = new ManagerJFrameController(this, manager, contentPanel, 
+                                                employeeShiftView, tablePanel, staffManagerJPanel); // Hành động
 
-                    contentPanel.removeAll();
-                    if (e.getActionCommand().equals("ĐIỂM DANH")) {
-                        try {
-                      
-                            contentPanel.add(new RollCall(), BorderLayout.CENTER);
-                        } catch (ClassNotFoundException | IOException | SQLException e1) {
-                            e1.printStackTrace();
-                        }
-                      
-                    } else if (e.getActionCommand().equals("Thanh toán")) {
-                    
-                    } else if (e.getActionCommand().equals("BÁN HÀNG")) {
-                        try {
-                            contentPanel.add(new Table_JPanel(), BorderLayout.CENTER);
-                        } catch (ClassNotFoundException ex) {
-                        } catch (SQLException ex) {
-                        } catch (IOException ex) {
-                        }
-                        
-                    }
-                    else if (e.getActionCommand().equals("XẾP LỊCH")) {           
-                        contentPanel.add(employeeShiftView, BorderLayout.CENTER);
-                    }
-                    else if (e.getActionCommand().equals("BÀN")) {
-                    	contentPanel.add(tablePanel, BorderLayout.CENTER);
-                    }
-                    else if(e.getActionCommand().equals("NHÂN VIÊN")){
-                        contentPanel.add(staffManagerJPanel, BorderLayout.CENTER);
-                    }
-                    
-                    contentPanel.revalidate();
-                    contentPanel.repaint();
-                }
-            });
+            button.addActionListener(controller.getButtonActionListener(label)); // Thêm ActionListener cho button
             menuPanel.add(button);
         }
         sidebar.add(menuPanel, BorderLayout.CENTER);
@@ -200,9 +163,9 @@ public class ManagerTestJFrame extends JFrame {
 
     private void toggleSidebar(boolean expand) {
         int targetWidth = expand ? 210 : 0; // Kích thước mục tiêu
-        int step = (expand ? 60 : -60); // Mỗi lần tăng/giảm 60px
+        int step = (expand ? 20 : -20); // Mỗi lần tăng/giảm 60px
 
-        Timer timer = new Timer(4, new ActionListener() { // Tăng thời gian từ 1ms lên 10ms
+        Timer timer = new Timer(1, new ActionListener() { // Tăng thời gian từ 1ms lên 10ms
             int width = sidebar.getWidth();
 
             @Override
@@ -232,22 +195,8 @@ public class ManagerTestJFrame extends JFrame {
         timer.start();
     }
 
+    public Panel getMenuPanel() {
+        return this.menuPanel;
+    }
 
-    
-    public static void main(String[] args) {
-		try {
-			Manager manager = new Manager(9, "Nguyễn Văn Test", "0123456789", "src\\image\\Manager_Image\\Manager_Defaut.png" , "a", "a", "45", "3", "Nam", 0);
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()); 
-			SwingUtilities.invokeLater(() -> {
-				try {
-					new ManagerTestJFrame(manager).setVisible(true);
-				} catch (ClassNotFoundException | IOException | SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}); 
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
-	}
 }

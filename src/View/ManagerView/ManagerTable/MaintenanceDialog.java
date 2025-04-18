@@ -1,15 +1,15 @@
 package View.ManagerView.ManagerTable;
 
 import Model.Table;
-import Repository.TableRepository;
+import Repository.Table.ITableRespository;
+import Repository.Table.TableRepository;
 import Utils.ValidationUtils;
-
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 
 public class MaintenanceDialog extends JDialog {
 
@@ -81,7 +81,7 @@ public class MaintenanceDialog extends JDialog {
             }
 
             try {
-                TableRepository tableRepository = new TableRepository();
+                ITableRespository tableRepository = new TableRepository();
                 tableRepository.updateTableStatus(id, "Bảo trì");
 
                 table.setStatus("Bảo trì");
@@ -128,7 +128,7 @@ public class MaintenanceDialog extends JDialog {
             }
 
             try {
-                TableRepository tableRepository = new TableRepository();
+                ITableRespository tableRepository = new TableRepository();
                 tableRepository.updateTableStatus(id, "Trống");
 
                 table.setStatus("Trống");

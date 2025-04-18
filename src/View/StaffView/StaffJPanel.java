@@ -1,7 +1,8 @@
 package View.StaffView;
 
 import Model.Product;
-import Repository.*;
+import Repository.Product.ProductRespository;
+import Repository.Product.IProductRespository;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -20,7 +21,7 @@ import javax.swing.border.EmptyBorder;
 public class StaffJPanel extends JPanel {
     private Locale VN = new Locale("vi", "VN");
 
-    private ProductRepository productDao = new ProductRepository();
+    private IProductRespository productDao = new ProductRespository();
     private List<Product> products = productDao.getArrayListProductFromSQL(); // Lấy danh sách sản phẩm từ database
 
     // DefaultListModel để quản lý danh sách

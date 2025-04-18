@@ -2,7 +2,8 @@ package View.ManagerView.ManagerTable;
 
 import Controller.ManagerController.TableManagerController;
 import Model.Table;
-import Repository.TableRepository;
+import Repository.Table.ITableRespository;
+import Repository.Table.TableRepository;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -37,7 +38,7 @@ public class TablePanel extends JPanel {
 		add(panel_Center, BorderLayout.CENTER);
 		panel_Center.setLayout(new GridLayout(1, 3, 10, 0));
 		try {
-			TableRepository tableRepository = new TableRepository();
+			ITableRespository tableRepository = new TableRepository();
 			listTable = tableRepository.getTableFromSQL();
 			int total = listTable.size();
 			String[] columnNames = {"Mã bàn", "Tên bàn", "Trạng thái"};
@@ -188,7 +189,6 @@ public class TablePanel extends JPanel {
 			e.printStackTrace();
 		}
 	}
+}	
 	
 	
-	
-}

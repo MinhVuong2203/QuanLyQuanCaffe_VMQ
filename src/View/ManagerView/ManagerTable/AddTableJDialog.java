@@ -1,7 +1,8 @@
 package View.ManagerView.ManagerTable;
 
 import Model.Table;
-import Repository.TableRepository;
+import Repository.Table.ITableRespository;
+import Repository.Table.TableRepository;
 import Utils.ValidationUtils;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -98,7 +99,7 @@ public class AddTableJDialog extends JDialog {
 						
 						Table table = new Table(Integer.parseInt(idTextField.getText()), nameTextField.getText(), "Trống");
 						
-						TableRepository tableRepository;
+						ITableRespository tableRepository;
 						try {
 							tableRepository = new TableRepository();
 							tableRepository.insertTable(table);						

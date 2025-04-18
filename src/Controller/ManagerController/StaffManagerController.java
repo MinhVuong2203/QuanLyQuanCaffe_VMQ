@@ -17,8 +17,6 @@ public class StaffManagerController implements ActionListener {
             String atb = (String) staffManagerJPanel.comboBox.getSelectedItem();
             String value = staffManagerJPanel.textField.getText();
             System.out.println("Attribute: " + atb + ", Value: " + value);
-       
-
         } else if (command.equals("Remove Staff")) {
             // Code to remove staff
         } else if (command.equals("Update Staff")) {

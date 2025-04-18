@@ -1,6 +1,7 @@
 package Controller.ManagerController;
 
-import Repository.EmployeeRepository;
+import Repository.Employee.EmployeeRespository;
+import Repository.Employee.IEmployeeRespository;
 import java.awt.event.MouseAdapter;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -43,7 +44,7 @@ public class EmployeeShiftController {
                     );
 
                     try {
-                        EmployeeRepository employeeRepository = new EmployeeRepository();
+                        IEmployeeRespository employeeRepository = new EmployeeRespository();
                         int id = (int) target.getValueAt(row, 0);
                         String Title = columnNames[column];
                         String dateString = Title.substring(Title.indexOf('(') + 1, Title.indexOf(')'));

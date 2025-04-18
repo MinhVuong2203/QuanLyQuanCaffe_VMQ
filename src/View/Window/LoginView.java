@@ -1,6 +1,6 @@
 package View.Window;
 
-import Controller.Window.LoginController;
+import Controller.WindowController.LoginController;
 import Model.User;
 import java.awt.Color;
 import java.awt.Font;
@@ -17,12 +17,17 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-public class Login extends JFrame {
+public class LoginView extends JFrame {
     private static final long serialVersionUID = 1L;
+
+    // private LoginController ac; // Khai báo controller
+
     private JPanel contentPane;
     private JTextField textField;
     private JPasswordField passwordField;
     private JCheckBox showMK;
+
+
 
     public JPasswordField getPasswordField() {
         return passwordField;
@@ -44,7 +49,7 @@ public class Login extends JFrame {
         this.showMK = showMK;
     }
 
-    public Login() {
+    public LoginView() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setTitle("Staff Sign");
         setIconImage(Toolkit.getDefaultToolkit().getImage("src\\image\\Quán Caffe MVQ _ Icon.png"));
@@ -64,7 +69,7 @@ public class Login extends JFrame {
         lblNewLabel.setBounds(157, 101, 200, 29);
         contentPane.add(lblNewLabel);
 
-        ActionListener ac = new LoginController(this);
+        ActionListener ac = new LoginController(this); // Gọi controller
 
         JButton btnNewButton = new JButton("Đăng nhập");
 		btnNewButton.setFont(new Font("Arial", Font.PLAIN, 16));
@@ -128,6 +133,11 @@ public class Login extends JFrame {
     public void thongBao(String msg) {
         JOptionPane.showMessageDialog(this, msg);
     }
+
+    public void showMessage(String message, String title, int messageType) {
+        JOptionPane.showMessageDialog(this, message, title, messageType);
+    }
+    
 
 
 

@@ -1,6 +1,6 @@
 package View.Window;
 
-import Controller.Window.WelcomScreenController;
+import Controller.WindowController.WelcomScreenController;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.Arrays;

@@ -3,7 +3,9 @@ package View.ManagerView.ManagerStaff;
 import Controller.ManagerController.FilterDocumentListener;
 import Controller.ManagerController.StaffManagerController;
 import Model.Employee;
-import Repository.EmployeeRepository;
+import Repository.Employee.EmployeeRespository;
+import Repository.Employee.IEmployeeRespository;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -46,7 +48,7 @@ public class StaffManagerJPanel extends JPanel {
 		
 		table = new JTable();
 		try {
-			EmployeeRepository employeeRepository = new EmployeeRepository();
+			IEmployeeRespository employeeRepository = new EmployeeRespository();
 			listEmployee = employeeRepository.getAllEmployeesAllAttributes();
 			columnNames = new String[]{"Mã nhân viên", "Tên nhân viên", "Số điện thoại","username", "password","Chức vụ", "CCCD", "Ngày sinh", "Giới tính", "Lương theo giờ"};
 		

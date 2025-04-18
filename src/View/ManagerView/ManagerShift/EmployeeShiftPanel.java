@@ -31,7 +31,8 @@ import com.toedter.calendar.JDateChooser;
 
 import Controller.ManagerController.EmployeeShiftController;
 import Model.Employee;
-import Repository.EmployeeRepository;
+import Repository.Employee.EmployeeRespository;
+import Repository.Employee.IEmployeeRespository;
 
 import java.awt.Color;
 import java.awt.event.MouseAdapter;
@@ -140,7 +141,7 @@ public class EmployeeShiftPanel extends JPanel {
 			}
 
 			try { // Tạo mảng 2 chiều để chứa dữ liệu bảng
-				EmployeeRepository employeeRepository = new EmployeeRepository();
+				IEmployeeRespository employeeRepository = new EmployeeRespository();
 				List<Employee> employees = employeeRepository.getAllEmployeesToManager();
 				Object[][] data = new Object[employees.size()][numDays]; 
 				for (int i = 0; i < employees.size(); i++) {

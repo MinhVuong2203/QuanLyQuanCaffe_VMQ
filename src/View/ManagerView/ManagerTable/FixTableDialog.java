@@ -1,7 +1,8 @@
 package View.ManagerView.ManagerTable;
 
 import Model.Table;
-import Repository.TableRepository;
+import Repository.Table.ITableRespository;
+import Repository.Table.TableRepository;
 import Utils.ValidationUtils;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -110,7 +111,7 @@ public class FixTableDialog extends JDialog {
 			}
 
 			try {
-				TableRepository tableRepository = new TableRepository();
+				ITableRespository tableRepository = new TableRepository();
 				tableRepository.updateTable(id, nameText);
 
 				// Cập nhật danh sách

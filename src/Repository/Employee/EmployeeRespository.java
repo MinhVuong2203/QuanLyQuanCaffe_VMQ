@@ -1,4 +1,4 @@
-package Repository;
+package Repository.Employee;
 
 import Model.Employee;
 import Utils.JdbcUtils;
@@ -18,16 +18,16 @@ import java.util.Map;
 import com.toedter.calendar.JDateChooser;
 import java.util.Date;
 
-public class EmployeeRepository {
+public class EmployeeRespository implements IEmployeeRespository {
     private Locale VN = new Locale("vi", "VN");
-
     private Connection connection;
     private JdbcUtils jdbcUtils;
 
-    public EmployeeRepository() throws IOException, ClassNotFoundException, SQLException {
+    public EmployeeRespository() throws IOException, ClassNotFoundException, SQLException {
         jdbcUtils = new JdbcUtils();
     }
 
+    @Override
     public int getMaxShiftID() {
         String sql = "SELECT MAX(shiftID) FROM EmployeeShift";
         try (Connection connection = jdbcUtils.connect();
@@ -42,6 +42,7 @@ public class EmployeeRepository {
         return 0;
     }
 
+    @Override
     public boolean checkEqualsPhone(String phone) throws SQLException {
         try {
             connection = jdbcUtils.connect(); // Phải có để có connection
@@ -60,6 +61,7 @@ public class EmployeeRepository {
         return false; // Không tồn tại
     }
 
+    @Override
     public List<Employee> getAllEmployees() throws SQLException {
         List<Employee> employees = new ArrayList<>();
         String sql = "SELECT e.image, e.employeeID, e.name, es.shiftID, es.startTime, es.endTime, ua.role, es.status\r\n"
@@ -92,6 +94,7 @@ public class EmployeeRepository {
         return employees;
     }
 
+    @Override
     public List<Employee> getAllEmployeesToManager() throws SQLException {
         Map<Integer, Employee> mapEmployee = new java.util.HashMap<>();
         String sql = "SELECT e.employeeID , e.image, e.name, ua.role "
@@ -123,6 +126,7 @@ public class EmployeeRepository {
         return null;
     }
 
+    @Override
     public void setStatusFromSQL(int id, String status) {
         try (Connection connection = jdbcUtils.connect();
                 Statement stmt = connection.createStatement()) {
@@ -133,6 +137,7 @@ public class EmployeeRepository {
         }
     }
 
+    @Override
     public String getStatusFromSQL(int id) {
         String sql = "SELECT status FROM EmployeeShift WHERE employeeID = " + id;
         try (Connection connection = jdbcUtils.connect();
@@ -147,6 +152,7 @@ public class EmployeeRepository {
         return null;
     }
 
+    @Override
     public String[] getEachEmployeeShift(int id, JDateChooser startDay, JDateChooser endDay) {
         int n = ValidationUtils.CalculateDate(startDay, endDay) + 1;
         String[] x = new String[n];
@@ -180,6 +186,7 @@ public class EmployeeRepository {
         return x;
     }
 
+    @Override
     public void addShiftToSQL(int id, String dateString, String timeRange) {
         String sql = "INSERT INTO EmployeeShift (shiftID, employeeID, startTime, endTime) " +
                 "VALUES (" + (getMaxShiftID() + 1) + ", " + id + ", '" + dateString + " " + timeRange.split("-")[0]
@@ -195,6 +202,7 @@ public class EmployeeRepository {
         }
     }
 
+    @Override
     public void deleteShiftFromSQL(int id, String dateString) {
         String sql = "DELETE FROM EmployeeShift WHERE employeeID = " + id + " AND CAST(startTime AS DATE) = '"
                 + dateString + "'";
@@ -206,6 +214,7 @@ public class EmployeeRepository {
         }
     }
 
+    @Override
     public void updateShiftToSQL(int id, String dateString, String timeRange, String lastTimeRange) {
         String sql = "UPDATE EmployeeShift SET startTime = '" + dateString + " " + timeRange.split("-")[0]
                 + ":00', endTime = '" + dateString + " " + timeRange.split("-")[1] + ":00' "
@@ -219,6 +228,7 @@ public class EmployeeRepository {
         }
     }
 
+    @Override
     public List<Employee> getAllEmployeesAllAttributes(){
         String sql = "SELECT e.employeeID, e.name, e.phone, e.image, u.username, u.password, u.role, e.CCCD, e.birthDate, e.gender, e.hourWage " +
                      "FROM Employee as e " + 
@@ -256,7 +266,7 @@ public class EmployeeRepository {
 
     public static void main(String[] args) {
         try {
-            EmployeeRepository employeeRepository = new EmployeeRepository();
+            EmployeeRespository employeeRepository = new EmployeeRespository();
             List<Employee> employees = employeeRepository.getAllEmployees();
             for (Employee employee : employees) {
                 System.out.println(employee.getImage() + " " + employee.getName() + " "

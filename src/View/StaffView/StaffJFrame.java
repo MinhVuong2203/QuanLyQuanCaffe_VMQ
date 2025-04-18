@@ -1,17 +1,16 @@
 package View.StaffView;
 
+import Controller.StaffController.StaffJFrameController;
 import Model.Employee;
-
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.util.Locale;
-
 import javax.swing.*;
 
-public class Staff_view extends JFrame {
+public class StaffJFrame extends JFrame {
     private Locale VN = new Locale("vi", "VN");
     private DateFormat formatTime = DateFormat.getTimeInstance(DateFormat.LONG, VN);
     private DateFormat formatDate = DateFormat.getDateInstance(DateFormat.LONG, VN);
@@ -27,8 +26,9 @@ public class Staff_view extends JFrame {
     private boolean isSidebarExpanded = true;
     private Timer mouseTracker;
     private StaffJPanel staffInterface;
+    private Panel menuPanel;
 
-    public Staff_view(Employee employee) throws IOException, ClassNotFoundException, SQLException {
+    public StaffJFrame(Employee employee) throws IOException, ClassNotFoundException, SQLException {
         setTitle("Giao Diện Thu Ngân - Quán Cafe");
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -36,6 +36,7 @@ public class Staff_view extends JFrame {
         setResizable(false);
         getContentPane().setLayout(new BorderLayout());
 
+       
         // Panel Header (Thông tin nhân viên)
         JPanel panel = new JPanel();
         panel.setLayout(null);
@@ -94,18 +95,21 @@ public class Staff_view extends JFrame {
 
         // GradientPanel menuPanel = new GradientPanel(new Color(27, 94, 32), new
         // Color(56, 142, 60)); // Màu chuyển
-        Panel menuPanel = new Panel();
+        menuPanel = new Panel();
         menuPanel.setLayout(new GridLayout(10, 1, 0, 0));
 
-        JPanel contentPanel = new JPanel(new BorderLayout());
+        
+        JPanel contentPanel = new JPanel(new BorderLayout()); 
         contentPanel.setBackground(Color.LIGHT_GRAY);
+        
+        StaffJFrameController controller = new StaffJFrameController(this, employee, contentPanel); // Hành động
 
         // Initialize staffInterface by default
         // staffInterface = new StaffJPanel();
         Table_JPanel table_JPanel = new Table_JPanel();
         contentPanel.add(table_JPanel, BorderLayout.CENTER);
 
-        String[] buttonLabels = { "BÁN HÀNG", "ĐIỂM DANH", "ĐĂNG XUẤT" };
+        String[] buttonLabels = {"BÁN HÀNG", "ĐIỂM DANH", "ĐĂNG XUẤT"};
         String[] iconButtonLabels = { "src\\image\\SideBar_Image\\Sell.png", "src\\image\\SideBar_Image\\DiemDanh.png",
                 "src\\image\\SideBar_Image\\SignOut.png" };
         int index_iconButtonLabels = 0;
@@ -118,58 +122,18 @@ public class Staff_view extends JFrame {
             button.setContentAreaFilled(true);
             button.setFont(new Font("Arial", Font.BOLD, 14));
             button.setBorderPainted(false);
+            button.setHorizontalAlignment(SwingConstants.LEFT);
             // Thêm icon
-            int width = 64, height = 64;
-            if (index_iconButtonLabels == 2) {
-                width = height = 42;
-            }
+            int width = 42, height = 42;
+        
+            if (index_iconButtonLabels == 0) button.setBackground(new Color(88, 214, 141)); // Màu focus đầu tiên mặc định
             ImageIcon iconButton = new ImageIcon(iconButtonLabels[index_iconButtonLabels++]);
             Image scale_iconButton = iconButton.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
             ImageIcon scaleIcon_first_img = new ImageIcon(scale_iconButton);
             button.setIcon(scaleIcon_first_img);
 
-            button.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    for (Component btn : menuPanel.getComponents()) // menuPanel.getComponents() là trả về một danh sách
-                        if (btn instanceof JButton) // các thành phần trong menuPanel
-                            btn.setBackground(new Color(39, 174, 96)); // Xét lại màu
-                    ((JButton) e.getSource()).setBackground(new Color(88, 214, 141)); // Đặt màu cho button được chọn
-
-                    contentPanel.removeAll();
-                    if (e.getActionCommand().equals("ĐIỂM DANH")) {
-                        try {
-                            // staffInterface = new StaffJPanel();
-                            // contentPanel.add(staffInterface, BorderLayout.CENTER);
-                            contentPanel.add(new RollCall(), BorderLayout.CENTER);
-                        } catch (ClassNotFoundException | IOException | SQLException e1) {
-                            e1.printStackTrace();
-                        }
-                        contentPanel.revalidate();
-                        contentPanel.repaint();
-                    } else if (e.getActionCommand().equals("Thanh toán")) {
-                        // if (staffInterface.getPlacedModel().isEmpty()) {
-                        // JOptionPane.showMessageDialog(Staff_view.this, "Vui lòng chọn món ăn trước
-                        // khi thanh toán!", "Thông báo",
-                        // JOptionPane.INFORMATION_MESSAGE);
-                        // return;
-                        // }
-                        // Payment_Interface paymentInterface = new Payment_Interface(staffInterface);
-                        // paymentInterface.printBill();
-                        // contentPanel.add(paymentInterface, BorderLayout.CENTER);
-                        // contentPanel.revalidate();
-                        // contentPanel.repaint();
-                    } else if (e.getActionCommand().equals("BÁN HÀNG")) {
-                        try {
-                            contentPanel.add(new Table_JPanel(), BorderLayout.CENTER);
-                        } catch (ClassNotFoundException | SQLException | IOException e1) {
-                            e1.printStackTrace();
-                        }
-                        contentPanel.revalidate();
-                        contentPanel.repaint();
-                    }
-                }
-            });
+            button.addActionListener(controller.getButtonActionListener(label));
+            
             menuPanel.add(button);
         }
         sidebar.add(menuPanel, BorderLayout.CENTER);
@@ -182,6 +146,21 @@ public class Staff_view extends JFrame {
         getContentPane().add(splitPane, BorderLayout.CENTER);
 
         startMouseTracking();
+    }
+
+    public void clock() {
+        // lblTime.setText("Thời gian hiện tại: " +
+        // formatTime.format(java.util.Calendar.getInstance().getTime()));
+        Timer timer = new Timer(1000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Cập nhật thời gian hiện tại
+                formattedDate = formatDate.format(new java.util.Date());
+                formattedTime = formatTime.format(new java.util.Date());
+                lblTime.setText("Thời gian hiện tại: " + formattedTime + " - " + formattedDate);
+            }
+        });
+        timer.start();
     }
 
     // Đọc vị trí chuột mỗi 100ms
@@ -203,31 +182,17 @@ public class Staff_view extends JFrame {
         mouseTracker.start();
     }
 
-    public void clock() {
-        // lblTime.setText("Thời gian hiện tại: " +
-        // formatTime.format(java.util.Calendar.getInstance().getTime()));
-        Timer timer = new Timer(1000, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Cập nhật thời gian hiện tại
-                formattedDate = formatDate.format(new java.util.Date());
-                formattedTime = formatTime.format(new java.util.Date());
-                lblTime.setText("Thời gian hiện tại: " + formattedTime + " - " + formattedDate);
-            }
-        });
-        timer.start();
-    }
-
     private void toggleSidebar(boolean expand) {
-        int targetWidth = expand ? 210 : 0;// kich thước mục tiêu
-        int step = (expand ? 20 : -20);// mỗi lần tăng/giảm 60px
+        int targetWidth = expand ? 210 : 0; // Kích thước mục tiêu
+        int step = (expand ? 20 : -20); // Mỗi lần tăng/giảm 60px
 
-        Timer timer = new Timer(1, new ActionListener() {
+        Timer timer = new Timer(1, new ActionListener() { // Tăng thời gian từ 1ms lên 10ms
             int width = sidebar.getWidth();
 
             @Override
             public void actionPerformed(ActionEvent e) {
                 width += step;
+
                 if ((expand && width >= targetWidth) || (!expand && width <= targetWidth)) {
                     width = targetWidth;
                     ((Timer) e.getSource()).stop();
@@ -235,16 +200,20 @@ public class Staff_view extends JFrame {
                 }
 
                 final int finalWidth = width;
-                SwingUtilities.invokeLater(() -> {
-                    sidebar.setPreferredSize(new Dimension(finalWidth, getHeight()));
-                    splitPane.setDividerLocation(finalWidth);
-                    sidebar.revalidate();
-                    sidebar.repaint();
-                });
+
+                // Chỉ cập nhật kích thước sidebar sau khi dừng timer
+                if (width == targetWidth) {
+                    // Cập nhật UI sau khi hoàn thành thay đổi
+                    SwingUtilities.invokeLater(() -> {
+                        sidebar.setPreferredSize(new Dimension(finalWidth, getHeight()));
+                        splitPane.setDividerLocation(finalWidth);
+                        sidebar.revalidate();
+                        sidebar.repaint();
+                    });
+                }
             }
         });
         timer.start();
-
     }
 
     public JLabel getLblTime() {
@@ -253,5 +222,9 @@ public class Staff_view extends JFrame {
 
     public void setLblTime(JLabel lblTime) {
         this.lblTime = lblTime;
+    }
+
+    public Panel getMenuPanel() {
+        return menuPanel;
     }
 }
