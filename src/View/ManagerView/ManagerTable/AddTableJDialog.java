@@ -1,9 +1,7 @@
 package View.ManagerView.ManagerTable;
 
+import Controller.ManagerController.TableDialogController;
 import Model.Table;
-import Repository.Table.ITableRespository;
-import Repository.Table.TableRepository;
-import Utils.ValidationUtils;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
@@ -18,6 +16,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+
 
 public class AddTableJDialog extends JDialog {
 
@@ -79,42 +78,16 @@ public class AddTableJDialog extends JDialog {
 				okButton.setActionCommand("OK");
 				buttonPane.add(okButton);
 				okButton.addActionListener(e -> {
-					infoID.setText("");
-					infoName.setText("");
-					if (idTextField.getText().isEmpty() || nameTextField.getText().isEmpty()) {
-						JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin!", "Lỗi", JOptionPane.ERROR_MESSAGE); return;
-					} 
-					else{	
-						if (!ValidationUtils.isNumeric(idTextField.getText())) {
-							JOptionPane.showMessageDialog(this, "ID không hợp lệ!", "Lỗi", JOptionPane.ERROR_MESSAGE); return;
+					try {
+						TableDialogController controller = new TableDialogController(listTable, tablePanel);
+						if (controller.validateAddTableInput(idTextField.getText(), nameTextField.getText(), infoID, infoName)) {
+							controller.addTable(idTextField.getText(), nameTextField.getText());
+							dispose();
 						}
-						if (ValidationUtils.indexListTableID(listTable, Integer.parseInt(idTextField.getText())) != -1){
-							infoID.setText("ID này đã tồn tại!"); 
-							
-							return;
-						}else if (ValidationUtils.indexListTableName(listTable, nameTextField.getText())){
-							infoName.setText("Tên bàn này đã tồn tại!"); 
-							return;
-						}
-						
-						Table table = new Table(Integer.parseInt(idTextField.getText()), nameTextField.getText(), "Trống");
-						
-						ITableRespository tableRepository;
-						try {
-							tableRepository = new TableRepository();
-							tableRepository.insertTable(table);						
-							System.out.println("list Dialog" + listTable.size());
-
-						} catch (ClassNotFoundException | IOException | SQLException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						}					
-						JOptionPane.showMessageDialog(this, "Thêm bàn thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-			            dispose();
-						listTable.add(table); // Thêm bàn mới vào danh sách bàn
-						tablePanel.updateTableData(listTable); // Cập nhật lại bảng trong TablePanel
+					} catch (ClassNotFoundException | IOException | SQLException ex) {
+						ex.printStackTrace();
+						JOptionPane.showMessageDialog(this, "Lỗi khi thêm bàn!", "Lỗi", JOptionPane.ERROR_MESSAGE);
 					}
-  
 				});
 			}
 			{

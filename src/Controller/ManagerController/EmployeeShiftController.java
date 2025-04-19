@@ -1,7 +1,7 @@
 package Controller.ManagerController;
 
-import Repository.Employee.EmployeeRespository;
-import Repository.Employee.IEmployeeRespository;
+import Service.Employee.EmployeeShiftService;
+import Service.Employee.IEmployeeShiftService;
 import java.awt.event.MouseAdapter;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -10,6 +10,11 @@ import javax.swing.JTable;
 
 public class EmployeeShiftController {
 
+    private final IEmployeeShiftService employeeShiftService;
+
+    public EmployeeShiftController() throws ClassNotFoundException, IOException, SQLException {
+        this.employeeShiftService = new EmployeeShiftService();
+    }
 
     public static void attachShiftSelectionHandler(JTable shiftTable, String [] columnNames) {
         shiftTable.addMouseListener(new MouseAdapter() {
@@ -44,7 +49,7 @@ public class EmployeeShiftController {
                     );
 
                     try {
-                        IEmployeeRespository employeeRepository = new EmployeeRespository();
+                        EmployeeShiftController controller = new EmployeeShiftController();
                         int id = (int) target.getValueAt(row, 0);
                         String Title = columnNames[column];
                         String dateString = Title.substring(Title.indexOf('(') + 1, Title.indexOf(')'));
@@ -55,21 +60,21 @@ public class EmployeeShiftController {
                         if (!last.isEmpty()){  // Nếu nó không rỗng thì xóa hoặc update ca làm việc
                             if (selectedShift.equals("Xoá ca (Trống)")) {
                                 target.setValueAt("", row, column);
-                                employeeRepository.deleteShiftFromSQL(id, dateString);
+                                controller.employeeShiftService.deleteShift(id, dateString);
                             } else {
                                 target.setValueAt(timeRange, row, column);
-                                employeeRepository.updateShiftToSQL(id, dateString, timeRange, last);     
+                                controller.employeeShiftService.updateShift(id, dateString, timeRange, last);     
                             }
                         }
                         else { // Nếu ban đầu nó rỗng thì chỉ Thêm ca làm việc
                             if (!selectedShift.equals("Xoá ca (Trống)"))
                             target.setValueAt(timeRange, row, column);
-                            employeeRepository.addShiftToSQL(id, dateString, timeRange);
+                            controller.employeeShiftService.addShift(id, dateString, timeRange);
 
                         }
                     }
                     } catch (ClassNotFoundException | IOException | SQLException e1) {
-                        e1.printStackTrace();
+                        JOptionPane.showMessageDialog(null, "Lỗi khi khởi tạo controller: " + e1.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
                     }
 
                         

@@ -1,9 +1,7 @@
 package View.ManagerView.ManagerTable;
 
+import Controller.ManagerController.TableDialogController;
 import Model.Table;
-import Repository.Table.ITableRespository;
-import Repository.Table.TableRepository;
-import Utils.ValidationUtils;
 import java.awt.*;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -53,45 +51,15 @@ public class MaintenanceDialog extends JDialog {
         JButton maintenanceButton = new JButton("Bảo trì");
         maintenanceButton.setFont(new Font("Tahoma", Font.BOLD, 14));
         maintenanceButton.addActionListener(e -> {
-            infoID.setText("");
-            String idText = idTextField.getText().trim();
-
-            if (idText.isEmpty()) {
-                infoID.setText("Vui lòng nhập ID!");
-                return;
-            }
-
-            if (!ValidationUtils.isNumeric(idText)) {
-                infoID.setText("ID không hợp lệ!");
-                return;
-            }
-
-            int id = Integer.parseInt(idText);
-            int index = ValidationUtils.indexListTableID(listTable, id);
-
-            if (index == -1) {
-                infoID.setText("ID không tồn tại!");
-                return;
-            }
-
-            Table table = listTable.get(index);
-            if ("Bảo trì".equalsIgnoreCase(table.getStatus())) {
-                JOptionPane.showMessageDialog(this, "Bàn đã ở trạng thái bảo trì!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-                return;
-            }
-
             try {
-                ITableRespository tableRepository = new TableRepository();
-                tableRepository.updateTableStatus(id, "Bảo trì");
-
-                table.setStatus("Bảo trì");
-                tablePanel.updateTableData(listTable);
-
-                JOptionPane.showMessageDialog(this, "Đã chuyển bàn sang trạng thái Bảo trì.", "Thành công", JOptionPane.INFORMATION_MESSAGE);
-                dispose();
+                TableDialogController controller = new TableDialogController(listTable, tablePanel);
+                if (controller.validateMaintenanceInput(idTextField.getText().trim(), true, infoID)) {
+                    controller.updateTableStatus(idTextField.getText().trim(), true);
+                    dispose();
+                }
             } catch (ClassNotFoundException | IOException | SQLException ex) {
                 ex.printStackTrace();
-                JOptionPane.showMessageDialog(this, "Lỗi khi cập nhật trạng thái!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Lỗi khi bảo trì bàn: " + ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
             }
         });
         buttonPane.add(maintenanceButton);
@@ -99,48 +67,20 @@ public class MaintenanceDialog extends JDialog {
         // Nút GỠ BẢO TRÌ
         JButton activateButton = new JButton("Gỡ bảo trì");
         activateButton.setFont(new Font("Tahoma", Font.BOLD, 14));
+        
         activateButton.addActionListener(e -> {
-            infoID.setText("");
-            String idText = idTextField.getText().trim();
-
-            if (idText.isEmpty()) {
-                infoID.setText("Vui lòng nhập ID!");
-                return;
-            }
-
-            if (!ValidationUtils.isNumeric(idText)) {
-                infoID.setText("ID không hợp lệ!");
-                return;
-            }
-
-            int id = Integer.parseInt(idText);
-            int index = ValidationUtils.indexListTableID(listTable, id);
-
-            if (index == -1) {
-                infoID.setText("ID không tồn tại!");
-                return;
-            }
-
-            Table table = listTable.get(index);
-            if (!"Bảo trì".equalsIgnoreCase(table.getStatus())) {
-                JOptionPane.showMessageDialog(this, "Bàn này không ở trạng thái bảo trì!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-                return;
-            }
-
             try {
-                ITableRespository tableRepository = new TableRepository();
-                tableRepository.updateTableStatus(id, "Trống");
-
-                table.setStatus("Trống");
-                tablePanel.updateTableData(listTable);
-
-                JOptionPane.showMessageDialog(this, "Đã chuyển bàn về trạng thái Trống.", "Thành công", JOptionPane.INFORMATION_MESSAGE);
-                dispose();
+                TableDialogController controller = new TableDialogController(listTable, tablePanel);
+                if (controller.validateMaintenanceInput(idTextField.getText().trim(), false, infoID)) {
+                    controller.updateTableStatus(idTextField.getText().trim(), false);
+                    dispose();
+                }
             } catch (ClassNotFoundException | IOException | SQLException ex) {
                 ex.printStackTrace();
-                JOptionPane.showMessageDialog(this, "Lỗi khi cập nhật trạng thái!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Lỗi khi gỡ bảo trì bàn: " + ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
             }
         });
+
         buttonPane.add(activateButton);
 
         // Nút CANCEL

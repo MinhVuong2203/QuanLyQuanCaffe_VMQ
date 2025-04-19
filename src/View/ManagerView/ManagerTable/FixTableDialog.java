@@ -1,9 +1,7 @@
 package View.ManagerView.ManagerTable;
 
+import Controller.ManagerController.TableDialogController;
 import Model.Table;
-import Repository.Table.ITableRespository;
-import Repository.Table.TableRepository;
-import Utils.ValidationUtils;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
@@ -81,45 +79,12 @@ public class FixTableDialog extends JDialog {
 		buttonPane.add(okButton);
 
 		okButton.addActionListener(e -> {
-			infoID.setText("");
-			infoName.setText("");
-
-			String idText = idTextField.getText().trim();
-			String nameText = nameTextField.getText().trim();
-
-			if (idText.isEmpty() || nameText.isEmpty()) {
-				JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-				return;
-			}
-
-			if (!ValidationUtils.isNumeric(idText)) {
-				infoID.setText("ID không hợp lệ!");
-				return;
-			}
-
-			int id = Integer.parseInt(idText);
-			int index = ValidationUtils.indexListTableID(listTable, id);
-			System.out.println(index);
-			if (index == -1) {
-				infoID.setText("ID này không tồn tại!");
-				return;
-			}
-
-			if (ValidationUtils.indexListTableName(listTable, nameText)) {
-				infoName.setText("Tên bàn này đã tồn tại!");
-				return;
-			}
-
 			try {
-				ITableRespository tableRepository = new TableRepository();
-				tableRepository.updateTable(id, nameText);
-
-				// Cập nhật danh sách
-				listTable.get(index).setTableName(nameText);
-				tablePanel.updateTableData(listTable);
-
-				JOptionPane.showMessageDialog(this, "Cập nhật tên bàn thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-				dispose();
+				TableDialogController controller = new TableDialogController(listTable, tablePanel);
+				if (controller.validateFixTableInput(idTextField.getText(), nameTextField.getText(), infoID, infoName)) {
+					controller.updateTableName(idTextField.getText(), nameTextField.getText());
+					dispose();
+				}
 			} catch (ClassNotFoundException | IOException | SQLException ex) {
 				ex.printStackTrace();
 				JOptionPane.showMessageDialog(this, "Lỗi khi cập nhật bàn!", "Lỗi", JOptionPane.ERROR_MESSAGE);

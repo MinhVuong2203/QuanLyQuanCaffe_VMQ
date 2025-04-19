@@ -3,11 +3,14 @@ package View.ManagerView.ManagerStaff;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import java.awt.Font;
+import java.awt.Image;
+
 import javax.swing.JLabel;
 import java.awt.Color;
 import javax.swing.JTextField;
@@ -42,7 +45,7 @@ public class AddEmployeeJDialog extends JDialog {
 	 * Create the dialog.
 	 */
 	public AddEmployeeJDialog() {
-		setBounds(100, 100, 612, 500);
+		setBounds(100, 100, 639, 479);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -51,6 +54,7 @@ public class AddEmployeeJDialog extends JDialog {
 		JLabel ImageLabel = new JLabel("ảnh");
 		ImageLabel.setBounds(383, 31, 180, 240);
 		contentPanel.add(ImageLabel);
+		ImageLabel.setIcon(new ImageIcon(new ImageIcon("src\\image\\Customer_Image\\Customer_default.png").getImage().getScaledInstance(180, 240, Image.SCALE_SMOOTH)));
 		
 		JLabel lblNewLabel_1 = new JLabel("Họ và tên:");
 		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 16));
@@ -120,7 +124,7 @@ public class AddEmployeeJDialog extends JDialog {
 		luongTextField = new JTextField();
 		luongTextField.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		luongTextField.setColumns(10);
-		luongTextField.setBounds(141, 275, 201, 22);
+		luongTextField.setBounds(192, 275, 90, 22);
 		contentPanel.add(luongTextField);
 		
 		JLabel lblNewLabel_1_6 = new JLabel("Username:");
@@ -147,13 +151,61 @@ public class AddEmployeeJDialog extends JDialog {
 		
 		JRadioButton rdbtnNam = new JRadioButton("Nam");
 		rdbtnNam.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		rdbtnNam.setBounds(159, 229, 80, 21);
+		rdbtnNam.setBounds(167, 229, 80, 21);
 		contentPanel.add(rdbtnNam);
 		
 		JRadioButton rdbtnNu = new JRadioButton("Nữ");
 		rdbtnNu.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		rdbtnNu.setBounds(241, 229, 80, 21);
+		rdbtnNu.setBounds(249, 229, 80, 21);
 		contentPanel.add(rdbtnNu);
+		
+		JLabel nameErrol = new JLabel("Báo lỗi");
+		nameErrol.setForeground(Color.RED);
+		nameErrol.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		nameErrol.setBounds(141, 10, 201, 20);
+		contentPanel.add(nameErrol);
+		
+		JLabel phoneErrol = new JLabel("Báo lỗi");
+		phoneErrol.setForeground(Color.RED);
+		phoneErrol.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		phoneErrol.setBounds(141, 63, 201, 20);
+		contentPanel.add(phoneErrol);
+		
+		JLabel CCCDErrol = new JLabel("Báo lỗi");
+		CCCDErrol.setForeground(Color.RED);
+		CCCDErrol.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		CCCDErrol.setBounds(141, 113, 201, 20);
+		contentPanel.add(CCCDErrol);
+		
+		JLabel BirthdayErrol = new JLabel("Báo lỗi");
+		BirthdayErrol.setForeground(Color.RED);
+		BirthdayErrol.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		BirthdayErrol.setBounds(141, 163, 201, 20);
+		contentPanel.add(BirthdayErrol);
+		
+		JLabel sexErrol = new JLabel("Báo lỗi");
+		sexErrol.setForeground(Color.RED);
+		sexErrol.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		sexErrol.setBounds(141, 213, 201, 20);
+		contentPanel.add(sexErrol);
+		
+		JLabel luongErrol = new JLabel("Báo lỗi");
+		luongErrol.setForeground(Color.RED);
+		luongErrol.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		luongErrol.setBounds(141, 256, 201, 20);
+		contentPanel.add(luongErrol);
+		
+		JLabel usernameErrol = new JLabel("Báo lỗi");
+		usernameErrol.setForeground(Color.RED);
+		usernameErrol.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		usernameErrol.setBounds(141, 307, 201, 20);
+		contentPanel.add(usernameErrol);
+		
+		JLabel passwordErrol = new JLabel("Báo lỗi");
+		passwordErrol.setForeground(Color.RED);
+		passwordErrol.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		passwordErrol.setBounds(141, 356, 201, 20);
+		contentPanel.add(passwordErrol);
 		{
 			JPanel buttonPane = new JPanel();
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));

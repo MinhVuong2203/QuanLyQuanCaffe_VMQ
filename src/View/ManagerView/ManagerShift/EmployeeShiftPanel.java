@@ -11,11 +11,13 @@ import java.util.Date;
 import java.util.List;
 
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
@@ -35,7 +37,10 @@ import Repository.Employee.EmployeeRespository;
 import Repository.Employee.IEmployeeRespository;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.event.MouseAdapter;
+
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 
 public class EmployeeShiftPanel extends JPanel {
@@ -113,6 +118,43 @@ public class EmployeeShiftPanel extends JPanel {
 		add(panel_center, BorderLayout.CENTER);
 	}
 
+	 // Phương thức đặt màu dựa trên vai trò (role)
+    private void setConditionalRowColorsByRole(JTable table) {
+        table.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
+                                                           boolean hasFocus, int row, int column) {
+                Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+
+                // Lấy giá trị của cột "role" (cột thứ 3, chỉ số 2)
+                String role = table.getModel().getValueAt(row, 2).toString();
+
+                // Nếu hàng không được chọn, đặt màu dựa trên vai trò
+                if (!isSelected) {
+                    switch (role.toLowerCase()) {
+                        case "phục vụ":
+                            c.setBackground(new Color(173, 216, 230)); // Xanh nhạt cho phụ vụ
+                            break;
+                        case "thu ngân":
+                            c.setBackground(new Color(255, 245, 157)); // Vàng nhạt cho thu ngân
+                            break;
+						case "pha chế":
+							c.setBackground(new Color(255, 182, 193)); // Hồng nhạt cho pha chế
+							break;
+						default:
+                            c.setBackground(Color.CYAN); 
+                            break;
+						}
+					
+							
+                } else {
+					c.setFont(new Font("Arial", Font.BOLD, 16));
+                }
+                return c;
+            }
+        });
+    }
+
 	public void checkDate(JDateChooser fromDateChooser, JDateChooser toDateChooser) {
 		if (!ValidationUtils.validateDates(fromDateChooser, toDateChooser)) {
 			JOptionPane.showMessageDialog(this, "Đến ngày phải lớn hơn Từ ngày!", "Lỗi", JOptionPane.ERROR_MESSAGE);
@@ -165,7 +207,7 @@ public class EmployeeShiftPanel extends JPanel {
 				};
 				shiftTable.setModel(model);
 				
-
+				// Trang trí bảng
 				shiftTable.setFont(new Font("Arial", Font.PLAIN, 14));
 				shiftTable.setRowHeight(30);
 				shiftTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -178,6 +220,9 @@ public class EmployeeShiftPanel extends JPanel {
 				for (int i = 3; i < numDays; i++)
 					shiftTable.getColumnModel().getColumn(i).setMinWidth(140); // Chiều rộng cột dữ liệu
 					System.out.println("Tạo bảng thành công!");
+
+				this.setConditionalRowColorsByRole(shiftTable); // Đặt màu cho các hàng dựa trên vai trò
+
 				// Sự kiện double click vào ô ca làm việc
 				EmployeeShiftController.attachShiftSelectionHandler(shiftTable, columnNames);
 

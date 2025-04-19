@@ -21,7 +21,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import java.awt.GridLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 
@@ -151,15 +150,18 @@ public class StaffManagerJPanel extends JPanel {
 		btnThem.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		btnThem.setPreferredSize(new Dimension(110, 40));
 		westPanel.add(btnThem);
+		btnThem.addActionListener(ac);
 		
 		JButton btnSua = new JButton("Cập nhật");
 		btnSua.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		btnSua.setPreferredSize(new Dimension(110, 40));
 		westPanel.add(btnSua);
+		btnSua.addActionListener(ac);
 		
 		JButton btnNghi = new JButton("Nghỉ việc");
 		btnNghi.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		btnNghi.setPreferredSize(new Dimension(110, 40));
 		westPanel.add(btnNghi);
+		btnNghi.addActionListener(ac);
 	}
 }
