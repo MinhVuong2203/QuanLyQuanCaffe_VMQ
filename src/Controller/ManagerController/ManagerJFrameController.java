@@ -22,9 +22,7 @@ public class ManagerJFrameController {
     private TablePanel tablePanel;
     private StaffManagerJPanel staffManagerJPanel;
 
-    public ManagerJFrameController(ManagerJFrame managerJFrame, Manager manager, JPanel contentPanel,
-                                  EmployeeShiftPanel employeeShiftPanel, TablePanel tablePanel,
-                                  StaffManagerJPanel staffManagerJPanel) {
+    public ManagerJFrameController(ManagerJFrame managerJFrame, Manager manager, JPanel contentPanel, EmployeeShiftPanel employeeShiftPanel, TablePanel tablePanel,StaffManagerJPanel staffManagerJPanel) {
         this.managerJFrame = managerJFrame;
         this.manager = manager;
         this.contentPanel = contentPanel;

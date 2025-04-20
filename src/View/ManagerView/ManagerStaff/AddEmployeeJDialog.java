@@ -1,20 +1,19 @@
 package View.ManagerView.ManagerStaff;
 
+import Controller.ManagerController.AddEmployeeJDialogController;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.FlowLayout;
-
+import java.awt.Font;
+import java.awt.Image;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import java.awt.Font;
-import java.awt.Image;
-
 import javax.swing.JLabel;
-import java.awt.Color;
-import javax.swing.JTextField;
+import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
 
 public class AddEmployeeJDialog extends JDialog {
 
@@ -27,11 +26,11 @@ public class AddEmployeeJDialog extends JDialog {
 	private JTextField luongTextField;
 	private JTextField usernameTextField;
 	private JTextField passwordTextField;
+	private JLabel ImageLabel;
+	private String defaultImg = "src\\image\\Employee_Image\\Employee_default.png";
 
-	/**
-	 * Launch the application.
-	 */
 	public static void main(String[] args) {
+		
 		try {
 			AddEmployeeJDialog dialog = new AddEmployeeJDialog();
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -41,20 +40,22 @@ public class AddEmployeeJDialog extends JDialog {
 		}
 	}
 
-	/**
-	 * Create the dialog.
-	 */
 	public AddEmployeeJDialog() {
-		setBounds(100, 100, 639, 479);
+		setBounds(100, 100, 623, 479);
+		setLocationRelativeTo(null);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
 		
-		JLabel ImageLabel = new JLabel("ảnh");
+		AddEmployeeJDialogController addEmployeeJDialogController = new AddEmployeeJDialogController(this);
+
+		ImageLabel = new JLabel("");
+		ImageLabel.setBackground(new Color(128, 255, 255));
 		ImageLabel.setBounds(383, 31, 180, 240);
+		ImageLabel.setOpaque(true);
+		ImageLabel.setIcon(new ImageIcon(new ImageIcon(defaultImg).getImage().getScaledInstance(180, 240, Image.SCALE_SMOOTH)));
 		contentPanel.add(ImageLabel);
-		ImageLabel.setIcon(new ImageIcon(new ImageIcon("src\\image\\Customer_Image\\Customer_default.png").getImage().getScaledInstance(180, 240, Image.SCALE_SMOOTH)));
 		
 		JLabel lblNewLabel_1 = new JLabel("Họ và tên:");
 		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 16));
@@ -206,6 +207,16 @@ public class AddEmployeeJDialog extends JDialog {
 		passwordErrol.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		passwordErrol.setBounds(141, 356, 201, 20);
 		contentPanel.add(passwordErrol);
+
+		JButton iconLb = new JButton();
+		iconLb.setBounds(563, 245, 26, 26);
+		contentPanel.add(iconLb);
+		iconLb.setIcon(new ImageIcon(new ImageIcon("src\\image\\Customer_Image\\writeImg.png").getImage().getScaledInstance(26, 26, Image.SCALE_SMOOTH)));
+		iconLb.addActionListener(e -> {
+			addEmployeeJDialogController.chooseFile();
+		}
+		);
+
 		{
 			JPanel buttonPane = new JPanel();
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
@@ -225,4 +236,17 @@ public class AddEmployeeJDialog extends JDialog {
 			}
 		}
 	}
+
+	public void setImageLabel(String filePath) {
+		this.ImageLabel.setIcon(new ImageIcon(new ImageIcon(filePath).getImage().getScaledInstance(180, 240, Image.SCALE_SMOOTH)));
+	}
+
+	public String getDefaultImg() {
+		return defaultImg;
+	}
+
+	public void setDefaultImg(String defautlImg) {
+		this.defaultImg = defautlImg;
+	}
+
 }
