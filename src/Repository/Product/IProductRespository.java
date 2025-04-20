@@ -14,4 +14,6 @@ public interface IProductRespository {
     public void deleteProductFromOrderDetail(int orderId, int productId) throws SQLException;
     public void addToOrder(int orderID, int tableID, int employeeID, int customerID, String orderTime) throws SQLException;
     public void delToOrder(int orderID, int tableID) throws SQLException;
+    public int initTempOrderId() throws SQLException;
+    public Product getProductByName(String name) throws SQLException;
 }

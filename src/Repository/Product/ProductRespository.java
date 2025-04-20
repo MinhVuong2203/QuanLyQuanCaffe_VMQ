@@ -75,7 +75,8 @@ public class ProductRespository implements IProductRespository {
     }
 
     @Override
-    public void addProductToOrderDetail(int orderId, int productId, int quantity, double price, int tableID) throws SQLException {
+    public void addProductToOrderDetail(int orderId, int productId, int quantity, double price, int tableID)
+            throws SQLException {
         try {
             connection = jdbcUtils.connect();
 
@@ -108,6 +109,17 @@ public class ProductRespository implements IProductRespository {
             stmt.setDouble(4, price);
             stmt.executeUpdate();
             stmt.close();
+
+            // Cập nhật totalPrice trong Orders bằng tổng các price trong OrderDetail
+            String updateTotalSql = "UPDATE Orders SET totalPrice = (SELECT SUM(price) FROM OrderDetail WHERE orderID = ?) "
+                    + "WHERE orderID = ?";
+            var updateStmt = connection.prepareStatement(updateTotalSql);
+            updateStmt.setInt(1, orderId);
+            updateStmt.setInt(2, orderId);
+            updateStmt.executeUpdate();
+            updateStmt.close();
+
+            connection.commit(); // Commit transaction
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -147,6 +159,55 @@ public class ProductRespository implements IProductRespository {
             e.printStackTrace();
         } finally {
             connection.close();
+        }
+    }
+
+    @Override
+    public int initTempOrderId() throws SQLException {
+        try {
+            connection = jdbcUtils.connect();
+            Statement stmt = connection.createStatement();
+            String sql = "SELECT MAX(orderID) FROM Orders";
+            ResultSet rs = stmt.executeQuery(sql);
+            int tempOrderId;
+            if (rs.next()) {
+                return tempOrderId = rs.getInt(1) + 1;
+            }
+            return 1;
+        } catch (ClassNotFoundException | SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
+    @Override
+    public Product getProductByName(String name) throws SQLException {
+        try {
+            connection = jdbcUtils.connect();
+            String sql = "SELECT * FROM Product WHERE name = ?";
+            var stmt = connection.prepareStatement(sql);
+            stmt.setString(1, name);
+            var rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                Product product = new Product();
+                product.setProductID(rs.getInt("productID"));
+                product.setName(rs.getString("name"));
+                product.setPrice(rs.getDouble("price"));
+                product.setSize(rs.getString("size"));
+                product.setImage(rs.getString("image"));
+                return product;
+            }
+            return null;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            if (connection != null) {
+                connection.close();
+            }
         }
     }
 

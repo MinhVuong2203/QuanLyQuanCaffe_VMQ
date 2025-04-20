@@ -18,6 +18,7 @@ import java.util.Locale;
 import java.util.Map;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
 
 import Controller.StaffController.StaffJPanelController;
 
@@ -45,10 +46,14 @@ public class StaffJPanel extends JPanel {
     private JPanel order;
     private JScrollPane scrollPane_Menu;
 
-    private int orderId = 7; // Added orderId for saving order details
+    // private int orderId = 7; // Added orderId for saving order details
 
     public int tableID;
     public int empID;
+
+    private Map<Product, Integer> tempOrderProducts = new HashMap<>(); // Lưu tạm các món được chọn
+    private int tempOrderId = productDao.initTempOrderId();
+
     /**
      * Create the panel.
      */
@@ -103,7 +108,6 @@ public class StaffJPanel extends JPanel {
         order.add(Button_Pay);
         // Button_Pay.addActionListener(e -> printBill());
         Button_Pay.addActionListener(ac);
-
 
         placedModel = new DefaultListModel<>();
         list_dishSelected = new JList(placedModel);
@@ -299,13 +303,11 @@ public class StaffJPanel extends JPanel {
                         double price = priceMap.get(dishName);
                         updateOrAddItem(dishName, price, qty);
                         int productId = productDao.getProductIdByName(dishName);
+                        Product product = productDao.getProductByID(productId);
                         if (productId != -1) {
-                            // Check if product exists in order
-                            // if (orderContainsProduct(dishName)) {
-                            //     productDao.updateOrderDetail(orderId, productId, qty, price);
-                            // } else {
-                            // }
-                            productDao.addProductToOrderDetail(orderId, productId, qty, price, tableID);
+                            // Lưu vào Map tạm thời
+                            Integer currentQty = tempOrderProducts.getOrDefault(product, 0);
+                            tempOrderProducts.put(product, currentQty + qty);
                         }
                         updateTotalMoney();
                     } else {
@@ -340,12 +342,10 @@ public class StaffJPanel extends JPanel {
                         double price = priceMap.get(displayText);
                         updateOrAddItem(displayText, price, qty);
                         int productId = productDao.getProductIdByNameAndSize(dishName, selectedSize);
+                        Product product = productDao.getProductByID(productId);
                         if (productId != -1) {
-                            // if (orderContainsProduct(displayText)) {
-                            //     productDao.updateOrderDetail(orderId, productId, qty, price * qty);
-                            // } else {
-                            // }
-                            productDao.addProductToOrderDetail(orderId, productId, qty, price * qty, tableID);
+                            Integer currentQty = tempOrderProducts.getOrDefault(product, 0);
+                            tempOrderProducts.put(product, currentQty + qty);
                         }
                         updateTotalMoney();
                     } else {
@@ -470,6 +470,30 @@ public class StaffJPanel extends JPanel {
         textArea_Bill.setText(bill.toString());
     }
 
+    public void clearTempOrder() {
+    // try {
+        // Xóa các món trong map tạm
+        tempOrderProducts.clear();
+        
+        // Xóa các món trên giao diện
+        // DefaultTableModel model = (DefaultTableModel) tblOrder.getModel();
+        // model.setRowCount(0);
+        
+        // // Reset tổng tiền về 0
+        // lblTotalMoney.setText("0 VNĐ");
+        
+        // // Khởi tạo lại orderID mới
+        // tempOrderId = productDao.initTempOrderId();
+        
+    // } catch (SQLException e) {
+    //     e.printStackTrace();
+    //     JOptionPane.showMessageDialog(this, 
+    //         "Có lỗi xảy ra khi xóa đơn hàng tạm", 
+    //         "Lỗi", 
+    //         JOptionPane.ERROR_MESSAGE);
+    // }
+}
+
     public JList<String> getList_dishSelected() {
         return list_dishSelected;
     }
@@ -550,13 +574,13 @@ public class StaffJPanel extends JPanel {
         this.order = order;
     }
 
-    public int getOrderId() {
-        return orderId;
-    }
+    // public int getOrderId() {
+    //     return orderId;
+    // }
 
-    public void setOrderId(int orderId) {
-        this.orderId = orderId;
-    }
+    // public void setOrderId(int orderId) {
+    //     this.orderId = orderId;
+    // }
 
     public int getEmpID() {
         return empID;
@@ -564,5 +588,21 @@ public class StaffJPanel extends JPanel {
 
     public void setEmpID(int empID) {
         this.empID = empID;
+    }
+
+    public Map<Product, Integer> getTempOrderProducts() {
+        return tempOrderProducts;
+    }
+
+    public void setTempOrderProducts(Map<Product, Integer> tempOrderProducts) {
+        this.tempOrderProducts = tempOrderProducts;
+    }
+
+    public int getTempOrderId() {
+        return tempOrderId;
+    }
+
+    public void setTempOrderId(int tempOrderId) {
+        this.tempOrderId = tempOrderId;
     }
 }
