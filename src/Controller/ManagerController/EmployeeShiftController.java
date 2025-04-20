@@ -1,7 +1,7 @@
 package Controller.ManagerController;
 
-import Service.Employee.EmployeeShiftService;
-import Service.Employee.IEmployeeShiftService;
+import Service.Implements.EmployeeShiftService;
+import Service.Interface.IEmployeeShiftService;
 import java.awt.event.MouseAdapter;
 import java.io.IOException;
 import java.sql.SQLException;

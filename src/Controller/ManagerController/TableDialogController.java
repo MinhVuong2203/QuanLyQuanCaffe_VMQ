@@ -1,7 +1,7 @@
 package Controller.ManagerController;
 
 import Model.Table;
-import Service.Table.TableService;
+import Service.Implements.TableService;
 import Utils.ValidationUtils;
 import View.ManagerView.ManagerTable.TablePanel;
 import java.io.IOException;

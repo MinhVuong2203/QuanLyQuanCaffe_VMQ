@@ -1,7 +1,7 @@
 package Controller.WindowController;
 
-import Service.Customer.CustomerService;
-import Service.Customer.ICustomerService;
+import Service.Implements.CustomerService;
+import Service.Interface.ICustomerService;
 import Utils.ValidationUtils;
 import View.Window.LoginView;
 import View.Window.SignUpView;

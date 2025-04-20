@@ -1,8 +1,9 @@
-package Service.Table;
+package Service.Implements;
 
 import Model.Table;
 import Repository.Table.ITableRespository;
 import Repository.Table.TableRepository;
+import Service.Interface.ITableService;
 import Utils.ValidationUtils;
 import java.io.IOException;
 import java.sql.SQLException;

@@ -28,6 +28,8 @@ public class AddEmployeeJDialog extends JDialog {
 	private JTextField passwordTextField;
 	private JLabel ImageLabel;
 	private String defaultImg = "src\\image\\Employee_Image\\Employee_default.png";
+	private final JLabel idLabel;
+
 
 	public static void main(String[] args) {
 		
@@ -39,6 +41,7 @@ public class AddEmployeeJDialog extends JDialog {
 			e.printStackTrace();
 		}
 	}
+    
 
 	public AddEmployeeJDialog() {
 		setBounds(100, 100, 623, 479);
@@ -62,12 +65,13 @@ public class AddEmployeeJDialog extends JDialog {
 		lblNewLabel_1.setBounds(56, 32, 75, 20);
 		contentPanel.add(lblNewLabel_1);
 		
+		
 		JLabel Labelid = new JLabel("ID:");
 		Labelid.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		Labelid.setBounds(383, 281, 22, 20);
 		contentPanel.add(Labelid);
 		
-		JLabel idLabel = new JLabel("id");
+		idLabel = new JLabel("id");
 		idLabel.setForeground(new Color(255, 0, 0));
 		idLabel.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		idLabel.setBounds(415, 281, 70, 20);
@@ -236,17 +240,50 @@ public class AddEmployeeJDialog extends JDialog {
 			}
 		}
 	}
+	
+	public String getDefaultImg() {
+		return defaultImg;
+	}
+	public JTextField getNameTextField() {
+		return nameTextField;
+	}
+	public JTextField getPhoneTextField() {
+		return phoneTextField;
+	}
+	public JTextField getCCCDtextField() {
+		return CCCDtextField;
+	}
+	public JTextField getBirthdayTextField() {
+		return BirthdayTextField;
+	}
+	public JTextField getLuongTextField() {
+		return luongTextField;
+	}
+	public JTextField getUsernameTextField() {
+		return usernameTextField;
+	}
+	public JTextField getPasswordTextField() {
+		return passwordTextField;
+	}
+	public JLabel getIdLabel() {
+		return idLabel;
+	}
 
 	public void setImageLabel(String filePath) {
 		this.ImageLabel.setIcon(new ImageIcon(new ImageIcon(filePath).getImage().getScaledInstance(180, 240, Image.SCALE_SMOOTH)));
 	}
-
-	public String getDefaultImg() {
-		return defaultImg;
-	}
-
 	public void setDefaultImg(String defautlImg) {
 		this.defaultImg = defautlImg;
 	}
+	public void setIdLabel(String id) {
+		this.idLabel.setText(id);
+	}
+
+
+
+
+
+
+
 
 }

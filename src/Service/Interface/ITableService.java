@@ -1,4 +1,4 @@
-package Service.Table;
+package Service.Interface;
 
 import java.sql.SQLException;
 

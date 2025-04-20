@@ -1,4 +1,4 @@
-package Service.Employee;
+package Service.Interface;
 
 import Model.Employee;
 import java.sql.SQLException;

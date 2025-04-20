@@ -129,9 +129,9 @@ INSERT INTO UserAccount (ID, username, password, role) VALUES
 --Employee
 INSERT INTO Employee (employeeID, name, phone, hourWage, CCCD, birthDate, gender, image)
 VALUES
-(100001, N'Nguyễn Ngọc Quý', '0912345678', '', '012345678901', '1990-05-12', N'Nam', N'src\\image\\Employee_Image\\Employee_default.png'),
-(100002, N'Nguyễn Bình Minh', '0923456789', '', '023456789012', '1992-07-25', N'Nam', N'src\\image\\Employee_Image\\Employee_default.png'),
-(100003, N'Nguyễn Minh Vương', '0818214849', '', '034567890123', '1988-03-18', N'Nam', N'src\\image\\Employee_Image\\Employee_default.png'),
+(100001, N'Nguyễn Ngọc Quý', '0912345678', '', '012345678901', '1990-05-12', N'Nam', N'src\\image\\Manager_Image\\Manager_Defaut.png'),
+(100002, N'Nguyễn Bình Minh', '0923456789', '', '023456789012', '1992-07-25', N'Nam', N'src\\image\\Manager_Image\\Manager_Defaut.png'),
+(100003, N'Nguyễn Minh Vương', '0818214849', '', '034567890123', '1988-03-18', N'Nam', N'src\\image\\Manager_Image\\Manager_Defaut.png'),
 (100004, N'Phạm Duy', '0945678901', 40000, '045678901234', '1995-11-02', N'Nam', N'src\\image\\Employee_Image\\Employee_default.png'),
 (100005, N'Mai Trinh', '0956789012', 40000, '056789012345', '1997-09-14', N'Nữ', N'src\\image\\Employee_Image\\Employee_default.png'),
 (100006, N'Ngô Trang', '0967890123', 45000, '067890123456', '2000-12-22', N'Nữ', N'src\\image\\Employee_Image\\Employee_default.png'),
