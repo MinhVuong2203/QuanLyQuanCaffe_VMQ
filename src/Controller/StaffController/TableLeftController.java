@@ -16,6 +16,8 @@ public class TableLeftController implements ActionListener{
     public void actionPerformed(ActionEvent e) {
         JButton sourceButton = (JButton) e.getSource();  // Lấy nút đã nhấn từ sự kiện
         System.out.println("Bạn đã nhấn: " + sourceButton.getText());
+        int tableID = (int) sourceButton.getClientProperty("tableID");
+        tableJPanel.tableID = tableID;
         this.tableJPanel.updateRight();
         tableJPanel.updateInfo(sourceButton.getText());
     }

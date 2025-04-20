@@ -88,7 +88,7 @@ public class ManagerJFrame extends JFrame {
         JPanel contentPanel = new JPanel(new BorderLayout());
         contentPanel.setBackground(Color.LIGHT_GRAY);
 
-        Table_JPanel table_JPanel = new Table_JPanel(); // Tạo đối tượng Table_JPanel nhưng do cập nhật trong quản lí nên không tạo
+        Table_JPanel table_JPanel = new Table_JPanel(manager.getId()); // Tạo đối tượng Table_JPanel nhưng do cập nhật trong quản lí nên không tạo
         contentPanel.add(table_JPanel, BorderLayout.CENTER);
 
 

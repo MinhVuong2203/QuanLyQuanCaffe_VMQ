@@ -10,16 +10,17 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProductRespository implements IProductRespository{
+public class ProductRespository implements IProductRespository {
     private Connection connection;
     private JdbcUtils jdbcUtils;
+
     public ProductRespository() throws IOException, ClassNotFoundException, SQLException {
         jdbcUtils = new JdbcUtils();
     }
-    
+
     @Override
     public List<Product> getArrayListProductFromSQL() throws SQLException {
-        
+
         List<Product> list = new ArrayList<>();
         try {
             connection = jdbcUtils.connect(); // Phải có để có connection
@@ -41,8 +42,8 @@ public class ProductRespository implements IProductRespository{
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-			connection.close();
-		}
+            connection.close();
+        }
         return null;
     }
 
@@ -67,32 +68,54 @@ public class ProductRespository implements IProductRespository{
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            connection.close();}
+            connection.close();
+        }
         return product;
 
     }
-    
+
     @Override
-    public void addProductToOrder(int orderId, int productId, int quantity, double price) throws SQLException {
+    public void addProductToOrderDetail(int orderId, int productId, int quantity, double price, int tableID) throws SQLException {
         try {
             connection = jdbcUtils.connect();
+
+            // Kiểm tra xem orderID đã tồn tại trong bảng Orders chưa
+            String checkSql = "SELECT orderID FROM Orders WHERE orderID = ?";
+            var checkStmt = connection.prepareStatement(checkSql);
+            checkStmt.setInt(1, orderId);
+            var rs = checkStmt.executeQuery();
+
+            // Nếu chưa có order, tạo order mới trước
+            if (!rs.next()) {
+                String createOrderSql = "INSERT INTO Orders (orderID, tableID, employeeID, customerID, orderTime, totalPrice, status) VALUES (?, ?, ?, ?, GETDATE(), 0, N'Đang chuẩn bị')";
+                var orderStmt = connection.prepareStatement(createOrderSql);
+                orderStmt.setInt(1, orderId);
+                orderStmt.setInt(2, tableID); // tableID mặc định
+                orderStmt.setInt(3, 100004); // employeeID mặc định
+                orderStmt.setInt(4, 100000); // customerID mặc định
+                orderStmt.executeUpdate();
+                orderStmt.close();
+            }
+            rs.close();
+            checkStmt.close();
+
+            // Sau đó mới thêm vào OrderDetail
             String sql = "INSERT INTO OrderDetail (orderID, productID, quantity, price) VALUES (?, ?, ?, ?)";
             var stmt = connection.prepareStatement(sql);
             stmt.setInt(1, orderId);
-            stmt.setInt(2, productId); 
+            stmt.setInt(2, productId);
             stmt.setInt(3, quantity);
             stmt.setDouble(4, price);
             stmt.executeUpdate();
             stmt.close();
+
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            connection.close();
         }
     }
 
     @Override
-    public void updateOrder(int orderId, int productId, int quantity, double price) throws SQLException {
+    public void updateOrderDetail(int orderId, int productId, int quantity, double price) throws SQLException {
         try {
             connection = jdbcUtils.connect();
             String sql = "UPDATE OrderDetail SET quantity = ?, price = ? WHERE orderID = ? AND productID = ?";
@@ -109,7 +132,93 @@ public class ProductRespository implements IProductRespository{
             connection.close();
         }
     }
-    
+
+    @Override
+    public void deleteProductFromOrderDetail(int orderId, int productId) throws SQLException {
+        try {
+            connection = jdbcUtils.connect();
+            String sql = "DELETE FROM OrderDetail WHERE orderID = ? AND productID = ?";
+            var stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, orderId);
+            stmt.setInt(2, productId);
+            stmt.executeUpdate();
+            stmt.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            connection.close();
+        }
+    }
+
+    @Override
+    public void addToOrder(int orderID, int tableID, int employeeID, int customerID, String orderTime)
+            throws SQLException {
+        try {
+            connection = jdbcUtils.connect();
+            // Calculate total price from OrderDetail
+            String totalPriceQuery = "SELECT SUM(quantity * price) as total FROM OrderDetail WHERE orderID = ?";
+            var priceStmt = connection.prepareStatement(totalPriceQuery);
+            priceStmt.setInt(1, orderID);
+            var rs = priceStmt.executeQuery();
+            double totalPrice = 0.0;
+            if (rs.next()) {
+                totalPrice = rs.getDouble("total");
+            }
+            rs.close();
+            priceStmt.close();
+
+            String sql = "INSERT INTO Orders (orderID, tableID, employeeID, customerID, orderTime, totalPrice, status) VALUES (?, ?, ?, ?, ?, ?, ?)";
+            var stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, orderID);
+            stmt.setInt(2, tableID);
+            stmt.setInt(3, employeeID);
+            stmt.setInt(4, customerID);
+            stmt.setString(5, orderTime);
+            stmt.setDouble(6, totalPrice);
+            stmt.setString(7, "Đang chuẩn bị");
+            stmt.executeUpdate();
+            stmt.close();
+
+            // Update table status
+            sql = "UPDATE TableCaffe SET status = N'Có khách' WHERE TableID = ?";
+            stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, tableID);
+            stmt.executeUpdate();
+            stmt.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            connection.close();
+        }
+    }
+
+    @Override
+    public void delToOrder(int orderID, int tableID) throws SQLException {
+        try {
+            // String deleteDetailsSql = "DELETE FROM OrderDetail WHERE orderID = ?";
+            // var detailsStmt = connection.prepareStatement(deleteDetailsSql);
+            // detailsStmt.setInt(1, orderID);
+            // detailsStmt.executeUpdate();
+            // detailsStmt.close();
+
+            // Then delete from Orders
+            String deleteOrderSql = "DELETE FROM Orders WHERE orderID = ?";
+            var orderStmt = connection.prepareStatement(deleteOrderSql);
+            orderStmt.setInt(1, orderID);
+            orderStmt.executeUpdate();
+            orderStmt.close();
+
+            // Update table status back to "Trống"
+            String updateTableSql = "UPDATE TableCaffe SET status = N'Trống' WHERE TableID = ?";
+            var tableStmt = connection.prepareStatement(updateTableSql);
+            tableStmt.setInt(1, tableID);
+            tableStmt.executeUpdate();
+            tableStmt.close();
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+    }
+
     @Override
     public int getProductIdByNameAndSize(String name, String size) throws SQLException {
         try {
@@ -131,12 +240,12 @@ public class ProductRespository implements IProductRespository{
         }
         return -1; // Return -1 if no product found
     }
-    
+
     @Override
     public int getProductIdByName(String name) throws SQLException {
         try {
             connection = jdbcUtils.connect();
-            String sql = "SELECT ProductID FROM Product WHERE name = ?";  // Default to M size for products
+            String sql = "SELECT ProductID FROM Product WHERE name = ?"; // Default to M size for products
             var stmt = connection.prepareStatement(sql);
             stmt.setString(1, name);
             var rs = stmt.executeQuery();

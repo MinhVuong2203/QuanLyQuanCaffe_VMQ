@@ -11,6 +11,9 @@ public class Table {
         this.status = status;
     }
 
+    public Table() {
+    }
+
     public int getTableID() {
         return tableID;
     }

@@ -7,6 +7,8 @@ import View.ManagerView.ManagerStaff.StaffManagerJPanel;
 import View.ManagerView.ManagerTable.TablePanel;
 import View.StaffView.RollCall;
 import View.StaffView.Table_JPanel;
+import View.Window.WelcomeScreen;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -48,7 +50,7 @@ public class ManagerJFrameController {
                 try {
                     switch (command) {
                         case "BÁN HÀNG":
-                            contentPanel.add(new Table_JPanel(), BorderLayout.CENTER);
+                            contentPanel.add(new Table_JPanel(manager.getId()), BorderLayout.CENTER);
                             break;
                         case "ĐIỂM DANH":
                             contentPanel.add(new RollCall(), BorderLayout.CENTER);
@@ -73,6 +75,7 @@ public class ManagerJFrameController {
                                     JOptionPane.YES_NO_OPTION);
                             if (confirm == JOptionPane.YES_OPTION) {
                                 managerJFrame.dispose();
+                                SwingUtilities.invokeLater(() -> new WelcomeScreen());  // WelcomeScrren
                             }
                             break;
                     }

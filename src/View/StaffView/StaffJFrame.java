@@ -18,7 +18,7 @@ public class StaffJFrame extends JFrame {
     private String formattedTime;
     private String formattedDate;
 
-    JLabel lblTime;
+    private JLabel lblTime;
 
     private static final long serialVersionUID = 1L;
     private JPanel sidebar;
@@ -106,7 +106,7 @@ public class StaffJFrame extends JFrame {
 
         // Initialize staffInterface by default
         // staffInterface = new StaffJPanel();
-        Table_JPanel table_JPanel = new Table_JPanel();
+        Table_JPanel table_JPanel = new Table_JPanel(employee.getId());
         contentPanel.add(table_JPanel, BorderLayout.CENTER);
 
         String[] buttonLabels = {"BÁN HÀNG", "ĐIỂM DANH", "ĐĂNG XUẤT"};

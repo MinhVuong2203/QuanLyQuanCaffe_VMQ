@@ -81,6 +81,7 @@ CREATE TABLE EmployeeShift (
     FOREIGN KEY (employeeID) REFERENCES Employee(employeeID)
 );
 
+GO
 -- Dùng trigger để tự động lấy lương của nhân viên, và tính tiền lương theo ca
 CREATE TRIGGER trg_CalculateSalary
 ON EmployeeShift

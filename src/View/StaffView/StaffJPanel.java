@@ -1,6 +1,7 @@
 package View.StaffView;
 
 import Model.Product;
+import Model.Table;
 import Repository.Product.ProductRespository;
 import Repository.Product.IProductRespository;
 import java.awt.*;
@@ -17,6 +18,8 @@ import java.util.Locale;
 import java.util.Map;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+
+import Controller.StaffController.StaffJPanelController;
 
 public class StaffJPanel extends JPanel {
     private Locale VN = new Locale("vi", "VN");
@@ -42,15 +45,18 @@ public class StaffJPanel extends JPanel {
     private JPanel order;
     private JScrollPane scrollPane_Menu;
 
-    private int orderId; // Added orderId for saving order details
+    private int orderId = 7; // Added orderId for saving order details
 
+    public int tableID;
+    public int empID;
     /**
      * Create the panel.
      */
-    public StaffJPanel() throws IOException, ClassNotFoundException, SQLException {
+    public StaffJPanel(int tableID, int empID) throws IOException, ClassNotFoundException, SQLException {
         setBorder(new EmptyBorder(5, 5, 5, 5));
         setBackground(new Color(231, 215, 200));
-
+        this.tableID = tableID;
+        this.empID = empID;
         menuModel = new DefaultListModel<>();
         priceMap = new HashMap<>();
         imgMap = new HashMap<>();
@@ -89,11 +95,15 @@ public class StaffJPanel extends JPanel {
         scrollPane_dishSelected.setBounds(0, 73, 540, 215);
         order.add(scrollPane_dishSelected);
 
-        JButton Button_Pay = new JButton("Thanh toán");
+        ActionListener ac = new StaffJPanelController(this);
+
+        JButton Button_Pay = new JButton("Đặt món");
         Button_Pay.setFont(new Font("Arial", Font.BOLD, 16));
         Button_Pay.setBounds(222, 303, 118, 28);
         order.add(Button_Pay);
-        Button_Pay.addActionListener(e -> printBill());
+        // Button_Pay.addActionListener(e -> printBill());
+        Button_Pay.addActionListener(ac);
+
 
         placedModel = new DefaultListModel<>();
         list_dishSelected = new JList(placedModel);
@@ -291,11 +301,11 @@ public class StaffJPanel extends JPanel {
                         int productId = productDao.getProductIdByName(dishName);
                         if (productId != -1) {
                             // Check if product exists in order
-                            if (orderContainsProduct(dishName)) {
-                                productDao.updateOrder(orderId, productId, qty, price * qty);
-                            } else {
-                                productDao.addProductToOrder(orderId, productId, qty, price * qty);
-                            }
+                            // if (orderContainsProduct(dishName)) {
+                            //     productDao.updateOrderDetail(orderId, productId, qty, price);
+                            // } else {
+                            // }
+                            productDao.addProductToOrderDetail(orderId, productId, qty, price, tableID);
                         }
                         updateTotalMoney();
                     } else {
@@ -331,11 +341,11 @@ public class StaffJPanel extends JPanel {
                         updateOrAddItem(displayText, price, qty);
                         int productId = productDao.getProductIdByNameAndSize(dishName, selectedSize);
                         if (productId != -1) {
-                            if (orderContainsProduct(displayText)) {
-                                productDao.updateOrder(orderId, productId, qty, price * qty);
-                            } else {
-                                productDao.addProductToOrder(orderId, productId, qty, price * qty);
-                            }
+                            // if (orderContainsProduct(displayText)) {
+                            //     productDao.updateOrderDetail(orderId, productId, qty, price * qty);
+                            // } else {
+                            // }
+                            productDao.addProductToOrderDetail(orderId, productId, qty, price * qty, tableID);
                         }
                         updateTotalMoney();
                     } else {
@@ -530,5 +540,29 @@ public class StaffJPanel extends JPanel {
 
     public void setImgMap(Map<String, String> imgMap) {
         this.imgMap = imgMap;
+    }
+
+    public JPanel getOrder() {
+        return order;
+    }
+
+    public void setOrder(JPanel order) {
+        this.order = order;
+    }
+
+    public int getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(int orderId) {
+        this.orderId = orderId;
+    }
+
+    public int getEmpID() {
+        return empID;
+    }
+
+    public void setEmpID(int empID) {
+        this.empID = empID;
     }
 }

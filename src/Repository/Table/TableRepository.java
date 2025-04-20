@@ -10,24 +10,25 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TableRepository implements ITableRespository{
+public class TableRepository implements ITableRespository {
     private Connection connection;
     private JdbcUtils jdbcUtils;
 
     public TableRepository() throws ClassNotFoundException, IOException, SQLException {
         this.jdbcUtils = new JdbcUtils();
     }
-    
+
     @Override
-    public List<Table> getTableFromSQL() throws SQLException, ClassNotFoundException{
+    public List<Table> getTableFromSQL() throws SQLException, ClassNotFoundException {
         List<Table> listTables = new ArrayList<>();
         try {
             connection = jdbcUtils.connect(); // Phải có để có connection
             Statement stmt = connection.createStatement();
             String sql = "SELECT * FROM TableCaffe";
             ResultSet rs = stmt.executeQuery(sql);
-            while (rs.next()){
-                if (rs.getInt(1) == 0) continue; // Bỏ qua tableID = 0
+            while (rs.next()) {
+                if (rs.getInt(1) == 0)
+                    continue; // Bỏ qua tableID = 0
                 listTables.add(new Table(rs.getInt(1), rs.getString(2), rs.getString(3)));
             }
             rs.close();
@@ -37,28 +38,29 @@ public class TableRepository implements ITableRespository{
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-			connection.close();
-		}
+            connection.close();
+        }
         return null;
     }
-    
+
     @Override
-    public void insertTable(Table table) throws SQLException, ClassNotFoundException{
+    public void insertTable(Table table) throws SQLException, ClassNotFoundException {
         try {
             connection = jdbcUtils.connect(); // Phải có để có connection
             Statement stmt = connection.createStatement();
-            String sql = "INSERT INTO TableCaffe (tableID, tableName, status) VALUES (" + table.getTableID() + ", '" + table.getTableName() + "', N'" + table.getStatus() + "')";
+            String sql = "INSERT INTO TableCaffe (tableID, tableName, status) VALUES (" + table.getTableID() + ", '"
+                    + table.getTableName() + "', N'" + table.getStatus() + "')";
             stmt.executeUpdate(sql);
             stmt.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            } finally {
-                connection.close(); 
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            connection.close();
         }
     }
 
     @Override
-    public void updateTable(int id, String name) throws SQLException, ClassNotFoundException{
+    public void updateTable(int id, String name) throws SQLException, ClassNotFoundException {
         try {
             connection = jdbcUtils.connect(); // Phải có để có connection
             Statement stmt = connection.createStatement();
@@ -71,7 +73,7 @@ public class TableRepository implements ITableRespository{
             connection.close(); // Đóng kết nối
         }
     }
-    
+
     @Override
     public void updateTableStatus(int tableId, String status) throws SQLException, ClassNotFoundException {
         try {
@@ -87,5 +89,27 @@ public class TableRepository implements ITableRespository{
         }
     }
 
-}
+    @Override
+    public int getTableIDByName(String name) throws SQLException, ClassNotFoundException {
+        try {
+            connection = jdbcUtils.connect();
+            Statement stmt = connection.createStatement();
+            String sql = "SELECT tableID FROM TableCaffe WHERE tableName = N'" + name + "'";
+            ResultSet rs = stmt.executeQuery(sql);
 
+            if (rs.next()) {
+                int tableId = rs.getInt("tableID");
+                rs.close();
+                stmt.close();
+                return tableId;
+            }
+
+            rs.close();
+            stmt.close();
+            return -1; // Return -1 if table not found
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+}
