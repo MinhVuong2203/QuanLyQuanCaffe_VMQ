@@ -1,6 +1,11 @@
 package Utils;
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
@@ -51,6 +56,15 @@ public class ConvertInto{
                 return "";
         }
     }
-    
-    
+
+    // Copy hình ảnh từ đường dẫn được chọn vào trong project
+    public static void copyImageToProject(String sourcePath, String destinationPath) {
+        try {
+            Path filePath = Paths.get(sourcePath); // tạo path file nguồn
+            Path fileCopy = Paths.get(destinationPath); // tạo path file đích
+            Files.copy(filePath, fileCopy, StandardCopyOption.REPLACE_EXISTING);  
+        } catch (IOException e) {
+            System.out.println("Lỗi khi sao chép file: " + e.getMessage());
+        }     
+    }  
 }

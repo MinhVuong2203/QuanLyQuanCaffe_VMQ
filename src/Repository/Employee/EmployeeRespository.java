@@ -5,6 +5,7 @@ import Utils.JdbcUtils;
 import Utils.ValidationUtils;
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -28,6 +29,21 @@ public class EmployeeRespository implements IEmployeeRespository {
     }
 
     @Override
+    public int getIdMaxFromSQL() throws SQLException {
+        String sql = "SELECT MAX(employeeID) FROM Employee";
+        try (Connection connection = jdbcUtils.connect();
+                Statement stmt = connection.createStatement();
+                ResultSet rs = stmt.executeQuery(sql)) {
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    @Override
     public int getMaxShiftID() {
         String sql = "SELECT MAX(shiftID) FROM EmployeeShift";
         try (Connection connection = jdbcUtils.connect();
@@ -47,19 +63,70 @@ public class EmployeeRespository implements IEmployeeRespository {
         try {
             connection = jdbcUtils.connect(); // Phải có để có connection
             Statement stmt = connection.createStatement();
-            String sql = "SELECT [phone]\r\n" + //
-                    "FROM [Employee]\r\n" + //
-                    "WHERE [phone] = '" + phone + "'";
+            String sql = "SELECT [phone] FROM [Employee] WHERE [phone] = '" + phone + "'";
             ResultSet rs = stmt.executeQuery(sql);
-            if (rs.next())
-                return true; // Có tồn tại
+            if (rs.next()) return true; // Có tồn tại
         } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            connection.close();
-        }
+            System.out.println("Error: " + e.getMessage());
+        } 
         return false; // Không tồn tại
     }
+    @Override
+    public boolean checkEqualsCCCD(String cccd) throws SQLException{
+        try {
+            connection = jdbcUtils.connect(); // Phải có để có connection
+            Statement stmt = connection.createStatement();
+            String sql = "SELECT [CCCD] FROM [Employee] WHERE [CCCD] = '" + cccd + "'";
+            ResultSet rs = stmt.executeQuery(sql);
+            if (rs.next()) return true; // Có tồn tại
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        } 
+        return false; // Không tồn tại
+    }
+
+    @Override
+    public boolean checkEqualsUsername(String username) throws SQLException{
+        try {
+            connection = jdbcUtils.connect(); // Phải có để có connection
+            Statement stmt = connection.createStatement();
+            String sql = "SELECT [username] FROM [UserAccount] WHERE [username] = '" + username + "'";
+            ResultSet rs = stmt.executeQuery(sql);
+            if (rs.next()) return true; // Có tồn tại
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        } 
+        return false; // Không tồn tại
+    }
+
+    @Override
+    public void addEmployee(Employee employee) throws SQLException, ClassNotFoundException {
+        try{
+            connection = jdbcUtils.connect(); // Phải có để có connection
+            String sqlUserAccount = "INSERT INTO UserAccount (ID, username, [password], role) VALUES (?, ?, ?, ?)";
+            PreparedStatement stmtUserAccount = connection.prepareStatement(sqlUserAccount);
+            stmtUserAccount.setInt(1, employee.getId()); // ID của UserAccount
+            stmtUserAccount.setString(2, employee.getUsername());
+            stmtUserAccount.setString(3, employee.getPassword());
+            stmtUserAccount.setString(4, employee.getRole());
+            stmtUserAccount.executeUpdate();
+            String sqlEmployee = "INSERT INTO Employee (employeeID, [name], phone, hourWage, CCCD, birthDate, gender, [image]) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            PreparedStatement stmtEmployee = connection.prepareStatement(sqlEmployee);
+            stmtEmployee.setInt(1, employee.getId());
+            stmtEmployee.setString(2, employee.getName());
+            stmtEmployee.setString(3, employee.getPhone());
+            stmtEmployee.setDouble(4, employee.getHourlyWage());
+            stmtEmployee.setString(5, employee.getCCCD());
+            stmtEmployee.setString(6, employee.getBirthDate());
+            stmtEmployee.setString(7, employee.getGender());
+            stmtEmployee.setString(8, employee.getImage());
+            stmtEmployee.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Error: " + e.getMessage());
+        } 
+        
+    }
+
 
     @Override
     public List<Employee> getAllEmployees() throws SQLException {

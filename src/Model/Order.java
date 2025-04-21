@@ -6,9 +6,9 @@ import java.util.Map;
 public class Order {
     // Phương thức để khởi tạo
     private int orderID;
-    private int employeeID;
-    private int customerID;
-    private int tableID; // Nếu tableID = 0 thì là đơn hàng giao hàng
+    private int employeeID; 
+    private int customerID; // customerID = 0 là khách vãng lai
+    private int tableID; 
 
     private String status; // "Đang chờ", "Đã thanh toán", "Đã hủy"
 

@@ -49,11 +49,13 @@ public class Employee extends User{
 	public void setGender(String gender) {
 		this.gender = gender;
 	}
-
+	
 	@Override
-    public String toString() {
-        return "Employee{" + "id=" + id + ", name=" + name + ", phone=" + phone + ", image=" + image + ", username=" + username + ", password=" + password + ", role=" + role + ", hourlyWage=" + hourlyWage + '}';
-    }
+	public String toString() {
+		return "Employee [hourlyWage=" + hourlyWage + ", CCCD=" + CCCD + ", birthDate=" + birthDate + ", gender="
+				+ gender + ", employeeShift=" + employeeShift + ", username=" + username + ", password=" + password
+				+ ", role=" + role + ", image=" + image + ", id=" + id + ", name=" + name + ", phone=" + phone + "]";
+	}
 
 	public EmployeeShift getEmployeeShift() {
 		return employeeShift;

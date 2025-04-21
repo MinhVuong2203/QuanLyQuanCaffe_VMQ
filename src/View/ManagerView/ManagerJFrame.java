@@ -11,6 +11,9 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.util.Locale;
+
 import javax.swing.*;
 
 public class ManagerJFrame extends JFrame {
@@ -21,6 +24,14 @@ public class ManagerJFrame extends JFrame {
     private Timer mouseTracker;
     private StaffJPanel staffInterface;
     private Panel menuPanel;
+
+    private Locale VN = new Locale("vi", "VN");
+    private DateFormat formatTime = DateFormat.getTimeInstance(DateFormat.LONG, VN);
+    private DateFormat formatDate = DateFormat.getDateInstance(DateFormat.LONG, VN);
+    private String formattedTime;
+    private String formattedDate;
+    JLabel lblTime;
+
   
 
     public ManagerJFrame(Manager manager) throws IOException, ClassNotFoundException, SQLException {
@@ -48,9 +59,10 @@ public class ManagerJFrame extends JFrame {
         lblID.setBounds(103, 44, 140, 18);
         panel.add(lblID);
 
-        JLabel lblTime = new JLabel("Thời gian hiện tại:");
-        lblTime.setBounds(780, 10, 150, 30);
+        lblTime = new JLabel("");
+        lblTime.setBounds(780, 10, 450, 30);
         lblTime.setFont(new Font("Arial", Font.PLAIN, 16));
+        clock();
         panel.add(lblTime);
 
         JLabel lblShift = new JLabel("Ca làm:");
@@ -190,6 +202,21 @@ public class ManagerJFrame extends JFrame {
                         sidebar.repaint();
                     });
                 }
+            }
+        });
+        timer.start();
+    }
+
+    public void clock() {
+        // lblTime.setText("Thời gian hiện tại: " +
+        // formatTime.format(java.util.Calendar.getInstance().getTime()));
+        Timer timer = new Timer(1000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Cập nhật thời gian hiện tại
+                formattedDate = formatDate.format(new java.util.Date());
+                formattedTime = formatTime.format(new java.util.Date());
+                lblTime.setText("Thời gian hiện tại: " + formattedTime + " - " + formattedDate);
             }
         });
         timer.start();

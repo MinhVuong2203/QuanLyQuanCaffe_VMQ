@@ -83,6 +83,7 @@ CREATE TABLE EmployeeShift (
 
 GO
 -- Dùng trigger để tự động lấy lương của nhân viên, và tính tiền lương theo ca
+go
 CREATE TRIGGER trg_CalculateSalary
 ON EmployeeShift
 AFTER INSERT, UPDATE

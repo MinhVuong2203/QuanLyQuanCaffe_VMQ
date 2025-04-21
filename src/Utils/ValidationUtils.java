@@ -57,6 +57,12 @@ public class ValidationUtils {
         if (phoneNumber == null) return false;
         return phoneNumber.matches("^0\\d{9,10}$");
     }
+
+    //CCCD
+    public static boolean isCCCD(String cccd) {
+        if (cccd == null) return false;
+        return cccd.matches("^\\d{12}$");
+    }
     
     // Hàm kiểm tra từ ngày đến ngày 
     public static boolean validateDates(JDateChooser fromDateChooser, JDateChooser toDateChooser) {

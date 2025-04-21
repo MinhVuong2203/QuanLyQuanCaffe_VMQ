@@ -5,7 +5,6 @@ import Controller.ManagerController.StaffManagerController;
 import Model.Employee;
 import Repository.Employee.EmployeeRespository;
 import Repository.Employee.IEmployeeRespository;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -16,13 +15,13 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.JButton;
-import javax.swing.JLabel;
 
 public class StaffManagerJPanel extends JPanel {
 
@@ -141,26 +140,42 @@ public class StaffManagerJPanel extends JPanel {
 			
 		// WEST		
 		JPanel westPanel = new JPanel();
+		westPanel.setBackground(new Color(240, 210, 230));
 		westPanel.setBounds(0, 0, 100, 525);
-		westPanel.setPreferredSize(new Dimension(120, 200));
+		westPanel.setPreferredSize(new Dimension(140, 200));
 		this.add(westPanel, BorderLayout.WEST);
 		westPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 20));
 		
 		JButton btnThem = new JButton("Thêm");
-		btnThem.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		btnThem.setForeground(new Color(255, 255, 255));
+		btnThem.setBackground(new Color(0, 255, 0));
+		btnThem.setFont(new Font("Tahoma", Font.BOLD, 16));
 		btnThem.setPreferredSize(new Dimension(110, 40));
-		westPanel.add(btnThem);
+		btnThem.setOpaque(true);
+		btnThem.setContentAreaFilled(true);
+		btnThem.setBorderPainted(false); 
 		btnThem.addActionListener(ac);
+		westPanel.add(btnThem);
 		
 		JButton btnSua = new JButton("Cập nhật");
-		btnSua.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		btnSua.setForeground(new Color(255, 255, 255));
+		btnSua.setBackground(new Color(255, 128, 64));
+		btnSua.setFont(new Font("Tahoma", Font.BOLD, 16));
 		btnSua.setPreferredSize(new Dimension(110, 40));
+		btnSua.setOpaque(true);
+		btnSua.setContentAreaFilled(true);
+		btnSua.setBorderPainted(false); 
 		westPanel.add(btnSua);
 		btnSua.addActionListener(ac);
 		
 		JButton btnNghi = new JButton("Nghỉ việc");
-		btnNghi.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		btnNghi.setForeground(new Color(255, 255, 255));
+		btnNghi.setBackground(new Color(255, 0, 0));
+		btnNghi.setFont(new Font("Tahoma", Font.BOLD, 16));
 		btnNghi.setPreferredSize(new Dimension(110, 40));
+		btnNghi.setOpaque(true);
+		btnNghi.setContentAreaFilled(true);
+		btnNghi.setBorderPainted(false); 
 		westPanel.add(btnNghi);
 		btnNghi.addActionListener(ac);
 	}

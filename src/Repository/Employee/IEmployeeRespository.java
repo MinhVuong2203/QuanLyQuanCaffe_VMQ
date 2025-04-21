@@ -7,8 +7,12 @@ import java.util.List;
 import com.toedter.calendar.JDateChooser;
 
 public interface IEmployeeRespository {
+    public int getIdMaxFromSQL() throws SQLException;
     public int getMaxShiftID();
     public boolean checkEqualsPhone(String phone) throws SQLException;
+    public boolean checkEqualsCCCD(String cccd) throws SQLException;
+    public boolean checkEqualsUsername(String username) throws SQLException;
+    public void addEmployee(Employee employee) throws SQLException, ClassNotFoundException;
     public List<Employee> getAllEmployees() throws SQLException;
     public List<Employee> getAllEmployeesToManager() throws SQLException;
     public void setStatusFromSQL(int id, String status);

@@ -10,7 +10,7 @@ public class Program {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             SwingUtilities.invokeLater(() -> new WelcomeScreen());  // WelcomeScrren
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("Error setting look and feel: " + e.getMessage());
         }
     }
 }

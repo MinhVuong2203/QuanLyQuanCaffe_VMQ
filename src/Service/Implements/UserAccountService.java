@@ -23,8 +23,6 @@ public class UserAccountService implements IUserAccountService  {
 
     @Override
     public void signUp(String name, String phone) throws SQLException{
-
-
         uRepository.signUp(name, phone); // thực hiện đăng ký tài khoản mới
     }
     

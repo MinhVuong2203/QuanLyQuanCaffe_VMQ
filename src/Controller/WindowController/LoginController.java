@@ -55,8 +55,8 @@ public class LoginController implements ActionListener {   // Controller gọi v
                         return;
                     }
                         loginView.dispose();
-                            if (user.getRole().equalsIgnoreCase("Thu ngân")) {
-                            System.out.println("Giao diện thu ngân");
+                            if (user.getRole().equalsIgnoreCase("Thu ngân") || user.getRole().equalsIgnoreCase("pha chế") || user.getRole().equalsIgnoreCase("phục vụ") ) {
+                            System.out.println("Giao diện nhân viên");
                             try {
                                 Employee employee = u.getEmployeeFromID(user.getId());  // Lấy ra nhân viên khi đăng nhập đúng
                                 UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
