@@ -13,12 +13,10 @@ import javax.swing.JOptionPane;
 import Model.Product;
 import Repository.Product.IProductRespository;
 import Repository.Product.ProductRespository;
-import View.StaffView.StaffJFrame;
 import View.StaffView.StaffJPanel;
 
 public class StaffJPanelController implements ActionListener {
     private StaffJPanel staffJPanel;
-    private StaffJFrame staffJFrame;
     private LocalDateTime time = LocalDateTime.now();
 
     public StaffJPanelController(StaffJPanel staffJPanel) {

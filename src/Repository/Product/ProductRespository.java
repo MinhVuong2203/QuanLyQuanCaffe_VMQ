@@ -254,13 +254,39 @@ public class ProductRespository implements IProductRespository {
     }
 
     @Override
-    public void delToOrder(int orderID, int tableID) throws SQLException {
+    public int getOrderIDByTableID(int TableID) throws SQLException {
         try {
-            // String deleteDetailsSql = "DELETE FROM OrderDetail WHERE orderID = ?";
-            // var detailsStmt = connection.prepareStatement(deleteDetailsSql);
-            // detailsStmt.setInt(1, orderID);
-            // detailsStmt.executeUpdate();
-            // detailsStmt.close();
+            connection = jdbcUtils.connect();
+            String orderID = """
+                        SELECT orderID 
+                        FROM Orders 
+                        WHERE tableID = ? 
+                        AND status = N'Đang chuẩn bị'
+                    """;
+            var orderStmt = connection.prepareStatement(orderID);
+            orderStmt.setInt(1, TableID);
+            var rs = orderStmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("orderID");
+            }
+            orderStmt.close();
+            rs.close();
+            return -1;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
+
+    @Override
+    public void delOrder(int orderID, int tableID) throws SQLException {
+        try {
+            connection = jdbcUtils.connect();
+            String deleteDetailsSql = "DELETE FROM OrderDetail WHERE orderID = ?";
+            var detailsStmt = connection.prepareStatement(deleteDetailsSql);
+            detailsStmt.setInt(1, orderID);
+            detailsStmt.executeUpdate();
+            detailsStmt.close();
 
             // Then delete from Orders
             String deleteOrderSql = "DELETE FROM Orders WHERE orderID = ?";
@@ -276,7 +302,7 @@ public class ProductRespository implements IProductRespository {
             tableStmt.executeUpdate();
             tableStmt.close();
         } catch (Exception e) {
-            // TODO: handle exception
+            e.printStackTrace();
         }
     }
 

@@ -1,6 +1,7 @@
 package View.StaffView;
 
 import Controller.StaffController.TableLeftController;
+import Controller.StaffController.TableRightController;
 import Model.Employee;
 import Model.Table;
 import Repository.Product.IProductRespository;
@@ -41,6 +42,15 @@ public class Table_JPanel extends JPanel {
 	public JLabel TimeLabel;
 	public JLabel statusLabel;
 	public String table_people;
+	public int id;
+	
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
 
 	public List<JButton> getTableButtons() {
 		return tableButtons;
@@ -59,7 +69,7 @@ public class Table_JPanel extends JPanel {
 	 */
 	public Table_JPanel(int id) throws ClassNotFoundException, SQLException, IOException {
 		setBackground(new Color(255, 255, 255));
-
+		this.id = id;
 		ITableRespository tableRepository = new TableRepository();
 		listTables = new ArrayList<>();
 		listTables = tableRepository.getTableFromSQL();
@@ -103,6 +113,7 @@ public class Table_JPanel extends JPanel {
 		}
 
 		// phải
+		ActionListener acRight = new TableRightController(this);
 		rightPanel = new JPanel();
 		rightPanel.setLayout(null);
 		rightPanel.setPreferredSize(new Dimension(600, 500));
@@ -110,36 +121,38 @@ public class Table_JPanel extends JPanel {
 		// Các thành phần
 		btnNewButton = new JButton(); // Gọi món, thanh toán
 		btnNewButton.setFont(new Font("Arial", Font.PLAIN, 20));
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (btnNewButton.getText().equals("Gọi món")) {
-					try {
-						System.out.println("ID table: " + tableID);
-						StaffJPanel staffPanel = new StaffJPanel(tableID, id);
-						Container parent = Table_JPanel.this.getParent();
-						parent.remove(Table_JPanel.this);
-						parent.add(staffPanel);
-						parent.revalidate();
-						parent.repaint();
-					} catch (Exception ex) {
-						ex.printStackTrace();
-					}
-				} else if (btnNewButton.getText().equals("Thanh toán")) {
-					try {
-						IProductRespository productRespository = new ProductRespository();
-						productRespository.delToOrder(0, tableID);
-						System.out.println("Thanh toan thanh cong");
-						System.out.println(tableID);
-					} catch (ClassNotFoundException | IOException | SQLException e1) {
-						JOptionPane.showMessageDialog(Table_JPanel.this,
-								"Lỗi thanh toán: " + e1.getMessage(),
-								"Lỗi",
-								JOptionPane.ERROR_MESSAGE);
-						e1.printStackTrace();
-					}
-				}
-			}
-		});
+		btnNewButton.addActionListener(acRight);
+		// btnNewButton.addActionListener(new ActionListener() {
+		// 	public void actionPerformed(ActionEvent e) {
+		// 		if (btnNewButton.getText().equals("Gọi món")) {
+		// 			try {
+		// 				System.out.println("ID table: " + tableID);
+		// 				StaffJPanel staffPanel = new StaffJPanel(tableID, id);
+		// 				Container parent = Table_JPanel.this.getParent();
+		// 				parent.remove(Table_JPanel.this);
+		// 				parent.add(staffPanel);
+		// 				parent.revalidate();
+		// 				parent.repaint();
+		// 			} catch (Exception ex) {
+		// 				ex.printStackTrace();
+		// 			}
+		// 		} else if (btnNewButton.getText().equals("Thanh toán")) {
+		// 			try {
+		// 				IProductRespository productRespository = new ProductRespository();
+		// 				int orderID = productRespository.getOrderIDByTableID(tableID);
+		// 				productRespository.delOrder(orderID, tableID);
+		// 				System.out.println("Thanh toan thanh cong");
+		// 				System.out.println(tableID);
+		// 			} catch (ClassNotFoundException | IOException | SQLException e1) {
+		// 				JOptionPane.showMessageDialog(Table_JPanel.this,
+		// 						"Lỗi thanh toán: " + e1.getMessage(),
+		// 						"Lỗi",
+		// 						JOptionPane.ERROR_MESSAGE);
+		// 				e1.printStackTrace();
+		// 			}
+		// 		}
+		// 	}
+		// });
 		btnNewButton.setBounds(263, 461, 159, 42);
 		rightPanel.add(btnNewButton);
 
