@@ -5,10 +5,13 @@ public class Employee extends User{
     protected String birthDate;
     protected String gender;
 	protected EmployeeShift employeeShift = new EmployeeShift(); // Khởi tạo đối tượng EmployeeShift
-    public Employee() {
-		super();
+
+	public Employee() {
 	}
 
+	public Employee(int id, String name, String phone, String image, String username, String password, String role) {
+		super(id, name, phone, image, username, password, role);
+	}
 	public Employee(int id, String name, String phone, String image, String username, String password, String role, String CCCD, String birthDate, String gender, double hourlyWage) {
         super(id, name, phone, image, username, password, role);
         this.hourlyWage = hourlyWage;

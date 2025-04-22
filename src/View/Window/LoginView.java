@@ -52,7 +52,7 @@ public class LoginView extends JFrame {
     public LoginView() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setTitle("Staff Sign");
-        setIconImage(Toolkit.getDefaultToolkit().getImage("src\\image\\Quán Caffe MVQ _ Icon.png"));
+        setIconImage(Toolkit.getDefaultToolkit().getImage("src\\image\\System_Image\\Quán Caffe MVQ _ Icon.png"));
         this.setSize(600, 400);
         this.setLocationRelativeTo(null);
         setResizable(false); // Ngắn thay đổi kích thướt
@@ -118,7 +118,7 @@ public class LoginView extends JFrame {
 
         JLabel lblNewLabel_3 = new JLabel("\r\n");
         lblNewLabel_3.setFont(new Font("Arial", Font.PLAIN, 10));
-        lblNewLabel_3.setIcon(new ImageIcon("src\\image\\background.png"));
+        lblNewLabel_3.setIcon(new ImageIcon("src\\image\\System_Image\\background.png"));
         lblNewLabel_3.setBounds(0, -1, 597, 373);
         contentPane.add(lblNewLabel_3);
         this.setVisible(true);

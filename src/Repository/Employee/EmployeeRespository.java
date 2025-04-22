@@ -99,6 +99,46 @@ public class EmployeeRespository implements IEmployeeRespository {
         return false; // Không tồn tại
     }
 
+    // Cập nhật các phương thức kiểm tra để hỗ trợ excludeId
+    public boolean checkEqualsPhone(String phone, int excludeId) throws SQLException, ClassNotFoundException {
+        connection = jdbcUtils.connect();
+        String sql = "SELECT COUNT(*) FROM Employee WHERE phone = ? AND employeeID != ?";
+        PreparedStatement stmt = connection.prepareStatement(sql);
+        stmt.setString(1, phone);
+        stmt.setInt(2, excludeId);
+        ResultSet rs = stmt.executeQuery();
+        if (rs.next()) {
+            return rs.getInt(1) > 0;
+        }
+        return false;
+    }
+
+    public boolean checkEqualsCCCD(String cccd, int excludeId) throws SQLException, ClassNotFoundException {
+        connection = jdbcUtils.connect();
+        String sql = "SELECT COUNT(*) FROM Employee WHERE CCCD = ? AND employeeID != ?";
+        PreparedStatement stmt = connection.prepareStatement(sql);
+        stmt.setString(1, cccd);
+        stmt.setInt(2, excludeId);
+        ResultSet rs = stmt.executeQuery();
+        if (rs.next()) {
+            return rs.getInt(1) > 0;
+        }
+        return false;
+    }
+
+    public boolean checkEqualsUsername(String username, int excludeId) throws SQLException, ClassNotFoundException {
+        connection = jdbcUtils.connect();
+        String sql = "SELECT COUNT(*) FROM UserAccount WHERE username = ? AND ID != ?";
+        PreparedStatement stmt = connection.prepareStatement(sql);
+        stmt.setString(1, username);
+        stmt.setInt(2, excludeId);
+        ResultSet rs = stmt.executeQuery();
+        if (rs.next()) {
+            return rs.getInt(1) > 0;
+        }
+        return false;
+    }
+
     @Override
     public void addEmployee(Employee employee) throws SQLException, ClassNotFoundException {
         try{
@@ -124,7 +164,36 @@ public class EmployeeRespository implements IEmployeeRespository {
         } catch (SQLException e) {
             System.out.println("Error: " + e.getMessage());
         } 
-        
+    }
+
+    @Override
+    public void updateEmployee(Employee employee) throws SQLException, ClassNotFoundException {
+        try {
+            connection = jdbcUtils.connect();
+            // Cập nhật UserAccount
+            String sqlUserAccount = "UPDATE UserAccount SET username = ?, [password] = ?, role = ? WHERE ID = ?";
+            PreparedStatement stmtUserAccount = connection.prepareStatement(sqlUserAccount);
+            stmtUserAccount.setString(1, employee.getUsername());
+            stmtUserAccount.setString(2, employee.getPassword());
+            stmtUserAccount.setString(3, employee.getRole());
+            stmtUserAccount.setInt(4, employee.getId());
+            stmtUserAccount.executeUpdate();
+
+            // Cập nhật Employee
+            String sqlEmployee = "UPDATE Employee SET [name] = ?, phone = ?, hourWage = ?, CCCD = ?, birthDate = ?, gender = ?, [image] = ? WHERE employeeID = ?";
+            PreparedStatement stmtEmployee = connection.prepareStatement(sqlEmployee);
+            stmtEmployee.setString(1, employee.getName());
+            stmtEmployee.setString(2, employee.getPhone());
+            stmtEmployee.setDouble(3, employee.getHourlyWage());
+            stmtEmployee.setString(4, employee.getCCCD());
+            stmtEmployee.setString(5, employee.getBirthDate());
+            stmtEmployee.setString(6, employee.getGender());
+            stmtEmployee.setString(7, employee.getImage());
+            stmtEmployee.setInt(8, employee.getId());
+            stmtEmployee.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
     }
 
 
@@ -187,6 +256,21 @@ public class EmployeeRespository implements IEmployeeRespository {
             // Sắp xếp theo role
             listEmployee.sort(Comparator.comparing(Employee::getRole).thenComparing(Employee::getOnlyName));
             return listEmployee;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public String getImgByID(int id) throws SQLException {
+        String sql = "SELECT image FROM Employee WHERE employeeID = " + id;
+        try (Connection connection = jdbcUtils.connect();
+                Statement stmt = connection.createStatement();
+                ResultSet rs = stmt.executeQuery(sql)) {
+            if (rs.next()) {
+                return rs.getString("image");
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

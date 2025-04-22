@@ -31,4 +31,19 @@ public class EmployeeService implements IEmployeeService {
         }
     }
 
+    @Override
+    public void updateEmployee(Employee employee) throws SQLException, ClassNotFoundException {
+        // Kiểm tra số điện thoại và CCCD, bỏ qua nếu trùng với chính nhân viên hiện tại
+        if (this.employeeRepository.checkEqualsPhone(employee.getPhone(), employee.getId())) {
+            throw new RuntimeException("Số điện thoại đã được sử dụng bởi người khác!");
+        } else if (this.employeeRepository.checkEqualsCCCD(employee.getCCCD(), employee.getId())) {
+            throw new RuntimeException("CCCD đã được sử dụng bởi người khác!");
+        } else if (this.employeeRepository.checkEqualsUsername(employee.getUsername(), employee.getId())) {
+            throw new RuntimeException("Tên đăng nhập đã được sử dụng bởi người khác!");
+        } else {
+            this.employeeRepository.updateEmployee(employee);
+            System.out.println("Updating employee: " + employee.getName());
+        }
+    }
+
 }

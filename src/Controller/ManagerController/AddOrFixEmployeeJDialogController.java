@@ -7,17 +7,18 @@ import Service.Implements.EmployeeService;
 import Service.Interface.IEmployeeService;
 import Utils.ConvertInto;
 import Utils.ValidationUtils;
-import View.ManagerView.ManagerStaff.AddEmployeeJDialog;
+import View.ManagerView.ManagerStaff.AddOrFixEmployeeJDialog;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.sql.SQLException;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 
-public class AddEmployeeJDialogController {
-    private AddEmployeeJDialog addEmployeeJDialog;
+public class AddOrFixEmployeeJDialogController {
+    private AddOrFixEmployeeJDialog addEmployeeJDialog;
     private IEmployeeService employeeService;
     
-    public AddEmployeeJDialogController(AddEmployeeJDialog addEmployeeJDialog) {
+    public AddOrFixEmployeeJDialogController(AddOrFixEmployeeJDialog addEmployeeJDialog) {
         this.addEmployeeJDialog = addEmployeeJDialog;
     }
 
@@ -87,35 +88,31 @@ public class AddEmployeeJDialogController {
 
         try {
             this.employeeService = new EmployeeService();
-            employee.setPassword(ConvertInto.hashPassword(employee.getPassword())); // Mã hóa mật khẩu
+           
             // Điều chỉnh đường dẫn ảnh
             String imagePath = this.addEmployeeJDialog.getDefaultImg(); // Lấy đường dẫn ảnh từ JLabel
             String imageCopy = "src\\image\\Employee_Image\\" + employee.getId() + employee.getUsername() + ".png"; // Lấy đường dẫn ảnh từ JLabel
             employee.setImage(imageCopy); 
-            System.out.println(employee.getImage());
-            this.employeeService.addEmployee(employee); // Thêm nhân viên vào cơ sở dữ liệu
-            ConvertInto.copyImageToProject(imagePath, imageCopy); // Sao chép ảnh vào thư mục dự án
 
-
-            this.addEmployeeJDialog.showMessage("Thêm nhân viên thành công", "Thành công", 1);
+            if (addEmployeeJDialog.getMode().equals("add")){
+                employee.setPassword(ConvertInto.hashPassword(employee.getPassword())); // Mã hóa mật khẩu
+                this.employeeService.addEmployee(employee); // Thêm nhân viên vào cơ sở dữ liệu
+                ConvertInto.copyImageToProject(imagePath, imageCopy); // Sao chép ảnh vào thư mục dự án
+                this.addEmployeeJDialog.showMessage("Thêm nhân viên thành công", "Thành công", 1);
+            } else if (addEmployeeJDialog.getMode().equals("update")){
+                if (!employee.getPassword().isEmpty()) {
+                    employee.setPassword(ConvertInto.hashPassword(employee.getPassword()));
+                }
+                employeeService.updateEmployee(employee); // Gọi phương thức cập nhật
+                ConvertInto.copyImageToProject(imagePath, imageCopy);
+                this.addEmployeeJDialog.showMessage("Cập nhật nhân viên thành công", "Thành công", JOptionPane.INFORMATION_MESSAGE);    
+            }
             this.addEmployeeJDialog.dispose();
         } catch (RuntimeException ex) {
             this.addEmployeeJDialog.showMessage(ex.getMessage(), "Lỗi", 0);
         } catch (ClassNotFoundException | IOException | SQLException e) {
            System.out.println(e.getMessage());
         }
-
-        
-
-
-        
-        
-        
-
-
-    
-
-
 
         System.out.println(employee);
     }

@@ -23,7 +23,7 @@ public class WelcomeScreen extends JFrame {
     public WelcomeScreen() {
         setTitle("WELCOME TO VMQ COFFEE");
         setSize(800, 500);
-        setIconImage(Toolkit.getDefaultToolkit().getImage("src\\image\\Quán Caffe MVQ _ Icon.png"));
+        setIconImage(Toolkit.getDefaultToolkit().getImage("src\\image\\System_Image\\Quán Caffe MVQ _ Icon.png"));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false); // Ngắn thay đổi kích thướt

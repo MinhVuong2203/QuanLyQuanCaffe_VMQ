@@ -1,6 +1,6 @@
 package View.ManagerView.ManagerStaff;
 
-import Controller.ManagerController.AddEmployeeJDialogController;
+import Controller.ManagerController.AddOrFixEmployeeJDialogController;
 import Model.Employee;
 import Utils.NumberDocumentFilter;
 import Utils.ValidationUtils;
@@ -31,10 +31,11 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.text.AbstractDocument;
 
 import com.toedter.calendar.JDateChooser;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class AddEmployeeJDialog extends JDialog {
+public class AddOrFixEmployeeJDialog extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 	private final JPanel contentPanel = new JPanel();
@@ -51,46 +52,35 @@ public class AddEmployeeJDialog extends JDialog {
 	private final JComboBox comboBox;
 	private final JRadioButton rdbtnNam;
     private final JRadioButton rdbtnNu;
-	 
-
+	// Các hiển thị lỗi
 	public JLabel passwordErrol;
     public JLabel usernameErrol;
-    public  JLabel roleErrol;
-    public  JLabel luongErrol;
+    public JLabel roleErrol;
+    public JLabel luongErrol;
 	public JLabel genderErrol;
     public JLabel BirthdayErrol;
     public JLabel CCCDErrol;
     public JLabel phoneErrol;
     public JLabel nameErrol;
-	
+	// Chế độ
+	public String mode;
+	private Employee employeeToUpdate;
 
 
+	public AddOrFixEmployeeJDialog(String mode, Employee employeeToUpdate) throws IOException, ClassNotFoundException, SQLException {
+		this.employeeToUpdate = employeeToUpdate;
+		this.mode = mode;
 
-
-	public static void main(String[] args) {
-		
-		try {
-			AddEmployeeJDialog dialog = new AddEmployeeJDialog();
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-			dialog.setVisible(true);
-		} catch (Exception e) {
-			System.out.println("Error: " + e.getMessage());
-		}
-	}
-    
-   
-    
-    
-
-	public AddEmployeeJDialog() throws IOException, ClassNotFoundException, SQLException {
 		setBounds(100, 100, 623, 497);
 		setLocationRelativeTo(null);
+		this.setTitle(mode.equals("add") ? "Thêm nhân viên mới" : "Cập nhật thông tin nhân viên");
+		this.setIconImage(Toolkit.getDefaultToolkit().getImage("src\\image\\System_Image\\Quán Caffe MVQ _ Icon.png"));
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
 		
-		AddEmployeeJDialogController addEmployeeJDialogController = new AddEmployeeJDialogController(this);
+		AddOrFixEmployeeJDialogController addEmployeeJDialogController = new AddOrFixEmployeeJDialogController(this);
 
 		ImageLabel = new JLabel("");
 		ImageLabel.setBackground(new Color(128, 255, 255));
@@ -110,11 +100,13 @@ public class AddEmployeeJDialog extends JDialog {
 		Labelid.setBounds(383, 281, 22, 20);
 		contentPanel.add(Labelid);
 		
-		idLabel = new JLabel((addEmployeeJDialogController.getIdMaxFromSQL() + 1)+ "");
+		idLabel = new JLabel();
 		idLabel.setForeground(new Color(255, 0, 0));
 		idLabel.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		idLabel.setBounds(415, 281, 70, 20);
 		contentPanel.add(idLabel);
+
+		
 		
 		nameTextField = new JTextField();
 		nameTextField.setFont(new Font("Tahoma", Font.PLAIN, 16));
@@ -172,6 +164,8 @@ public class AddEmployeeJDialog extends JDialog {
 		((AbstractDocument) luongTextField.getDocument()).setDocumentFilter(new NumberDocumentFilter());
 		contentPanel.add(luongTextField);
 		luongTextField.setHorizontalAlignment(SwingConstants.RIGHT);
+
+
 			JButton btnPlus = new JButton();
 			btnPlus.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
@@ -317,12 +311,19 @@ public class AddEmployeeJDialog extends JDialog {
 		}
 		);
 
+		// Điền dữ liệu nhân viên vào các trường (cho chế độ cập nhật)
+		if (mode.equals("add")) {
+            idLabel.setText((addEmployeeJDialogController.getIdMaxFromSQL() + 1) + "");
+        } else if (mode.equals("update") && employeeToUpdate != null) {
+            populateFields(employeeToUpdate); 
+        }
+
 		{
 			JPanel buttonPane = new JPanel();
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
-				JButton okButton = new JButton("OK");
+				JButton okButton = new JButton(mode.equals("add") ? "OK" : "Cập nhật");
 				okButton.setFont(new Font("Tahoma", Font.BOLD, 16));
 				okButton.setActionCommand("OK");
 				buttonPane.add(okButton);
@@ -335,9 +336,7 @@ public class AddEmployeeJDialog extends JDialog {
 				JButton cancelButton = new JButton("Cancel");
 				cancelButton.setFont(new Font("Tahoma", Font.BOLD, 16));
 				cancelButton.setActionCommand("Cancel");
-				cancelButton.addActionListener(e -> {
-					this.dispose();
-				});
+				cancelButton.addActionListener(e -> {this.dispose();});
 				buttonPane.add(cancelButton);
 			}
 		}
@@ -370,6 +369,9 @@ public class AddEmployeeJDialog extends JDialog {
 	public JLabel getIdLabel() {
 		return idLabel;
 	}
+	public String getMode(){
+		return this.mode;
+	}
 
 	public void setImageLabel(String filePath) {
 		this.ImageLabel.setIcon(new ImageIcon(new ImageIcon(filePath).getImage().getScaledInstance(180, 240, Image.SCALE_SMOOTH)));
@@ -380,6 +382,8 @@ public class AddEmployeeJDialog extends JDialog {
 	public void setIdLabel(String id) {
 		this.idLabel.setText(id);
 	}
+
+
 
 	public Employee getEmployee() {
 		Employee employee = new Employee();
@@ -429,4 +433,33 @@ public class AddEmployeeJDialog extends JDialog {
 			this.luongTextField.setText(df.format(x));		
 		}
 	}
+
+	// Phương thức điền dữ liệu nhân viên vào các trường (cho chế độ cập nhật)
+    private void populateFields(Employee employee) {
+        idLabel.setText(String.valueOf(employee.getId()));
+        nameTextField.setText(employee.getName());
+        phoneTextField.setText(employee.getPhone());
+        CCCDtextField.setText(employee.getCCCD());
+        try {
+            if (!employee.getBirthDate().isEmpty()) {
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                BirthdayTextField.setDate(dateFormat.parse(employee.getBirthDate()));
+            }
+        } catch (Exception e) {
+            BirthdayTextField.setDate(null);
+        }
+        luongTextField.setText(employee.getHourlyWage() >= 0 ? String.valueOf(employee.getHourlyWage()) : "");
+        usernameTextField.setText(employee.getUsername());
+	
+        passwordTextField.setText(employee.getPassword()); // Lưu ý: Có thể cần giải mã hoặc để trống
+        defaultImg = employee.getImage();
+        ImageLabel.setIcon(new ImageIcon(new ImageIcon(defaultImg).getImage().getScaledInstance(180, 240, Image.SCALE_SMOOTH)));
+        comboBox.setSelectedItem(employee.getRole());
+        if (employee.getGender().equals("Nam")) {
+            rdbtnNam.setSelected(true);
+        } else if (employee.getGender().equals("Nữ")) {
+            rdbtnNu.setSelected(true);
+        }
+    }
+
 }

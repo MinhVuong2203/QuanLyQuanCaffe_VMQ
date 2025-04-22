@@ -13,10 +13,12 @@ import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -179,4 +181,30 @@ public class StaffManagerJPanel extends JPanel {
 		westPanel.add(btnNghi);
 		btnNghi.addActionListener(ac);
 	}
+
+	public Employee getEmployeeSelected() throws IOException, ClassNotFoundException, SQLException{
+		int row = table.getSelectedRow();
+		if (row == -1){
+			return null;
+		}
+
+		int id = (int) table.getValueAt(row, 0);
+		String name = (String) table.getValueAt(row, 1);
+		String phone = (String) table.getValueAt(row, 2);
+		String username = (String) table.getValueAt(row, 3);
+		String password = (String) table.getValueAt(row, 4);
+		String role = (String) table.getValueAt(row, 5);
+		String cccd = (String) table.getValueAt(row, 6);
+		String birthDate = (String) table.getValueAt(row, 7);
+		String gender = (String) table.getValueAt(row, 8);
+		double hourlyWage = (double) table.getValueAt(row, 9);
+		Employee employee = new Employee(id, name, phone,"", username, password, role, cccd, birthDate, gender, hourlyWage);
+		EmployeeRespository employeeRespository = new EmployeeRespository();
+		employee.setImage(employeeRespository.getImgByID(id));
+		return employee;
+	}
+
+	
+
+
 }

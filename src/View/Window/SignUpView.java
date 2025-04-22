@@ -45,7 +45,7 @@ public class SignUpView extends JFrame {
     public SignUpView() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setTitle("Đăng ký tài khoản khách hàng");
-		setIconImage(Toolkit.getDefaultToolkit().getImage("src\\image\\Quán Caffe MVQ _ Icon.png"));
+		setIconImage(Toolkit.getDefaultToolkit().getImage("src\\image\\System_Image\\Quán Caffe MVQ _ Icon.png"));
 		this.setSize(600, 400);
 		this.setResizable(false);
 		this.setLocationRelativeTo(null);
@@ -114,7 +114,7 @@ public class SignUpView extends JFrame {
 		
 		JLabel background = new JLabel("");
 		background.setFont(new Font("Arial", Font.PLAIN, 16));
-		background.setIcon(new ImageIcon("src\\image\\background.png"));
+		background.setIcon(new ImageIcon("src\\image\\System_Image\\background.png"));
 		background.setBounds(0, 0, 600, 375);
 		contentPane.add(background);
 		
