@@ -46,4 +46,14 @@ public class EmployeeService implements IEmployeeService {
         }
     }
 
+    @Override
+    public boolean quitJob(int id){
+        try {
+            this.employeeRepository.quitJob(id);
+            return true;
+        } catch (ClassNotFoundException | SQLException e) {
+           System.out.println("Error: " + e.getMessage());
+        }
+        return false;
+    }
 }

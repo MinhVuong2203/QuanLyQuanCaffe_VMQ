@@ -17,6 +17,7 @@ public interface IEmployeeRespository {
     public boolean checkEqualsUsername(String username, int excludeId) throws SQLException, ClassNotFoundException;
     public void updateEmployee(Employee employee) throws SQLException, ClassNotFoundException;
     public void addEmployee(Employee employee) throws SQLException, ClassNotFoundException;
+    public void quitJob(int id) throws SQLException, ClassNotFoundException;
     public List<Employee> getAllEmployees() throws SQLException;
     public List<Employee> getAllEmployeesToManager() throws SQLException;
     public String getImgByID(int id) throws SQLException;

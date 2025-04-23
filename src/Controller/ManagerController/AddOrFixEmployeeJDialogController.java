@@ -8,6 +8,8 @@ import Service.Interface.IEmployeeService;
 import Utils.ConvertInto;
 import Utils.ValidationUtils;
 import View.ManagerView.ManagerStaff.AddOrFixEmployeeJDialog;
+import View.ManagerView.ManagerStaff.ChangePasswordDialog;
+import View.ManagerView.ManagerStaff.StaffManagerJPanel;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.sql.SQLException;
@@ -17,8 +19,10 @@ import javax.swing.JOptionPane;
 public class AddOrFixEmployeeJDialogController {
     private AddOrFixEmployeeJDialog addEmployeeJDialog;
     private IEmployeeService employeeService;
+    private StaffManagerJPanel staffManagerJPanel;
     
-    public AddOrFixEmployeeJDialogController(AddOrFixEmployeeJDialog addEmployeeJDialog) {
+    public AddOrFixEmployeeJDialogController(AddOrFixEmployeeJDialog addEmployeeJDialog, StaffManagerJPanel staffManagerJPanel) {
+        this.staffManagerJPanel = staffManagerJPanel;
         this.addEmployeeJDialog = addEmployeeJDialog;
     }
 
@@ -91,20 +95,26 @@ public class AddOrFixEmployeeJDialogController {
            
             // Điều chỉnh đường dẫn ảnh
             String imagePath = this.addEmployeeJDialog.getDefaultImg(); // Lấy đường dẫn ảnh từ JLabel
-            String imageCopy = "src\\image\\Employee_Image\\" + employee.getId() + employee.getUsername() + ".png"; // Lấy đường dẫn ảnh từ JLabel
-            employee.setImage(imageCopy); 
-
+            if (!imagePath.equals("src\\\\image\\\\Employee_Image\\\\Employee_default.png")) {
+                String imageCopy = "src\\image\\Employee_Image\\" + employee.getId() + employee.getUsername() + ".png"; 
+                employee.setImage(imageCopy); 
+            }
+            
             if (addEmployeeJDialog.getMode().equals("add")){
                 employee.setPassword(ConvertInto.hashPassword(employee.getPassword())); // Mã hóa mật khẩu
                 this.employeeService.addEmployee(employee); // Thêm nhân viên vào cơ sở dữ liệu
-                ConvertInto.copyImageToProject(imagePath, imageCopy); // Sao chép ảnh vào thư mục dự án
+                ConvertInto.copyImageToProject(imagePath, employee.getImage()); // Sao chép ảnh vào thư mục dự án
+                this.staffManagerJPanel.addEmployeeToTable(employee); // Thêm nhân viên vào bảng
                 this.addEmployeeJDialog.showMessage("Thêm nhân viên thành công", "Thành công", 1);
-            } else if (addEmployeeJDialog.getMode().equals("update")){
-                if (!employee.getPassword().isEmpty()) {
-                    employee.setPassword(ConvertInto.hashPassword(employee.getPassword()));
+            } 
+            else if (addEmployeeJDialog.getMode().equals("update")){
+                if (addEmployeeJDialog.newPasswordToSet != null && !employee.getPassword().equals(ConvertInto.hashPassword(addEmployeeJDialog.newPasswordToSet))) {
+                    employee.setPassword(ConvertInto.hashPassword(addEmployeeJDialog.newPasswordToSet)); // Mã hóa mật khẩu mới
                 }
-                employeeService.updateEmployee(employee); // Gọi phương thức cập nhật
-                ConvertInto.copyImageToProject(imagePath, imageCopy);
+                System.out.println("img: " + employee.getImage());
+                this.employeeService.updateEmployee(employee); // Gọi phương thức cập nhật
+                ConvertInto.copyImageToProject(imagePath, employee.getImage());
+                this.staffManagerJPanel.setEmployeeSelected(employee); // Cập nhật nhân viên trong bảng
                 this.addEmployeeJDialog.showMessage("Cập nhật nhân viên thành công", "Thành công", JOptionPane.INFORMATION_MESSAGE);    
             }
             this.addEmployeeJDialog.dispose();
@@ -113,8 +123,13 @@ public class AddOrFixEmployeeJDialogController {
         } catch (ClassNotFoundException | IOException | SQLException e) {
            System.out.println(e.getMessage());
         }
+    }
 
-        System.out.println(employee);
+    public void openChangePasswordDialog() {
+        ChangePasswordDialog dialog = new ChangePasswordDialog(addEmployeeJDialog);
+        dialog.setVisible(true);
+        addEmployeeJDialog.newPasswordToSet = dialog.getNewPassword();
+        System.out.println("New Password: " + addEmployeeJDialog.newPasswordToSet);
     }
 
     

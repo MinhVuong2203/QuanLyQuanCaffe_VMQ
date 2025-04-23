@@ -13,17 +13,16 @@ import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Date;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
 
 public class StaffManagerJPanel extends JPanel {
 
@@ -33,6 +32,7 @@ public class StaffManagerJPanel extends JPanel {
 	public JTable table;
 	public String[] columnNames;
 	public List<Employee> listEmployee;
+
 
 	/**
 	 * Create the panel.
@@ -44,7 +44,6 @@ public class StaffManagerJPanel extends JPanel {
 		JPanel tableStaff = new JPanel();
 		add(tableStaff, BorderLayout.CENTER);
 
-			
 		
 		table = new JTable();
 		try {
@@ -204,7 +203,51 @@ public class StaffManagerJPanel extends JPanel {
 		return employee;
 	}
 
-	
+	public void setEmployeeSelected(Employee employee) {
+		int row = table.getSelectedRow();
+		if (row == -1){
+			return;
+		}
+		table.setValueAt(employee.getId(), row, 0);
+		table.setValueAt(employee.getName(), row, 1);
+		table.setValueAt(employee.getPhone(), row, 2);
+		table.setValueAt(employee.getUsername(), row, 3);
+		table.setValueAt(employee.getPassword(), row, 4);
+		table.setValueAt(employee.getRole(), row, 5);
+		table.setValueAt(employee.getCCCD(), row, 6);
+		table.setValueAt(employee.getBirthDate(), row, 7);
+		table.setValueAt(employee.getGender(), row, 8);
+		table.setValueAt(employee.getHourlyWage(), row, 9);	
+	}
+
+	public void addEmployeeToTable(Employee employee) {
+		DefaultTableModel model = (DefaultTableModel) table.getModel();
+		Object[] rowData = new Object[]{
+			employee.getId(),
+			employee.getName(),
+			employee.getPhone(),
+			employee.getUsername(),
+			employee.getPassword(),
+			employee.getRole(),
+			employee.getCCCD(),
+			employee.getBirthDate(),
+			employee.getGender(),
+			employee.getHourlyWage()
+		};
+		model.addRow(rowData); // Thêm hàng mới vào bảng
+		listEmployee.add(employee); // Cập nhật danh sách nhân viên
+	}
+
+	public void removeEmployeeFromTable() {
+		DefaultTableModel model = (DefaultTableModel) table.getModel();
+		int row = table.getSelectedRow(); // Lấy chỉ số hàng được chọn
+		if (row == -1) {
+			return; // Nếu không có hàng nào được chọn, thoát khỏi phương thức
+		}
+		model.removeRow(row); // Xóa hàng khỏi bảng
+		listEmployee.remove(row); // Cập nhật danh sách nhân viên
+		table.clearSelection(); // Bỏ chọn hàng trong bảng
+	}	
 
 
 }

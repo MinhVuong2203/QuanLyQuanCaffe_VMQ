@@ -243,8 +243,8 @@ public class EmployeeRespository implements IEmployeeRespository {
                 ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
-                if (rs.getString("role").equals("Quản lí"))
-                    continue;// bỏ qua quản lý
+                if (rs.getString("role").equalsIgnoreCase("Quản lí") || rs.getString("role").equalsIgnoreCase("Nghỉ việc"))
+                    continue;// bỏ qua quản lý và nhân viên nghỉ việc
                 Employee employee = new Employee();
                 employee.setId(rs.getInt("employeeID"));
                 employee.setImage(rs.getString("image"));
@@ -380,11 +380,22 @@ public class EmployeeRespository implements IEmployeeRespository {
     }
 
     @Override
+    public void quitJob(int id) throws SQLException, ClassNotFoundException{
+        String sql = "UPDATE UserAccount SET role = N'Nghỉ việc' WHERE ID = " + id;
+        try (Connection connection = jdbcUtils.connect();
+                Statement stmt = connection.createStatement()) {
+            stmt.executeUpdate(sql);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public List<Employee> getAllEmployeesAllAttributes(){
         String sql = "SELECT e.employeeID, e.name, e.phone, e.image, u.username, u.password, u.role, e.CCCD, e.birthDate, e.gender, e.hourWage " +
                      "FROM Employee as e " + 
                      "JOIN UserAccount as u ON e.employeeID = u.ID " +
-                     "WHERE u.role != 'Quản lí'"; // Lọc luôn ở SQL
+                     "WHERE u.role != N'Quản lí' AND u.role != N'Nghỉ việc'"; // Lọc luôn ở SQL
         try (Connection connection = jdbcUtils.connect();
              Statement stmt = connection.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {

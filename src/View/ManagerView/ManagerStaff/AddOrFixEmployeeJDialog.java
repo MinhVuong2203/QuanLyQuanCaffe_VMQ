@@ -66,10 +66,14 @@ public class AddOrFixEmployeeJDialog extends JDialog {
 	public String mode;
 	private Employee employeeToUpdate;
 
+	public JButton changePasswordButton; // Nút đổi mật khẩu mới
+    public String newPasswordToSet = null; // Mật khẩu mới được nhập từ người dùng
 
-	public AddOrFixEmployeeJDialog(String mode, Employee employeeToUpdate) throws IOException, ClassNotFoundException, SQLException {
+	private StaffManagerJPanel staffManagerJPanel; // Tham chiếu đến StaffManagerJPanel nếu cần
+	public AddOrFixEmployeeJDialog(String mode, Employee employeeToUpdate, StaffManagerJPanel staffManagerJPanel) throws IOException, ClassNotFoundException, SQLException {
 		this.employeeToUpdate = employeeToUpdate;
 		this.mode = mode;
+		this.staffManagerJPanel = staffManagerJPanel;
 
 		setBounds(100, 100, 623, 497);
 		setLocationRelativeTo(null);
@@ -80,7 +84,7 @@ public class AddOrFixEmployeeJDialog extends JDialog {
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
 		
-		AddOrFixEmployeeJDialogController addEmployeeJDialogController = new AddOrFixEmployeeJDialogController(this);
+		AddOrFixEmployeeJDialogController addEmployeeJDialogController = new AddOrFixEmployeeJDialogController(this, staffManagerJPanel);
 
 		ImageLabel = new JLabel("");
 		ImageLabel.setBackground(new Color(128, 255, 255));
@@ -311,6 +315,20 @@ public class AddOrFixEmployeeJDialog extends JDialog {
 		}
 		);
 
+		if (mode.equals("add")) {
+            idLabel.setText((addEmployeeJDialogController.getIdMaxFromSQL() + 1) + "");
+        } else if (mode.equals("update")) {
+            lblNewLabel_1_7.setVisible(false); // Ẩn nhãn "Password:"
+            passwordTextField.setVisible(false); // Ẩn trường mật khẩu
+            changePasswordButton = new JButton("Đổi mật khẩu");
+            changePasswordButton.setBounds(380, 363, 200, 26);
+			changePasswordButton.setFont(new Font("Tahoma", Font.PLAIN, 16));
+            changePasswordButton.addActionListener(e -> addEmployeeJDialogController.openChangePasswordDialog());
+            contentPanel.add(changePasswordButton);
+            populateFields(employeeToUpdate);
+        }
+
+
 		// Điền dữ liệu nhân viên vào các trường (cho chế độ cập nhật)
 		if (mode.equals("add")) {
             idLabel.setText((addEmployeeJDialogController.getIdMaxFromSQL() + 1) + "");
@@ -384,7 +402,6 @@ public class AddOrFixEmployeeJDialog extends JDialog {
 	}
 
 
-
 	public Employee getEmployee() {
 		Employee employee = new Employee();
 		employee.setId(Integer.parseInt(this.idLabel.getText()));
@@ -448,7 +465,7 @@ public class AddOrFixEmployeeJDialog extends JDialog {
         } catch (Exception e) {
             BirthdayTextField.setDate(null);
         }
-        luongTextField.setText(employee.getHourlyWage() >= 0 ? String.valueOf(employee.getHourlyWage()) : "");
+        luongTextField.setText(String.valueOf(employee.getHourlyWage()).split("\\.")[0]);
         usernameTextField.setText(employee.getUsername());
 	
         passwordTextField.setText(employee.getPassword()); // Lưu ý: Có thể cần giải mã hoặc để trống
@@ -461,5 +478,6 @@ public class AddOrFixEmployeeJDialog extends JDialog {
             rdbtnNu.setSelected(true);
         }
     }
+
 
 }

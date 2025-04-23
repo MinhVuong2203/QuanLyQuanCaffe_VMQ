@@ -8,10 +8,10 @@ public class HashMK {
         String[] passwords = {
             "quy1234@",
             "minh123@",
-            "vuong123@",
+            "q",
             "pass1234@",
             "trinh1234@@",
-            "pass12341234",
+            "Ngotrang123@",
             "pass12344321",
             "hoang1234@",
             "thanh1234@",
