@@ -38,12 +38,18 @@ CREATE TABLE Orders(
     employeeID int NOT NULL,
     customerID int NOT NULL,
     orderTime datetime NOT NULL,
-    totalPrice decimal(10,2) NOT NULL,
+    totalPrice decimal(10,0) NOT NULL,
     [status] nvarchar(50) NOT NULL,
+	Discount decimal(10,0) NOT NULL DEFAULT 0,
     foreign key (tableID) references TableCaffe(TableID),
     foreign key (employeeID) references Employee(employeeID),
     foreign key (customerID) references Customer(customerID)
 )
+
+alter table Orders
+ADD Discount decimal(10,0) NOT NULL DEFAULT 0;
+ALTER TABLE Orders
+ALTER COLUMN totalPrice decimal(10,0);
 
 create table [Product](
     productID int PRIMARY KEY,
