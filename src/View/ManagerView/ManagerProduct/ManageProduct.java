@@ -1,143 +1,107 @@
 package View.ManagerView.ManagerProduct;
 
+import Model.Product;
+import Repository.Product.ProductRespository;
 import java.awt.*;
-import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.table.DefaultTableModel;
 
-import Repository.Product.ProductRespository;
-import Model.Product;
+public class ManageProduct extends JPanel {
+    private JTextField searchField;
+    private JButton btnCoffee, btnTea, btnCake;
+    private JButton btnAdd, btnEdit, btnDelete;
+    private JPanel productGridPanel;
 
-public class ManageProduct extends JFrame {
-    private JTable productable;
-    private DefaultTableModel tableModel;
     private List<Product> products = new ArrayList<>();
-    private JButton addBtn, delBtn, changeBtn;
     private ProductRespository productRespository;
 
     {
         try {
             productRespository = new ProductRespository();
-        } catch (IOException | ClassNotFoundException | SQLException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Lỗi khởi tạo ProductRespository: " + e.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+            products = productRespository.getArrayListProductFromSQL();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
         }
     }
 
     public ManageProduct() {
-        try {
-            products = productRespository.getArrayListProductFromSQL();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Lỗi lấy sản phẩm: " + e.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+        setLayout(new BorderLayout());
+
+        // Top: Search and filter
+        JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
+        searchField = new JTextField("Tìm kiếm...", 20);
+        btnCoffee = new JButton("Cà phê");
+        btnTea = new JButton("Trà");
+        btnCake = new JButton("Bánh");
+        topPanel.add(searchField);
+        topPanel.add(btnCoffee);
+        topPanel.add(btnTea);
+        topPanel.add(btnCake);
+
+        // Center: Product Grid
+        productGridPanel = new JPanel(new GridLayout(0, 4, 15, 15));
+        productGridPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        showProducts(products);
+
+        JScrollPane scrollPane = new JScrollPane(productGridPanel);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+
+        // Bottom: Control buttons
+        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
+        btnAdd = new JButton("Thêm sản phẩm");
+        btnEdit = new JButton("Sửa sản phẩm");
+        btnDelete = new JButton("Ngừng bán");
+        btnAdd.setBackground(Color.PINK);
+        btnEdit.setBackground(Color.LIGHT_GRAY);
+        btnDelete.setBackground(Color.PINK);
+        bottomPanel.add(btnAdd);
+        bottomPanel.add(btnEdit);
+        bottomPanel.add(btnDelete);
+
+        add(topPanel, BorderLayout.NORTH);
+        add(scrollPane, BorderLayout.CENTER);
+        add(bottomPanel, BorderLayout.SOUTH);
+    }
+
+    private void showProducts(List<Product> productList) {
+        productGridPanel.removeAll();
+        for (Product p : productList) {
+            JPanel card = new JPanel();
+            card.setLayout(new BorderLayout());
+            card.setBackground(new Color(255, 170, 100));
+            card.setPreferredSize(new Dimension(120, 150));
+    
+            // Load và scale ảnh
+            String imagePath = p.getImage(); // đường dẫn ảnh
+            ImageIcon icon = new ImageIcon(imagePath);
+            Image img = icon.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
+            ImageIcon scaledIcon = new ImageIcon(img);
+    
+            JLabel lblImage = new JLabel(scaledIcon);
+            lblImage.setHorizontalAlignment(SwingConstants.CENTER);
+    
+            JLabel lblName = new JLabel(p.getName(), SwingConstants.CENTER);
+            JLabel lblPrice = new JLabel(p.getPrice() + "đ", SwingConstants.CENTER);
+            lblPrice.setOpaque(true);
+            lblPrice.setBackground(Color.LIGHT_GRAY);
+    
+            card.add(lblName, BorderLayout.NORTH);
+            card.add(lblImage, BorderLayout.CENTER);
+            card.add(lblPrice, BorderLayout.SOUTH);
+    
+            productGridPanel.add(card);
         }
-
-        // UI setup
-        setTitle("Quản lý sản phẩm");
-        setSize(800, 600);
-        setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        // Gradient panel (giả lập nếu bạn có class GradientPanel thì thay thế JPanel bên dưới)
-        JPanel mainPanel = new JPanel();
-        mainPanel.setLayout(new BorderLayout());
-        mainPanel.setBackground(new Color(240, 240, 255));
-
-        // Table setup
-        productable = new JTable();
-        productable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        productable.setRowHeight(25);
-        productable.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        productable.setSelectionBackground(new Color(200, 200, 255));
-        JScrollPane scrollPane = new JScrollPane(productable);
-        mainPanel.add(scrollPane, BorderLayout.CENTER);
-
-        // Buttons
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
-
-        addBtn = new JButton("Thêm");
-        delBtn = new JButton("Xóa");
-        changeBtn = new JButton("Sửa");
-
-        styleButton(addBtn, new Color(0, 153, 51), Color.WHITE);
-        styleButton(delBtn, Color.LIGHT_GRAY, Color.WHITE);
-        styleButton(changeBtn, Color.LIGHT_GRAY, Color.BLACK);
-
-        delBtn.setEnabled(false);
-        changeBtn.setEnabled(false);
-
-        buttonPanel.add(addBtn);
-        buttonPanel.add(delBtn);
-        buttonPanel.add(changeBtn);
-
-        mainPanel.add(buttonPanel, BorderLayout.NORTH);
-
-        setContentPane(mainPanel);
-        setTableData(products);
-
-        // Table row select listener
-        productable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-            public void valueChanged(ListSelectionEvent e) {
-                boolean isSelected = productable.getSelectedRow() != -1;
-                setButtonState(isSelected);
-            }
-        });
+        productGridPanel.revalidate();
+        productGridPanel.repaint();
     }
-
-    private void setTableData(List<Product> products) {
-        String[] columnNames = { "STT", "Tên sản phẩm", "Size", "Giá" };
-        Object[][] data = new Object[products.size()][4];
-
-        for (int i = 0; i < products.size(); i++) {
-            Product p = products.get(i);
-            data[i][0] = i + 1;
-            data[i][1] = p.getName();
-            data[i][2] = p.getSize();
-            data[i][3] = p.getPrice();
-        }
-
-        tableModel = new DefaultTableModel(data, columnNames) {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false; // Không cho chỉnh sửa trực tiếp
-            }
-        };
-
-        productable.setModel(tableModel);
-    }
-
-    private void setButtonState(boolean enabled) {
-        changeBtn.setEnabled(enabled);
-        delBtn.setEnabled(enabled);
-
-        if (enabled) {
-            delBtn.setBackground(Color.RED);
-            delBtn.setForeground(Color.WHITE);
-            changeBtn.setBackground(Color.ORANGE);
-            changeBtn.setForeground(Color.BLACK);
-        } else {
-            delBtn.setBackground(Color.LIGHT_GRAY);
-            changeBtn.setBackground(Color.LIGHT_GRAY);
-        }
-    }
-
-    private void styleButton(JButton button, Color bgColor, Color fgColor) {
-        button.setBackground(bgColor);
-        button.setForeground(fgColor);
-        button.setFocusPainted(false);
-        button.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        button.setPreferredSize(new Dimension(100, 35));
-    }
-
+    
+    
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            new ManageProduct().setVisible(true);
-        });
-    }
+        JFrame frame = new JFrame("Quản lý sản phẩm");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(800, 600);
+        frame.add(new ManageProduct());
+        frame.setVisible(true);
+}
 }
