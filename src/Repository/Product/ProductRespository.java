@@ -348,4 +348,18 @@ public class ProductRespository implements IProductRespository {
         }
         return -1; // Return -1 if no product found
     }
+    public void delProductByID(int product) throws SQLException {
+        try {
+            connection = jdbcUtils.connect();
+            String sql = "DELETE FROM Product WHERE productID = ?";
+            var stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, product);
+            stmt.executeUpdate();
+            stmt.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            connection.close();
+        }
+    }
 }
