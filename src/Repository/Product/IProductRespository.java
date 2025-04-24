@@ -3,6 +3,7 @@ package Repository.Product;
 import Model.Product;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 public interface IProductRespository {
     public List<Product> getArrayListProductFromSQL() throws SQLException;
@@ -18,4 +19,5 @@ public interface IProductRespository {
     public Product getProductByName(String name) throws SQLException;
     public int getOrderIDByTableID(int TableID) throws SQLException;
     public void delProductByID(int productID) throws SQLException;
+    public Map<String, Object> getBillInfoByTableID(int tableID) throws SQLException;
 }

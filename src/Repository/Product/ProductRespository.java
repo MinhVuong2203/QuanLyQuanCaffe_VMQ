@@ -8,7 +8,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ProductRespository implements IProductRespository {
     private Connection connection;
@@ -258,9 +260,9 @@ public class ProductRespository implements IProductRespository {
         try {
             connection = jdbcUtils.connect();
             String orderID = """
-                        SELECT orderID 
-                        FROM Orders 
-                        WHERE tableID = ? 
+                        SELECT orderID
+                        FROM Orders
+                        WHERE tableID = ?
                         AND status = N'Đang chuẩn bị'
                     """;
             var orderStmt = connection.prepareStatement(orderID);
@@ -348,6 +350,7 @@ public class ProductRespository implements IProductRespository {
         }
         return -1; // Return -1 if no product found
     }
+
     public void delProductByID(int product) throws SQLException {
         try {
             connection = jdbcUtils.connect();
@@ -361,5 +364,83 @@ public class ProductRespository implements IProductRespository {
         } finally {
             connection.close();
         }
+    }
+
+    @Override
+    public Map<String, Object> getBillInfoByTableID(int tableID) throws SQLException {
+        Map<String, Object> billInfo = new HashMap<>();
+        List<Map<String, Object>> products = new ArrayList<>();
+
+        try {
+            connection = jdbcUtils.connect();
+
+            // Lấy thông tin cơ bản của đơn hàng
+            String orderSql = """
+                        SELECT t.TableID, t.tableName, o.orderID, o.totalPrice, o.orderTime, e.employeeID, e.name as employeeName
+                        FROM Orders o
+                        JOIN TableCaffe t ON o.tableID = t.TableID
+                        JOIN Employee e ON o.employeeID = e.employeeID
+                        WHERE o.tableID = ? AND o.status = N'Đang chuẩn bị'
+                    """;
+
+            var orderStmt = connection.prepareStatement(orderSql);
+            orderStmt.setInt(1, tableID);
+            var orderRs = orderStmt.executeQuery();
+
+            if (orderRs.next()) {
+                billInfo.put("tableName", orderRs.getString("tableName"));
+                billInfo.put("orderID", orderRs.getInt("orderID"));
+                billInfo.put("totalPrice", orderRs.getDouble("totalPrice"));
+                billInfo.put("orderTime", orderRs.getString("orderTime"));
+                billInfo.put("employeeName", orderRs.getString("employeeName"));
+                billInfo.put("employeeID", orderRs.getInt("employeeID"));
+
+                int orderID = orderRs.getInt("orderID");
+
+                // Lấy chi tiết các sản phẩm trong đơn hàng
+                String detailSql = """
+                            SELECT p.name as productName, p.size, od.quantity, od.price, p.price as unitPrice
+                            FROM OrderDetail od
+                            JOIN Product p ON od.productID = p.productID
+                            WHERE od.orderID = ?
+                        """;
+
+                var detailStmt = connection.prepareStatement(detailSql);
+                detailStmt.setInt(1, orderID);
+                var detailRs = detailStmt.executeQuery();
+
+                double total = 0;
+
+                while (detailRs.next()) {
+                    Map<String, Object> product = new HashMap<>();
+                    product.put("productName", detailRs.getString("productName"));
+                    product.put("size", detailRs.getString("size"));
+                    product.put("quantity", detailRs.getInt("quantity"));
+                    product.put("unitPrice", detailRs.getDouble("unitPrice"));
+                    product.put("totalProductPrice", detailRs.getDouble("price"));
+
+                    total += detailRs.getDouble("price");
+                    products.add(product);
+                }
+
+                billInfo.put("products", products);
+                billInfo.put("calculatedTotal", total);
+
+                detailRs.close();
+                detailStmt.close();
+            }
+
+            orderRs.close();
+            orderStmt.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (connection != null) {
+                connection.close();
+            }
+        }
+
+        return billInfo;
     }
 }
