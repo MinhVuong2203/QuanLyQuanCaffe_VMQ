@@ -188,8 +188,57 @@ public class GamePanel extends JPanel {
 		    panel_Center.add(btn);
 		}
 		
+		bet_text = new JTextField();
+		bet_text.setFont(new Font("Arial", Font.BOLD, 14));
+		bet_text.setBounds(749, 543, 100, 34);
+		panel_Center.add(bet_text);
+		bet_text.setColumns(10);
+		bet_text.setHorizontalAlignment(SwingConstants.RIGHT);
 		
+		JButton btnPlus = new JButton();
+		btnPlus.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				plusBet_text();
+			}
+		});
+		btnPlus.setBounds(850, 543, 32, 32);
+		btnPlus.setIcon(new ImageIcon(new ImageIcon("src\\image\\Customer_Image\\plus.png").getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH)));
+		btnPlus.setBorderPainted(false);
+		btnPlus.setFocusPainted(false);
+		btnPlus.setContentAreaFilled(false);
+		btnPlus.setOpaque(false);
+		panel_Center.add(btnPlus);
+		
+		JButton btnDes = new JButton();
+		btnDes.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		btnDes.setBounds(717, 544, 32, 32);
+		btnDes.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				desBet_text();
+			}
+		});
+		btnDes.setIcon(new ImageIcon(new ImageIcon("src\\image\\Customer_Image\\minus.png").getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH)));
+		btnDes.setBorderPainted(false);
+		btnDes.setFocusPainted(false);
+		btnDes.setContentAreaFilled(false);
+		btnDes.setOpaque(false);
+		panel_Center.add(btnDes);
+		
+		TheLe_Panel.setVisible(false);
+		
+		btn_Lac.addActionListener(ac);
 	}
+	
+	public void setImage(int dice1, int dice2, int dice3) {
+		if (dice1 != -1)
+			Dice1_Label.setIcon(new ImageIcon(new ImageIcon(imgDice[dice1-1]).getImage().getScaledInstance(173, 248, Image.SCALE_SMOOTH)));
+		if (dice2 != -1)
+			Dice2_Label.setIcon(new ImageIcon(new ImageIcon(imgDice[dice2-1]).getImage().getScaledInstance(173, 248, Image.SCALE_SMOOTH)));
+		if (dice3 != -1)
+			Dice3_Label.setIcon(new ImageIcon(new ImageIcon(imgDice[dice3-1]).getImage().getScaledInstance(173, 248, Image.SCALE_SMOOTH)));
+	}
+
+	
 }
 
 		
