@@ -5,6 +5,9 @@ import Service.Interface.IEmployeeShiftService;
 import java.awt.event.MouseAdapter;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 
@@ -28,6 +31,34 @@ public class EmployeeShiftController {
                 
                     if (column < 3) return;
 
+                    String title = columnNames[column];
+                    String dateString = title.substring(title.indexOf('(') + 1, title.indexOf(')'));
+                    
+                    // Chuyển đổi dateString thành Date để so sánh
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                    Date columnDate;
+                    try {
+                        columnDate = sdf.parse(dateString);
+                    } catch (ParseException ex) {
+                        JOptionPane.showMessageDialog(null, "Lỗi định dạng ngày: " + ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+
+                    Date today = new Date();
+                    String todayString = sdf.format(today);
+                    try {
+                        today = sdf.parse(todayString);
+                    } catch (ParseException ex) {
+                        JOptionPane.showMessageDialog(null, "Lỗi định dạng ngày hiện tại: " + ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+
+                    // Chỉ cho phép double-click nếu ngày của cột >= ngày hiện tại
+                    if (columnDate.compareTo(today) < 0) {
+                        JOptionPane.showMessageDialog(null, "Không thể chọn ca làm việc cho ngày đã qua.", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                        return; // Không hiển thị hộp thoại cho ngày trong quá khứ
+                    }
+
                     String[] shifts = {
                         "Sáng (06:00 - 12:00)",
                         "Trưa (12:00 - 18:00)",
@@ -48,11 +79,13 @@ public class EmployeeShiftController {
                         target.getValueAt(row, column)
                     );
 
+
+
                     try {
                         EmployeeShiftController controller = new EmployeeShiftController();
                         int id = (int) target.getValueAt(row, 0);
                         String Title = columnNames[column];
-                        String dateString = Title.substring(Title.indexOf('(') + 1, Title.indexOf(')'));
+                        // String dateString = Title.substring(Title.indexOf('(') + 1, Title.indexOf(')'));
                         String timeRange = selectedShift.substring(selectedShift.indexOf("(") + 1, selectedShift.indexOf(")"));
                         System.out.println(id + " " + dateString + " " + timeRange);
                         
