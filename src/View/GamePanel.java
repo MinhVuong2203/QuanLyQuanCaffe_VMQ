@@ -238,7 +238,49 @@ public class GamePanel extends JPanel {
 			Dice3_Label.setIcon(new ImageIcon(new ImageIcon(imgDice[dice3-1]).getImage().getScaledInstance(173, 248, Image.SCALE_SMOOTH)));
 	}
 
+	public void ProcessingRules() {
+		if (this.TheLe_Panel.isVisible()) {
+			TheLe_Panel.setVisible(false);
+			System.out.println("ẩn");
+		} else {
+			System.out.println("Hiện");
+			TheLe_Panel.setVisible(true);
+		}
+		
+	}
 	
+	public void selectDice(int index) {
+	    selectedDice = index;
+	    for (int i = 0; i < diceButtons.length; i++) {
+	        if (i == index) {
+	            diceButtons[i].setBorderPainted(true); // Viền nổi bật
+	            diceButtons[i].setBorder(javax.swing.BorderFactory.createLineBorder(Color.YELLOW, 3));
+	        } else {
+	            diceButtons[i].setBorderPainted(false);
+	        }
+	    }
+	}
+	
+	public void plusBet_text() {
+		if (this.bet_text.getText().isEmpty()) this.bet_text.setText("0"); // Ban đầu
+		if (!ValidationUtils.isNumeric(this.bet_text.getText())) return;
+		double x = Double.parseDouble(this.bet_text.getText()) + 100;
+		DecimalFormat df = new DecimalFormat("0");
+		df.setGroupingUsed(false); // Tắt dấu phân cách
+		this.bet_text.setText(df.format(x));
+	}
+	
+	public void desBet_text() {
+		if (this.bet_text.getText().equals("0")) return;
+		if (!ValidationUtils.isNumeric(this.bet_text.getText())) return;
+		double x = Double.parseDouble(this.bet_text.getText());
+		if (x >= 100) {
+			x -= 100;
+			DecimalFormat df = new DecimalFormat("0");
+			df.setGroupingUsed(false); // Tắt dấu phân cách
+			this.bet_text.setText(df.format(x));		
+		}
+	}
 }
 
 		
