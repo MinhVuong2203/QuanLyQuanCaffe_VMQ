@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -14,14 +15,17 @@ import java.util.Locale;
 import java.util.Map;
 
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.border.TitledBorder;
 
+import Controller.StaffController.PaymentController;
 import Repository.Product.IProductRespository;
 import Repository.Product.ProductRespository;
 
@@ -34,6 +38,7 @@ public class Payment_Interface extends JPanel {
     private StaffJPanel staffInterface; // Tham chiếu đến Staff_Interface
     private JButton btnThanhToan;
     private JButton btnQuayLai;
+    private JLabel qrCodeLabel;
     public JComboBox<String> cboPaymentMethod;
     public int tableID;
     public int id;
@@ -44,23 +49,80 @@ public class Payment_Interface extends JPanel {
         this.tableID = tableID;
         this.id = id;
 
-        // Tạo giao diện hóa đơn
-        JScrollPane scrollPane = new JScrollPane();
+        // Tạo panel chứa hóa đơn và QR code
+        JPanel billPanel = new JPanel(new BorderLayout(0, 10));
+        billPanel.setBackground(Color.WHITE);
+        billPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+
+        // TextArea cho văn bản hóa đơn
         textArea_Bill = new JTextArea();
-        textArea_Bill.setFont(new Font("Arial", Font.PLAIN, 14));
+        textArea_Bill.setFont(new Font("Monospaced", Font.PLAIN, 14)); // Monospaced để căn chỉnh cột
         textArea_Bill.setEditable(false);
-        scrollPane.setViewportView(textArea_Bill);
-        add(scrollPane, BorderLayout.CENTER);
+        textArea_Bill.setBackground(Color.WHITE);
+
+        // ScrollPane cho textarea
+        JScrollPane scrollPane = new JScrollPane(textArea_Bill);
+        scrollPane.setBorder(null);
+
+        // Tạo JLabel cho QR Code
+        qrCodeLabel = new JLabel();
+        qrCodeLabel.setHorizontalAlignment(JLabel.CENTER);
+
+        // Tải hình ảnh QR code
+        try {
+            // Đường dẫn có thể cần điều chỉnh tùy theo vị trí của file hình ảnh
+            ImageIcon qrIcon = new ImageIcon("src/image/System_Image/QR_Payment.jpg");
+            Image scaledImage = qrIcon.getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH);
+            qrCodeLabel.setIcon(new ImageIcon(scaledImage));
+        } catch (Exception e) {
+            qrCodeLabel.setText("QR Code không khả dụng");
+            e.printStackTrace();
+        }
+
+        // Panel chứa QR code và thông tin
+        JPanel qrPanel = new JPanel(new BorderLayout());
+        qrPanel.setBackground(Color.WHITE);
+        qrPanel.add(qrCodeLabel, BorderLayout.CENTER);
+
+        JLabel qrInfoLabel = new JLabel("Quét mã để thanh toán", JLabel.CENTER);
+        qrInfoLabel.setFont(new Font("Arial", Font.BOLD, 12));
+        qrPanel.add(qrInfoLabel, BorderLayout.SOUTH);
+
+        // Thêm các thành phần vào panel
+        billPanel.add(scrollPane, BorderLayout.CENTER);
+        billPanel.add(qrPanel, BorderLayout.SOUTH);
+
+        add(billPanel, BorderLayout.CENTER);
 
         // Panel chứa các nút điều khiển
-        JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 10, 0));
+        JPanel buttonPanel = new JPanel(new BorderLayout(10, 0));
         buttonPanel.setBackground(new Color(231, 215, 200));
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        // Tạo panel cho nút quay lại và thanh toán
+        JPanel btnPanel = new JPanel(new GridLayout(1, 2, 20, 0));
+        btnPanel.setBackground(new Color(231, 215, 200));
 
         btnQuayLai = new JButton("Quay lại");
+        btnThanhToan = new JButton("Thanh toán");
+
+        // Thiết lập style cho nút
+        Font buttonFont = new Font("Arial", Font.BOLD, 14);
+        btnQuayLai.setFont(buttonFont);
+        btnThanhToan.setFont(buttonFont);
+
+        btnQuayLai.setBackground(new Color(255, 204, 153));
+        btnThanhToan.setBackground(new Color(153, 255, 153));
+
+        // Thiết lập kích thước cho nút
+        Dimension buttonSize = new Dimension(120, 40);
+        btnQuayLai.setPreferredSize(buttonSize);
+        btnThanhToan.setPreferredSize(buttonSize);
+
         // Tạo comboBox chọn phương thức thanh toán
         String[] paymentMethods = { "Tiền mặt", "Thẻ ngân hàng", "Ví điện tử", "Chuyển khoản ngân hàng" };
         cboPaymentMethod = new JComboBox<>(paymentMethods);
-        cboPaymentMethod.setFont(new Font("Arial", Font.PLAIN, 20));
+        cboPaymentMethod.setFont(new Font("Arial", Font.PLAIN, 14));
         cboPaymentMethod.setBorder(BorderFactory.createTitledBorder(
                 null,
                 "Phương thức thanh toán",
@@ -69,32 +131,20 @@ public class Payment_Interface extends JPanel {
                 new Font("Arial", Font.BOLD, 12),
                 Color.BLACK));
         cboPaymentMethod.setBackground(Color.WHITE);
+        cboPaymentMethod.setPreferredSize(new Dimension(200, 50));
 
-        btnThanhToan = new JButton("Thanh toán");
+        // Thêm vào panel
+        btnPanel.add(btnQuayLai);
+        btnPanel.add(btnThanhToan);
 
-        // Thiết lập style cho nút
-        Font buttonFont = new Font("Arial", Font.BOLD, 20);
-        btnQuayLai.setFont(buttonFont);
-        btnThanhToan.setFont(buttonFont);
+        // Đặt combo box ở giữa và nút ở hai bên
+        buttonPanel.add(btnPanel, BorderLayout.EAST);
+        buttonPanel.add(cboPaymentMethod, BorderLayout.CENTER);
 
-        btnQuayLai.setBackground(new Color(255, 204, 153));
-        btnThanhToan.setBackground(new Color(153, 255, 153));
-
-        // Thiết lập kích thước cho nút
-        Dimension buttonSize = new Dimension(50, 40);
-        btnQuayLai.setPreferredSize(buttonSize);
-        btnThanhToan.setPreferredSize(buttonSize);
-        cboPaymentMethod.setPreferredSize(buttonSize);
-        btnQuayLai.setMinimumSize(buttonSize);
-        btnThanhToan.setMinimumSize(buttonSize);
-
-        buttonPanel.add(btnQuayLai);
-        buttonPanel.add(cboPaymentMethod);
-        buttonPanel.add(btnThanhToan);
-
-        // Thêm action listener
-        btnQuayLai.addActionListener(e -> navigateBack());
-        btnThanhToan.addActionListener(e -> processPayment());
+        //the action listener cho nút
+        PaymentController paymentController = new PaymentController(this);
+        btnQuayLai.addActionListener(paymentController);
+        btnThanhToan.addActionListener(paymentController);
 
         add(buttonPanel, BorderLayout.SOUTH);
 
@@ -112,45 +162,66 @@ public class Payment_Interface extends JPanel {
                 return;
             }
 
-            // Tạo nội dung hóa đơn
+            // Tạo nội dung hóa đơn theo mẫu
             StringBuilder bill = new StringBuilder();
-            bill.append("            QUÁN CAFE VMQ\n");
-            bill.append("      273 An Dương Vương, P.3, Q.5\n");
-            bill.append("         SĐT: 028 3835 4409\n");
-            bill.append("=====================================\n\n");
+            bill.append("      CAFFEE VMQ\n");
+            bill.append("Add: 478 Lê Văn Việt\n");
+            bill.append("Hotline: 0961892734\n");
+            bill.append("---------------------------------------\n");
+            bill.append("           PHIẾU TẠM TÍNH\n");
 
+            // Mã hóa đơn
+            bill.append("Số: ").append(billInfo.get("orderID")).append("\n");
+
+            // Thời gian và thông tin
+            bill.append("Ngày: ").append(dateFormat.format(new Date())).append("\n");
             bill.append("Bàn: ").append(billInfo.get("tableName")).append("\n");
-            bill.append("Mã hóa đơn: ").append(billInfo.get("orderID")).append("\n");
-            bill.append("Nhân viên: ").append(billInfo.get("employeeName")).append("\n");
-            bill.append("Thời gian: ").append(dateFormat.format(new Date())).append("\n\n");
+            // Thông tin thanh toán
+            String staffName = (String) billInfo.get("employeeName");
+            bill.append(String.format("Thu ngân: %s\n", staffName));
 
-            bill.append("-------------------------------------\n");
-            bill.append(String.format("%-20s %5s %12s\n", "Sản phẩm", "SL", "Thành tiền"));
-            bill.append("-------------------------------------\n");
+            // Header cho danh sách món
+            bill.append(String.format("%-4s %-14s %2s %10s %10s\n", "TT", "Tên món", "SL", "ĐG", "TT"));
+            bill.append("---------------------------------------\n");
 
             // Thêm từng sản phẩm vào hóa đơn
-            // @SuppressWarnings("unchecked")
             List<Map<String, Object>> products = (List<Map<String, Object>>) billInfo.get("products");
+            int stt = 1;
+            double totalAmount = 0;
+
             for (Map<String, Object> product : products) {
                 String productName = (String) product.get("productName");
                 String size = (String) product.get("size");
                 int quantity = (Integer) product.get("quantity");
+                double unitPrice = (Double) product.get("unitPrice");
                 double totalProductPrice = (Double) product.get("totalProductPrice");
 
-                bill.append(String.format("%-20s %5d %12s\n",
-                        truncateString(productName + " " + size, 20),
+                totalAmount += totalProductPrice;
+
+                // Định dạng tên sản phẩm có thể xuống dòng
+                String formattedName = truncateString(productName, 14);
+                String[] nameLines = formattedName.split("\n");
+                // Hiển thị dòng đầu tiên với đầy đủ thông tin
+                bill.append(String.format("%-4d %-14s %2d %,10.0f %,10.0f\n",
+                        stt++,
+                        nameLines[0],
                         quantity,
-                        currencyFormat.format(totalProductPrice)));
+                        unitPrice,
+                        totalProductPrice));
+
+                // Hiển thị các dòng tiếp theo của tên sản phẩm (nếu có)
+                for (int i = 1; i < nameLines.length; i++) {
+                    bill.append(String.format("     %-14s\n", nameLines[i]));
+                }
             }
 
-            bill.append("-------------------------------------\n");
-            Double totalPrice = (Double) billInfo.get("totalPrice");
-            bill.append(String.format("%-26s %12s\n", "Tổng tiền:",
-                    currencyFormat.format(totalPrice)));
+            bill.append("---------------------------------------\n");
+            bill.append(String.format("%-23s %,10.0fđ\n", "Tiền hàng", totalAmount));
+            bill.append(String.format("%-23s %,10.0fđ\n", "Tổng thanh toán", totalAmount));
+            bill.append(String.format("%-23s %,10.0fđ\n\n", "Cần phải thu", totalAmount));
 
-            bill.append("\n=====================================\n");
-            bill.append("         Cảm ơn quý khách!\n");
-            bill.append("        Hẹn gặp lại lần sau!");
+            // Footer
+            bill.append("Quý khách vui lòng kiểm tra kỹ hóa đơn trước khi thanh toán!\n\n");
 
             textArea_Bill.setText(bill.toString());
 
@@ -160,85 +231,47 @@ public class Payment_Interface extends JPanel {
         }
     }
 
-    // Hàm cắt chuỗi nếu quá dài
+    // Hàm xuống dòn nếu chuỗi quá dài
     public String truncateString(String str, int length) {
+        if (str == null) {
+            return "";
+        }
+
         if (str.length() <= length) {
             return str;
         }
-        return str.substring(0, length - 3) + "...";
-    }
 
-    public void processPayment() {
-        try {
-            IProductRespository productRespository = new ProductRespository();
-            int orderID = productRespository.getOrderIDByTableID(tableID);
+        StringBuilder result = new StringBuilder();
+        int startIndex = 0;
 
-            if (orderID != -1) {
-                // Lấy phương thức thanh toán từ comboBox
-                String paymentMethod = cboPaymentMethod.getSelectedItem().toString();
+        while (startIndex < str.length()) {
+            int endIndex = Math.min(startIndex + length, str.length());
 
-                // Xác nhận thanh toán
-                int confirm = JOptionPane.showConfirmDialog(this,
-                        "Xác nhận thanh toán bằng " + paymentMethod + "?",
-                        "Xác nhận",
-                        JOptionPane.YES_NO_OPTION);
-
-                if (confirm == JOptionPane.YES_OPTION) {
-                    Map<String, Object> billInfo = productRespository.getBillInfoByTableID(tableID);
-                    Double totalAmount = (Double) billInfo.get("totalPrice");
-
-                    Date now = new Date();
-                    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                    String paymentTime = formatter.format(now);
-
-                    // Thêm payment vào database (cần viết phương thức này)
-                    // productRespository.addPayment(orderID, paymentMethod, totalAmount,
-                    // paymentTime);
-
-                    // Xóa order sau khi thanh toán
-                    productRespository.delOrder(orderID, tableID);
-                    JOptionPane.showMessageDialog(this,
-                            "Thanh toán thành công bằng " + paymentMethod + "!",
-                            "Thông báo",
-                            JOptionPane.INFORMATION_MESSAGE);
-
-                    navigateBack();
+            // Nếu không phải dòng cuối và không kết thúc chuỗi
+            if (endIndex < str.length()) {
+                // Tìm vị trí khoảng trắng gần nhất để tránh cắt giữa từ
+                int lastSpace = str.substring(startIndex, endIndex).lastIndexOf(' ');
+                if (lastSpace > 0) {
+                    endIndex = startIndex + lastSpace;
                 }
-            } else {
-                JOptionPane.showMessageDialog(this,
-                        "Không tìm thấy đơn hàng cần thanh toán!",
-                        "Lỗi",
-                        JOptionPane.ERROR_MESSAGE);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this,
-                    "Lỗi khi thanh toán: " + e.getMessage(),
-                    "Lỗi",
-                    JOptionPane.ERROR_MESSAGE);
-        }
-    }
 
-    public void navigateBack() {
-        try {
-            Table_JPanel tablePanel = new Table_JPanel(id);
-            tablePanel.id = this.id;
+            // Thêm dòng vào kết quả
+            result.append(str.substring(startIndex, endIndex));
 
-            // Tìm container cha
-            var parent = this.getParent();
-            if (parent != null) {
-                parent.removeAll();
-                parent.add(tablePanel);
-                parent.revalidate();
-                parent.repaint();
+            // Nếu còn nội dung, thêm ký tự xuống dòng
+            if (endIndex < str.length()) {
+                result.append("\n    "); // Thêm khoảng trắng để căn lề với cột tên món
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this,
-                    "Lỗi khi quay lại màn hình bàn: " + e.getMessage(),
-                    "Lỗi",
-                    JOptionPane.ERROR_MESSAGE);
+
+            startIndex = endIndex;
+            // Nếu kết thúc tại khoảng trắng, bỏ qua khoảng trắng đó
+            if (startIndex < str.length() && str.charAt(startIndex) == ' ') {
+                startIndex++;
+            }
         }
+
+        return result.toString();
     }
 
     // Thêm phương thức để cập nhật nội dung từ Staff_Interface (giữ lại cho tương
