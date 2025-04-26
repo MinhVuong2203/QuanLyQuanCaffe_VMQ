@@ -71,7 +71,72 @@ public class GamePanelController implements ActionListener {
 				return;
 			}
 			
+			this.x = 0;
+			int delayBetweenDices = 1100; // delay giữa các xúc xắc (milliseconds)
+
+			for (int i = 0; i < 3; i++) {
+			final int diceIndex = i; // biến final để dùng trong inner class
+			Timer timer = new Timer(delayBetweenDices * i, new ActionListener() {
+				int localCounter = 0;
+				Timer localTimer;
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					if (localTimer == null) {
+						localTimer = (Timer) e.getSource();
+					}
+					int dice = 1 + rand.nextInt(6);
+					// Hiển thị xúc xắc tương ứng
+					if (diceIndex == 0)
+						gamePanel.setImage(dice, -1, -1);
+					else if (diceIndex == 1)
+						gamePanel.setImage(-1, dice, -1);
+					else
+						gamePanel.setImage(-1, -1, dice);
+					localCounter++;
+					if (localCounter >= MAX_COUNT) {
+						localTimer.stop();
+						int real = 1 + rand.nextInt(6);
+						if (real == choose) x++;
+						// Hiển thị kết quả thực
+						if (diceIndex == 0)
+							gamePanel.setImage(real, -1, -1);
+						else if (diceIndex == 1)
+							gamePanel.setImage(-1, real, -1);
+						else
+							gamePanel.setImage(-1, -1, real);
+						// Nếu là lần cuối (diceIndex == 2) thì xử lý phần thưởng
+						if (diceIndex == 2) {
+							SwingUtilities.invokeLater(() -> {
+								NumberFormat numberFormat = NumberFormat.getNumberInstance(new Locale("vi", "VN"));
+								double newCost;
+								if (x > 0) {
+									JOptionPane.showMessageDialog(null, "Bạn đã thắng " + numberFormat.format(price * x * x) + " xu", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+									newCost = cost + price * x * x;
+									
+								} else {
+									JOptionPane.showMessageDialog(null, "Rất tiếc! Chúc bạn may mắn lần sau", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+									newCost = cost - price;
+									
+								}
+								try {
+									UserAccountRepository user = new UserAccountRepository();
+									user.updatePoint(customer_view.id, newCost); // Cập nhật lại số dư trong database
+								} catch (IOException ex) {
+								} catch (ClassNotFoundException ex) {
+								} catch (SQLException ex) {
+								}
+							});
+						}
+					}
+				}
+			});
+			timer.setDelay(3);  // tốc độ lắc
+			timer.start();
+		}			
+		}
 			
+		else if (command.equals("Thể lệ")){
+			gamePanel.ProcessingRules();
+		}	
 	}
-}
 }
