@@ -101,12 +101,13 @@ public class ManageProduct extends JPanel {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             JFrame frame = new JFrame("Quản lý sản phẩm");
+            
             SwingUtilities.invokeLater(() -> frame.setVisible(true));
     
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.setSize(800, 600);
             frame.add(new ManageProduct());
-            // frame.setVisible(true);
+            frame.setVisible(true);
 
         } catch (Exception e) {
             e.printStackTrace();
