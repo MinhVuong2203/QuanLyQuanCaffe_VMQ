@@ -443,4 +443,41 @@ public class ProductRespository implements IProductRespository {
 
         return billInfo;
     }
+    @Override
+    public void addProduct(Product product) throws SQLException {
+        try {
+            connection = jdbcUtils.connect();
+            String sql = "INSERT INTO Product (name, price, size, image) VALUES (?, ?, ?, ?)";
+            var stmt = connection.prepareStatement(sql);
+            stmt.setString(1, product.getName());
+            stmt.setDouble(2, product.getPrice());
+            stmt.setString(3, product.getSize());
+            stmt.setString(4, product.getImage());
+            stmt.executeUpdate();
+            stmt.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            connection.close();
+        }
+    }
+    @Override
+    public void updateProduct(Product product) throws SQLException {
+        try {
+            connection = jdbcUtils.connect();
+            String sql = "UPDATE Product SET name = ?, price = ?, size = ?, image = ? WHERE productID = ?";
+            var stmt = connection.prepareStatement(sql);
+            stmt.setString(1, product.getName());
+            stmt.setDouble(2, product.getPrice());
+            stmt.setString(3, product.getSize());
+            stmt.setString(4, product.getImage());
+            stmt.setInt(5, product.getProductID());
+            stmt.executeUpdate();
+            stmt.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            connection.close();
+        }
+    }
 }

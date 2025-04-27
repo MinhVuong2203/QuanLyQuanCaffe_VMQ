@@ -1,13 +1,12 @@
 package Controller.StaffController;
 
-import Repository.Customer.CustomerRepository;
-import Utils.ValidationUtils;
-import View.StaffView.GamePanel;
 import Model.Customer;
-
+import Repository.UserAccount.UserAccountRepository;
+import Utils.ValidationUtils;
+import Model.Customer;
+import View.GamePanel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.beans.Customizer;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.text.NumberFormat;
@@ -57,7 +56,7 @@ public class GamePanelController implements ActionListener {
 			}
 			double price = Double.parseDouble(gamePanel.bet_text.getText());
 			
-			String cleanedText = customer.getPoint().replace(".", "");  // Xóa dấu chấm để không bị 1.000 thành 1.0
+			String cleanedText = String.valueOf(customer.getPoints()).replace(".", "");  // Xóa dấu chấm để không bị 1.000 thành 1.0
 			System.out.println("leanedText" + cleanedText);
 			double cost = Double.parseDouble(cleanedText);
 
@@ -121,7 +120,7 @@ public class GamePanelController implements ActionListener {
 								}
 								try {
 									UserAccountRepository user = new UserAccountRepository();
-									user.updatePoint(customer_view.id, newCost); // Cập nhật lại số dư trong database
+									user.updatePoint(customer.getId(), newCost); // Cập nhật lại số dư trong database
 								} catch (IOException ex) {
 								} catch (ClassNotFoundException ex) {
 								} catch (SQLException ex) {

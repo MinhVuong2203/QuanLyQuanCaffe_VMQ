@@ -14,12 +14,16 @@ public class ManageProduct extends JPanel {
     private JPanel productGridPanel;
 
     private List<Product> products = new ArrayList<>();
+    private List<Product> allProducts = new ArrayList<>();
     private ProductRespository productRespository;
+    private Product selectedProduct = null;
+
 
     {
         try {
             productRespository = new ProductRespository();
             products = productRespository.getArrayListProductFromSQL();
+            allProducts = new ArrayList<>(products); 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
         }
@@ -39,6 +43,11 @@ public class ManageProduct extends JPanel {
         topPanel.add(btnTea);
         topPanel.add(btnCake);
 
+        btnCoffee.addActionListener(e -> filterProductsByCategory("cà phê"));
+        btnTea.addActionListener(e -> filterProductsByCategory("trà"));
+        btnCake.addActionListener(e -> filterProductsByCategory("bánh"));
+
+
         // Center: Product Grid
         productGridPanel = new JPanel(new GridLayout(0, 4, 15, 15));
         productGridPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
@@ -52,12 +61,198 @@ public class ManageProduct extends JPanel {
         btnAdd = new JButton("Thêm sản phẩm");
         btnEdit = new JButton("Sửa sản phẩm");
         btnDelete = new JButton("Ngừng bán");
+
+        btnAdd.addActionListener(e -> {
+            // Logic to add a new product
+            JDialog addProductDialog = new JDialog((Frame) SwingUtilities.getWindowAncestor(this), "Thêm sản phẩm", true);
+            addProductDialog.setSize(400, 350);
+            addProductDialog.setLocationRelativeTo(this);
+            addProductDialog.setLayout(new BorderLayout());
+            addProductDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        
+            JLabel lblName = new JLabel("Tên sản phẩm:");
+            JTextField txtName = new JTextField(20);
+            JLabel lblPrice = new JLabel("Giá sản phẩm:");
+            JTextField txtPrice = new JTextField(20);
+            JLabel lblSize = new JLabel("Kích thước:");
+            JTextField txtSize = new JTextField(20);
+            JLabel lblImage = new JLabel("Hình ảnh:");
+            JTextField txtImage = new JTextField(20);
+            JButton btnAddImage = new JButton("Chọn ảnh");
+            btnAddImage.addActionListener(e1 -> {
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+                int returnValue = fileChooser.showOpenDialog(addProductDialog);
+                if (returnValue == JFileChooser.APPROVE_OPTION) {
+                    txtImage.setText(fileChooser.getSelectedFile().getAbsolutePath());
+                }
+            });
+        
+            JButton btnAddProduct = new JButton("Thêm sản phẩm");
+            btnAddProduct.addActionListener(e1 -> {
+                String name = txtName.getText();
+                String priceStr = txtPrice.getText();
+                String size = txtSize.getText();
+                String image = txtImage.getText();
+                if (name.isEmpty() || priceStr.isEmpty() || size.isEmpty() || image.isEmpty()) {
+                    JOptionPane.showMessageDialog(addProductDialog, "Vui lòng điền đầy đủ thông tin", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                try {
+                    double price = Double.parseDouble(priceStr);
+                    Product newProduct = new Product(allProducts.size() + 1, name, price, size, image);
+                    productRespository.addProduct(newProduct);
+                    products.add(newProduct);
+                    allProducts.add(newProduct);
+                    showProducts(products);
+                    addProductDialog.dispose();
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(addProductDialog, "Giá phải là số!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(addProductDialog, "Error: " + ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+                }
+            });
+        
+            JPanel inputPanel = new JPanel(new GridLayout(5, 2, 5, 5));
+            inputPanel.add(lblName);
+            inputPanel.add(txtName);
+            inputPanel.add(lblPrice);
+            inputPanel.add(txtPrice);
+            inputPanel.add(lblSize);
+            inputPanel.add(txtSize);
+            inputPanel.add(lblImage);
+            inputPanel.add(txtImage);
+            inputPanel.add(new JLabel()); // trống cho đẹp
+            inputPanel.add(btnAddImage);
+        
+            addProductDialog.add(inputPanel, BorderLayout.CENTER);
+        
+            JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+            buttonPanel.add(btnAddProduct);
+            addProductDialog.add(buttonPanel, BorderLayout.SOUTH);
+        
+            addProductDialog.setVisible(true);
+        });
+        
+        btnEdit.addActionListener(e -> {
+            if (selectedProduct == null) {
+                JOptionPane.showMessageDialog(this, "Vui lòng chọn sản phẩm cần sửa!");
+                return;
+            }
+        
+            // Mở dialog sửa sản phẩm
+            JDialog editProductDialog = new JDialog((Frame) SwingUtilities.getWindowAncestor(this), "Sửa sản phẩm", true);
+            editProductDialog.setSize(400, 300);
+            editProductDialog.setLocationRelativeTo(this);
+            editProductDialog.setLayout(new BorderLayout());
+            editProductDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        
+            JLabel lblName = new JLabel("Tên sản phẩm:");
+            JTextField txtName = new JTextField(selectedProduct.getName(), 20);
+        
+            JLabel lblPrice = new JLabel("Giá sản phẩm:");
+            JTextField txtPrice = new JTextField(String.valueOf(selectedProduct.getPrice()), 20);
+        
+            JLabel lblSize = new JLabel("Kích thước:");
+            JTextField txtSize = new JTextField(selectedProduct.getSize(), 20);
+        
+            JLabel lblImage = new JLabel("Hình ảnh:");
+            JTextField txtImage = new JTextField(selectedProduct.getImage(), 20);
+            
+            JButton btnChooseImage = new JButton("Chọn ảnh");
+            btnChooseImage.addActionListener(e1 -> {
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+                int returnValue = fileChooser.showOpenDialog(editProductDialog);
+                if (returnValue == JFileChooser.APPROVE_OPTION) {
+                    txtImage.setText(fileChooser.getSelectedFile().getAbsolutePath());
+                }
+            });
+        
+            JButton btnSaveChanges = new JButton("Lưu thay đổi");
+            btnSaveChanges.addActionListener(e1 -> {
+                String name = txtName.getText();
+                String priceStr = txtPrice.getText();
+                String size = txtSize.getText();
+                String image = txtImage.getText();
+        
+                if (name.isEmpty() || priceStr.isEmpty() || size.isEmpty() || image.isEmpty()) {
+                    JOptionPane.showMessageDialog(editProductDialog, "Vui lòng điền đầy đủ thông tin", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+        
+                try {
+                    double price = Double.parseDouble(priceStr);
+        
+                    selectedProduct.setName(name);
+                    selectedProduct.setPrice(price);
+                    selectedProduct.setSize(size);
+                    selectedProduct.setImage(image);
+        
+                    // Cập nhật vào database
+                    productRespository.updateProduct(selectedProduct);
+        
+                    // Refresh UI
+                    showProducts(products);
+                    selectedProduct = null;
+                    editProductDialog.dispose();
+                    JOptionPane.showMessageDialog(this, "Đã lưu thay đổi sản phẩm!");
+        
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(editProductDialog, "Error: " + ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+                }
+            });
+        
+            JPanel inputPanel = new JPanel(new GridLayout(5, 2));
+            inputPanel.add(lblName);
+            inputPanel.add(txtName);
+            inputPanel.add(lblPrice);
+            inputPanel.add(txtPrice);
+            inputPanel.add(lblSize);
+            inputPanel.add(txtSize);
+            inputPanel.add(lblImage);
+            inputPanel.add(btnChooseImage);
+            inputPanel.add(new JLabel()); // placeholder
+            inputPanel.add(btnSaveChanges);
+        
+            editProductDialog.add(inputPanel, BorderLayout.CENTER);
+            editProductDialog.setVisible(true);
+        });
+        
+            
+       
+        
+        btnDelete.addActionListener(e -> {
+            if (selectedProduct == null) {
+                JOptionPane.showMessageDialog(this, "Vui lòng chọn sản phẩm cần ngừng bán!");
+                return;
+            }
+            int result = JOptionPane.showConfirmDialog(this, "Bạn có chắc muốn ngừng bán sản phẩm: " + selectedProduct.getName() + " không?", "Xác nhận", JOptionPane.YES_NO_OPTION);
+            if (result == JOptionPane.YES_OPTION) {
+                try {
+                    productRespository.delProductByID(selectedProduct.getProductID());
+                    products.remove(selectedProduct);
+                    allProducts.remove(selectedProduct);
+                    showProducts(products);
+                    selectedProduct = null; // clear chọn
+                    JOptionPane.showMessageDialog(this, "Đã ngừng bán sản phẩm thành công!");
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+        
+        
         btnAdd.setBackground(Color.PINK);
         btnEdit.setBackground(Color.LIGHT_GRAY);
         btnDelete.setBackground(Color.PINK);
+
+
         bottomPanel.add(btnAdd);
         bottomPanel.add(btnEdit);
         bottomPanel.add(btnDelete);
+
+       
 
         add(topPanel, BorderLayout.NORTH);
         add(scrollPane, BorderLayout.CENTER);
@@ -81,7 +276,7 @@ public class ManageProduct extends JPanel {
             JLabel lblImage = new JLabel(scaledIcon);
             lblImage.setHorizontalAlignment(SwingConstants.CENTER);
     
-            JLabel lblName = new JLabel(p.getName(), SwingConstants.CENTER);
+            JLabel lblName = new JLabel(p.getName() + " size " + p.getSize(), SwingConstants.CENTER);
             JLabel lblPrice = new JLabel(p.getPrice() + "đ", SwingConstants.CENTER);
             lblPrice.setOpaque(true);
             lblPrice.setBackground(Color.LIGHT_GRAY);
@@ -90,11 +285,51 @@ public class ManageProduct extends JPanel {
             card.add(lblImage, BorderLayout.CENTER);
             card.add(lblPrice, BorderLayout.SOUTH);
     
+            // Thêm MouseListener để chọn sản phẩm
+            card.addMouseListener(new java.awt.event.MouseAdapter() {
+                @Override
+                public void mouseClicked(java.awt.event.MouseEvent evt) {
+                    selectedProduct = p;
+                    highlightSelectedProduct(card);
+                }
+            });
+    
             productGridPanel.add(card);
         }
         productGridPanel.revalidate();
         productGridPanel.repaint();
     }
+    
+    private void filterProductsByCategory(String category) {
+        List<Product> filtered = new ArrayList<>();
+        for (Product p : allProducts) {
+            String productName = p.getName().toLowerCase();
+            if (category.equals("bánh")) {
+                if (productName.startsWith("bánh")) {
+                    filtered.add(p);
+                }
+            } else if (category.equals("trà")) {
+                if (productName.startsWith("trà")) {
+                    filtered.add(p);
+                }
+            } else if (category.equals("cà phê")) {
+                if (!productName.startsWith("bánh") && !productName.startsWith("trà")) {
+                    filtered.add(p);
+                }
+            }
+        }
+        showProducts(filtered);
+    }
+    private void highlightSelectedProduct(JPanel selectedCard) {
+        for (Component comp : productGridPanel.getComponents()) {
+            if (comp instanceof JPanel) {
+                comp.setBackground(new Color(255, 170, 100)); // màu mặc định
+            }
+        }
+        selectedCard.setBackground(new Color(255, 100, 100)); // màu khi được chọn
+    }
+    
+    
     
     
     public static void main(String[] args) {

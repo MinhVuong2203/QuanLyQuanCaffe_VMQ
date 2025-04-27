@@ -20,4 +20,6 @@ public interface IProductRespository {
     public int getOrderIDByTableID(int TableID) throws SQLException;
     public void delProductByID(int productID) throws SQLException;
     public Map<String, Object> getBillInfoByTableID(int tableID) throws SQLException;
+    public void addProduct(Product product) throws SQLException;
+    public void updateProduct(Product product) throws SQLException;
 }
