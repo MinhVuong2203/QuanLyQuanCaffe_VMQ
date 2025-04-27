@@ -1,9 +1,10 @@
-package Controller;
+package Controller.StaffController;
 
 import Repository.Customer.CustomerRepository;
 import Utils.ValidationUtils;
+import View.StaffView.GamePanel;
 import Model.Customer;
-import View.GamePanel;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.Customizer;

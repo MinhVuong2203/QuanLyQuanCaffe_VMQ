@@ -1,6 +1,5 @@
-package View;
+package View.StaffView;
 
-import Controller.GamePanelController;
 import Utils.ValidationUtils;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -16,6 +15,8 @@ import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+
+import Controller.StaffController.GamePanelController;
 
 public class GamePanel extends JPanel {
 	
