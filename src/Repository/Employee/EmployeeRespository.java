@@ -65,37 +65,41 @@ public class EmployeeRespository implements IEmployeeRespository {
             Statement stmt = connection.createStatement();
             String sql = "SELECT [phone] FROM [Employee] WHERE [phone] = '" + phone + "'";
             ResultSet rs = stmt.executeQuery(sql);
-            if (rs.next()) return true; // Có tồn tại
+            if (rs.next())
+                return true; // Có tồn tại
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
-        } 
+        }
         return false; // Không tồn tại
     }
+
     @Override
-    public boolean checkEqualsCCCD(String cccd) throws SQLException{
+    public boolean checkEqualsCCCD(String cccd) throws SQLException {
         try {
             connection = jdbcUtils.connect(); // Phải có để có connection
             Statement stmt = connection.createStatement();
             String sql = "SELECT [CCCD] FROM [Employee] WHERE [CCCD] = '" + cccd + "'";
             ResultSet rs = stmt.executeQuery(sql);
-            if (rs.next()) return true; // Có tồn tại
+            if (rs.next())
+                return true; // Có tồn tại
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
-        } 
+        }
         return false; // Không tồn tại
     }
 
     @Override
-    public boolean checkEqualsUsername(String username) throws SQLException{
+    public boolean checkEqualsUsername(String username) throws SQLException {
         try {
             connection = jdbcUtils.connect(); // Phải có để có connection
             Statement stmt = connection.createStatement();
             String sql = "SELECT [username] FROM [UserAccount] WHERE [username] = '" + username + "'";
             ResultSet rs = stmt.executeQuery(sql);
-            if (rs.next()) return true; // Có tồn tại
+            if (rs.next())
+                return true; // Có tồn tại
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
-        } 
+        }
         return false; // Không tồn tại
     }
 
@@ -141,7 +145,7 @@ public class EmployeeRespository implements IEmployeeRespository {
 
     @Override
     public void addEmployee(Employee employee) throws SQLException, ClassNotFoundException {
-        try{
+        try {
             connection = jdbcUtils.connect(); // Phải có để có connection
             String sqlUserAccount = "INSERT INTO UserAccount (ID, username, [password], role) VALUES (?, ?, ?, ?)";
             PreparedStatement stmtUserAccount = connection.prepareStatement(sqlUserAccount);
@@ -163,7 +167,7 @@ public class EmployeeRespository implements IEmployeeRespository {
             stmtEmployee.executeUpdate();
         } catch (SQLException e) {
             System.out.println("Error: " + e.getMessage());
-        } 
+        }
     }
 
     @Override
@@ -195,7 +199,6 @@ public class EmployeeRespository implements IEmployeeRespository {
             System.out.println("Error: " + e.getMessage());
         }
     }
-
 
     @Override
     public List<Employee> getAllEmployees() throws SQLException {
@@ -243,7 +246,8 @@ public class EmployeeRespository implements IEmployeeRespository {
                 ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
-                if (rs.getString("role").equalsIgnoreCase("Quản lí") || rs.getString("role").equalsIgnoreCase("Nghỉ việc"))
+                if (rs.getString("role").equalsIgnoreCase("Quản lí")
+                        || rs.getString("role").equalsIgnoreCase("Nghỉ việc"))
                     continue;// bỏ qua quản lý và nhân viên nghỉ việc
                 Employee employee = new Employee();
                 employee.setId(rs.getInt("employeeID"));
@@ -278,10 +282,11 @@ public class EmployeeRespository implements IEmployeeRespository {
     }
 
     @Override
-    public void setStatusFromSQL(int id, String status) {
+    public void setStatusFromSQL(int id, String status, int shiftID) {
         try (Connection connection = jdbcUtils.connect();
                 Statement stmt = connection.createStatement()) {
-            String sql = "UPDATE EmployeeShift SET status = N'" + status + "' WHERE employeeID = " + id;
+                String sql = "UPDATE EmployeeShift SET status = N'" + status + "' WHERE employeeID = " + id + " AND "
+                    + "shiftID = " + shiftID;
             stmt.executeUpdate(sql);
         } catch (Exception e) {
             e.printStackTrace();
@@ -289,8 +294,8 @@ public class EmployeeRespository implements IEmployeeRespository {
     }
 
     @Override
-    public String getStatusFromSQL(int id) {
-        String sql = "SELECT status FROM EmployeeShift WHERE employeeID = " + id;
+    public String getStatusFromSQL(int id, int shiftID) {
+        String sql = "SELECT status FROM EmployeeShift WHERE employeeID = " + id + " AND shiftID = " + shiftID;
         try (Connection connection = jdbcUtils.connect();
                 Statement stmt = connection.createStatement();
                 ResultSet rs = stmt.executeQuery(sql)) {
@@ -342,10 +347,10 @@ public class EmployeeRespository implements IEmployeeRespository {
         String sql = "INSERT INTO EmployeeShift (shiftID, employeeID, startTime, endTime) " +
                 "VALUES (" + (getMaxShiftID() + 1) + ", " + id + ", '" + dateString + " " + timeRange.split("-")[0]
                 + ":00', '" + dateString + " " + timeRange.split("-")[1] + ":00')";
-                
+
         try {
             Connection connection = jdbcUtils.connect();
-           
+
             Statement stmt = connection.createStatement();
             stmt.executeUpdate(sql);
         } catch (Exception e) {
@@ -380,7 +385,7 @@ public class EmployeeRespository implements IEmployeeRespository {
     }
 
     @Override
-    public void quitJob(int id) throws SQLException, ClassNotFoundException{
+    public void quitJob(int id) throws SQLException, ClassNotFoundException {
         String sql = "UPDATE UserAccount SET role = N'Nghỉ việc' WHERE ID = " + id;
         try (Connection connection = jdbcUtils.connect();
                 Statement stmt = connection.createStatement()) {
@@ -391,17 +396,18 @@ public class EmployeeRespository implements IEmployeeRespository {
     }
 
     @Override
-    public List<Employee> getAllEmployeesAllAttributes(){
-        String sql = "SELECT e.employeeID, e.name, e.phone, e.image, u.username, u.password, u.role, e.CCCD, e.birthDate, e.gender, e.hourWage " +
-                     "FROM Employee as e " + 
-                     "JOIN UserAccount as u ON e.employeeID = u.ID " +
-                     "WHERE u.role != N'Quản lí' AND u.role != N'Nghỉ việc'"; // Lọc luôn ở SQL
+    public List<Employee> getAllEmployeesAllAttributes() {
+        String sql = "SELECT e.employeeID, e.name, e.phone, e.image, u.username, u.password, u.role, e.CCCD, e.birthDate, e.gender, e.hourWage "
+                +
+                "FROM Employee as e " +
+                "JOIN UserAccount as u ON e.employeeID = u.ID " +
+                "WHERE u.role != N'Quản lí' AND u.role != N'Nghỉ việc'"; // Lọc luôn ở SQL
         try (Connection connection = jdbcUtils.connect();
-             Statement stmt = connection.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
-            
+                Statement stmt = connection.createStatement();
+                ResultSet rs = stmt.executeQuery(sql)) {
+
             List<Employee> employees = new ArrayList<>();
-            while(rs.next()){
+            while (rs.next()) {
                 int id = rs.getInt("employeeID");
                 String name = rs.getString("name").trim();
                 String phone = rs.getString("phone") != null ? rs.getString("phone").trim() : "";
@@ -413,18 +419,17 @@ public class EmployeeRespository implements IEmployeeRespository {
                 String birthDate = rs.getString("birthDate").trim();
                 String gender = rs.getString("gender").trim();
                 double hourWage = rs.getDouble("hourWage");
-        
-                employees.add(new Employee(id, name, phone, image, username, password, role, CCCD, birthDate, gender, hourWage));
-            }   
-            return employees; 
-        } 
-        catch (SQLException | ClassNotFoundException e) {
+
+                employees.add(new Employee(id, name, phone, image, username, password, role, CCCD, birthDate, gender,
+                        hourWage));
+            }
+            return employees;
+        } catch (SQLException | ClassNotFoundException e) {
             System.err.println("Error executing query: " + e.getMessage());
             e.printStackTrace();
         }
         return new ArrayList<>(); // Trả về danh sách rỗng nếu có lỗi
     }
-    
 
     public static void main(String[] args) {
         try {

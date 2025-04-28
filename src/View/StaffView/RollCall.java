@@ -114,8 +114,7 @@ public class RollCall extends JPanel {
             // Tìm nhân viên được chọn từ danh sách employees
             Employee selected = null;
             for (Employee emp : employees) {
-                if (selectedValue.contains(emp.getEmployeeShift().getShiftID() + "")) {
-                    // Tìm thấy nhân viên có ca làm trùng với giá trị được chọn
+                if (selectedValue.contains("ID: " + emp.getId()) && selectedValue.contains("Ca làm: " + emp.getEmployeeShift().getShiftID())) {
                     selected = emp;
                     break;
                 }
@@ -147,18 +146,38 @@ public class RollCall extends JPanel {
                         "EmployeeID: " + selected.getId());
                 btnCallRoll.addActionListener(e -> {
                     try {
-                        if (Label_Status.getText().equals("Trạng thái: chưa điểm danh")) {
-                            employeeRepository.setStatusFromSQL(selectedEmployee.getId(), "Đã điểm danh");
+                        // Lấy trạng thái hiện tại từ database để đảm bảo tính chính xác
+                        String currentStatus = employeeRepository.getStatusFromSQL(selectedEmployee.getId(), selectedEmployee.getEmployeeShift().getShiftID());
+
+                        if (currentStatus != null && currentStatus.equalsIgnoreCase("chưa điểm danh")) {
+                            // Cập nhật trạng thái trong database
+                            employeeRepository.setStatusFromSQL(selectedEmployee.getId(), "Đã điểm danh", selectedEmployee.getEmployeeShift().getShiftID());
+
+                            // Cập nhật UI
                             Label_Status.setText("Trạng thái: Đã điểm danh");
                             Label_Status.setForeground(Color.GREEN);
+
+                            // Cập nhật đối tượng selected để phản ánh thay đổi
+                            selectedEmployee.getEmployeeShift().setStatus("Đã điểm danh");
                         } else {
-                            employeeRepository.setStatusFromSQL(selectedEmployee.getId(), "Chưa điểm danh");
-                            Label_Status.setText("Trạng thái: Chưa điểm danh");
+                            // Cập nhật trạng thái trong database
+                            employeeRepository.setStatusFromSQL(selectedEmployee.getId(), "chưa điểm danh", selectedEmployee.getEmployeeShift().getShiftID());
+
+                            // Cập nhật UI
+                            Label_Status.setText("Trạng thái: chưa điểm danh");
                             Label_Status.setForeground(Color.RED);
+
+                            // Cập nhật đối tượng selected để phản ánh thay đổi
+                            selectedEmployee.getEmployeeShift().setStatus("chưa điểm danh");
                         }
+
+                        // In ra log để debug
+                        System.out.println("Trạng thái sau khi cập nhật: " +
+                                employeeRepository.getStatusFromSQL(selectedEmployee.getId(), selectedEmployee.getEmployeeShift().getShiftID()));
                     } catch (Exception ex) {
                         ex.printStackTrace();
-                        JOptionPane.showMessageDialog(null, "Lỗi khi cập nhật trạng thái điểm danh");
+                        JOptionPane.showMessageDialog(null,
+                                "Lỗi khi cập nhật trạng thái điểm danh: " + ex.getMessage());
                     }
                 });
 

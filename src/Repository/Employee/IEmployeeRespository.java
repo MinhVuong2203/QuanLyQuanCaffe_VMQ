@@ -21,8 +21,8 @@ public interface IEmployeeRespository {
     public List<Employee> getAllEmployees() throws SQLException;
     public List<Employee> getAllEmployeesToManager() throws SQLException;
     public String getImgByID(int id) throws SQLException;
-    public void setStatusFromSQL(int id, String status);
-    public String getStatusFromSQL(int id);
+    public void setStatusFromSQL(int id, String status, int shiftID);
+    public String getStatusFromSQL(int id, int shiftID);
     public String[] getEachEmployeeShift(int id, JDateChooser startDay, JDateChooser endDay);
     public void addShiftToSQL(int id, String dateString, String timeRange) ;
     public void deleteShiftFromSQL(int id, String dateString) ;
