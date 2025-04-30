@@ -25,10 +25,10 @@ public class ManagerJFrameController {
     private StaffManagerJPanel staffManagerJPanel;
     private ManageProduct managerProduct;
     private GamePanel gamePanel;
-    private Table_JPanel table_JPanel;
-    private RollCall rollCall;
+    private Manager manager;
 
-    public ManagerJFrameController(ManagerJFrame managerJFrame, JPanel contentPanel, Table_JPanel table_JPanel, RollCall rollcall, EmployeeShiftPanel employeeShiftPanel, TablePanel tablePanel,StaffManagerJPanel staffManagerJPanel, ManageProduct managerProduct, GamePanel gamePanel) {
+
+    public ManagerJFrameController(ManagerJFrame managerJFrame, JPanel contentPanel, Manager manager , EmployeeShiftPanel employeeShiftPanel, TablePanel tablePanel,StaffManagerJPanel staffManagerJPanel, ManageProduct managerProduct, GamePanel gamePanel) {
         this.managerJFrame = managerJFrame;   
         this.contentPanel = contentPanel;
         this.employeeShiftPanel = employeeShiftPanel;
@@ -36,31 +36,32 @@ public class ManagerJFrameController {
         this.staffManagerJPanel = staffManagerJPanel;
         this.managerProduct = managerProduct;
         this.gamePanel = gamePanel;
-        this.table_JPanel = table_JPanel;
-        this.rollCall = rollcall;
+        this.manager = manager;
+        
     }
 
     public ActionListener getButtonActionListener(String command) {
         return new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Đặt màu cho button được chọn
-                 for (Component btn : managerJFrame.getMenuPanel().getComponents()) {
-                    if (btn instanceof JButton) {
-                        btn.setBackground(new Color(39, 174, 96));
+                try {
+                    // Đặt màu cho button được chọn
+                    for (Component btn : managerJFrame.getMenuPanel().getComponents()) {
+                        if (btn instanceof JButton) {
+                            btn.setBackground(new Color(39, 174, 96));
+                        }
                     }
-                }
-                ((JButton) e.getSource()).setBackground(new Color(88, 214, 141));
-
-                // Xử lý hành động
-                if (!command.equalsIgnoreCase("ĐĂNG XUẤT")) contentPanel.removeAll();
-                
+                    ((JButton) e.getSource()).setBackground(new Color(88, 214, 141));
+                    
+                    // Xử lý hành động
+                    if (!command.equalsIgnoreCase("ĐĂNG XUẤT")) contentPanel.removeAll();
+                    
                     switch (command) {
                         case "BÁN HÀNG":
-                            contentPanel.add(table_JPanel, BorderLayout.CENTER);
+                            contentPanel.add(new Table_JPanel(manager.getId()), BorderLayout.CENTER);
                             break;
                         case "ĐIỂM DANH":
-                            contentPanel.add(rollCall, BorderLayout.CENTER);
+                            contentPanel.add(new RollCall(), BorderLayout.CENTER);
                             break;
                         case "MINI GAME":
                             contentPanel.add(gamePanel, BorderLayout.CENTER);
@@ -83,7 +84,7 @@ public class ManagerJFrameController {
                             break;
                         case "ĐĂNG XUẤT":
                             // Thêm logic đăng xuất (ví dụ: đóng frame, quay về màn hình đăng nhập)
-                            int confirm = JOptionPane.showConfirmDialog(managerJFrame, 
+                            int confirm = JOptionPane.showConfirmDialog(managerJFrame,
                                     "Bạn có chắc chắn muốn đăng xuất?", "Xác nhận đăng xuất", 
                                     JOptionPane.YES_NO_OPTION);
                             if (confirm == JOptionPane.YES_OPTION) {
@@ -92,9 +93,13 @@ public class ManagerJFrameController {
                             }
                             break;
                     }
-                
-                contentPanel.revalidate();
-                contentPanel.repaint();
+                    
+                    contentPanel.revalidate();
+                    contentPanel.repaint();
+                } catch (ClassNotFoundException ex) {
+                } catch (SQLException ex) {
+                } catch (IOException ex) {
+                }
             }
         };
     }
