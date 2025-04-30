@@ -100,9 +100,9 @@ public class StaffJFrame extends JFrame {
         Table_JPanel table_JPanel = new Table_JPanel(employee.getId());
         contentPanel.add(table_JPanel, BorderLayout.CENTER);
         RollCall rollCall = new RollCall();
-        GamePanel gamePanel = new GamePanel(); // Mini game panel
+        
 
-        StaffJFrameController controller = new StaffJFrameController(this, contentPanel, employee, gamePanel); // Hành động
+        StaffJFrameController controller = new StaffJFrameController(this, contentPanel, employee); // Hành động
 
         String[] buttonLabels = {"BÁN HÀNG", "ĐIỂM DANH", "MINI GAME", "ĐĂNG XUẤT"};
         String[] iconButtonLabels = { "src\\image\\SideBar_Image\\Sell.png", 

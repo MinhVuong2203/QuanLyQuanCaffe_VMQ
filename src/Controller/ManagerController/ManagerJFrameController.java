@@ -24,18 +24,17 @@ public class ManagerJFrameController {
     private TablePanel tablePanel;
     private StaffManagerJPanel staffManagerJPanel;
     private ManageProduct managerProduct;
-    private GamePanel gamePanel;
+ 
     private Manager manager;
 
 
-    public ManagerJFrameController(ManagerJFrame managerJFrame, JPanel contentPanel, Manager manager , EmployeeShiftPanel employeeShiftPanel, TablePanel tablePanel,StaffManagerJPanel staffManagerJPanel, ManageProduct managerProduct, GamePanel gamePanel) {
+    public ManagerJFrameController(ManagerJFrame managerJFrame, JPanel contentPanel, Manager manager , EmployeeShiftPanel employeeShiftPanel, TablePanel tablePanel,StaffManagerJPanel staffManagerJPanel, ManageProduct managerProduct) {
         this.managerJFrame = managerJFrame;   
         this.contentPanel = contentPanel;
         this.employeeShiftPanel = employeeShiftPanel;
         this.tablePanel = tablePanel;
         this.staffManagerJPanel = staffManagerJPanel;
         this.managerProduct = managerProduct;
-        this.gamePanel = gamePanel;
         this.manager = manager;
         
     }
@@ -64,7 +63,7 @@ public class ManagerJFrameController {
                             contentPanel.add(new RollCall(), BorderLayout.CENTER);
                             break;
                         case "MINI GAME":
-                            contentPanel.add(gamePanel, BorderLayout.CENTER);
+                            contentPanel.add(new GamePanel(), BorderLayout.CENTER);
                             break;
                         case "XẾP LỊCH":
                             contentPanel.add(employeeShiftPanel, BorderLayout.CENTER);

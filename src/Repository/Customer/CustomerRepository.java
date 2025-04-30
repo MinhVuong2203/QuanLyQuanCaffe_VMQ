@@ -4,6 +4,7 @@ import Model.Customer;
 import Utils.JdbcUtils;
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -118,4 +119,22 @@ public class CustomerRepository implements ICustomerRespository {
         }
         return null; // Không tìm thấy khách hàng
     }
+
+    @Override
+     public void updatePoint(int customerID, double newPoints) throws SQLException, ClassNotFoundException {
+        try (Connection connection = jdbcUtils.connect();
+             PreparedStatement pstmt = connection.prepareStatement("UPDATE Customer SET point = ? WHERE customerID = ?")) {
+            pstmt.setDouble(1, newPoints);
+            pstmt.setInt(2, customerID);
+            pstmt.executeUpdate();
+        }
+    }
+
+	
+
+	
+
+	
+
+
 }

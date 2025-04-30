@@ -16,15 +16,11 @@ import javax.swing.*;
 public class StaffJFrameController {
     private StaffJFrame staffJFrame;
     private JPanel contentPanel;
-    private Table_JPanel table_JPanel;
-    private RollCall rollCall;
-    private GamePanel gamePanel;
     private Employee employee;
 
-    public StaffJFrameController(StaffJFrame staffJFrame, JPanel contentPanel, Employee employee ,GamePanel gamePanel) {
+    public StaffJFrameController(StaffJFrame staffJFrame, JPanel contentPanel, Employee employee) {
         this.staffJFrame = staffJFrame;
-        this.contentPanel = contentPanel;
-        this.gamePanel = gamePanel;
+        this.contentPanel = contentPanel;        
         this.employee = employee;
     }
 
@@ -50,7 +46,7 @@ public class StaffJFrameController {
                             contentPanel.add(new RollCall(), BorderLayout.CENTER);
                             break;
                         case "MINI GAME":
-                            contentPanel.add(gamePanel, BorderLayout.CENTER);
+                            contentPanel.add(new GamePanel(), BorderLayout.CENTER);
                             break;
                         case "ĐĂNG XUẤT":
                             // Thêm logic đăng xuất (ví dụ: đóng frame, quay về màn hình đăng nhập)

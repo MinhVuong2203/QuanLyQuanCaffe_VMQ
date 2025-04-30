@@ -11,8 +11,8 @@ public class Customer extends Person{
         return points;
     }
 
-    public void setPoints(int points) {
-        this.points = points;
+    public void setPoints(double newPoints) {
+        this.points = newPoints;
     }
 
     @Override
