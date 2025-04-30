@@ -8,7 +8,6 @@ import View.ManagerView.ManagerTable.TablePanel;
 import View.StaffView.RollCall;
 import View.StaffView.Table_JPanel;
 import View.Window.WelcomeScreen;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -46,7 +45,7 @@ public class ManagerJFrameController {
                 ((JButton) e.getSource()).setBackground(new Color(88, 214, 141));
 
                 // Xử lý hành động
-                contentPanel.removeAll();
+                if (!command.equalsIgnoreCase("ĐĂNG XUẤT")) contentPanel.removeAll();
                 try {
                     switch (command) {
                         case "BÁN HÀNG":

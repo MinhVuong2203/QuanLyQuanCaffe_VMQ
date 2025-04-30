@@ -38,10 +38,12 @@ import Repository.Employee.IEmployeeRespository;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Image;
 import java.awt.event.MouseAdapter;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.ImageIcon;
 
 
 public class EmployeeShiftPanel extends JPanel {
@@ -114,13 +116,17 @@ public class EmployeeShiftPanel extends JPanel {
 
         // Thêm hai nút Xuất PDF và Xuất Excel
         JButton btnExportPDF = new JButton("Xuất PDF");
+        btnExportPDF.setIcon(new ImageIcon(new ImageIcon("src\\image\\Manager_Image\\pdf_img.png").getImage().getScaledInstance(26, 26, Image.SCALE_SMOOTH)));
+        btnExportPDF.setForeground(new Color(255, 0, 0));
+        btnExportPDF.setBackground(new Color(240, 240, 240));
         btnExportPDF.setFont(new Font("Arial", Font.PLAIN, 18));
-        btnExportPDF.setBounds(360, 70, 120, 28);
+        btnExportPDF.setBounds(272, 70, 120, 41);
         panel_top.add(btnExportPDF);
 
         JButton btnExportExcel = new JButton("Xuất Excel");
         btnExportExcel.setFont(new Font("Arial", Font.PLAIN, 18));
         btnExportExcel.setBounds(500, 70, 120, 28);
+        btnExportExcel.setIcon(new ImageIcon(new ImageIcon("src\\image\\Manager_Image\\excel_img.png").getImage().getScaledInstance(26, 26, Image.SCALE_SMOOTH)));
         panel_top.add(btnExportExcel);
 
         // Xử lý sự kiện cho nút Xuất PDF

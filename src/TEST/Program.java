@@ -13,7 +13,6 @@ public class Program {
         } catch (Exception e) {
             System.out.println("Error setting look and feel: " + e.getMessage());
         }
-        
 
     }
 }

@@ -5,7 +5,6 @@ import View.StaffView.RollCall;
 import View.StaffView.StaffJFrame;
 import View.StaffView.Table_JPanel;
 import View.Window.WelcomeScreen;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -36,7 +35,7 @@ public class StaffJFrameController {
                 }
                 ((JButton) e.getSource()).setBackground(new Color(88, 214, 141));
 
-                contentPanel.removeAll();
+                if (!command.equalsIgnoreCase("ĐĂNG XUẤT")) contentPanel.removeAll();
                 try {
                     switch (command) {
                         case "BÁN HÀNG":

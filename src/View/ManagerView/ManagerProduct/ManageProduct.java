@@ -67,18 +67,30 @@ public class ManageProduct extends JPanel {
             JDialog addProductDialog = new JDialog((Frame) SwingUtilities.getWindowAncestor(this), "Thêm sản phẩm", true);
             addProductDialog.setSize(400, 350);
             addProductDialog.setLocationRelativeTo(this);
-            addProductDialog.setLayout(new BorderLayout());
+            BorderLayout borderLayout = new BorderLayout();
+            borderLayout.setVgap(20);
+            borderLayout.setHgap(20);
+            addProductDialog.getContentPane().setLayout(borderLayout);
             addProductDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         
             JLabel lblName = new JLabel("Tên sản phẩm:");
+            lblName.setFont(new Font("Tahoma", Font.BOLD, 16));
             JTextField txtName = new JTextField(20);
+            txtName.setFont(new Font("Tahoma", Font.BOLD, 16));
             JLabel lblPrice = new JLabel("Giá sản phẩm:");
+            lblPrice.setFont(new Font("Tahoma", Font.BOLD, 16));
             JTextField txtPrice = new JTextField(20);
+            txtPrice.setFont(new Font("Tahoma", Font.BOLD, 16));
             JLabel lblSize = new JLabel("Kích thước:");
+            lblSize.setFont(new Font("Tahoma", Font.BOLD, 16));
             JTextField txtSize = new JTextField(20);
+            txtSize.setFont(new Font("Tahoma", Font.BOLD, 16));
             JLabel lblImage = new JLabel("Hình ảnh:");
+            lblImage.setFont(new Font("Tahoma", Font.BOLD, 16));
             JTextField txtImage = new JTextField(20);
+            txtImage.setFont(new Font("Tahoma", Font.BOLD, 16));
             JButton btnAddImage = new JButton("Chọn ảnh");
+            btnAddImage.setFont(new Font("Tahoma", Font.BOLD, 16));
             btnAddImage.addActionListener(e1 -> {
                 JFileChooser fileChooser = new JFileChooser();
                 fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
@@ -89,6 +101,8 @@ public class ManageProduct extends JPanel {
             });
         
             JButton btnAddProduct = new JButton("Thêm sản phẩm");
+            btnAddProduct.setBackground(new Color(128, 255, 128));
+            btnAddProduct.setFont(new Font("Tahoma", Font.BOLD, 16));
             btnAddProduct.addActionListener(e1 -> {
                 String name = txtName.getText();
                 String priceStr = txtPrice.getText();
@@ -113,7 +127,7 @@ public class ManageProduct extends JPanel {
                 }
             });
         
-            JPanel inputPanel = new JPanel(new GridLayout(5, 2, 5, 5));
+            JPanel inputPanel = new JPanel(new GridLayout(5, 2, 0, 10));
             inputPanel.add(lblName);
             inputPanel.add(txtName);
             inputPanel.add(lblPrice);
@@ -125,11 +139,11 @@ public class ManageProduct extends JPanel {
             inputPanel.add(new JLabel()); // trống cho đẹp
             inputPanel.add(btnAddImage);
         
-            addProductDialog.add(inputPanel, BorderLayout.CENTER);
+            addProductDialog.getContentPane().add(inputPanel, BorderLayout.CENTER);
         
             JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
             buttonPanel.add(btnAddProduct);
-            addProductDialog.add(buttonPanel, BorderLayout.SOUTH);
+            addProductDialog.getContentPane().add(buttonPanel, BorderLayout.SOUTH);
         
             addProductDialog.setVisible(true);
         });
@@ -144,7 +158,7 @@ public class ManageProduct extends JPanel {
             JDialog editProductDialog = new JDialog((Frame) SwingUtilities.getWindowAncestor(this), "Sửa sản phẩm", true);
             editProductDialog.setSize(400, 300);
             editProductDialog.setLocationRelativeTo(this);
-            editProductDialog.setLayout(new BorderLayout());
+            editProductDialog.getContentPane().setLayout(new BorderLayout());
             editProductDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         
             JLabel lblName = new JLabel("Tên sản phẩm:");
@@ -215,7 +229,7 @@ public class ManageProduct extends JPanel {
             inputPanel.add(new JLabel()); // placeholder
             inputPanel.add(btnSaveChanges);
         
-            editProductDialog.add(inputPanel, BorderLayout.CENTER);
+            editProductDialog.getContentPane().add(inputPanel, BorderLayout.CENTER);
             editProductDialog.setVisible(true);
         });
         
@@ -341,7 +355,7 @@ public class ManageProduct extends JPanel {
     
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.setSize(800, 600);
-            frame.add(new ManageProduct());
+            frame.getContentPane().add(new ManageProduct());
             frame.setVisible(true);
 
         } catch (Exception e) {

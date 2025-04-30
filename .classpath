@@ -19,5 +19,8 @@
 	<classpathentry kind="lib" path="Libraries/commons-io-2.16.1.jar"/>
 	<classpathentry kind="lib" path="Libraries/commons-9.1.0.jar"/>
 	<classpathentry kind="lib" path="Libraries/slf4j-api-2.0.13.jar"/>
+	<classpathentry kind="lib" path="Libraries/log4j-api-2.23.1.jar"/>
+	<classpathentry kind="lib" path="Libraries/log4j-core-2.23.1.jar"/>
+	<classpathentry kind="lib" path="Libraries/commons-compress-1.26.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
