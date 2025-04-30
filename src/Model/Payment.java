@@ -25,5 +25,13 @@ public class Payment {
     public String getPaymentMethod() { return paymentMethod; }
     public double getAmount() { return amount; }
     public LocalDateTime getPaymentTime() { return paymentTime; }
+
+    public Payment() {
+        // Constructor rỗng
+    }
+
 }
+
+
+    
 

@@ -13,129 +13,135 @@ import java.util.Locale;
 import java.util.Random;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
-import javax.swing.Timer;
+import javax.swing.Timer; 
 
 public class GamePanelController implements ActionListener {
-	private GamePanel gamePanel;
-	private Customer customer;
-	private int x; // Để tính số lần xuất hiện
-	private Timer timer1;
-	private Timer timer2;
-	private Timer timer3;
-	private int counter = 0;
-	private final int MAX_COUNT = 60; // Số lần đổi hình xúc xắc để tạo hiệu ứng
-	
-	public GamePanelController(GamePanel gamePanel) {
-		
-		this.gamePanel = gamePanel;
-	}	
+    private GamePanel panel;
+    private Customer customer;
+    private int x; // số lần đúng
+    private final int MAX_COUNT = 60; // số lần đổi xúc xắc để tạo hiệu ứng
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		String command = e.getActionCommand();
-		System.out.println("Chọn " + command);
-		if (command.equals("Quay")){
-			 
-			Random rand = new Random();
-			int choose = this.gamePanel.selectedDice + 1;
-			
-			if (choose == 0) {
-				JOptionPane.showMessageDialog(null, "Bạn phải chọn 1 loại", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-				return;
-			}
-			
-			if (this.gamePanel.bet_text.getText().isEmpty()) {
-				JOptionPane.showMessageDialog(null, "Bạn hãy nhập số xu", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-				return;
-			}
-			
-			if (!ValidationUtils.isNumeric(this.gamePanel.bet_text.getText())) {
-				JOptionPane.showMessageDialog(null, "Số xu không hợp lệ", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-				return;
-			}
-			double price = Double.parseDouble(gamePanel.bet_text.getText());
-			
-			String cleanedText = String.valueOf(customer.getPoints()).replace(".", "");  // Xóa dấu chấm để không bị 1.000 thành 1.0
-			System.out.println("leanedText" + cleanedText);
-			double cost = Double.parseDouble(cleanedText);
+    public GamePanelController(GamePanel panel) {
+        this.panel = panel;
+    }
 
-			System.out.println(choose + " " + price + " " + cost);
-			if (price > cost) {
-				JOptionPane.showMessageDialog(null, "Số tiền cược lớn hơn số dư", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-				return;
-			}
-			
-			if (price == 0) {
-				JOptionPane.showMessageDialog(null, "Chơi kì vậy bạn! Đặt tiền cược đi chứ", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-				return;
-			}
-			
-			this.x = 0;
-			int delayBetweenDices = 1100; // delay giữa các xúc xắc (milliseconds)
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
 
-			for (int i = 0; i < 3; i++) {
-			final int diceIndex = i; // biến final để dùng trong inner class
-			Timer timer = new Timer(delayBetweenDices * i, new ActionListener() {
-				int localCounter = 0;
-				Timer localTimer;
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					if (localTimer == null) {
-						localTimer = (Timer) e.getSource();
-					}
-					int dice = 1 + rand.nextInt(6);
-					// Hiển thị xúc xắc tương ứng
-					if (diceIndex == 0)
-						gamePanel.setImage(dice, -1, -1);
-					else if (diceIndex == 1)
-						gamePanel.setImage(-1, dice, -1);
-					else
-						gamePanel.setImage(-1, -1, dice);
-					localCounter++;
-					if (localCounter >= MAX_COUNT) {
-						localTimer.stop();
-						int real = 1 + rand.nextInt(6);
-						if (real == choose) x++;
-						// Hiển thị kết quả thực
-						if (diceIndex == 0)
-							gamePanel.setImage(real, -1, -1);
-						else if (diceIndex == 1)
-							gamePanel.setImage(-1, real, -1);
-						else
-							gamePanel.setImage(-1, -1, real);
-						// Nếu là lần cuối (diceIndex == 2) thì xử lý phần thưởng
-						if (diceIndex == 2) {
-							SwingUtilities.invokeLater(() -> {
-								NumberFormat numberFormat = NumberFormat.getNumberInstance(new Locale("vi", "VN"));
-								double newCost;
-								if (x > 0) {
-									JOptionPane.showMessageDialog(null, "Bạn đã thắng " + numberFormat.format(price * x * x) + " xu", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-									newCost = cost + price * x * x;
-									
-								} else {
-									JOptionPane.showMessageDialog(null, "Rất tiếc! Chúc bạn may mắn lần sau", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-									newCost = cost - price;
-									
-								}
-								try {
-									UserAccountRepository user = new UserAccountRepository();
-									user.updatePoint(customer.getId(), newCost); // Cập nhật lại số dư trong database
-								} catch (IOException ex) {
-								} catch (ClassNotFoundException ex) {
-								} catch (SQLException ex) {
-								}
-							});
-						}
-					}
-				}
-			});
-			timer.setDelay(3);  // tốc độ lắc
-			timer.start();
-		}			
-		}
-			
-		else if (command.equals("Thể lệ")){
-			gamePanel.ProcessingRules();
-		}	
-	}
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        String command = e.getActionCommand();
+        if (command.equals("Quay")) {
+            handleRoll();
+        } else if (command.equals("Thể lệ")) {
+            panel.ProcessingRules();
+        }
+    }
+
+    private void handleRoll() {
+        if (panel.selectedDice == -1) {
+            JOptionPane.showMessageDialog(null, "Bạn phải chọn một loại xúc xắc!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
+        String betText = panel.bet_text.getText().trim();
+        if (betText.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Bạn hãy nhập số xu!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
+        if (!ValidationUtils.isNumeric(betText)) {
+            JOptionPane.showMessageDialog(null, "Số xu không hợp lệ!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
+        double betAmount = Double.parseDouble(betText);
+
+        double currentPoints = customer.getPoints();
+
+        if (betAmount > currentPoints) {
+            JOptionPane.showMessageDialog(null, "Số tiền cược lớn hơn số dư!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
+        if (betAmount <= 0) {
+            JOptionPane.showMessageDialog(null, "Đặt cược phải lớn hơn 0!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
+        this.x = 0;
+        startRollingDice(betAmount, currentPoints, panel.selectedDice + 1);
+    }
+
+    private void startRollingDice(double betAmount, double currentPoints, int chosenDice) {
+        Random rand = new Random();
+        int delayBetweenDices = 1100; // ms giữa các viên xúc xắc
+
+        for (int i = 0; i < 3; i++) {
+            final int diceIndex = i;
+            Timer timer = new Timer(delayBetweenDices * i, null);
+            timer.addActionListener(new ActionListener() {
+                int localCounter = 0;
+                Timer localTimer = timer;
+
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    int dice = 1 + rand.nextInt(6);
+
+                    // Cập nhật xúc xắc ngẫu nhiên
+                    updateDiceImage(diceIndex, dice);
+
+                    localCounter++;
+                    if (localCounter >= MAX_COUNT) {
+                        localTimer.stop();
+
+                        int realDice = 1 + rand.nextInt(6);
+                        if (realDice == chosenDice) x++;
+
+                        updateDiceImage(diceIndex, realDice);
+
+                        // Nếu là viên xúc xắc cuối cùng, tính điểm
+                        if (diceIndex == 2) {
+                            SwingUtilities.invokeLater(() -> updatePointAfterRoll(betAmount, currentPoints));
+                        }
+                    }
+                }
+            });
+            timer.setDelay(3);
+            timer.start();
+        }
+    }
+
+    private void updateDiceImage(int diceIndex, int dice) {
+        if (diceIndex == 0) {
+            panel.setImage(dice, -1, -1);
+        } else if (diceIndex == 1) {
+            panel.setImage(-1, dice, -1);
+        } else {
+            panel.setImage(-1, -1, dice);
+        }
+    }
+
+    private void updatePointAfterRoll(double betAmount, double currentPoints) {
+        NumberFormat numberFormat = NumberFormat.getNumberInstance(new Locale("vi", "VN"));
+        double newPoints;
+
+        if (x > 0) {
+            double reward = betAmount * x * x;
+            JOptionPane.showMessageDialog(null, "Bạn đã thắng " + numberFormat.format(reward) + " xu!", "Chiến thắng", JOptionPane.INFORMATION_MESSAGE);
+            newPoints = currentPoints + reward;
+        } else {
+            JOptionPane.showMessageDialog(null, "Rất tiếc! Chúc bạn may mắn lần sau!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            newPoints = currentPoints - betAmount;
+        }
+
+        try {
+            UserAccountRepository userRepo = new UserAccountRepository();
+            userRepo.updatePoint(customer.getId(), newPoints);
+        } catch (IOException | ClassNotFoundException | SQLException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Lỗi khi cập nhật điểm: " + ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+        }
+    }
 }
