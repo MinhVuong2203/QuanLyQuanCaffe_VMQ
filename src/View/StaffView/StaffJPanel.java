@@ -415,6 +415,47 @@ public class StaffJPanel extends JPanel {
             String selectedItem = model.get(selectedIndex);
             model.remove(selectedIndex);
             removeItemFromBill(selectedItem);
+
+            // Trích xuất tên sản phẩm và kích thước từ mục đã chọn
+            String[] parts = selectedItem.split(" - ");
+            String productInfo = parts[0]; // Phần đầu tiên là tên sản phẩm (và kích thước nếu có)
+
+            try {
+                // Xử lý sản phẩm có và không có kích thước
+                String productName;
+                String size = "";
+
+                if (productInfo.contains("(")) {
+                    // Đối với sản phẩm có kích thước
+                    int bracketIndex = productInfo.lastIndexOf("(");
+                    productName = productInfo.substring(0, bracketIndex).trim();
+                    size = productInfo.substring(bracketIndex + 1, productInfo.length() - 1).trim();
+                } else {
+                    // Đối với sản phẩm không có kích thước (như bánh)
+                    productName = productInfo.trim();
+                }
+
+                // Tìm và xóa sản phẩm khỏi tempOrderProducts
+                Product productToRemove = null;
+                for (Product product : tempOrderProducts.keySet()) {
+                    if (product.getName().trim().equals(productName) &&
+                            (size.isEmpty() || product.getSize().trim().equals(size))) {
+                        productToRemove = product;
+                        break;
+                    }
+                }
+
+                if (productToRemove != null) {
+                    tempOrderProducts.remove(productToRemove);
+                    System.out.println("Đã xóa sản phẩm " + productName + (size.isEmpty() ? "" : " (size " + size + ")")
+                            + " khỏi đơn hàng tạm");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Có lỗi xảy ra khi xóa sản phẩm!", "Lỗi",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+
             updateTotalMoney();
         } else {
             JOptionPane.showMessageDialog(this, "Vui lòng chọn một món để xóa!");
@@ -423,6 +464,7 @@ public class StaffJPanel extends JPanel {
 
     private void clearItem() {
         placedModel.clear();
+        tempOrderProducts.clear();
         updateTotalMoney();
         textArea_Bill.setText("");
     }
@@ -471,28 +513,8 @@ public class StaffJPanel extends JPanel {
     }
 
     public void clearTempOrder() {
-    // try {
-        // Xóa các món trong map tạm
         tempOrderProducts.clear();
-        
-        // Xóa các món trên giao diện
-        // DefaultTableModel model = (DefaultTableModel) tblOrder.getModel();
-        // model.setRowCount(0);
-        
-        // // Reset tổng tiền về 0
-        // lblTotalMoney.setText("0 VNĐ");
-        
-        // // Khởi tạo lại orderID mới
-        // tempOrderId = productDao.initTempOrderId();
-        
-    // } catch (SQLException e) {
-    //     e.printStackTrace();
-    //     JOptionPane.showMessageDialog(this, 
-    //         "Có lỗi xảy ra khi xóa đơn hàng tạm", 
-    //         "Lỗi", 
-    //         JOptionPane.ERROR_MESSAGE);
-    // }
-}
+    }
 
     public JList<String> getList_dishSelected() {
         return list_dishSelected;
@@ -575,11 +597,11 @@ public class StaffJPanel extends JPanel {
     }
 
     // public int getOrderId() {
-    //     return orderId;
+    // return orderId;
     // }
 
     // public void setOrderId(int orderId) {
-    //     this.orderId = orderId;
+    // this.orderId = orderId;
     // }
 
     public int getEmpID() {

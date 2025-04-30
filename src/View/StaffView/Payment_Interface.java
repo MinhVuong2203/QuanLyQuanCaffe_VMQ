@@ -5,7 +5,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
-import java.awt.Image;
+// import java.awt.Image;
 import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.*;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -24,10 +25,35 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.border.TitledBorder;
+import javax.swing.*;
+
+import java.text.*;
+
+import com.itextpdf.io.image.ImageData;
+import com.itextpdf.io.image.ImageDataFactory;
+import com.itextpdf.kernel.geom.PageSize;
+import com.itextpdf.kernel.geom.Rectangle;
 
 import Controller.StaffController.PaymentController;
 import Repository.Product.IProductRespository;
 import Repository.Product.ProductRespository;
+
+import java.awt.Component;
+import java.awt.Desktop;
+import java.io.File;
+import java.io.FileOutputStream;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.Table;
+import com.itextpdf.layout.properties.UnitValue;
+import com.itextpdf.layout.element.Cell;
+import com.itextpdf.layout.element.Paragraph;
+import com.itextpdf.layout.properties.TextAlignment;
+import com.itextpdf.layout.properties.HorizontalAlignment;
+import com.itextpdf.layout.element.Image;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class Payment_Interface extends JPanel {
     private Locale VN = new Locale("vi", "VN");
@@ -72,7 +98,7 @@ public class Payment_Interface extends JPanel {
         try {
             // Đường dẫn có thể cần điều chỉnh tùy theo vị trí của file hình ảnh
             ImageIcon qrIcon = new ImageIcon("src/image/System_Image/QR_Payment.jpg");
-            Image scaledImage = qrIcon.getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH);
+            java.awt.Image scaledImage = qrIcon.getImage().getScaledInstance(150, 150, java.awt.Image.SCALE_SMOOTH);
             qrCodeLabel.setIcon(new ImageIcon(scaledImage));
         } catch (Exception e) {
             qrCodeLabel.setText("QR Code không khả dụng");
@@ -141,7 +167,7 @@ public class Payment_Interface extends JPanel {
         buttonPanel.add(btnPanel, BorderLayout.EAST);
         buttonPanel.add(cboPaymentMethod, BorderLayout.CENTER);
 
-        //the action listener cho nút
+        // the action listener cho nút
         PaymentController paymentController = new PaymentController(this);
         btnQuayLai.addActionListener(paymentController);
         btnThanhToan.addActionListener(paymentController);
@@ -283,6 +309,139 @@ public class Payment_Interface extends JPanel {
     }
 
     public void printBill() {
-        // Có thể triển khai chức năng in hóa đơn ở đây
+        try {
+            // Lấy thông tin hóa đơn
+            IProductRespository productRespository = new ProductRespository();
+            Map<String, Object> billInfo = productRespository.getBillInfoByTableID(tableID);
+
+            if (billInfo.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Không có dữ liệu hóa đơn cho bàn này.");
+                return;
+            }
+
+            // Tạo thư mục Invoices nếu chưa tồn tại
+            File directory = new File("Invoices");
+            if (!directory.exists()) {
+                directory.mkdir();
+            }
+
+            // Tạo tên file với mã hóa đơn và thời gian hiện tại
+            String orderID = billInfo.get("orderID").toString();
+            String fileName = "Invoices/HoaDon_" + orderID + "_" +
+                    new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()) + ".pdf";
+
+            // Tạo PDF document
+            PdfWriter writer = new PdfWriter(fileName);
+            PdfDocument pdf = new PdfDocument(writer);
+            Document document = new Document(pdf);
+
+            // Thêm thông tin cửa hàng và hóa đơn
+            document.add(new Paragraph("CAFFEE VMQ").setTextAlignment(TextAlignment.CENTER).setFontSize(16));
+            document.add(new Paragraph("Địa chỉ: 478 Lê Văn Việt").setTextAlignment(TextAlignment.CENTER));
+            document.add(new Paragraph("Hotline: 0961892734").setTextAlignment(TextAlignment.CENTER));
+            document.add(new Paragraph("---------------------------------------"));
+            document.add(
+                    new Paragraph("PHIẾU TẠM TÍNH").setTextAlignment(TextAlignment.CENTER).setFontSize(14));
+
+            // Thêm thông tin hóa đơn
+            document.add(new Paragraph("Số: " + billInfo.get("orderID")));
+            document.add(new Paragraph("Ngày: " + new SimpleDateFormat("dd/MM/yyyy HH:mm").format(new Date())));
+            document.add(new Paragraph("Bàn: " + billInfo.get("tableName")));
+            document.add(new Paragraph("Thu ngân: " + billInfo.get("employeeName")));
+            document.add(new Paragraph(" ")); // Khoảng trắng
+
+            // Tạo bảng sản phẩm
+            float[] columnWidths = { 1, 5, 1, 2, 2 }; // Tỉ lệ độ rộng các cột
+            Table table = new Table(columnWidths);
+            table.setWidth(UnitValue.createPercentValue(100)); // Chiếm toàn bộ chiều rộng
+
+            // Thêm header cho bảng
+            table.addHeaderCell(new Cell().add(new Paragraph("TT")).setTextAlignment(TextAlignment.CENTER));
+            table.addHeaderCell(
+                    new Cell().add(new Paragraph("Tên món")).setTextAlignment(TextAlignment.LEFT));
+            table.addHeaderCell(new Cell().add(new Paragraph("SL")).setTextAlignment(TextAlignment.CENTER));
+            table.addHeaderCell(
+                    new Cell().add(new Paragraph("Đơn giá")).setTextAlignment(TextAlignment.RIGHT));
+            table.addHeaderCell(
+                    new Cell().add(new Paragraph("Thành tiền")).setTextAlignment(TextAlignment.RIGHT));
+
+            // Thêm từng sản phẩm vào bảng
+            List<Map<String, Object>> products = (List<Map<String, Object>>) billInfo.get("products");
+            int stt = 1;
+            double totalAmount = 0;
+            NumberFormat formatter = NumberFormat.getNumberInstance(VN);
+
+            for (Map<String, Object> product : products) {
+                String productName = (String) product.get("productName");
+                int quantity = (Integer) product.get("quantity");
+                double unitPrice = (Double) product.get("unitPrice");
+                double totalProductPrice = (Double) product.get("totalProductPrice");
+
+                totalAmount += totalProductPrice;
+
+                // Thêm các cột vào bảng
+                table.addCell(new Cell().add(new Paragraph(String.valueOf(stt++)))
+                        .setTextAlignment(TextAlignment.CENTER));
+                table.addCell(new Cell().add(new Paragraph(productName)));
+                table.addCell(new Cell().add(new Paragraph(String.valueOf(quantity)))
+                        .setTextAlignment(TextAlignment.CENTER));
+                table.addCell(new Cell().add(new Paragraph(formatter.format(unitPrice)))
+                        .setTextAlignment(TextAlignment.RIGHT));
+                table.addCell(new Cell().add(new Paragraph(formatter.format(totalProductPrice)))
+                        .setTextAlignment(TextAlignment.RIGHT));
+            }
+
+            // Thêm bảng vào document
+            document.add(table);
+            document.add(new Paragraph(" ")); // Khoảng trắng
+
+            // Thêm tổng tiền
+            document.add(new Paragraph("---------------------------------------"));
+            document.add(new Paragraph(String.format("Tiền hàng: %s", formatter.format(totalAmount) + "đ"))
+                    .setTextAlignment(TextAlignment.RIGHT));
+            document.add(new Paragraph(String.format("Tổng thanh toán: %s", formatter.format(totalAmount) + "đ"))
+                    .setTextAlignment(TextAlignment.RIGHT));
+            document.add(new Paragraph(String.format("Cần phải thu: %s", formatter.format(totalAmount) + "đ"))
+                    .setTextAlignment(TextAlignment.RIGHT));
+            document.add(new Paragraph(" ")); // Khoảng trắng
+
+            // Footer
+            document.add(new Paragraph("Quý khách vui lòng kiểm tra kỹ hóa đơn trước khi thanh toán!")
+                    .setTextAlignment(TextAlignment.CENTER).setFontSize(10));
+
+            // Thêm QR code nếu có
+            try {
+                ImageData imageData = ImageDataFactory.create("src/image/System_Image/QR_Payment.jpg");
+                Image qrImage = new Image(imageData);
+                qrImage.setWidth(100);
+                qrImage.setHeight(100);
+                qrImage.setHorizontalAlignment(HorizontalAlignment.CENTER);
+                document.add(qrImage);
+                document.add(
+                        new Paragraph("Quét mã để thanh toán").setTextAlignment(TextAlignment.CENTER).setFontSize(10));
+            } catch (Exception e) {
+                System.out.println("Không tìm thấy hình ảnh QR code: " + e.getMessage());
+            }
+
+            // Đóng document
+            document.close();
+
+            // Hiển thị thông báo thành công và mở file
+            JOptionPane.showMessageDialog(this, "Đã xuất hóa đơn thành công!\nVị trí: " + fileName);
+
+            // Mở file vừa tạo
+            try {
+                File pdfFile = new File(fileName);
+                if (pdfFile.exists()) {
+                    Desktop.getDesktop().open(pdfFile);
+                }
+            } catch (Exception e) {
+                System.out.println("Không thể mở file tự động: " + e.getMessage());
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Lỗi khi xuất hóa đơn: " + ex.getMessage(),
+                    "Lỗi Xuất PDF", JOptionPane.ERROR_MESSAGE);
+        }
     }
 }

@@ -37,6 +37,9 @@ public class RollCall extends JPanel {
     private JLabel Label_Status;
     private JButton btnCallRoll;
 
+    private String visibleInfo;
+    private String hiddenInfo;
+
     public RollCall() throws IOException, ClassNotFoundException, SQLException {
         setLayout(new BorderLayout());
         setBackground(Color.WHITE);
@@ -83,9 +86,13 @@ public class RollCall extends JPanel {
 
             // So sánh cả ngày và giờ
             if (currentDateTime.isAfter(employeeShiftTimeStar) && currentDateTime.isBefore(employeeShiftTimeEnd)) {
-                Model_Infor.addElement(
-                        "Tên: " + employee.getName() + " - " + "ID: " + employee.getId() + " - " + "Ca làm: "
-                                + employee.getEmployeeShift().getShiftID());
+                // Thông tin hiển thị
+                visibleInfo = "Tên: " + employee.getName() + " - " + "ID: " + employee.getId();
+                // Thông tin ẩn (Ca làm) với màu trùng với nền
+                hiddenInfo = "<font color='#FFFFFF'>Ca làm: " + employee.getEmployeeShift().getShiftID()
+                        + "</font>";
+
+                Model_Infor.addElement("<html>" + visibleInfo + hiddenInfo + "</html>");
             }
         }
     }
@@ -99,6 +106,14 @@ public class RollCall extends JPanel {
 
                 if (isSelected) {
                     component.setBackground(new Color(231, 215, 200));
+                    // Chuyển đổi chuỗi HTML để thay đổi màu của phần "Ca làm" thành màu nền khi
+                    // được chọn
+                    if (value instanceof String) {
+                        String text = (String) value;
+                        // Thay thế màu font để phù hợp với màu nền khi được chọn
+                        text = text.replace("<font color='#FFFFFF'>", "<font color='rgb(231, 215, 200)'>");
+                        ((JLabel) component).setText(text);
+                    }
                 }
 
                 return component;
@@ -108,13 +123,13 @@ public class RollCall extends JPanel {
 
     private void displaySelectedEmployee() throws ClassNotFoundException, IOException, SQLException {
         callRollPanel.removeAll();
-
         String selectedValue = listInfor.getSelectedValue();
         if (selectedValue != null) {
             // Tìm nhân viên được chọn từ danh sách employees
             Employee selected = null;
             for (Employee emp : employees) {
-                if (selectedValue.contains("ID: " + emp.getId()) && selectedValue.contains("Ca làm: " + emp.getEmployeeShift().getShiftID())) {
+                if (selectedValue.contains("ID: " + emp.getId())
+                        && selectedValue.contains("Ca làm: " + emp.getEmployeeShift().getShiftID())) {
                     selected = emp;
                     break;
                 }
@@ -131,7 +146,7 @@ public class RollCall extends JPanel {
                 infoLabel.setFont(new Font("Arial", Font.PLAIN, 20));
 
                 Label_Status = new JLabel("Trạng thái: " + selected.getEmployeeShift().getStatus());
-                Label_Status.setBounds(100, 577, 400, 30);
+                Label_Status.setBounds(100, 567, 400, 30);
                 Label_Status.setFont(new Font("Arial", Font.PLAIN, 20));
                 if (selected.getEmployeeShift().getStatus().equals("Đã điểm danh")) {
                     Label_Status.setForeground(Color.GREEN);
@@ -140,18 +155,20 @@ public class RollCall extends JPanel {
                 }
 
                 btnCallRoll = new JButton("Điểm danh");
-                btnCallRoll.setBounds(100, 610, 200, 30);
+                btnCallRoll.setBounds(100, 600, 200, 30);
                 btnCallRoll.setFont(new Font("Arial", Font.BOLD, 20));
                 System.out.println("Trạng thái: " + selected.getEmployeeShift().getStatus() +
                         "EmployeeID: " + selected.getId());
                 btnCallRoll.addActionListener(e -> {
                     try {
                         // Lấy trạng thái hiện tại từ database để đảm bảo tính chính xác
-                        String currentStatus = employeeRepository.getStatusFromSQL(selectedEmployee.getId(), selectedEmployee.getEmployeeShift().getShiftID());
+                        String currentStatus = employeeRepository.getStatusFromSQL(selectedEmployee.getId(),
+                                selectedEmployee.getEmployeeShift().getShiftID());
 
                         if (currentStatus != null && currentStatus.equalsIgnoreCase("chưa điểm danh")) {
                             // Cập nhật trạng thái trong database
-                            employeeRepository.setStatusFromSQL(selectedEmployee.getId(), "Đã điểm danh", selectedEmployee.getEmployeeShift().getShiftID());
+                            employeeRepository.setStatusFromSQL(selectedEmployee.getId(), "Đã điểm danh",
+                                    selectedEmployee.getEmployeeShift().getShiftID());
 
                             // Cập nhật UI
                             Label_Status.setText("Trạng thái: Đã điểm danh");
@@ -161,7 +178,8 @@ public class RollCall extends JPanel {
                             selectedEmployee.getEmployeeShift().setStatus("Đã điểm danh");
                         } else {
                             // Cập nhật trạng thái trong database
-                            employeeRepository.setStatusFromSQL(selectedEmployee.getId(), "chưa điểm danh", selectedEmployee.getEmployeeShift().getShiftID());
+                            employeeRepository.setStatusFromSQL(selectedEmployee.getId(), "chưa điểm danh",
+                                    selectedEmployee.getEmployeeShift().getShiftID());
 
                             // Cập nhật UI
                             Label_Status.setText("Trạng thái: chưa điểm danh");
@@ -173,7 +191,8 @@ public class RollCall extends JPanel {
 
                         // In ra log để debug
                         System.out.println("Trạng thái sau khi cập nhật: " +
-                                employeeRepository.getStatusFromSQL(selectedEmployee.getId(), selectedEmployee.getEmployeeShift().getShiftID()));
+                                employeeRepository.getStatusFromSQL(selectedEmployee.getId(),
+                                        selectedEmployee.getEmployeeShift().getShiftID()));
                     } catch (Exception ex) {
                         ex.printStackTrace();
                         JOptionPane.showMessageDialog(null,
@@ -191,7 +210,6 @@ public class RollCall extends JPanel {
                 }
 
                 String info = "<html>Tên: " + selected.getName() +
-                        "<br>Mã ca làm: " + selected.getEmployeeShift().getShiftID() +
                         "<br>Thời gian bắt đầu: "
                         + selected.getEmployeeShift().getStartTime().format(DateTimeFormatter.ofPattern("HH:mm")) +
                         "<br>Thời gian kết thúc: "
