@@ -1,5 +1,6 @@
 package View.StaffView;
 
+import Controller.StaffController.GamePanelController;
 import Utils.ValidationUtils;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -14,17 +15,12 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-
-import Controller.StaffController.GamePanelController;
-import Model.Customer;
-import Repository.Customer.CustomerRepository;
 
 public class GamePanel extends JPanel {
 	
@@ -67,29 +63,29 @@ public class GamePanel extends JPanel {
 		panel_Center.setLayout(null);
 		
 		ActionListener ac = new GamePanelController(this);
-		String phone = JOptionPane.showInputDialog(null, 
-			    "Nhập số điện thoại:", 
-			    "Thông tin khách hàng", 
-			    JOptionPane.QUESTION_MESSAGE);
+		// String phone = JOptionPane.showInputDialog(null, 
+		// 	    "Nhập số điện thoại:", 
+		// 	    "Thông tin khách hàng", 
+		// 	    JOptionPane.QUESTION_MESSAGE);
 
-			if (phone == null || phone.trim().isEmpty()) {
-			    JOptionPane.showMessageDialog(null, 
-			        "Số điện thoại không hợp lệ!", 
-			        "Lỗi", 
-			        JOptionPane.ERROR_MESSAGE);
-			    throw new IllegalArgumentException("Số điện thoại không được để trống");
-			}
+		// 	if (phone == null || phone.trim().isEmpty()) {
+		// 	    JOptionPane.showMessageDialog(null, 
+		// 	        "Số điện thoại không hợp lệ!", 
+		// 	        "Lỗi", 
+		// 	        JOptionPane.ERROR_MESSAGE);
+		// 	    throw new IllegalArgumentException("Số điện thoại không được để trống");
+		// 	}
 
-			CustomerRepository customerRepository = new CustomerRepository();
-			Customer customer = customerRepository.getCustomerByPhone(phone);
-			if (customer == null) {
-			    JOptionPane.showMessageDialog(null, 
-			        "Khách hàng không tồn tại! Vui lòng thêm khách hàng mới.", 
-			        "Thông báo", 
-			        JOptionPane.INFORMATION_MESSAGE);
-			    // Có thể thêm logic để tạo khách hàng mới
-			    return;
-			}
+		// 	CustomerRepository customerRepository = new CustomerRepository();
+		// 	Customer customer = customerRepository.getCustomerByPhone(phone);
+		// 	if (customer == null) {
+		// 	    JOptionPane.showMessageDialog(null, 
+		// 	        "Khách hàng không tồn tại! Vui lòng thêm khách hàng mới.", 
+		// 	        "Thông báo", 
+		// 	        JOptionPane.INFORMATION_MESSAGE);
+		// 	    // Có thể thêm logic để tạo khách hàng mới
+		// 	    return;
+		// 	}
 		
 		
 		imgDice = new String[]{"src\\image\\Customer_Image\\dice1.png", 

@@ -69,33 +69,6 @@ public class CustomerRepository implements ICustomerRespository {
     }
 
     @Override
-<<<<<<< Updated upstream
-    public void getCustomerByPhone(String phone) throws SQLException{
-        try {
-            connection = jdbcUtils.connect();
-=======
-    public Customer getCustomerByPhone(String phone) throws SQLException{
-        try {
-            connection = jdbcUtils.connect(); // Phải có để có connection
->>>>>>> Stashed changes
-            Statement stmt = connection.createStatement();
-            String sql = "SELECT * FROM Customer WHERE phone = '" + phone + "'";
-            ResultSet rs = stmt.executeQuery(sql);
-            if (rs.next()) {
-<<<<<<< Updated upstream
-                System.out.println("ID: " + rs.getInt("customerID"));
-                System.out.println("Name: " + rs.getString("name"));
-                System.out.println("Phone: " + rs.getString("phone"));
-                System.out.println("Point: " + rs.getInt("point"));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            connection.close();
-        }
-    }
-
-    @Override
     public int getCustomerIDByPhone(String phone) throws SQLException{
         try {
             connection = jdbcUtils.connect();
@@ -121,22 +94,28 @@ public class CustomerRepository implements ICustomerRespository {
             stmt.close();
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            connection.close();
         }
         return 0;
-=======
+    }
+
+    @Override
+    public Customer getCustomerByPhone(String phone) throws SQLException{
+        try {
+            connection = jdbcUtils.connect();
+            Statement stmt = connection.createStatement();
+            String sql = "SELECT * FROM Customer WHERE phone = '" + phone + "'";
+            ResultSet rs = stmt.executeQuery(sql);
+            if (rs.next()) {
                 int id = rs.getInt("customerID");
                 String name = rs.getString("name");
-            
                 double point = rs.getDouble("point");
-                return new Customer (id, name, phone, point); // Trả về đối tượng Customer
+                return new Customer(id, name, phone, point);
             }
         } catch (Exception e) {
             e.printStackTrace();
-        } 
-        return null;
->>>>>>> Stashed changes
+        } finally {
+            connection.close();
+        }
+        return null; // Không tìm thấy khách hàng
     }
 }
-
