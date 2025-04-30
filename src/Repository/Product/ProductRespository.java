@@ -480,4 +480,21 @@ public class ProductRespository implements IProductRespository {
             connection.close();
         }
     }
+    
+    @Override
+    public void updateTableStatus(int tableID, String status) throws SQLException {
+        try {
+            connection = jdbcUtils.connect();
+            String sql = "UPDATE TableCaffe SET status = ? WHERE TableID = ?";
+            var stmt = connection.prepareStatement(sql);
+            stmt.setString(1, status);
+            stmt.setInt(2, tableID);
+            stmt.executeUpdate();
+            stmt.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            connection.close();
+        }
+    }
 }

@@ -76,12 +76,13 @@ public class PaymentController implements ActionListener {
                     // productRespository.addPayment(orderID, paymentMethod, totalAmount, paymentTime);
 
                     // Xóa order sau khi thanh toán
-                    productRespository.delOrder(orderID, paymentInterface.tableID);
+                    // productRespository.delOrder(orderID, paymentInterface.tableID);
+                    productRespository.updateTableStatus(paymentInterface.tableID, "Trống");
                     JOptionPane.showMessageDialog(paymentInterface,
                             "Thanh toán thành công bằng " + paymentMethod + "!",
                             "Thông báo",
                             JOptionPane.INFORMATION_MESSAGE);
-
+                    paymentInterface.printBill();
                     BackToTable();
                 } else {
                     JOptionPane.showMessageDialog(paymentInterface,

@@ -65,10 +65,10 @@ public class ManagerJFrame extends JFrame {
         clock();
         panel.add(lblTime);
 
-        JLabel lblShift = new JLabel("Ca làm:");
-        lblShift.setBounds(780, 50, 150, 30);
-        lblShift.setFont(new Font("Arial", Font.PLAIN, 16));
-        panel.add(lblShift);
+        // JLabel lblShift = new JLabel("Ca làm:");
+        // lblShift.setBounds(780, 50, 150, 30);
+        // lblShift.setFont(new Font("Arial", Font.PLAIN, 16));
+        // panel.add(lblShift);
 
         JLabel lblNewLabel = new JLabel();
         lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
