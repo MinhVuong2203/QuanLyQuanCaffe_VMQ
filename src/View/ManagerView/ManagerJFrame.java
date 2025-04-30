@@ -6,6 +6,8 @@ import View.ManagerView.ManagerProduct.ManageProduct;
 import View.ManagerView.ManagerShift.EmployeeShiftPanel;
 import View.ManagerView.ManagerStaff.StaffManagerJPanel;
 import View.ManagerView.ManagerTable.TablePanel;
+import View.StaffView.GamePanel;
+import View.StaffView.RollCall;
 import View.StaffView.StaffJPanel;
 import View.StaffView.Table_JPanel;
 import java.awt.*;
@@ -105,7 +107,8 @@ public class ManagerJFrame extends JFrame {
 
         Table_JPanel table_JPanel = new Table_JPanel(manager.getId()); // Tạo đối tượng Table_JPanel nhưng do cập nhật trong quản lí nên không tạo
         contentPanel.add(table_JPanel, BorderLayout.CENTER);
-
+        
+        RollCall rollCall = new RollCall();
 
         EmployeeShiftPanel employeeShiftView = new EmployeeShiftPanel();  // Tạo đối tượng EmployeeShiftView để quay lại vẫn còn dữ liệu
         
@@ -115,6 +118,8 @@ public class ManagerJFrame extends JFrame {
 
         ManageProduct managerProduct = new ManageProduct(); // Tạo đối tượng ManageProduct để quay lại vẫn còn dữ liệu
 
+        GamePanel gamePanel = new GamePanel();
+        
         String[] buttonLabels = { "BÁN HÀNG", "ĐIỂM DANH","MINI GAME", "XẾP LỊCH", "BÀN", "NHÂN VIÊN", "SẢN PHẨM", "DOANH THU","ĐĂNG XUẤT"};
         String[] iconButtonLabels = { "src\\image\\SideBar_Image\\Sell.png", 
                                       "src\\image\\SideBar_Image\\DiemDanh.png", 
@@ -143,8 +148,7 @@ public class ManagerJFrame extends JFrame {
             ImageIcon scaleIcon_first_img = new ImageIcon(scale_iconButton);
             button.setIcon(scaleIcon_first_img);
 
-            ManagerJFrameController controller = new ManagerJFrameController(this, manager, contentPanel, 
-                                                employeeShiftView, tablePanel, staffManagerJPanel, managerProduct); // Hành động
+            ManagerJFrameController controller = new ManagerJFrameController(this, contentPanel, table_JPanel, rollCall, employeeShiftView, tablePanel, staffManagerJPanel, managerProduct, gamePanel); // Hành động
 
             button.addActionListener(controller.getButtonActionListener(label)); // Thêm ActionListener cho button
             menuPanel.add(button);

@@ -1,5 +1,6 @@
 package Repository.Customer;
 
+import Model.Customer;
 import java.sql.SQLException;
 
 public interface ICustomerRespository {

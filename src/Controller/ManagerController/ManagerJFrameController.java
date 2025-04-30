@@ -6,6 +6,7 @@ import View.ManagerView.ManagerProduct.ManageProduct;
 import View.ManagerView.ManagerShift.EmployeeShiftPanel;
 import View.ManagerView.ManagerStaff.StaffManagerJPanel;
 import View.ManagerView.ManagerTable.TablePanel;
+import View.StaffView.GamePanel;
 import View.StaffView.RollCall;
 import View.StaffView.Table_JPanel;
 import View.Window.WelcomeScreen;
@@ -18,21 +19,25 @@ import javax.swing.*;
 
 public class ManagerJFrameController {
     private ManagerJFrame managerJFrame;
-    private Manager manager;
     private JPanel contentPanel;
     private EmployeeShiftPanel employeeShiftPanel;
     private TablePanel tablePanel;
     private StaffManagerJPanel staffManagerJPanel;
     private ManageProduct managerProduct;
+    private GamePanel gamePanel;
+    private Table_JPanel table_JPanel;
+    private RollCall rollCall;
 
-    public ManagerJFrameController(ManagerJFrame managerJFrame, Manager manager, JPanel contentPanel, EmployeeShiftPanel employeeShiftPanel, TablePanel tablePanel,StaffManagerJPanel staffManagerJPanel, ManageProduct managerProduct) {
-        this.managerJFrame = managerJFrame;
-        this.manager = manager;
+    public ManagerJFrameController(ManagerJFrame managerJFrame, JPanel contentPanel, Table_JPanel table_JPanel, RollCall rollcall, EmployeeShiftPanel employeeShiftPanel, TablePanel tablePanel,StaffManagerJPanel staffManagerJPanel, ManageProduct managerProduct, GamePanel gamePanel) {
+        this.managerJFrame = managerJFrame;   
         this.contentPanel = contentPanel;
         this.employeeShiftPanel = employeeShiftPanel;
         this.tablePanel = tablePanel;
         this.staffManagerJPanel = staffManagerJPanel;
         this.managerProduct = managerProduct;
+        this.gamePanel = gamePanel;
+        this.table_JPanel = table_JPanel;
+        this.rollCall = rollcall;
     }
 
     public ActionListener getButtonActionListener(String command) {
@@ -49,13 +54,16 @@ public class ManagerJFrameController {
 
                 // Xử lý hành động
                 if (!command.equalsIgnoreCase("ĐĂNG XUẤT")) contentPanel.removeAll();
-                try {
+                
                     switch (command) {
                         case "BÁN HÀNG":
-                            contentPanel.add(new Table_JPanel(manager.getId()), BorderLayout.CENTER);
+                            contentPanel.add(table_JPanel, BorderLayout.CENTER);
                             break;
                         case "ĐIỂM DANH":
-                            contentPanel.add(new RollCall(), BorderLayout.CENTER);
+                            contentPanel.add(rollCall, BorderLayout.CENTER);
+                            break;
+                        case "MINI GAME":
+                            contentPanel.add(gamePanel, BorderLayout.CENTER);
                             break;
                         case "XẾP LỊCH":
                             contentPanel.add(employeeShiftPanel, BorderLayout.CENTER);
@@ -84,10 +92,7 @@ public class ManagerJFrameController {
                             }
                             break;
                     }
-                } catch (ClassNotFoundException | SQLException | IOException ex) {
-                    ex.printStackTrace();
-                    JOptionPane.showMessageDialog(managerJFrame, "Lỗi: " + ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
-                }
+                
                 contentPanel.revalidate();
                 contentPanel.repaint();
             }

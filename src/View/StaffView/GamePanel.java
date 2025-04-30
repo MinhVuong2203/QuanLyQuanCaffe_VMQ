@@ -7,11 +7,14 @@ import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.sql.SQLException;
 import java.text.DecimalFormat;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.JTextField;
@@ -20,6 +23,8 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import Controller.StaffController.GamePanelController;
+import Model.Customer;
+import Repository.Customer.CustomerRepository;
 
 public class GamePanel extends JPanel {
 	
@@ -45,13 +50,15 @@ public class GamePanel extends JPanel {
 	private JSeparator separator_3;
 	private JSeparator separator_4;
 	private JSeparator separator_5;
-	private JTextField textFieldSDT;
 	
 
 	/**
 	 * Create the panel.
+	 * @throws SQLException 
+	 * @throws IOException 
+	 * @throws ClassNotFoundException 
 	 */
-	public GamePanel() {
+	public GamePanel() throws ClassNotFoundException, IOException, SQLException {
 		setLayout(new BorderLayout(0, 0));
 		JPanel panel_Center = new JPanel();
 		panel_Center.setBackground(new Color(192, 192, 192));
@@ -60,7 +67,31 @@ public class GamePanel extends JPanel {
 		panel_Center.setLayout(null);
 		
 		ActionListener ac = new GamePanelController(this);
+		String phone = JOptionPane.showInputDialog(null, 
+			    "Nhập số điện thoại:", 
+			    "Thông tin khách hàng", 
+			    JOptionPane.QUESTION_MESSAGE);
 
+			if (phone == null || phone.trim().isEmpty()) {
+			    JOptionPane.showMessageDialog(null, 
+			        "Số điện thoại không hợp lệ!", 
+			        "Lỗi", 
+			        JOptionPane.ERROR_MESSAGE);
+			    throw new IllegalArgumentException("Số điện thoại không được để trống");
+			}
+
+			CustomerRepository customerRepository = new CustomerRepository();
+			Customer customer = customerRepository.getCustomerByPhone(phone);
+			if (customer == null) {
+			    JOptionPane.showMessageDialog(null, 
+			        "Khách hàng không tồn tại! Vui lòng thêm khách hàng mới.", 
+			        "Thông báo", 
+			        JOptionPane.INFORMATION_MESSAGE);
+			    // Có thể thêm logic để tạo khách hàng mới
+			    return;
+			}
+		
+		
 		imgDice = new String[]{"src\\image\\Customer_Image\\dice1.png", 
 							 "src\\image\\Customer_Image\\dice2.png",
 							 "src\\image\\Customer_Image\\dice3.png",
@@ -229,26 +260,36 @@ public class GamePanel extends JPanel {
 		btnDes.setOpaque(false);
 		panel_Center.add(btnDes);
 		
-		JLabel lblNewLabel_1 = new JLabel("Tài khoản khách hàng:");
+		JLabel lblNewLabel_1 = new JLabel("Khách hàng:");
 		lblNewLabel_1.setFont(new Font("Tahoma", Font.BOLD, 16));
-		lblNewLabel_1.setBounds(923, 13, 183, 24);
+		lblNewLabel_1.setBounds(923, 13, 108, 24);
 		panel_Center.add(lblNewLabel_1);
 		
-		textFieldSDT = new JTextField();
-		textFieldSDT.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		textFieldSDT.setBounds(923, 48, 183, 34);
-		panel_Center.add(textFieldSDT);
-		textFieldSDT.setColumns(10);
-		
 		JLabel imageCost = new JLabel("");
-		imageCost.setBounds(1313, 30, 34, 34);
+		imageCost.setBounds(1270, 70, 34, 34);
 		imageCost.setIcon(new ImageIcon(new ImageIcon("src\\image\\Customer_Image\\coin.png").getImage().getScaledInstance(34, 34, Image.SCALE_SMOOTH)));
 		panel_Center.add(imageCost);
 		
-		JLabel costLb = new JLabel("");
+		JLabel costLb = new JLabel("?");
 		costLb.setFont(new Font("Tahoma", Font.BOLD, 16));
-		costLb.setBounds(1128, 36, 175, 20);
+		costLb.setBounds(1127, 84, 135, 20);
+		costLb.setHorizontalAlignment(SwingConstants.RIGHT);
 		panel_Center.add(costLb);
+		
+		JLabel lbSDT = new JLabel("...");
+		lbSDT.setFont(new Font("Tahoma", Font.BOLD, 16));
+		lbSDT.setBounds(1030, 9, 188, 29);
+		panel_Center.add(lbSDT);
+		
+		JLabel lblNewLabel_1_1 = new JLabel("Số điện thoại:");
+		lblNewLabel_1_1.setFont(new Font("Tahoma", Font.BOLD, 16));
+		lblNewLabel_1_1.setBounds(923, 52, 111, 20);
+		panel_Center.add(lblNewLabel_1_1);
+		
+		JLabel lbSDT_1 = new JLabel("...");
+		lbSDT_1.setFont(new Font("Tahoma", Font.BOLD, 16));
+		lbSDT_1.setBounds(1040, 48, 188, 29);
+		panel_Center.add(lbSDT_1);
 		
 		TheLe_Panel.setVisible(false);
 		
@@ -308,7 +349,7 @@ public class GamePanel extends JPanel {
 		}
 	}
 	
-	public static void main(String[] args) throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
+	public static void main(String[] args) throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException, IOException, SQLException {
 	    // Đặt Look and Feel của hệ thống
 	    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 
