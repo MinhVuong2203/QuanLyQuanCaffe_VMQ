@@ -36,10 +36,12 @@ public class ManagerJFrame extends JFrame {
 
     public ManagerJFrame(Manager manager) throws IOException, ClassNotFoundException, SQLException {
         setTitle("Giao Diện Thu Ngân - Quán Cafe");
-        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        setIconImage(Toolkit.getDefaultToolkit().getImage("src\\image\\System_Image\\Quán Caffe MVQ _ Icon.png"));
+//        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        setSize(1300, 700);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        setResizable(false);
+//        setResizable(false);
         getContentPane().setLayout(new BorderLayout());
 
         // Panel Header (Thông tin nhân viên)

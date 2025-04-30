@@ -77,6 +77,7 @@ public class AddOrFixEmployeeJDialog extends JDialog {
 
 		setBounds(100, 100, 623, 497);
 		setLocationRelativeTo(null);
+		setIconImage(Toolkit.getDefaultToolkit().getImage("src\\image\\System_Image\\Quán Caffe MVQ _ Icon.png"));
 		this.setTitle(mode.equals("add") ? "Thêm nhân viên mới" : "Cập nhật thông tin nhân viên");
 		this.setIconImage(Toolkit.getDefaultToolkit().getImage("src\\image\\System_Image\\Quán Caffe MVQ _ Icon.png"));
 		getContentPane().setLayout(new BorderLayout());

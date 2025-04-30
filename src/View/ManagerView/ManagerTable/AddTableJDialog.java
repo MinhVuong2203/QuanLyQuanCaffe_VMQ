@@ -6,6 +6,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Toolkit;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
@@ -28,6 +29,7 @@ public class AddTableJDialog extends JDialog {
 	public AddTableJDialog(List<Table> listTable, TablePanel tablePanel) {
 		setBounds(100, 100, 339, 223);
 		getContentPane().setLayout(new BorderLayout());
+		setIconImage(Toolkit.getDefaultToolkit().getImage("src\\image\\System_Image\\Quán Caffe MVQ _ Icon.png"));
 		setTitle("Thêm bàn");
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setLocationRelativeTo(null);

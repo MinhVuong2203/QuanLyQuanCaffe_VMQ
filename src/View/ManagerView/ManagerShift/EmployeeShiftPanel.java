@@ -26,6 +26,7 @@ import org.w3c.dom.events.MouseEvent;
 import javax.swing.JScrollPane;
 
 import Utils.ConvertInto;
+import Utils.HoverEffect;
 import Utils.ValidationUtils;
 import Utils.file;
 
@@ -89,6 +90,7 @@ public class EmployeeShiftPanel extends JPanel {
         // Combobox    
         String[] listTime = {"Chọn", "1 tuần", "2 tuần", "3 tuần", "4 tuần"};
         JComboBox comboBox = new JComboBox<String>(listTime);
+        comboBox.setBackground(new Color(255, 255, 128));
         comboBox.setFont(new Font("Arial", Font.BOLD, 16));
         comboBox.setBounds(587, 21, 94, 31);
         comboBox.addActionListener(e -> {
@@ -106,9 +108,12 @@ public class EmployeeShiftPanel extends JPanel {
         panel_top.add(comboBox);
 
         JButton btnDongY = new JButton("Đồng ý");
-        btnDongY.setFont(new Font("Arial", Font.PLAIN, 18));
-        btnDongY.setBounds(1024, 24, 89, 28);
+        btnDongY.setBackground(new Color(0, 255, 128));
+        btnDongY.setFont(new Font("Arial", Font.BOLD, 16));
+        btnDongY.setBounds(1024, 24, 103, 28);
+        btnDongY.setBorderPainted(false);
         panel_top.add(btnDongY);
+        new HoverEffect(btnDongY, new Color(0, 255, 128), new Color(0, 200, 100));
         btnDongY.addActionListener(e -> {
             checkDate(fromDateChooser, toDateChooser);
             createShiftTable(fromDateChooser, toDateChooser); // Tạo bảng khi nhấn Đồng ý
@@ -116,17 +121,23 @@ public class EmployeeShiftPanel extends JPanel {
 
         // Thêm hai nút Xuất PDF và Xuất Excel
         JButton btnExportPDF = new JButton("Xuất PDF");
-        btnExportPDF.setIcon(new ImageIcon(new ImageIcon("src\\image\\Manager_Image\\pdf_img.png").getImage().getScaledInstance(26, 26, Image.SCALE_SMOOTH)));
+        btnExportPDF.setIcon(new ImageIcon(new ImageIcon("src\\image\\Manager_Image\\pdf_img.png").getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH)));
         btnExportPDF.setForeground(new Color(255, 0, 0));
         btnExportPDF.setBackground(new Color(240, 240, 240));
         btnExportPDF.setFont(new Font("Arial", Font.PLAIN, 18));
-        btnExportPDF.setBounds(272, 70, 120, 41);
+        btnExportPDF.setBounds(437, 70, 181, 41);
+        btnExportPDF.setBorderPainted(false);
+        new HoverEffect(btnExportPDF, new Color(255,255,255), new Color(196, 155, 155));
         panel_top.add(btnExportPDF);
 
         JButton btnExportExcel = new JButton("Xuất Excel");
+        btnExportExcel.setForeground(new Color(128, 255, 0));
+        btnExportExcel.setBackground(new Color(255, 255, 255));
         btnExportExcel.setFont(new Font("Arial", Font.PLAIN, 18));
-        btnExportExcel.setBounds(500, 70, 120, 28);
-        btnExportExcel.setIcon(new ImageIcon(new ImageIcon("src\\image\\Manager_Image\\excel_img.png").getImage().getScaledInstance(26, 26, Image.SCALE_SMOOTH)));
+        btnExportExcel.setBounds(720, 70, 181, 41);
+        btnExportExcel.setIcon(new ImageIcon(new ImageIcon("src\\image\\Manager_Image\\excel_img.png").getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH)));
+        btnExportExcel.setBorderPainted(false);
+        new HoverEffect(btnExportExcel, new Color(255,255,255), new Color(155, 196, 164));
         panel_top.add(btnExportExcel);
 
         // Xử lý sự kiện cho nút Xuất PDF

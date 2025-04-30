@@ -16,7 +16,7 @@ public class MaintenanceDialog extends JDialog {
     private JTextField idTextField;
 
     public MaintenanceDialog(List<Table> listTable, TablePanel tablePanel) {
-
+        setIconImage(Toolkit.getDefaultToolkit().getImage("src\\image\\System_Image\\Quán Caffe MVQ _ Icon.png"));
         setBounds(100, 100, 370, 190);
         getContentPane().setLayout(new BorderLayout());
         setTitle("Bảo trì / Gỡ bảo trì bàn");

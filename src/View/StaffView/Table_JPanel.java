@@ -62,7 +62,7 @@ public class Table_JPanel extends JPanel {
 	 * @throws SQLException
 	 */
 	public Table_JPanel(int id) throws ClassNotFoundException, SQLException, IOException {
-		setBackground(new Color(255, 255, 255));
+		setBackground(new Color(255, 255, 255));	
 		this.id = id;
 		ITableRespository tableRepository = new TableRepository();
 		listTables = new ArrayList<>();
@@ -89,10 +89,8 @@ public class Table_JPanel extends JPanel {
 			Button.setPreferredSize(new Dimension(170, 70));
 			// Lưu tableID vào thuộc tính của button để dễ truy xuất sau này
 			Button.putClientProperty("tableID", table.getTableID());
-
-			// 3 dòng này để xét màu background button được trên LookFeel
-			Button.setOpaque(true);
-			Button.setContentAreaFilled(true);
+			Button.setFont(new Font("Arial", Font.BOLD, 15));
+			// 1 dòng này để xét màu background button được trên LookFeel
 			Button.setBorderPainted(false);
 			///////////////////////////////////////
 			if (table.getStatus().equalsIgnoreCase("Trống"))

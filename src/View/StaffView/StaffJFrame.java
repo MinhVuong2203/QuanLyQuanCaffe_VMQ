@@ -30,6 +30,7 @@ public class StaffJFrame extends JFrame {
 
     public StaffJFrame(Employee employee) throws IOException, ClassNotFoundException, SQLException {
         setTitle("Giao Diện Thu Ngân - Quán Cafe");
+        setIconImage(Toolkit.getDefaultToolkit().getImage("src\\image\\System_Image\\Quán Caffe MVQ _ Icon.png"));
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);

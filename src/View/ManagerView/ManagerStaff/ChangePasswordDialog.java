@@ -6,6 +6,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Toolkit;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -30,6 +31,7 @@ public class ChangePasswordDialog extends JDialog {
      */
     public ChangePasswordDialog(AddOrFixEmployeeJDialog parent) {
         setTitle("Đổi mật khẩu");
+        setIconImage(Toolkit.getDefaultToolkit().getImage("src\\image\\System_Image\\Quán Caffe MVQ _ Icon.png"));
         setBounds(100, 100, 477, 308);
         setModal(true); // Đảm bảo tính modal
         setLocationRelativeTo(parent); // Đặt vị trí tương đối với cửa sổ cha
