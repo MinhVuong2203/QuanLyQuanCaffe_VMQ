@@ -13,6 +13,8 @@ import javax.swing.JOptionPane;
 import Model.Product;
 import Repository.Product.IProductRespository;
 import Repository.Product.ProductRespository;
+import Repository.Table.ITableRespository;
+import Repository.Table.TableRepository;
 import View.StaffView.StaffJPanel;
 
 public class StaffJPanelController implements ActionListener {
@@ -28,22 +30,40 @@ public class StaffJPanelController implements ActionListener {
         String str = e.getActionCommand();
         try {
             IProductRespository productRespository = new ProductRespository();
+            ITableRespository tableRespository = new TableRepository();
             if (str.equals("Đặt món")) {
                 String formattedTime = time.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
                 // JOptionPane.showMessageDialog(staffJPanel, "Chức năng này chưa được triển
                 // khai.");
-                productRespository.addToOrder(staffJPanel.getTempOrderId(), staffJPanel.tableID, staffJPanel.getEmpID(),
-                        100000, formattedTime);
-                // Lưu từng món vào OrderDetail
-                for (Map.Entry<Product, Integer> entry : staffJPanel.getTempOrderProducts().entrySet()) {
-                    Product product = entry.getKey();
-                    Integer quantity = entry.getValue();
-                    productRespository.addProductToOrderDetail(
-                            staffJPanel.getTempOrderId(),
-                            product.getProductID(),
-                            quantity,
-                            product.getPrice() * quantity,
-                            staffJPanel.tableID);
+                if (tableRespository.getTableStatus(staffJPanel.tableID).equals("Trống")) {
+                    productRespository.addToOrder(staffJPanel.getTempOrderId(), staffJPanel.tableID,
+                            staffJPanel.getEmpID(),
+                            100000, formattedTime);
+                    // Lưu từng món vào OrderDetail
+                    for (Map.Entry<Product, Integer> entry : staffJPanel.getTempOrderProducts().entrySet()) {
+                        Product product = entry.getKey();
+                        Integer quantity = entry.getValue();
+                        productRespository.addProductToOrderDetail(
+                                staffJPanel.getTempOrderId(),
+                                product.getProductID(),
+                                quantity,
+                                product.getPrice() * quantity,
+                                staffJPanel.tableID);
+                    }
+                } else if (tableRespository.getTableStatus(staffJPanel.tableID).equals("Có khách")) {
+                    productRespository.updateOrder(productRespository.getOrderIDByTableID(staffJPanel.tableID),
+                            staffJPanel.tableID, staffJPanel.getEmpID(), 100000, formattedTime);
+                    // Lưu từng món vào OrderDetail
+                    for (Map.Entry<Product, Integer> entry : staffJPanel.getTempOrderProducts().entrySet()) {
+                        Product product = entry.getKey();
+                        Integer quantity = entry.getValue();
+                        productRespository.addProductToOrderDetail(
+                                productRespository.getOrderIDByTableID(staffJPanel.tableID),
+                                product.getProductID(),
+                                quantity,
+                                product.getPrice() * quantity,
+                                staffJPanel.tableID);
+                    }
                 }
                 // Xóa dữ liệu tạm
                 staffJPanel.clearTempOrder();

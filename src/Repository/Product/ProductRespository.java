@@ -443,6 +443,7 @@ public class ProductRespository implements IProductRespository {
 
         return billInfo;
     }
+
     @Override
     public void addProduct(Product product) throws SQLException {
         try {
@@ -461,6 +462,7 @@ public class ProductRespository implements IProductRespository {
             connection.close();
         }
     }
+
     @Override
     public void updateProduct(Product product) throws SQLException {
         try {
@@ -480,7 +482,7 @@ public class ProductRespository implements IProductRespository {
             connection.close();
         }
     }
-    
+
     @Override
     public void updateTableStatus(int tableID, String status) throws SQLException {
         try {
@@ -495,6 +497,52 @@ public class ProductRespository implements IProductRespository {
             e.printStackTrace();
         } finally {
             connection.close();
+        }
+    }
+
+    @Override
+    public void updateOrder(int orderID, int tableID, int employeeID, int customerID, String orderTime)
+            throws SQLException {
+        Connection localConnection = null;
+        try {
+            localConnection = jdbcUtils.connect();
+            localConnection.setAutoCommit(false); // Bắt đầu transaction
+
+            // Cập nhật thông tin cơ bản của đơn hàng
+            String sql = "UPDATE Orders SET tableID = ?, employeeID = ?, customerID = ?, orderTime = ? WHERE orderID = ?";
+            var stmt = localConnection.prepareStatement(sql);
+            stmt.setInt(1, tableID);
+            stmt.setInt(2, employeeID);
+            stmt.setInt(3, customerID);
+            stmt.setString(4, orderTime);
+            stmt.setInt(5, orderID);
+            stmt.executeUpdate();
+            stmt.close();
+
+            // Tính toán lại tổng tiền dựa trên chi tiết đơn hàng
+            String updateTotalSql = "UPDATE Orders SET totalPrice = (SELECT SUM(price) FROM OrderDetail WHERE orderID = ?) "
+                    + "WHERE orderID = ?";
+            var updateStmt = localConnection.prepareStatement(updateTotalSql);
+            updateStmt.setInt(1, orderID);
+            updateStmt.setInt(2, orderID);
+            updateStmt.executeUpdate();
+            updateStmt.close();
+
+            // Commit transaction
+            localConnection.commit();
+
+            System.out.println("Đã cập nhật thông tin đơn hàng #" + orderID + " thành công!");
+        } catch (Exception e) {
+            // Rollback nếu có lỗi
+            if (localConnection != null) {
+                try {
+                    localConnection.rollback();
+                    System.err.println("Gặp lỗi, đã rollback giao dịch!");
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+            e.printStackTrace();
         }
     }
 }

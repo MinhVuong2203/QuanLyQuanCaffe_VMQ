@@ -13,7 +13,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.*;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -25,23 +24,16 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.border.TitledBorder;
-import javax.swing.*;
-
-import java.text.*;
 
 import com.itextpdf.io.image.ImageData;
 import com.itextpdf.io.image.ImageDataFactory;
-import com.itextpdf.kernel.geom.PageSize;
-import com.itextpdf.kernel.geom.Rectangle;
 
 import Controller.StaffController.PaymentController;
 import Repository.Product.IProductRespository;
 import Repository.Product.ProductRespository;
 
-import java.awt.Component;
 import java.awt.Desktop;
 import java.io.File;
-import java.io.FileOutputStream;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
@@ -52,8 +44,9 @@ import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.properties.TextAlignment;
 import com.itextpdf.layout.properties.HorizontalAlignment;
 import com.itextpdf.layout.element.Image;
-import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import com.itextpdf.kernel.font.PdfFont;
+import com.itextpdf.kernel.font.PdfFontFactory;
+import com.itextpdf.io.font.PdfEncodings;
 
 public class Payment_Interface extends JPanel {
     private Locale VN = new Locale("vi", "VN");
@@ -65,6 +58,7 @@ public class Payment_Interface extends JPanel {
     private JButton btnThanhToan;
     private JButton btnQuayLai;
     private JLabel qrCodeLabel;
+    private JScrollPane billScrollPane;
     public JComboBox<String> cboPaymentMethod;
     public int tableID;
     public int id;
@@ -118,6 +112,8 @@ public class Payment_Interface extends JPanel {
         billPanel.add(scrollPane, BorderLayout.CENTER);
         billPanel.add(qrPanel, BorderLayout.SOUTH);
 
+        billScrollPane = new JScrollPane(billPanel);
+        
         add(billPanel, BorderLayout.CENTER);
 
         // Panel chứa các nút điều khiển
@@ -334,20 +330,21 @@ public class Payment_Interface extends JPanel {
             PdfWriter writer = new PdfWriter(fileName);
             PdfDocument pdf = new PdfDocument(writer);
             Document document = new Document(pdf);
-
+            // Tạo font từ file trong hệ thống
+            PdfFont font = PdfFontFactory.createFont("c:/windows/fonts/arial.ttf", PdfEncodings.IDENTITY_H);
             // Thêm thông tin cửa hàng và hóa đơn
-            document.add(new Paragraph("CAFFEE VMQ").setTextAlignment(TextAlignment.CENTER).setFontSize(16));
-            document.add(new Paragraph("Địa chỉ: 478 Lê Văn Việt").setTextAlignment(TextAlignment.CENTER));
-            document.add(new Paragraph("Hotline: 0961892734").setTextAlignment(TextAlignment.CENTER));
-            document.add(new Paragraph("---------------------------------------"));
+            document.add(new Paragraph("CAFFEE VMQ").setFont(font).setTextAlignment(TextAlignment.CENTER).setFontSize(16));
+            document.add(new Paragraph("Địa chỉ: 478 Lê Văn Việt").setFont(font).setTextAlignment(TextAlignment.CENTER));
+            document.add(new Paragraph("Hotline: 0961892734").setFont(font).setTextAlignment(TextAlignment.CENTER));
+            // document.add(new Paragraph("---------------------------------------"));
             document.add(
-                    new Paragraph("PHIẾU TẠM TÍNH").setTextAlignment(TextAlignment.CENTER).setFontSize(14));
+                    new Paragraph("PHIẾU TẠM TÍNH").setFont(font).setTextAlignment(TextAlignment.CENTER).setFontSize(14));
 
             // Thêm thông tin hóa đơn
-            document.add(new Paragraph("Số: " + billInfo.get("orderID")));
-            document.add(new Paragraph("Ngày: " + new SimpleDateFormat("dd/MM/yyyy HH:mm").format(new Date())));
-            document.add(new Paragraph("Bàn: " + billInfo.get("tableName")));
-            document.add(new Paragraph("Thu ngân: " + billInfo.get("employeeName")));
+            document.add(new Paragraph("Số: " + billInfo.get("orderID")).setFont(font));
+            document.add(new Paragraph("Ngày: " + new SimpleDateFormat("dd/MM/yyyy HH:mm").format(new Date())).setFont(font));
+            document.add(new Paragraph("" + billInfo.get("tableName")).setFont(font));
+            document.add(new Paragraph("Thu ngân: " + billInfo.get("employeeName")).setFont(font));
             document.add(new Paragraph(" ")); // Khoảng trắng
 
             // Tạo bảng sản phẩm
@@ -356,14 +353,14 @@ public class Payment_Interface extends JPanel {
             table.setWidth(UnitValue.createPercentValue(100)); // Chiếm toàn bộ chiều rộng
 
             // Thêm header cho bảng
-            table.addHeaderCell(new Cell().add(new Paragraph("TT")).setTextAlignment(TextAlignment.CENTER));
+            table.addHeaderCell(new Cell().add(new Paragraph("TT")).setFont(font).setTextAlignment(TextAlignment.CENTER));
             table.addHeaderCell(
-                    new Cell().add(new Paragraph("Tên món")).setTextAlignment(TextAlignment.LEFT));
-            table.addHeaderCell(new Cell().add(new Paragraph("SL")).setTextAlignment(TextAlignment.CENTER));
+                    new Cell().add(new Paragraph("Tên món")).setFont(font).setTextAlignment(TextAlignment.LEFT));
+            table.addHeaderCell(new Cell().add(new Paragraph("SL")).setFont(font).setTextAlignment(TextAlignment.CENTER));
             table.addHeaderCell(
-                    new Cell().add(new Paragraph("Đơn giá")).setTextAlignment(TextAlignment.RIGHT));
+                    new Cell().add(new Paragraph("Đơn giá")).setFont(font).setTextAlignment(TextAlignment.RIGHT));
             table.addHeaderCell(
-                    new Cell().add(new Paragraph("Thành tiền")).setTextAlignment(TextAlignment.RIGHT));
+                    new Cell().add(new Paragraph("Thành tiền")).setFont(font).setTextAlignment(TextAlignment.RIGHT));
 
             // Thêm từng sản phẩm vào bảng
             List<Map<String, Object>> products = (List<Map<String, Object>>) billInfo.get("products");
@@ -380,33 +377,33 @@ public class Payment_Interface extends JPanel {
                 totalAmount += totalProductPrice;
 
                 // Thêm các cột vào bảng
-                table.addCell(new Cell().add(new Paragraph(String.valueOf(stt++)))
+                table.addCell(new Cell().add(new Paragraph(String.valueOf(stt++))).setFont(font)
                         .setTextAlignment(TextAlignment.CENTER));
-                table.addCell(new Cell().add(new Paragraph(productName)));
-                table.addCell(new Cell().add(new Paragraph(String.valueOf(quantity)))
+                table.addCell(new Cell().add(new Paragraph(productName)).setFont(font));
+                table.addCell(new Cell().add(new Paragraph(String.valueOf(quantity))).setFont(font)
                         .setTextAlignment(TextAlignment.CENTER));
-                table.addCell(new Cell().add(new Paragraph(formatter.format(unitPrice)))
+                table.addCell(new Cell().add(new Paragraph(formatter.format(unitPrice))).setFont(font)
                         .setTextAlignment(TextAlignment.RIGHT));
-                table.addCell(new Cell().add(new Paragraph(formatter.format(totalProductPrice)))
+                table.addCell(new Cell().add(new Paragraph(formatter.format(totalProductPrice))).setFont(font)
                         .setTextAlignment(TextAlignment.RIGHT));
             }
 
             // Thêm bảng vào document
             document.add(table);
-            document.add(new Paragraph(" ")); // Khoảng trắng
+            document.add(new Paragraph(" "));
 
             // Thêm tổng tiền
-            document.add(new Paragraph("---------------------------------------"));
-            document.add(new Paragraph(String.format("Tiền hàng: %s", formatter.format(totalAmount) + "đ"))
+            // document.add(new Paragraph("---------------------------------------"));
+            document.add(new Paragraph(String.format("Tiền hàng: %s", formatter.format(totalAmount) + "đ")).setFont(font)
                     .setTextAlignment(TextAlignment.RIGHT));
-            document.add(new Paragraph(String.format("Tổng thanh toán: %s", formatter.format(totalAmount) + "đ"))
+            document.add(new Paragraph(String.format("Tổng thanh toán: %s", formatter.format(totalAmount) + "đ")).setFont(font)
                     .setTextAlignment(TextAlignment.RIGHT));
-            document.add(new Paragraph(String.format("Cần phải thu: %s", formatter.format(totalAmount) + "đ"))
+            document.add(new Paragraph(String.format("Cần phải thu: %s", formatter.format(totalAmount) + "đ")).setFont(font)
                     .setTextAlignment(TextAlignment.RIGHT));
-            document.add(new Paragraph(" ")); // Khoảng trắng
+            document.add(new Paragraph(" "));
 
             // Footer
-            document.add(new Paragraph("Quý khách vui lòng kiểm tra kỹ hóa đơn trước khi thanh toán!")
+            document.add(new Paragraph("Quý khách vui lòng kiểm tra kỹ hóa đơn trước khi thanh toán!").setFont(font)
                     .setTextAlignment(TextAlignment.CENTER).setFontSize(10));
 
             // Thêm QR code nếu có
@@ -422,7 +419,6 @@ public class Payment_Interface extends JPanel {
             } catch (Exception e) {
                 System.out.println("Không tìm thấy hình ảnh QR code: " + e.getMessage());
             }
-
             // Đóng document
             document.close();
 

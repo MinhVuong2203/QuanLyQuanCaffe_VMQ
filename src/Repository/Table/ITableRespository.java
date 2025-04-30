@@ -10,4 +10,5 @@ public interface ITableRespository {
     public void updateTable(int id, String name) throws SQLException, ClassNotFoundException;
     public void updateTableStatus(int tableId, String status) throws SQLException, ClassNotFoundException;
     public int getTableIDByName(String name) throws SQLException, ClassNotFoundException;
+    public String getTableStatus(int tableId) throws SQLException, ClassNotFoundException;
 }

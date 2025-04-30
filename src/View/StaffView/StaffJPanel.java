@@ -85,7 +85,7 @@ public class StaffJPanel extends JPanel {
         total_monney.setColumns(10);
         total_monney.setEditable(false);
 
-        JLabel Label_TKKH = new JLabel("Tài khoản khách hàng: ");
+        JLabel Label_TKKH = new JLabel("SĐT khách hàng: ");
         Label_TKKH.setFont(new Font("Arial", Font.PLAIN, 16));
         Label_TKKH.setBounds(10, 21, 162, 24);
         order.add(Label_TKKH);

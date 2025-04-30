@@ -27,6 +27,7 @@ public class Table_JPanel extends JPanel {
 	public List<JButton> tableButtons; // danh sách nút nhấn
 	public List<Table> listTables; // danh sách table trong sql
 	public Table table = new Table();
+	public JButton orderButton;
 	public int tableID;
 	public JPanel rightPanel;
 	public JPanel firstPanel;
@@ -145,7 +146,7 @@ public class Table_JPanel extends JPanel {
 		// 		}
 		// 	}
 		// });
-		btnNewButton.setBounds(263, 461, 159, 42);
+		btnNewButton.setBounds(163, 461, 159, 42);
 		rightPanel.add(btnNewButton);
 
 		table_people = "src\\image\\Table_image\\Table_People.png";
@@ -228,14 +229,22 @@ public class Table_JPanel extends JPanel {
 					this.table_people = "src\\image\\Table_image\\Table_Empty.png";
 					this.btnNewButton.setText("Gọi món");
 					this.rightPanel.setBackground(new Color(144, 238, 144));
+					rightPanel.remove(orderButton);
 				} else if (table.getStatus().equalsIgnoreCase("Có khách")) {
 					this.table_people = "src\\image\\Table_image\\Table_People.png";
 					this.btnNewButton.setText("Thanh toán");
 					this.rightPanel.setBackground(new Color(236, 112, 99));
+					orderButton = new JButton("Gọi món");
+					orderButton.setFont(new Font("Arial", Font.PLAIN, 20));
+					orderButton.setBounds(342, 461, 159, 42);
+					rightPanel.add(orderButton);
+					ActionListener acRight = new TableRightController(this);
+					orderButton.addActionListener(acRight);
 				} else if (table.getStatus().equalsIgnoreCase("Bảo trì")) {
 					this.table_people = "src\\image\\Table_image\\repair_img.png";
 					this.btnNewButton.setText("Đang bảo trì");
 					this.rightPanel.setBackground(new Color(254, 250, 220));
+					rightPanel.remove(orderButton);
 				}
 
 				ImageIcon img = new ImageIcon(table_people);

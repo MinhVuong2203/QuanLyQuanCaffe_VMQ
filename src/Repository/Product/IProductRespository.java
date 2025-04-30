@@ -23,4 +23,5 @@ public interface IProductRespository {
     public void addProduct(Product product) throws SQLException;
     public void updateProduct(Product product) throws SQLException;
     public void updateTableStatus(int tableID, String status) throws SQLException;
+    public void updateOrder(int orderID, int tableID, int employeeID, int customerID, String orderTime) throws SQLException;
 }

@@ -112,4 +112,28 @@ public class TableRepository implements ITableRespository {
         }
         return -1;
     }
+
+    @Override
+    public String getTableStatus(int tableId) throws SQLException, ClassNotFoundException {
+        try {
+            connection = jdbcUtils.connect();
+            Statement stmt = connection.createStatement();
+            String sql = "SELECT status FROM TableCaffe WHERE tableID = " + tableId;
+            ResultSet rs = stmt.executeQuery(sql);
+
+            if (rs.next()) {
+                String status = rs.getString("status");
+                rs.close();
+                stmt.close();
+                return status;
+            }
+
+            rs.close();
+            stmt.close();
+            return null; // Return null if table not found
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
