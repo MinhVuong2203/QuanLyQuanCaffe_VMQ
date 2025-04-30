@@ -10,11 +10,14 @@ import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 import Controller.StaffController.GamePanelController;
 
@@ -42,6 +45,7 @@ public class GamePanel extends JPanel {
 	private JSeparator separator_3;
 	private JSeparator separator_4;
 	private JSeparator separator_5;
+	private JTextField textFieldSDT;
 	
 
 	/**
@@ -225,6 +229,27 @@ public class GamePanel extends JPanel {
 		btnDes.setOpaque(false);
 		panel_Center.add(btnDes);
 		
+		JLabel lblNewLabel_1 = new JLabel("Tài khoản khách hàng:");
+		lblNewLabel_1.setFont(new Font("Tahoma", Font.BOLD, 16));
+		lblNewLabel_1.setBounds(923, 13, 183, 24);
+		panel_Center.add(lblNewLabel_1);
+		
+		textFieldSDT = new JTextField();
+		textFieldSDT.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		textFieldSDT.setBounds(923, 48, 183, 34);
+		panel_Center.add(textFieldSDT);
+		textFieldSDT.setColumns(10);
+		
+		JLabel imageCost = new JLabel("");
+		imageCost.setBounds(1313, 30, 34, 34);
+		imageCost.setIcon(new ImageIcon(new ImageIcon("src\\image\\Customer_Image\\coin.png").getImage().getScaledInstance(34, 34, Image.SCALE_SMOOTH)));
+		panel_Center.add(imageCost);
+		
+		JLabel costLb = new JLabel("");
+		costLb.setFont(new Font("Tahoma", Font.BOLD, 16));
+		costLb.setBounds(1128, 36, 175, 20);
+		panel_Center.add(costLb);
+		
 		TheLe_Panel.setVisible(false);
 		
 		btn_Lac.addActionListener(ac);
@@ -281,6 +306,23 @@ public class GamePanel extends JPanel {
 			df.setGroupingUsed(false); // Tắt dấu phân cách
 			this.bet_text.setText(df.format(x));		
 		}
+	}
+	
+	public static void main(String[] args) throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
+	    // Đặt Look and Feel của hệ thống
+	    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+
+	    // Tạo JFrame
+	    JFrame frame = new JFrame("Game Panel");
+	    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Thoát chương trình khi đóng cửa sổ
+	    frame.setSize(1200, 600); // Đặt kích thước JFrame (có thể điều chỉnh)
+
+	    // Tạo GamePanel và thêm vào JFrame
+	    GamePanel gamePanel = new GamePanel();
+	    frame.getContentPane().add(gamePanel);
+
+	    // Hiển thị JFrame
+	    frame.setVisible(true);
 	}
 }
 

@@ -2,6 +2,7 @@ package View.ManagerView;
 
 import Controller.ManagerController.ManagerJFrameController;
 import Model.Manager;
+import View.ManagerView.ManagerProduct.ManageProduct;
 import View.ManagerView.ManagerShift.EmployeeShiftPanel;
 import View.ManagerView.ManagerStaff.StaffManagerJPanel;
 import View.ManagerView.ManagerTable.TablePanel;
@@ -112,13 +113,17 @@ public class ManagerJFrame extends JFrame {
 
         StaffManagerJPanel staffManagerJPanel = new StaffManagerJPanel(); // Tạo đối tượng StaffManagerJPanel để quay lại vẫn còn dữ liệu
 
-        String[] buttonLabels = { "BÁN HÀNG", "ĐIỂM DANH", "XẾP LỊCH", "BÀN", "NHÂN VIÊN", "DOANH THU","ĐĂNG XUẤT"};
+        ManageProduct managerProduct = new ManageProduct(); // Tạo đối tượng ManageProduct để quay lại vẫn còn dữ liệu
+
+        String[] buttonLabels = { "BÁN HÀNG", "ĐIỂM DANH","MINI GAME", "XẾP LỊCH", "BÀN", "NHÂN VIÊN", "SẢN PHẨM", "DOANH THU","ĐĂNG XUẤT"};
         String[] iconButtonLabels = { "src\\image\\SideBar_Image\\Sell.png", 
                                       "src\\image\\SideBar_Image\\DiemDanh.png", 
+                                      "src\\image\\SideBar_Image\\game_img.png",
                                       "src\\image\\SideBar_Image\\calendar.png", 
                                       "src\\image\\Table_image\\table_img.png", 
                                       "src\\image\\Employee_Image\\Employee_default.png", 
-                                      "src\\image\\SideBar_Image\\\\Revenue.png",
+                                      "src\\image\\SideBar_Image\\product_img.png", 
+                                      "src\\image\\SideBar_Image\\Revenue.png",
                                       "src\\image\\SideBar_Image\\SignOut.png"};
         int index_iconButtonLabels = 0;
         for (String label : buttonLabels) {
@@ -139,7 +144,7 @@ public class ManagerJFrame extends JFrame {
             button.setIcon(scaleIcon_first_img);
 
             ManagerJFrameController controller = new ManagerJFrameController(this, manager, contentPanel, 
-                                                employeeShiftView, tablePanel, staffManagerJPanel); // Hành động
+                                                employeeShiftView, tablePanel, staffManagerJPanel, managerProduct); // Hành động
 
             button.addActionListener(controller.getButtonActionListener(label)); // Thêm ActionListener cho button
             menuPanel.add(button);

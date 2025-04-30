@@ -2,6 +2,7 @@ package View.StaffView;
 
 import Controller.StaffController.StaffJFrameController;
 import Model.Employee;
+import Model.Table;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
@@ -61,11 +62,6 @@ public class StaffJFrame extends JFrame {
         clock();
         panel.add(lblTime);
 
-        // JLabel lblShift = new JLabel("Ca làm:");
-        // lblShift.setBounds(780, 50, 150, 30);
-        // lblShift.setFont(new Font("Arial", Font.PLAIN, 16));
-        // panel.add(lblShift);
-
         JLabel lblNewLabel = new JLabel();
         lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
@@ -94,8 +90,6 @@ public class StaffJFrame extends JFrame {
         sidebar.setPreferredSize(new Dimension(10, getHeight()));
         sidebar.setBackground(new Color(46, 204, 113));
 
-        // GradientPanel menuPanel = new GradientPanel(new Color(27, 94, 32), new
-        // Color(56, 142, 60)); // Màu chuyển
         menuPanel = new Panel();
         menuPanel.setLayout(new GridLayout(10, 1, 0, 0));
 
@@ -103,16 +97,18 @@ public class StaffJFrame extends JFrame {
         JPanel contentPanel = new JPanel(new BorderLayout()); 
         contentPanel.setBackground(Color.LIGHT_GRAY);
         
-        StaffJFrameController controller = new StaffJFrameController(this, employee, contentPanel); // Hành động
-
-        // Initialize staffInterface by default
-        // staffInterface = new StaffJPanel();
         Table_JPanel table_JPanel = new Table_JPanel(employee.getId());
         contentPanel.add(table_JPanel, BorderLayout.CENTER);
+        RollCall rollCall = new RollCall();
+        GamePanel gamePanel = new GamePanel(); // Mini game panel
 
-        String[] buttonLabels = {"BÁN HÀNG", "ĐIỂM DANH", "ĐĂNG XUẤT"};
-        String[] iconButtonLabels = { "src\\image\\SideBar_Image\\Sell.png", "src\\image\\SideBar_Image\\DiemDanh.png",
-                "src\\image\\SideBar_Image\\SignOut.png" };
+        StaffJFrameController controller = new StaffJFrameController(this, contentPanel, table_JPanel, rollCall, gamePanel); // Hành động
+
+        String[] buttonLabels = {"BÁN HÀNG", "ĐIỂM DANH", "MINI GAME", "ĐĂNG XUẤT"};
+        String[] iconButtonLabels = { "src\\image\\SideBar_Image\\Sell.png", 
+                                      "src\\image\\SideBar_Image\\DiemDanh.png",
+                                      "src\\image\\SideBar_Image\\game_img.png",
+                                      "src\\image\\SideBar_Image\\SignOut.png"};
         int index_iconButtonLabels = 0;
         for (String label : buttonLabels) {
             JButton button = new JButton(label);

@@ -2,6 +2,7 @@ package Controller.ManagerController;
 
 import Model.Manager;
 import View.ManagerView.ManagerJFrame;
+import View.ManagerView.ManagerProduct.ManageProduct;
 import View.ManagerView.ManagerShift.EmployeeShiftPanel;
 import View.ManagerView.ManagerStaff.StaffManagerJPanel;
 import View.ManagerView.ManagerTable.TablePanel;
@@ -22,14 +23,16 @@ public class ManagerJFrameController {
     private EmployeeShiftPanel employeeShiftPanel;
     private TablePanel tablePanel;
     private StaffManagerJPanel staffManagerJPanel;
+    private ManageProduct managerProduct;
 
-    public ManagerJFrameController(ManagerJFrame managerJFrame, Manager manager, JPanel contentPanel, EmployeeShiftPanel employeeShiftPanel, TablePanel tablePanel,StaffManagerJPanel staffManagerJPanel) {
+    public ManagerJFrameController(ManagerJFrame managerJFrame, Manager manager, JPanel contentPanel, EmployeeShiftPanel employeeShiftPanel, TablePanel tablePanel,StaffManagerJPanel staffManagerJPanel, ManageProduct managerProduct) {
         this.managerJFrame = managerJFrame;
         this.manager = manager;
         this.contentPanel = contentPanel;
         this.employeeShiftPanel = employeeShiftPanel;
         this.tablePanel = tablePanel;
         this.staffManagerJPanel = staffManagerJPanel;
+        this.managerProduct = managerProduct;
     }
 
     public ActionListener getButtonActionListener(String command) {
@@ -62,6 +65,9 @@ public class ManagerJFrameController {
                             break;
                         case "NHÂN VIÊN":
                             contentPanel.add(staffManagerJPanel, BorderLayout.CENTER);
+                            break;
+                        case "SẢN PHẨM":
+                            contentPanel.add(managerProduct, BorderLayout.CENTER);
                             break;
                         case "DOANH THU":
                             // Thêm logic cho DOANH THU (chưa được triển khai)
