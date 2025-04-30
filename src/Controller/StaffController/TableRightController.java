@@ -45,6 +45,7 @@ public class TableRightController implements ActionListener {
                     }
                 } catch (Exception e1) {
                     // TODO: handle exception
+                    e1.printStackTrace();
                 }
             } else if (str.equals("Gọi món")) {
                 try {

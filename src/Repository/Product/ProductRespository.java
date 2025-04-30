@@ -545,4 +545,21 @@ public class ProductRespository implements IProductRespository {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public void updateOrderStatus(int orderID, String status) throws SQLException {
+        try {
+            connection = jdbcUtils.connect();
+            String sql = "UPDATE Orders SET status = ? WHERE orderID = ?";
+            var stmt = connection.prepareStatement(sql);
+            stmt.setString(1, status);
+            stmt.setInt(2, orderID);
+            stmt.executeUpdate();
+            stmt.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            connection.close();
+        }
+    }
 }

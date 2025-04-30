@@ -3,6 +3,8 @@ package View.StaffView;
 import Model.Product;
 import Model.Table;
 import Repository.Product.ProductRespository;
+import Repository.Customer.CustomerRepository;
+import Repository.Customer.ICustomerRespository;
 import Repository.Product.IProductRespository;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -46,6 +48,8 @@ public class StaffJPanel extends JPanel {
     private JPanel order;
     private JScrollPane scrollPane_Menu;
 
+    private JLabel Label_TKKH;
+
     // private int orderId = 7; // Added orderId for saving order details
 
     public int tableID;
@@ -85,7 +89,7 @@ public class StaffJPanel extends JPanel {
         total_monney.setColumns(10);
         total_monney.setEditable(false);
 
-        JLabel Label_TKKH = new JLabel("SĐT khách hàng: ");
+        Label_TKKH = new JLabel("SĐT khách hàng: ");
         Label_TKKH.setFont(new Font("Arial", Font.PLAIN, 16));
         Label_TKKH.setBounds(10, 21, 162, 24);
         order.add(Label_TKKH);
@@ -357,6 +361,22 @@ public class StaffJPanel extends JPanel {
                 }
             }
         }
+
+        try {
+            ICustomerRespository customerRespository = new CustomerRepository();
+            String phone = textField_TKKH.getText().trim();
+            if (phone.isEmpty()) {
+                return;
+            } else {
+                String totalText = total_monney.getText().replace("đ", "").replace(",", ".").trim();
+                double totalmoney = Double.parseDouble(totalText);
+                int cusID = customerRespository.getCustomerIDByPhone(phone);
+                customerRespository.plusPoint(cusID, totalmoney); // Cộng điểm cho khách hàng
+            }
+        } catch (ClassNotFoundException | IOException | SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
     private boolean orderContainsProduct(String productName) {
@@ -626,5 +646,13 @@ public class StaffJPanel extends JPanel {
 
     public void setTempOrderId(int tempOrderId) {
         this.tempOrderId = tempOrderId;
+    }
+
+    public JLabel getLabel_TKKH() {
+        return Label_TKKH;
+    }
+
+    public void setLabel_TKKH(JLabel label_TKKH) {
+        Label_TKKH = label_TKKH;
     }
 }

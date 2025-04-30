@@ -229,7 +229,9 @@ public class Table_JPanel extends JPanel {
 					this.table_people = "src\\image\\Table_image\\Table_Empty.png";
 					this.btnNewButton.setText("Gọi món");
 					this.rightPanel.setBackground(new Color(144, 238, 144));
-					rightPanel.remove(orderButton);
+					if (orderButton != null && orderButton.getParent() != null) {
+						rightPanel.remove(orderButton);
+					}
 				} else if (table.getStatus().equalsIgnoreCase("Có khách")) {
 					this.table_people = "src\\image\\Table_image\\Table_People.png";
 					this.btnNewButton.setText("Thanh toán");
@@ -244,7 +246,9 @@ public class Table_JPanel extends JPanel {
 					this.table_people = "src\\image\\Table_image\\repair_img.png";
 					this.btnNewButton.setText("Đang bảo trì");
 					this.rightPanel.setBackground(new Color(254, 250, 220));
-					rightPanel.remove(orderButton);
+					if (orderButton != null && orderButton.getParent() != null) {
+						rightPanel.remove(orderButton);
+					}
 				}
 
 				ImageIcon img = new ImageIcon(table_people);

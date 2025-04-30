@@ -66,5 +66,57 @@ public class CustomerRepository implements ICustomerRespository {
             connection.close();
         }
     }
+
+    @Override
+    public void getCustomerByPhone(String phone) throws SQLException{
+        try {
+            connection = jdbcUtils.connect();
+            Statement stmt = connection.createStatement();
+            String sql = "SELECT * FROM Customer WHERE phone = '" + phone + "'";
+            ResultSet rs = stmt.executeQuery(sql);
+            if (rs.next()) {
+                System.out.println("ID: " + rs.getInt("customerID"));
+                System.out.println("Name: " + rs.getString("name"));
+                System.out.println("Phone: " + rs.getString("phone"));
+                System.out.println("Point: " + rs.getInt("point"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            connection.close();
+        }
+    }
+
+    @Override
+    public int getCustomerIDByPhone(String phone) throws SQLException{
+        try {
+            connection = jdbcUtils.connect();
+            Statement stmt = connection.createStatement();
+            String sql = "SELECT customerID FROM Customer WHERE phone = '" + phone + "'";
+            ResultSet rs = stmt.executeQuery(sql);
+            if (rs.next()) return rs.getInt("customerID");
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            connection.close();
+        }
+        return 0; // Không có ID nào
+    }
+
+    @Override
+    public double plusPoint(int customerID, double money) throws SQLException{
+        try {
+            connection = jdbcUtils.connect();
+            Statement stmt = connection.createStatement();
+            String sql = "UPDATE Customer SET point = point + " + money / 100000 + " WHERE customerID = " + customerID;
+            stmt.executeUpdate(sql);
+            stmt.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            connection.close();
+        }
+        return 0;
+    }
 }
 
