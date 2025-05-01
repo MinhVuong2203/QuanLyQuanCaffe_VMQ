@@ -86,7 +86,7 @@ public class Payment_Interface extends JPanel {
 
         // Tạo JLabel cho QR Code
         qrCodeLabel = new JLabel();
-        qrCodeLabel.setHorizontalAlignment(JLabel.CENTER);
+        qrCodeLabel.setHorizontalAlignment(JLabel.LEFT);
 
         // Tải hình ảnh QR code
         try {
@@ -104,7 +104,7 @@ public class Payment_Interface extends JPanel {
         qrPanel.setBackground(Color.WHITE);
         qrPanel.add(qrCodeLabel, BorderLayout.CENTER);
 
-        JLabel qrInfoLabel = new JLabel("Quét mã để thanh toán", JLabel.CENTER);
+        JLabel qrInfoLabel = new JLabel("Quét mã để thanh toán", JLabel.LEFT);
         qrInfoLabel.setFont(new Font("Arial", Font.BOLD, 12));
         qrPanel.add(qrInfoLabel, BorderLayout.SOUTH);
 
