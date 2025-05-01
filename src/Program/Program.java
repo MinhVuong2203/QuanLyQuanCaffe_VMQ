@@ -1,4 +1,4 @@
-package TEST;
+package Program;
 
 import View.Window.WelcomeScreen;
 import javax.swing.SwingUtilities;

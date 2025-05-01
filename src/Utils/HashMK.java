@@ -1,7 +1,4 @@
-package TEST;
-
-import Utils.ConvertInto;
-
+package Utils;
 
 public class HashMK {
     public static void main(String[] args) {
