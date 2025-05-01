@@ -509,7 +509,7 @@ public class ProductRespository implements IProductRespository {
             localConnection.setAutoCommit(false); // Bắt đầu transaction
 
             // Cập nhật thông tin cơ bản của đơn hàng
-            String sql = "UPDATE Orders SET tableID = ?, employeeID = ?, customerID = ?, orderTime = ? WHERE orderID = ?";
+            String sql = "UPDATE Orders SET tableID = ?, employeeID = ?, customerID = ?, orderTime = ? WHERE orderID = ? and status = N'Đang chuẩn bị'";
             var stmt = localConnection.prepareStatement(sql);
             stmt.setInt(1, tableID);
             stmt.setInt(2, employeeID);
