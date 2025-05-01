@@ -3,6 +3,9 @@ package Controller.StaffController;
 import View.StaffView.Table_JPanel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.sql.SQLException;
+
 import javax.swing.JButton;
 
 public class TableLeftController implements ActionListener{
@@ -19,6 +22,11 @@ public class TableLeftController implements ActionListener{
         int tableID = (int) sourceButton.getClientProperty("tableID");
         tableJPanel.tableID = tableID;
         this.tableJPanel.updateRight();
-        tableJPanel.updateInfo(sourceButton.getText());
+        try {
+			tableJPanel.updateInfo(sourceButton.getText());
+		} catch (ClassNotFoundException | IOException | SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
     }
 }

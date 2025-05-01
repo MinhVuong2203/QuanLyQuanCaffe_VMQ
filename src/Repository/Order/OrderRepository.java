@@ -62,6 +62,23 @@ public class OrderRepository implements IOrderRepository {
         
     }
 
+    @Override
+    public String getTimeByTableID(int tableID) throws SQLException {
+        try {
+            connection = jdbcUtils.connect();
+            String sql = "SELECT orderTime FROM Orders WHERE tableID = " + tableID + " AND status = N'Đang chuẩn bị'";
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(sql);
+            if (resultSet.next()) {
+                return resultSet.getString("orderTime");
+            }
+            statement.close();
+            resultSet.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } 
+        return null;
+    }
    
 
 }

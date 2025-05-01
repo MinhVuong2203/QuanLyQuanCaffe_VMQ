@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface IOrderRepository {
     List<Order> getAllOrders() throws SQLException;
+    public String getTimeByTableID(int tableID) throws SQLException;
 }
