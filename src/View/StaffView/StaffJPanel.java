@@ -1,7 +1,6 @@
 package View.StaffView;
 
 import Model.Product;
-import Model.Table;
 import Repository.Product.ProductRespository;
 import Repository.Customer.CustomerRepository;
 import Repository.Customer.ICustomerRespository;
@@ -13,14 +12,12 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.text.DateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.table.DefaultTableModel;
 
 import Controller.StaffController.StaffJPanelController;
 
@@ -43,17 +40,14 @@ public class StaffJPanel extends JPanel {
     private Map<String, Double> priceMap;
     private Map<String, String> imgMap;
 
-    private JTextArea textArea_Bill;
-
     private JPanel order;
     private JScrollPane scrollPane_Menu;
 
     private JLabel Label_TKKH;
-
-    // private int orderId = 7; // Added orderId for saving order details
-
+    
     public int tableID;
     public int empID;
+    public String customerPhone;
 
     private Map<Product, Integer> tempOrderProducts = new HashMap<>(); // Lưu tạm các món được chọn
     private int tempOrderId = productDao.initTempOrderId();
@@ -79,12 +73,12 @@ public class StaffJPanel extends JPanel {
 
         JLabel Label_monney = new JLabel("Tổng tiền:");
         Label_monney.setFont(new Font("Arial", Font.BOLD, 16));
-        Label_monney.setBounds(0, 303, 78, 28);
+        Label_monney.setBounds(0, 503, 78, 28);
         order.add(Label_monney);
 
         total_monney = new JTextField();
         total_monney.setFont(new Font("Arial", Font.PLAIN, 16));
-        total_monney.setBounds(88, 304, 118, 28);
+        total_monney.setBounds(88, 503, 118, 28);
         order.add(total_monney);
         total_monney.setColumns(10);
         total_monney.setEditable(false);
@@ -101,14 +95,14 @@ public class StaffJPanel extends JPanel {
         textField_TKKH.setColumns(10);
 
         JScrollPane scrollPane_dishSelected = new JScrollPane();
-        scrollPane_dishSelected.setBounds(0, 73, 540, 215);
+        scrollPane_dishSelected.setBounds(0, 73, 540, 415);
         order.add(scrollPane_dishSelected);
 
         ActionListener ac = new StaffJPanelController(this);
 
         JButton Button_Pay = new JButton("Đặt món");
         Button_Pay.setFont(new Font("Arial", Font.BOLD, 16));
-        Button_Pay.setBounds(222, 303, 118, 28);
+        Button_Pay.setBounds(222, 503, 118, 28);
         order.add(Button_Pay);
         // Button_Pay.addActionListener(e -> printBill());
         Button_Pay.addActionListener(ac);
@@ -126,7 +120,7 @@ public class StaffJPanel extends JPanel {
             }
         });
         Button_delete.setFont(new Font("Arial", Font.BOLD, 16));
-        Button_delete.setBounds(350, 303, 85, 27);
+        Button_delete.setBounds(350, 503, 85, 27);
         order.add(Button_delete);
         JButton Button_clear = new JButton("Clear");
         Button_clear.addActionListener(new ActionListener() {
@@ -135,17 +129,8 @@ public class StaffJPanel extends JPanel {
             }
         });
         Button_clear.setFont(new Font("Arial", Font.BOLD, 16));
-        Button_clear.setBounds(445, 303, 85, 27);
+        Button_clear.setBounds(445, 503, 85, 27);
         order.add(Button_clear);
-
-        JScrollPane scrollPane_Bill = new JScrollPane();
-        scrollPane_Bill.setBounds(0, 345, 540, 395);
-        order.add(scrollPane_Bill);
-
-        textArea_Bill = new JTextArea();
-        scrollPane_Bill.setViewportView(textArea_Bill);
-        textArea_Bill.setEditable(false);
-        textArea_Bill.setFont(new Font("Arial", Font.PLAIN, 20));
 
         // trái
         JPanel panel_Menu = new JPanel();
@@ -366,28 +351,29 @@ public class StaffJPanel extends JPanel {
             ICustomerRespository customerRespository = new CustomerRepository();
             String phone = textField_TKKH.getText().trim();
             if (phone.isEmpty()) {
+                customerPhone = "0000000000";
                 return;
             } else {
+                customerPhone = phone;
                 String totalText = total_monney.getText().replace("đ", "").replace(",", ".").trim();
                 double totalmoney = Double.parseDouble(totalText);
                 int cusID = customerRespository.getCustomerIDByPhone(phone);
                 customerRespository.plusPoint(cusID, totalmoney); // Cộng điểm cho khách hàng
             }
         } catch (ClassNotFoundException | IOException | SQLException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
 
-    private boolean orderContainsProduct(String productName) {
-        for (int i = 0; i < placedModel.size(); i++) {
-            String item = placedModel.getElementAt(i);
-            if (item.startsWith(productName)) {
-                return true;
-            }
-        }
-        return false;
-    }
+    // private boolean orderContainsProduct(String productName) {
+    //     for (int i = 0; i < placedModel.size(); i++) {
+    //         String item = placedModel.getElementAt(i);
+    //         if (item.startsWith(productName)) {
+    //             return true;
+    //         }
+    //     }
+    //     return false;
+    // }
 
     private void updateOrAddItem(String displayText, double price, int additionalQty) {
         String item;
@@ -434,7 +420,6 @@ public class StaffJPanel extends JPanel {
         if (selectedIndex != -1) {
             String selectedItem = model.get(selectedIndex);
             model.remove(selectedIndex);
-            removeItemFromBill(selectedItem);
 
             // Trích xuất tên sản phẩm và kích thước từ mục đã chọn
             String[] parts = selectedItem.split(" - ");
@@ -486,50 +471,6 @@ public class StaffJPanel extends JPanel {
         placedModel.clear();
         tempOrderProducts.clear();
         updateTotalMoney();
-        textArea_Bill.setText("");
-    }
-
-    private void removeItemFromBill(String itemName) {
-        String billText = textArea_Bill.getText();
-        String[] lines = billText.split("\n");
-        StringBuilder updatedBill = new StringBuilder();
-        for (String line : lines) {
-            if (!line.contains(itemName)) {
-                updatedBill.append(line).append("\n");
-            }
-        }
-        textArea_Bill.setText(updatedBill.toString().trim());
-    }
-
-    public void printBill() {
-        StringBuilder bill = new StringBuilder();
-        if (placedModel.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Vui lòng chọn món ăn trước khi in hóa đơn!", "Thông báo",
-                    JOptionPane.INFORMATION_MESSAGE);
-            return;
-        }
-        updateTotalMoney();
-        DateFormat formatDete = DateFormat.getDateInstance(DateFormat.LONG, VN);
-        DateFormat formatTime = DateFormat.getTimeInstance(DateFormat.LONG, VN);
-        String formattedDate = formatDete.format(new java.util.Date());
-        String formattedTime = formatTime.format(new java.util.Date());
-        bill.append("================= HÓA ĐƠN ===================\n");
-        bill.append("Khách hàng: ").append(textField_TKKH.getText().isEmpty() ? " " : textField_TKKH.getText())
-                .append("\n");
-        bill.append("Ngày: ").append(formattedDate).append(" ").append(formattedTime).append("\n");
-        bill.append("=============================================\n");
-        bill.append("Danh sách\n");
-        for (int i = 0; i < placedModel.size(); i++) {
-            String item = placedModel.getElementAt(i);
-            bill.append(item).append("\n");
-        }
-
-        bill.append("=============================================\n");
-        bill.append("TỔNG TIỀN: ").append(total_monney.getText()).append("\n");
-        bill.append("=============================================\n");
-        bill.append("Cảm ơn quý khách! Hẹn gặp lại!");
-
-        textArea_Bill.setText(bill.toString());
     }
 
     public void clearTempOrder() {
@@ -558,14 +499,6 @@ public class StaffJPanel extends JPanel {
 
     public void setTotal_monney(JTextField total_monney) {
         this.total_monney = total_monney;
-    }
-
-    public JTextArea getTextArea_Bill() {
-        return textArea_Bill;
-    }
-
-    public void setTextArea_Bill(JTextArea textArea_Bill) {
-        this.textArea_Bill = textArea_Bill;
     }
 
     public DefaultListModel<String> getMenuModel() {
