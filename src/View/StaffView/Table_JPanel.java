@@ -133,15 +133,15 @@ public class Table_JPanel extends JPanel {
 		TableLabel.setBounds(353, 36, 247, 91);
 		rightPanel.add(TableLabel);
 
-		JLabel lblNewLabel_2 = new JLabel("Giờ đến:");
-		lblNewLabel_2.setFont(new Font("Arial", Font.PLAIN, 22));
-		lblNewLabel_2.setBounds(53, 337, 87, 26);
-		rightPanel.add(lblNewLabel_2);
+//		JLabel lblNewLabel_2 = new JLabel("Giờ đến:");
+//		lblNewLabel_2.setFont(new Font("Arial", Font.PLAIN, 22));
+//		lblNewLabel_2.setBounds(53, 337, 87, 26);
+//		rightPanel.add(lblNewLabel_2);
 
 		
 		TimeLabel = new JLabel();
 		TimeLabel.setFont(new Font("Arial", Font.PLAIN, 22));
-		TimeLabel.setBounds(145, 337, 451, 26);
+		TimeLabel.setBounds(53, 337, 400, 26);
 		rightPanel.add(TimeLabel);
 
 		JLabel lblNewLabel_2_2 = new JLabel("Trạng thái:");
@@ -202,8 +202,7 @@ public class Table_JPanel extends JPanel {
 					this.table_people = "src\\image\\Table_image\\Table_Empty.png";
 					this.btnNewButton.setText("Gọi món");
 					this.rightPanel.setBackground(new Color(144, 238, 144));
-					this.TimeLabel.setText("...");
-					
+					this.TimeLabel.setText("");
 					if (orderButton != null && orderButton.getParent() != null) {
 						rightPanel.remove(orderButton);
 					}
@@ -213,7 +212,7 @@ public class Table_JPanel extends JPanel {
 					this.rightPanel.setBackground(new Color(236, 112, 99));
 					OrderRepository o = new OrderRepository();
 					String timeOr = o.getTimeByTableID(this.tableID);
-					this.TimeLabel.setText(timeOr);
+					this.TimeLabel.setText("Giờ đến: " + timeOr);
 					orderButton = new JButton("Gọi món");
 					orderButton.setFont(new Font("Arial", Font.PLAIN, 20));
 					orderButton.setBounds(342, 461, 159, 42);
