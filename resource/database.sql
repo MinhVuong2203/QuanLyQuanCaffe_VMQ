@@ -169,6 +169,14 @@ VALUES
 -- Customer
 INSERT INTO [dbo].[Customer]([customerID],[name],[phone],[point])   -- Để phục vụ cho khách vãng lai (khách nào vãng lai thì lấy ID này, nhân viên có chức năng tạo khách vãng lai bằng một nút bấm cho thao tác nhanh hơn, không cần nhập ID khách)
 VALUES (100000, N'Khách vãng lai', '0000000000',0)
+INSERT INTO [dbo].[Customer] ([customerID], [name], [phone], [point])
+VALUES 
+(100001, N'Nguyễn Văn Hóa', '0878347892', 101),
+(100002, N'Võ Thiện Linh', '0345698765', 30),
+(100003, N'Võ Hải Nam', '0345123789', 30),
+(100004, N'Minh Nghĩa', '0878347890', 30),
+(100005, N'Nguyễn Ly', '0962018371', 20),
+(100006, N'Hữu Nhân', '0123456789', 50);
 
 --Product
 INSERT INTO Product (ProductID, name, price,size, image) VALUES
