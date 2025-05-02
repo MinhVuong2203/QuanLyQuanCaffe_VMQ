@@ -4,8 +4,10 @@ import Controller.ManagerController.ManagerJFrameController;
 import Model.Manager;
 import View.ManagerView.ManagerProduct.ManageProduct;
 import View.ManagerView.ManagerShift.EmployeeShiftPanel;
+import View.ManagerView.ManagerShift.manageOrderAndSalary;
 import View.ManagerView.ManagerStaff.StaffManagerJPanel;
 import View.ManagerView.ManagerTable.TablePanel;
+import View.ManagerView.ManagerShift.manageOrderAndSalary;
 import View.StaffView.GamePanel;
 import View.StaffView.RollCall;
 import View.StaffView.StaffJPanel;
@@ -117,6 +119,8 @@ public class ManagerJFrame extends JFrame {
         StaffManagerJPanel staffManagerJPanel = new StaffManagerJPanel(); // Tạo đối tượng StaffManagerJPanel để quay lại vẫn còn dữ liệu
 
         ManageProduct managerProduct = new ManageProduct(); // Tạo đối tượng ManageProduct để quay lại vẫn còn dữ liệu
+
+        manageOrderAndSalary manageOrderAndSalary = new manageOrderAndSalary();
         
         String[] buttonLabels = { "BÁN HÀNG", "ĐIỂM DANH","MINI GAME", "XẾP LỊCH", "BÀN", "NHÂN VIÊN", "SẢN PHẨM", "DOANH THU","ĐĂNG XUẤT"};
         String[] iconButtonLabels = { "src\\image\\SideBar_Image\\Sell.png", 
@@ -146,7 +150,7 @@ public class ManagerJFrame extends JFrame {
             ImageIcon scaleIcon_first_img = new ImageIcon(scale_iconButton);
             button.setIcon(scaleIcon_first_img);
 
-            ManagerJFrameController controller = new ManagerJFrameController(this, contentPanel, manager , employeeShiftView, tablePanel, staffManagerJPanel, managerProduct); // Hành động
+            ManagerJFrameController controller = new ManagerJFrameController(this, contentPanel, manager , employeeShiftView, tablePanel, staffManagerJPanel, managerProduct,manageOrderAndSalary); // Hành động
 
             button.addActionListener(controller.getButtonActionListener(label)); // Thêm ActionListener cho button
             menuPanel.add(button);

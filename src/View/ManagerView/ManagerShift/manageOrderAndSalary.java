@@ -1,3 +1,4 @@
+
 package View.ManagerView.ManagerShift;
 
 import Model.Employee;
@@ -15,6 +16,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 public class manageOrderAndSalary extends JPanel {
@@ -26,7 +29,7 @@ public class manageOrderAndSalary extends JPanel {
 
     private OrderRepository orderRepository;
     private EmployeeRespository employeeRepository;
-    private EmployeeShiftRepository employeeShiftRepository; 
+    private EmployeeShiftRepository employeeShiftRepository;
 
     private DefaultTableModel invoiceModel;
     private DefaultTableModel salaryModel;
@@ -34,6 +37,7 @@ public class manageOrderAndSalary extends JPanel {
     public manageOrderAndSalary() {
         setLayout(new BorderLayout());
         setBackground(Color.WHITE);
+        
 
         fromDate = LocalDate.of(2000, 1, 1);
         toDate = LocalDate.of(2100, 1, 1);
@@ -128,43 +132,37 @@ public class manageOrderAndSalary extends JPanel {
 
         add(headerPanel, BorderLayout.NORTH);
 
-        JPanel centerPanel = new JPanel();
-        centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
-        centerPanel.setBackground(Color.WHITE);
-
         String[] invoiceCols = {"ID hóa đơn", "ID nhân viên", "ID khách hàng", "Giá", "Giá giảm", "Tổng tiền mỗi hóa đơn"};
         invoiceModel = new DefaultTableModel(invoiceCols, 0){
-        @Override
-        public boolean isCellEditable(int row, int column) {
-            return false;
-        }};
-        
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }};
         invoiceTable = new JTable(invoiceModel);
-        
         styleTable(invoiceTable);
         invoiceTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
         JPanel invoicePanel = new JPanel(new BorderLayout());
         invoicePanel.setBackground(Color.WHITE);
-        invoicePanel.add(new JScrollPane(invoiceTable), BorderLayout.CENTER);
-        centerPanel.add(invoicePanel);
-        centerPanel.add(Box.createVerticalStrut(10));
+        JScrollPane invoiceScrollPane = new JScrollPane(invoiceTable);
+        invoiceScrollPane.setBorder(new EmptyBorder(0, 10, 0, 0)); 
+        invoicePanel.add(invoiceScrollPane, BorderLayout.CENTER);
 
         String[] salaryCols = {"ID nhân viên", "Tên nhân viên", "Thời gian làm (giờ)", "Lương/giờ", "Tổng tiền"};
         salaryModel = new DefaultTableModel(salaryCols, 0){
-        @Override
-        public boolean isCellEditable(int row, int column) {
-            return false;
-        }};
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }};
         salaryTable = new JTable(salaryModel);
-        salaryTable.setEditingColumn(-1);
-        salaryTable.setEditingRow(-1);
         styleTable(salaryTable);
         salaryTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
         JPanel salaryPanel = new JPanel(new BorderLayout());
         salaryPanel.setBackground(Color.WHITE);
-        salaryPanel.add(new JScrollPane(salaryTable), BorderLayout.CENTER);
+        JScrollPane salaryScrollPane = new JScrollPane(salaryTable);
+        salaryScrollPane.setBorder(new EmptyBorder(0, 10, 0, 0)); 
+        salaryPanel.add(salaryScrollPane, BorderLayout.CENTER);
 
         JPanel totalPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         totalPanel.setBackground(Color.WHITE);
@@ -173,11 +171,14 @@ public class manageOrderAndSalary extends JPanel {
         totalLabel.setOpaque(true);
         totalLabel.setBackground(Color.PINK);
         totalPanel.add(totalLabel);
-
         salaryPanel.add(totalPanel, BorderLayout.SOUTH);
-        centerPanel.add(salaryPanel);
 
-        add(centerPanel, BorderLayout.CENTER);
+        JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, invoicePanel, salaryPanel);
+        splitPane.setResizeWeight(0.5);
+        splitPane.setDividerSize(8);
+        splitPane.setContinuousLayout(true);
+        splitPane.setBorder(new EmptyBorder(0, 10, 0, 0)); // Thêm lề trái 10px
+        add(splitPane, BorderLayout.CENTER);
         updateTableDisplay();
     }
 
@@ -185,13 +186,38 @@ public class manageOrderAndSalary extends JPanel {
         table.setFillsViewportHeight(true);
         table.getTableHeader().setBackground(Color.PINK);
         table.setBackground(Color.WHITE);
+        
+        // Căn lề trái cho nội dung các ô
+        DefaultTableCellRenderer leftRenderer = new DefaultTableCellRenderer();
+        leftRenderer.setHorizontalAlignment(SwingConstants.LEFT);
+        for (int i = 0; i < table.getColumnCount(); i++) {
+            table.getColumnModel().getColumn(i).setCellRenderer(leftRenderer);
+        }
+        
+        // Đặt kích thước ưu tiên cho bảng
+        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        table.setPreferredScrollableViewportSize(new Dimension(1200, 200));
     }
 
     private void updateTableDisplay() {
         String selected = (String) comboBox.getSelectedItem();
         invoiceTable.setVisible("Tất cả".equals(selected) || "Khách".equals(selected));
         salaryTable.setVisible("Tất cả".equals(selected) || "Lương nhân viên".equals(selected));
+        
+        // Cập nhật kích thước các cột khi thay đổi hiển thị
+        resizeTableColumns(invoiceTable);
+        resizeTableColumns(salaryTable);
+        
         getData();
+    }
+    
+    private void resizeTableColumns(JTable table) {
+        if (table.isVisible()) {
+            table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+            for (int i = 0; i < table.getColumnCount(); i++) {
+                table.getColumnModel().getColumn(i).setPreferredWidth(1300/table.getColumnCount());
+            }
+        }
     }
 
     private void getData() {
@@ -254,11 +280,5 @@ public class manageOrderAndSalary extends JPanel {
         }
     }
 
-    public static void main(String[] args) {
-        JFrame frame = new JFrame("Manage Order and Salary");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(1800, 800);
-        frame.add(new manageOrderAndSalary());
-        frame.setVisible(true);
-    }
+    
 }

@@ -31,6 +31,7 @@ public class ManageProduct extends JPanel {
 
     public ManageProduct() {
         setLayout(new BorderLayout());
+        
 
         // Top: Search and filter
         JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
@@ -364,22 +365,6 @@ public class ManageProduct extends JPanel {
     }
     
     
-    
-    
-    public static void main(String[] args) {
-        try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-            JFrame frame = new JFrame("Quản lý sản phẩm");
-            
-            SwingUtilities.invokeLater(() -> frame.setVisible(true));
-    
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.setSize(800, 600);
-            frame.getContentPane().add(new ManageProduct());
-            frame.setVisible(true);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 }
-}
+    
+    
