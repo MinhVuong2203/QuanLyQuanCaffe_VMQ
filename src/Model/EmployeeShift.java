@@ -71,4 +71,15 @@ public class EmployeeShift {
     public String toString() {
         return "EmplyeeShift{" + "shiftID=" + shiftID + ", employeeID=" + employeeID + ", startTime=" + startTime + ", endTime=" + endTime + ", hourWorked=" + hourWorked + ", salary=" + salary + '}';
     }
+    public EmployeeShift(LocalDateTime startTime, LocalDateTime endTime) {
+        this.startTime = startTime;
+        this.endTime = endTime;
+    }
+    public EmployeeShift(int employeeID, LocalDateTime startTime, LocalDateTime endTime) {
+    this.employeeID = employeeID;
+    this.startTime = startTime;
+    this.endTime = endTime;
+}
+
+    
 }

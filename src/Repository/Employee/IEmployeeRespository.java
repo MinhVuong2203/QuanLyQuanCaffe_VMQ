@@ -1,7 +1,10 @@
 package Repository.Employee;
 
 import Model.Employee;
+import Model.EmployeeShift;
+
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.List;
 
 import com.toedter.calendar.JDateChooser;
@@ -28,4 +31,6 @@ public interface IEmployeeRespository {
     public void deleteShiftFromSQL(int id, String dateString) ;
     public void updateShiftToSQL(int id, String dateString, String timeRange, String lastTimeRange);
     public List<Employee> getAllEmployeesAllAttributes();
+    public EmployeeShift getEmployeeShiftByEmployeeID(int employeeID) throws SQLException, ClassNotFoundException;
+    public List<Employee> getShiftsBetweenDates(LocalDate fromDate, LocalDate toDate) throws SQLException,ClassNotFoundException;
 }

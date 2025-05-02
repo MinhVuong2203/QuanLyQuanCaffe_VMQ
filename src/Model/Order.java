@@ -16,8 +16,15 @@ public class Order {
     Map<Product, Integer> products; // Sản phẩm và số lượng
     private Payment payments;
 
-    public Order() {
+    public Order(int orderID1, int employeeID1, int customerID1, int tableID1, String status1, Map<Product, Integer> products1) {
+        this.orderID = orderID1;
+        this.employeeID = employeeID1;
+        this.customerID = customerID1;
+        this.tableID = tableID1;
+        this.status = status1;
+        this.products = products1;
     }
+
 
     public Order(int orderID, int employeeID, int customerID, int tableID, String status) {
         this.orderID = orderID;
@@ -119,5 +126,12 @@ public class Order {
 
     public void setPayments(Payment payments) {
         this.payments = payments;
+    }
+    public double getPrice() {
+        double totalPrice = 0;
+        for (Map.Entry<Product, Integer> entry : this.products.entrySet()) {
+            totalPrice = entry.getKey().getPrice() * entry.getValue();
+        }
+        return totalPrice;
     }
 }

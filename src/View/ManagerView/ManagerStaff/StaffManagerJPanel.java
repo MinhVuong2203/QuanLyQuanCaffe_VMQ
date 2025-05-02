@@ -247,7 +247,10 @@ public class StaffManagerJPanel extends JPanel {
 		model.removeRow(row); // Xóa hàng khỏi bảng
 		listEmployee.remove(row); // Cập nhật danh sách nhân viên
 		table.clearSelection(); // Bỏ chọn hàng trong bảng
-	}	
+	}
+	//main
+	
+	
 
 
 }

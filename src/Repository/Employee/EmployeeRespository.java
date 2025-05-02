@@ -1,6 +1,7 @@
 package Repository.Employee;
 
 import Model.Employee;
+import Model.EmployeeShift;
 import Utils.JdbcUtils;
 import Utils.ValidationUtils;
 import java.io.IOException;
@@ -10,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -17,6 +19,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import com.toedter.calendar.JDateChooser;
+import java.sql.Timestamp;
 import java.util.Date;
 
 public class EmployeeRespository implements IEmployeeRespository {
@@ -458,5 +461,66 @@ public class EmployeeRespository implements IEmployeeRespository {
         // e.printStackTrace();
         // }
     }
+    public EmployeeShift getEmployeeShiftByEmployeeID(int employeeID) throws SQLException, ClassNotFoundException {
+    String sql = "SELECT * FROM EmployeeShift WHERE employeeID = ?";
+    try (Connection connection = jdbcUtils.connect();
+         PreparedStatement stmt = connection.prepareStatement(sql)) {
+        stmt.setInt(1, employeeID);
+        ResultSet rs = stmt.executeQuery();
+        if (rs.next()) {
+            Timestamp start = rs.getTimestamp("startTime");
+            Timestamp end = rs.getTimestamp("endTime");
+            if (start != null && end != null) {
+                return new EmployeeShift(start.toLocalDateTime(), end.toLocalDateTime());
+            }
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return null;
+}
+@Override
+public List<Employee> getShiftsBetweenDates(LocalDate fromDate, LocalDate toDate) throws SQLException, ClassNotFoundException {
+    List<Employee> employees = new ArrayList<>();
+
+    String sql = """
+        SELECT E.* FROM EmployeeShift ES
+        JOIN Employee E ON ES.employeeID = E.employeeID
+        WHERE ES.startTime BETWEEN ? AND ?
+        """;
+
+    try (Connection conn = jdbcUtils.connect();
+         PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+        stmt.setDate(1, java.sql.Date.valueOf(fromDate));
+        stmt.setDate(2, java.sql.Date.valueOf(toDate));
+
+        try (ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                int id = rs.getInt("employeeID");
+                String name = rs.getString("name").trim();
+                String phone = rs.getString("phone") != null ? rs.getString("phone").trim() : "";
+                String image = rs.getString("image") != null ? rs.getString("image").trim() : "";
+                String username = rs.getString("username").trim();
+                String password = rs.getString("password").trim();
+                String role = rs.getString("role").trim();
+                String CCCD = rs.getString("CCCD").trim();
+                String birthDate = rs.getString("birthDate").trim();
+                String gender = rs.getString("gender").trim();
+                double hourWage = rs.getDouble("hourWage");
+
+                employees.add(new Employee(id, name, phone, image, username, password, role, CCCD, birthDate, gender, hourWage));
+            }
+        }
+    }
+
+    return employees;
+}
+
+
+
+
+
+
 
 }

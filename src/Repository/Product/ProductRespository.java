@@ -4,6 +4,7 @@ import Model.Product;
 import Utils.JdbcUtils;
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -562,4 +563,51 @@ public class ProductRespository implements IProductRespository {
             connection.close();
         }
     }
+    @Override
+public Map<Product, Integer> getProductsByOrderID(int orderID) throws SQLException, ClassNotFoundException {
+    Map<Product, Integer> products = new HashMap<>();
+
+    String sql = """
+        SELECT p.*, od.quantity 
+        FROM OrderDetail od 
+        JOIN Product p ON od.productID = p.productID 
+        WHERE od.orderID = ?
+    """;
+
+    try (Connection connection = jdbcUtils.connect();
+         PreparedStatement stmt = connection.prepareStatement(sql)) {
+
+        stmt.setInt(1, orderID);
+        try (ResultSet rs = stmt.executeQuery()) {
+
+            boolean hasData = false;
+            while (rs.next()) {
+                hasData = true;
+
+                Product product = new Product();
+                product.setProductID(rs.getInt("productID"));
+                product.setName(rs.getString("name"));
+                product.setPrice(rs.getDouble("price"));
+                product.setSize(rs.getString("size"));
+                product.setImage(rs.getString("image"));
+
+                int quantity = rs.getInt("quantity");
+                products.put(product, quantity);
+            }
+
+            if (!hasData) {
+                System.out.println("⚠️ Không có sản phẩm nào cho orderID = " + orderID);
+            }
+        }
+
+    } catch (SQLException e) {
+        System.err.println("❌ Lỗi khi truy vấn sản phẩm theo orderID: " + orderID);
+        e.printStackTrace();
+        throw e; // Re-throw nếu muốn phía gọi xử lý tiếp
+    }
+
+    return products;
+}
+
+    
 }

@@ -108,18 +108,29 @@ public class ManageProduct extends JPanel {
                 String priceStr = txtPrice.getText();
                 String size = txtSize.getText();
                 String image = txtImage.getText();
+                
                 if (name.isEmpty() || priceStr.isEmpty() || size.isEmpty() || image.isEmpty()) {
                     JOptionPane.showMessageDialog(addProductDialog, "Vui lòng điền đầy đủ thông tin", "Lỗi", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
+                
                 try {
                     double price = Double.parseDouble(priceStr);
+                    
+                    // Kiểm tra xem sản phẩm đã tồn tại chưa
+                    boolean productExists = checkIfProductExists(name, size);
+                    if (productExists) {
+                        JOptionPane.showMessageDialog(addProductDialog, "Sản phẩm này đã tồn tại trong hệ thống!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                    
                     Product newProduct = new Product(allProducts.size() + 1, name, price, size, image);
                     productRespository.addProduct(newProduct);
                     products.add(newProduct);
                     allProducts.add(newProduct);
                     showProducts(products);
                     addProductDialog.dispose();
+                    JOptionPane.showMessageDialog(this, "Thêm sản phẩm thành công!");
                 } catch (NumberFormatException ex) {
                     JOptionPane.showMessageDialog(addProductDialog, "Giá phải là số!", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 } catch (Exception ex) {
@@ -341,6 +352,15 @@ public class ManageProduct extends JPanel {
             }
         }
         selectedCard.setBackground(new Color(255, 100, 100)); // màu khi được chọn
+    }
+
+    private boolean checkIfProductExists(String productName, String size) throws Exception {
+        for (Product p : allProducts) {
+            if (p.getName().equalsIgnoreCase(productName) && p.getSize().equalsIgnoreCase(size)) {
+                return true;
+            }
+        }
+        return false;
     }
     
     
