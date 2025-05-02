@@ -6,6 +6,7 @@ import View.ManagerView.ManagerProduct.ManageProduct;
 import View.ManagerView.ManagerShift.EmployeeShiftPanel;
 import View.ManagerView.ManagerStaff.StaffManagerJPanel;
 import View.ManagerView.ManagerTable.TablePanel;
+import View.ManagerView.ManagerShift.manageOrderAndSalary;
 import View.StaffView.GamePanel;
 import View.StaffView.RollCall;
 import View.StaffView.Table_JPanel;
@@ -26,15 +27,17 @@ public class ManagerJFrameController {
     private ManageProduct managerProduct;
  
     private Manager manager;
+    private manageOrderAndSalary manageOrderAndSalary;
 
 
-    public ManagerJFrameController(ManagerJFrame managerJFrame, JPanel contentPanel, Manager manager , EmployeeShiftPanel employeeShiftPanel, TablePanel tablePanel,StaffManagerJPanel staffManagerJPanel, ManageProduct managerProduct) {
+    public ManagerJFrameController(ManagerJFrame managerJFrame, JPanel contentPanel, Manager manager , EmployeeShiftPanel employeeShiftPanel, TablePanel tablePanel,StaffManagerJPanel staffManagerJPanel, ManageProduct managerProduct, manageOrderAndSalary manageOrderAndSalary) {
         this.managerJFrame = managerJFrame;   
         this.contentPanel = contentPanel;
         this.employeeShiftPanel = employeeShiftPanel;
         this.tablePanel = tablePanel;
         this.staffManagerJPanel = staffManagerJPanel;
-        this.managerProduct = managerProduct;
+        this.manager = manager;
+        this.manageOrderAndSalary = manageOrderAndSalary;
         this.manager = manager;
         
     }
@@ -79,7 +82,7 @@ public class ManagerJFrameController {
                             break;
                         case "DOANH THU":
                             // Thêm logic cho DOANH THU (chưa được triển khai)
-                            JOptionPane.showMessageDialog(managerJFrame, "Chức năng DOANH THU chưa được triển khai!");
+                            contentPanel.add(manageOrderAndSalary, BorderLayout.CENTER);
                             break;
                         case "ĐĂNG XUẤT":
                             // Thêm logic đăng xuất (ví dụ: đóng frame, quay về màn hình đăng nhập)

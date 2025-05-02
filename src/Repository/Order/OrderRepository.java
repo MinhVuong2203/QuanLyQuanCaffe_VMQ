@@ -1,14 +1,18 @@
 package Repository.Order;
 import Model.Order;
+import Model.Product;
 import Repository.Product.ProductRespository;
 import Utils.JdbcUtils;
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 
 public class OrderRepository implements IOrderRepository {
@@ -27,7 +31,7 @@ public class OrderRepository implements IOrderRepository {
             connection = jdbcUtils.connect();
             productRepository = new ProductRespository(); // tạo 1 lần
 
-            String sql = "SELECT * FROM OrderDetails";
+            String sql = "SELECT * FROM Orders";
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(sql);
 
@@ -37,6 +41,7 @@ public class OrderRepository implements IOrderRepository {
                 int customerID = resultSet.getInt("customerID");
                 int tableID = resultSet.getInt("tableID");
                 String status = resultSet.getString("status");
+                Map<Product, Integer> products = productRepository.getProductsByOrderID(orderID); // Lấy danh sách sản phẩm theo orderID
 
                 // int productID = resultSet.getInt("productID");
                 // int quantity = resultSet.getInt("quantity");
@@ -47,7 +52,7 @@ public class OrderRepository implements IOrderRepository {
                 //     products.put(product, quantity);
                 // }
                 
-                Order order = new Order(orderID, employeeID, customerID, tableID, status);
+                Order order = new Order(orderID, employeeID, customerID, tableID, status,products);
                 orderList.add(order);
             }
 
@@ -79,6 +84,43 @@ public class OrderRepository implements IOrderRepository {
         } 
         return null;
     }
-   
+ @Override
+public List<Order> getOrdersBetweenDates(LocalDate fromDate, LocalDate toDate)
+        throws SQLException, IOException, ClassNotFoundException {
+
+    List<Order> orderList = new ArrayList<>();
+    ProductRespository productRepository = new ProductRespository();
+
+    String sql = "SELECT * FROM Orders WHERE orderTime BETWEEN ? AND ?";
+
+    try (Connection conn = jdbcUtils.connect();
+         PreparedStatement statement = conn.prepareStatement(sql)) {
+
+        statement.setDate(1, java.sql.Date.valueOf(fromDate));
+        statement.setDate(2, java.sql.Date.valueOf(toDate));
+
+        try (ResultSet resultSet = statement.executeQuery()) {
+            while (resultSet.next()) {
+                int orderID = resultSet.getInt("orderID");
+                int employeeID = resultSet.getInt("employeeID");
+                int customerID = resultSet.getInt("customerID");
+                int tableID = resultSet.getInt("tableID");
+                String status = resultSet.getString("status");
+
+                Map<Product, Integer> products = productRepository.getProductsByOrderID(orderID);
+
+                Order order = new Order(orderID, employeeID, customerID, tableID, status, products);
+                orderList.add(order);
+            }
+        }
+
+    } catch (SQLException | ClassNotFoundException e) {
+        throw e; // Bắn lại cho nơi gọi xử lý
+    } catch (Exception e) {
+        e.printStackTrace(); // Log các lỗi runtime bất ngờ
+    }
+
+    return orderList;
+}
 
 }
