@@ -55,7 +55,8 @@ public class StaffJPanelController implements ActionListener {
                     }
                 } else if (tableRespository.getTableStatus(staffJPanel.tableID).equals("Có khách")) {
                     productRespository.updateOrder(productRespository.getOrderIDByTableID(staffJPanel.tableID),
-                            staffJPanel.tableID, staffJPanel.getEmpID(), 100000, formattedTime);
+                            staffJPanel.tableID, staffJPanel.getEmpID(),
+                            customerRespository.getCustomerIDByPhone(staffJPanel.customerPhone), formattedTime);
                     // Lưu từng món vào OrderDetail
                     for (Map.Entry<Product, Integer> entry : staffJPanel.getTempOrderProducts().entrySet()) {
                         Product product = entry.getKey();
