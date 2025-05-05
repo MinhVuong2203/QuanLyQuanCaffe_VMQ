@@ -39,6 +39,7 @@ public class ManagerJFrameController {
         this.manager = manager;
         this.manageOrderAndSalary = manageOrderAndSalary;
         this.manager = manager;
+        this.managerProduct = managerProduct;
         
     }
 

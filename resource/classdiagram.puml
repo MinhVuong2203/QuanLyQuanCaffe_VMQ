@@ -1,0 +1,94 @@
+@startUML
+@startuml
+
+'=== Lớp trừu tượng và các lớp con ===
+abstract class Person {
+  #int id
+  #String name
+  #String phone
+}
+
+class Customer {
+  -double points
+}
+
+class User {
+  #String username
+  #String password
+  #String role
+  #String image
+}
+
+class Employee {
+  #double hourlyWage
+  #String CCCD
+  #String birthDate
+  #String gender
+}
+
+class Manager {
+}
+
+class EmployeeShift {
+  -int shiftID
+  -int employeeID
+  -LocalDateTime startTime
+  -LocalDateTime endTime
+  -double hourWorked
+  -double salary
+  -String status
+}
+
+'=== Quan hệ kế thừa ===
+Person <|-- Customer
+Person <|-- User
+User <|-- Employee
+Employee <|-- Manager
+
+'=== Quan hệ hợp thành (composition/aggregation) ===
+Employee "1" *-- "1" EmployeeShift
+
+'=== Các lớp liên quan đến đơn hàng ===
+class Order {
+  -int orderID
+  -int employeeID
+  -int customerID
+  -int tableID
+  -String status
+  -Map<Product, Integer> products
+  -Payment payments
+}
+
+class OrderDetail {
+  -Product product
+  -int quantity
+  -double price
+}
+
+class Product {
+  -int productID
+  -String name
+  -double price
+  -String size
+  -String image
+}
+
+class Table {
+  -int tableID
+  -String tableName
+  -String status
+}
+
+'=== Quan hệ giữa các lớp ===
+Order "1" *-- "1..*" OrderDetail
+OrderDetail --> Product
+Order --> Customer
+Order --> Employee
+Order --> Table
+
+'=== Ghi chú tùy chọn ===
+note top of EmployeeShift: "status: Đã làm, Chưa làm, Đã nghỉ"
+note top of Table: "tableID = 0: Đơn giao hàng"
+note top of Customer: "customerID = 0: Khách vãng lai"
+
+@enduml

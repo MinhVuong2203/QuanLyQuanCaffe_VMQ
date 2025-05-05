@@ -449,12 +449,13 @@ public class ProductRespository implements IProductRespository {
     public void addProduct(Product product) throws SQLException {
         try {
             connection = jdbcUtils.connect();
-            String sql = "INSERT INTO Product (name, price, size, image) VALUES (?, ?, ?, ?)";
+            String sql = "INSERT INTO Product (productID,name, price, size, image) VALUES (?, ?, ?, ?, ?)";
             var stmt = connection.prepareStatement(sql);
-            stmt.setString(1, product.getName());
-            stmt.setDouble(2, product.getPrice());
-            stmt.setString(3, product.getSize());
-            stmt.setString(4, product.getImage());
+            stmt.setInt(1, product.getProductID());
+            stmt.setString(2, product.getName());
+            stmt.setDouble(3, product.getPrice());
+            stmt.setString(4, product.getSize());
+            stmt.setString(5, product.getImage());
             stmt.executeUpdate();
             stmt.close();
         } catch (Exception e) {
@@ -608,6 +609,17 @@ public Map<Product, Integer> getProductsByOrderID(int orderID) throws SQLExcepti
 
     return products;
 }
+
+@Override
+public int getNextProductId() throws SQLException, IOException, ClassNotFoundException {
+    String sql = "SELECT MAX(productID) FROM Product";
+    try (Connection conn = new JdbcUtils().connect();
+         Statement stmt = conn.createStatement();
+         ResultSet rs = stmt.executeQuery(sql)) {
+        return rs.next() ? rs.getInt(1) + 1 : 1;
+    }
+}
+
 
     
 }

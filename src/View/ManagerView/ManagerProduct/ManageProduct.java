@@ -3,13 +3,17 @@ package View.ManagerView.ManagerProduct;
 import Model.Product;
 import Repository.Product.ProductRespository;
 import java.awt.*;
+import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
 
 public class ManageProduct extends JPanel {
     private JTextField searchField;
-    private JButton btnCoffee, btnTea, btnCake;
+    private JButton btnCoffee, btnTea, btnCake,btnAll,searchButton;
     private JButton btnAdd, btnEdit, btnDelete;
     private JPanel productGridPanel;
 
@@ -36,13 +40,29 @@ public class ManageProduct extends JPanel {
         // Top: Search and filter
         JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
         searchField = new JTextField("Tìm kiếm...", 20);
+        searchButton = new JButton("Tìm kiếm");
+        searchButton.addActionListener(e -> {
+            String searchText = searchField.getText().toLowerCase();
+            List<Product> filteredProducts = new ArrayList<>();
+            for (Product p : allProducts) {
+                if (p.getName().toLowerCase().contains(searchText)) {
+                    filteredProducts.add(p);
+                }
+            }
+            showProducts(filteredProducts);
+        });
+        btnAll = new JButton("Tất cả");
+        btnAll.addActionListener(e -> showProducts(allProducts));
         btnCoffee = new JButton("Cà phê");
         btnTea = new JButton("Trà");
         btnCake = new JButton("Bánh");
         topPanel.add(searchField);
+        topPanel.add(searchButton);
         topPanel.add(btnCoffee);
         topPanel.add(btnTea);
         topPanel.add(btnCake);
+        topPanel.add(btnAll);
+        
 
         btnCoffee.addActionListener(e -> filterProductsByCategory("cà phê"));
         btnTea.addActionListener(e -> filterProductsByCategory("trà"));
@@ -97,8 +117,14 @@ public class ManageProduct extends JPanel {
                 fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
                 int returnValue = fileChooser.showOpenDialog(addProductDialog);
                 if (returnValue == JFileChooser.APPROVE_OPTION) {
-                    txtImage.setText(fileChooser.getSelectedFile().getAbsolutePath());
-                }
+                    File selectedFile = fileChooser.getSelectedFile();
+                
+                    // Lấy đường dẫn tương đối từ thư mục gốc project
+                    Path projectPath = Paths.get(System.getProperty("user.dir"));
+                    Path filePath = selectedFile.toPath();
+                    Path relativePath = projectPath.relativize(filePath);
+                    txtImage.setText(relativePath.toString());
+                    }
             });
         
             JButton btnAddProduct = new JButton("Thêm sản phẩm");
@@ -117,15 +143,16 @@ public class ManageProduct extends JPanel {
                 
                 try {
                     double price = Double.parseDouble(priceStr);
-                    
-                    // Kiểm tra xem sản phẩm đã tồn tại chưa
                     boolean productExists = checkIfProductExists(name, size);
                     if (productExists) {
                         JOptionPane.showMessageDialog(addProductDialog, "Sản phẩm này đã tồn tại trong hệ thống!", "Lỗi", JOptionPane.ERROR_MESSAGE);
                         return;
                     }
                     
-                    Product newProduct = new Product(allProducts.size() + 1, name, price, size, image);
+                    
+                    int nextId = productRespository.getNextProductId();
+                    Product newProduct = new Product(nextId, name, price, size, image);
+                    
                     productRespository.addProduct(newProduct);
                     products.add(newProduct);
                     allProducts.add(newProduct);
@@ -134,6 +161,8 @@ public class ManageProduct extends JPanel {
                     JOptionPane.showMessageDialog(this, "Thêm sản phẩm thành công!");
                 } catch (NumberFormatException ex) {
                     JOptionPane.showMessageDialog(addProductDialog, "Giá phải là số!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                } catch (SQLException ex) {
+                    JOptionPane.showMessageDialog(addProductDialog, "Lỗi database: " + ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(addProductDialog, "Error: " + ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
                 }
@@ -160,7 +189,7 @@ public class ManageProduct extends JPanel {
             addProductDialog.setVisible(true);
         });
         
-        btnEdit.addActionListener(e -> {
+        btnEdit.addActionListener(event -> {
             if (selectedProduct == null) {
                 JOptionPane.showMessageDialog(this, "Vui lòng chọn sản phẩm cần sửa!");
                 return;
@@ -191,7 +220,13 @@ public class ManageProduct extends JPanel {
                 fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
                 int returnValue = fileChooser.showOpenDialog(editProductDialog);
                 if (returnValue == JFileChooser.APPROVE_OPTION) {
-                    txtImage.setText(fileChooser.getSelectedFile().getAbsolutePath());
+                    File selectedFile = fileChooser.getSelectedFile();
+                
+                    // Lấy đường dẫn tương đối từ thư mục gốc project
+                    Path projectPath = Paths.get(System.getProperty("user.dir"));
+                    Path filePath = selectedFile.toPath();
+                    Path relativePath = projectPath.relativize(filePath);
+                    txtImage.setText(relativePath.toString());
                 }
             });
         

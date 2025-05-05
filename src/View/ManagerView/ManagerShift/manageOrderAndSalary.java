@@ -19,6 +19,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
 
 public class manageOrderAndSalary extends JPanel {
     private JComboBox<String> comboBox;
@@ -211,14 +212,7 @@ public class manageOrderAndSalary extends JPanel {
         getData();
     }
     
-    private void resizeTableColumns(JTable table) {
-        if (table.isVisible()) {
-            table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-            for (int i = 0; i < table.getColumnCount(); i++) {
-                table.getColumnModel().getColumn(i).setPreferredWidth(1300/table.getColumnCount());
-            }
-        }
-    }
+    
 
     private void getData() {
         try {
@@ -254,7 +248,7 @@ public class manageOrderAndSalary extends JPanel {
                     }
                 }
                 double salary = emp.getHourlyWage() * totalHours;
-                totalSalary += salary;
+                totalSalary -= salary;
                 Object[] row = {
                     emp.getId(),
                     emp.getName(),
@@ -271,7 +265,7 @@ public class manageOrderAndSalary extends JPanel {
             } else if ("Lương nhân viên".equals(selected)) {
                 totalLabel.setText(String.valueOf(totalSalary));
             } else {
-                totalLabel.setText(String.valueOf(totalInvoice - totalSalary));
+                totalLabel.setText(String.valueOf(totalInvoice + totalSalary));
             }
 
         } catch (Exception e) {
@@ -280,5 +274,36 @@ public class manageOrderAndSalary extends JPanel {
         }
     }
 
+    private void resizeTableColumns(JTable table) {
+        final int maxWidth = 500; // Giới hạn độ rộng tối đa
+        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        for (int column = 0; column < table.getColumnCount(); column++) {
+            int width = 400; // độ rộng tối thiểu
+            for (int row = 0; row < table.getRowCount(); row++) {
+                TableCellRenderer renderer = table.getCellRenderer(row, column);
+                Component comp = table.prepareRenderer(renderer, row, column);
+                width = Math.max(comp.getPreferredSize().width + 10, width);
+            }
+
+            TableCellRenderer headerRenderer = table.getTableHeader().getDefaultRenderer();
+            Component headerComp = headerRenderer.getTableCellRendererComponent(table, table.getColumnName(column), false, false, 0, column);
+            width = Math.max(width, headerComp.getPreferredSize().width + 10);
+
+            if (width > maxWidth) {
+                width = maxWidth;
+            }
+
+            table.getColumnModel().getColumn(column).setPreferredWidth(width);
+        }
+    }
+
+//     public static void main(String[] args) {
+//         JFrame frame = new JFrame("Manage Order and Salary");
+//         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//         frame.setSize(1300, 700);
+//         frame.add(new manageOrderAndSalary());
+//         frame.setVisible(true);
+
     
+// }
 }

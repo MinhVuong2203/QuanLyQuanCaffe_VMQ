@@ -1,6 +1,7 @@
 package Repository.Product;
 
 import Model.Product;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
@@ -26,4 +27,5 @@ public interface IProductRespository {
     public void updateOrder(int orderID, int tableID, int employeeID, int customerID, String orderTime) throws SQLException;
     public void updateOrderStatus(int orderID, String status) throws SQLException;
     public Map<Product,Integer> getProductsByOrderID(int orderID) throws SQLException, ClassNotFoundException;
+    public int getNextProductId() throws SQLException, ClassNotFoundException,IOException;
 }
