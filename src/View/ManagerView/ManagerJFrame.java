@@ -40,7 +40,7 @@ public class ManagerJFrame extends JFrame {
   
 
     public ManagerJFrame(Manager manager) throws IOException, ClassNotFoundException, SQLException {
-        setTitle("Giao Diện Thu Ngân - Quán Cafe");
+        setTitle("Giao Diện Quản Lý - Quán Cafe");
         setIconImage(Toolkit.getDefaultToolkit().getImage("src\\image\\System_Image\\Quán Caffe MVQ _ Icon.png"));
 //        setExtendedState(JFrame.MAXIMIZED_BOTH);
         setSize(1300, 700);
