@@ -10,10 +10,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 public class ManageProduct extends JPanel {
     private JTextField searchField;
-    private JButton btnCoffee, btnTea, btnCake,btnAll,searchButton;
+    private JButton btnCoffee, btnTea, btnCake,btnAll;
     private JButton btnAdd, btnEdit, btnDelete;
     private JPanel productGridPanel;
 
@@ -39,25 +41,35 @@ public class ManageProduct extends JPanel {
 
         // Top: Search and filter
         JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
-        searchField = new JTextField("Tìm kiếm...", 20);
-        searchButton = new JButton("Tìm kiếm");
-        searchButton.addActionListener(e -> {
-            String searchText = searchField.getText().toLowerCase();
-            List<Product> filteredProducts = new ArrayList<>();
-            for (Product p : allProducts) {
-                if (p.getName().toLowerCase().contains(searchText)) {
-                    filteredProducts.add(p);
-                }
-            }
-            showProducts(filteredProducts);
-        });
+        searchField = new JTextField(20);
+        searchField.getDocument().addDocumentListener(new DocumentListener() {
+			
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				// TODO Auto-generated method stub
+				searchProducts();
+			}
+			
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				// TODO Auto-generated method stub
+				searchProducts();
+			}
+			
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				// TODO Auto-generated method stub
+				searchProducts();
+			}
+		});
+        
+        
         btnAll = new JButton("Tất cả");
         btnAll.addActionListener(e -> showProducts(allProducts));
         btnCoffee = new JButton("Cà phê");
         btnTea = new JButton("Trà");
         btnCake = new JButton("Bánh");
         topPanel.add(searchField);
-        topPanel.add(searchButton);
         topPanel.add(btnCoffee);
         topPanel.add(btnTea);
         topPanel.add(btnCake);
@@ -397,6 +409,17 @@ public class ManageProduct extends JPanel {
             }
         }
         return false;
+    }
+    
+    private void searchProducts() {
+        String searchText = searchField.getText().toLowerCase();
+        List<Product> filteredProducts = new ArrayList<>();
+        for (Product p : allProducts) {
+            if (p.getName().toLowerCase().contains(searchText)) {
+                filteredProducts.add(p);
+            }
+        }
+        showProducts(filteredProducts);
     }
     
     
