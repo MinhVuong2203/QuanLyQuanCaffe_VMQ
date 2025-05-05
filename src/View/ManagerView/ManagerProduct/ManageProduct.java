@@ -10,12 +10,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 
 public class ManageProduct extends JPanel {
     private JTextField searchField;
-    private JButton btnCoffee, btnTea, btnCake,btnAll;
+    private JButton btnCoffee, btnTea, btnCake,btnAll,searchButton;
     private JButton btnAdd, btnEdit, btnDelete;
     private JPanel productGridPanel;
 
@@ -42,35 +40,11 @@ public class ManageProduct extends JPanel {
 
         // Top: Search and filter
         JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
-        searchField = new JTextField(10);
-        searchField.setFont(new Font("Tahoma", Font.PLAIN, 16));
-        searchField.getDocument().addDocumentListener(new DocumentListener() {
-			
-			@Override
-			public void removeUpdate(DocumentEvent e) {
-				// TODO Auto-generated method stub
-				searchProducts();
-			}
-			
-			@Override
-			public void insertUpdate(DocumentEvent e) {
-				// TODO Auto-generated method stub
-				searchProducts();
-			}
-			
-			@Override
-			public void changedUpdate(DocumentEvent e) {
-				// TODO Auto-generated method stub
-				searchProducts();
-			}
-		});
-        
-        
         searchField = new JTextField("Tìm kiếm...", 20);
         searchButton = new JButton("Tìm kiếm");
         searchButton.setSize(new Dimension(100, 50));
         searchButton.setFont(new Font("Tahoma", Font.BOLD, 14));
-        searchButton.setBackground(Color.GREEN);
+        searchButton.setBackground(new Color(255,255,255));
         searchButton.addActionListener(e -> {
             String searchText = searchField.getText().toLowerCase();
             List<Product> filteredProducts = new ArrayList<>();
@@ -95,7 +69,12 @@ public class ManageProduct extends JPanel {
         btnTea.setFont(new Font("Tahoma", Font.BOLD, 14));
         btnTea.setBackground(new Color(106,162,50)); 
         btnCake = new JButton("Bánh");
+        btnCake.setSize(new Dimension(100, 50));
+        btnCake.setFont(new Font("Tahoma", Font.BOLD, 14));
+        btnCake.setBackground(new Color(255, 170, 100));
         topPanel.add(searchField);
+        topPanel.add(searchButton);
+        
         topPanel.add(btnCoffee);
         topPanel.add(btnTea);
         topPanel.add(btnCake);
@@ -351,9 +330,7 @@ public class ManageProduct extends JPanel {
         });
         
         
-        btnAdd.setBackground(Color.PINK);
-        btnEdit.setBackground(Color.LIGHT_GRAY);
-        btnDelete.setBackground(Color.PINK);
+       
 
 
         bottomPanel.add(btnAdd);
@@ -448,20 +425,29 @@ public class ManageProduct extends JPanel {
         }
         return false;
     }
-    
-    private void searchProducts() {
-        String searchText = searchField.getText().toLowerCase();
-        List<Product> filteredProducts = new ArrayList<>();
-        for (Product p : allProducts) {
-            if (p.getName().toLowerCase().contains(searchText)) {
-                filteredProducts.add(p);
-            }
-        }
-        showProducts(filteredProducts);
+    public static void main(String[] args) {
+        JFrame frame = new JFrame("Quản lý sản phẩm");
+        ManageProduct manageProduct = new ManageProduct();
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.add(manageProduct);
+        frame.setSize(1200, 800);
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
     }
     
+//     private void searchProducts() {
+//         String searchText = searchField.getText().toLowerCase();
+//         List<Product> filteredProducts = new ArrayList<>();
+//         for (Product p : allProducts) {
+//             if (p.getName().toLowerCase().contains(searchText)) {
+//                 filteredProducts.add(p);
+//             }
+//         }
+//         showProducts(filteredProducts);
+//     }
     
-}
+    
+// }
 }
     
     
