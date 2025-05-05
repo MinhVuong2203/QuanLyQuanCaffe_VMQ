@@ -23,6 +23,7 @@ public class ManageProduct extends JPanel {
     private List<Product> allProducts = new ArrayList<>();
     private ProductRespository productRespository;
     private Product selectedProduct = null;
+    private JLabel lblNewLabel;
 
 
     {
@@ -41,7 +42,8 @@ public class ManageProduct extends JPanel {
 
         // Top: Search and filter
         JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
-        searchField = new JTextField(20);
+        searchField = new JTextField(10);
+        searchField.setFont(new Font("Tahoma", Font.PLAIN, 16));
         searchField.getDocument().addDocumentListener(new DocumentListener() {
 			
 			@Override
@@ -69,6 +71,10 @@ public class ManageProduct extends JPanel {
         btnCoffee = new JButton("Cà phê");
         btnTea = new JButton("Trà");
         btnCake = new JButton("Bánh");
+        
+        lblNewLabel = new JLabel("Tìm kiếm:");
+        lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 16));
+        topPanel.add(lblNewLabel);
         topPanel.add(searchField);
         topPanel.add(btnCoffee);
         topPanel.add(btnTea);
