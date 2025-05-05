@@ -95,32 +95,6 @@ public class Payment_Interface extends JPanel {
         JScrollPane scrollPane = new JScrollPane(textArea_Bill);
         scrollPane.setBorder(null);
         billContentPanel.add(scrollPane, BorderLayout.CENTER);
-
-        // // Tạo JLabel cho QR Code
-        // qrCodeLabel = new JLabel();
-        // qrCodeLabel.setHorizontalAlignment(JLabel.LEFT);
-
-        // // Tải hình ảnh QR code
-        // try {
-        // // Đường dẫn có thể cần điều chỉnh tùy theo vị trí của file hình ảnh
-        // ImageIcon qrIcon = new ImageIcon("src/image/System_Image/QR_Payment.jpg");
-        // java.awt.Image scaledImage = qrIcon.getImage().getScaledInstance(150, 150,
-        // java.awt.Image.SCALE_SMOOTH);
-        // qrCodeLabel.setIcon(new ImageIcon(scaledImage));
-        // } catch (Exception e) {
-        // qrCodeLabel.setText("QR Code không khả dụng");
-        // e.printStackTrace();
-        // }
-
-        // // Panel chứa QR code và thông tin
-        // JPanel qrPanel = new JPanel(new BorderLayout());
-        // qrPanel.setBackground(Color.WHITE);
-        // qrPanel.add(qrCodeLabel, BorderLayout.CENTER);
-
-        // JLabel qrInfoLabel = new JLabel("Quét mã để thanh toán", JLabel.LEFT);
-        // qrInfoLabel.setFont(new Font("Arial", Font.BOLD, 12));
-        // qrPanel.add(qrInfoLabel, BorderLayout.SOUTH);
-
         // Thêm các thành phần vào panel
         billPanel.add(billContentPanel, BorderLayout.CENTER);
         // billPanel.add(qrPanel, BorderLayout.SOUTH);
@@ -146,6 +120,9 @@ public class Payment_Interface extends JPanel {
 
         btnQuayLai.setBackground(new Color(255, 204, 153));
         btnThanhToan.setBackground(new Color(153, 255, 153));
+
+        btnQuayLai.setBorderPainted(false);
+        btnThanhToan.setBorderPainted(false);
 
         // Thiết lập kích thước cho nút
         Dimension buttonSize = new Dimension(120, 40);
