@@ -377,10 +377,12 @@ public class ProductRespository implements IProductRespository {
 
             // Lấy thông tin cơ bản của đơn hàng
             String orderSql = """
-                        SELECT t.TableID, t.tableName, o.orderID, o.totalPrice, o.orderTime, e.employeeID, e.name as employeeName
+                        SELECT t.TableID, t.tableName, o.orderID, o.totalPrice, o.orderTime, e.employeeID, e.name as employeeName, o.Discount, 
+                               c.customerID, c.name as customerName, c.phone as customerPhone, c.point as customerPoint
                         FROM Orders o
                         JOIN TableCaffe t ON o.tableID = t.TableID
                         JOIN Employee e ON o.employeeID = e.employeeID
+                        JOIN Customer c ON o.customerID = c.customerID
                         WHERE o.tableID = ? AND o.status = N'Đang chuẩn bị'
                     """;
 
@@ -395,6 +397,16 @@ public class ProductRespository implements IProductRespository {
                 billInfo.put("orderTime", orderRs.getString("orderTime"));
                 billInfo.put("employeeName", orderRs.getString("employeeName"));
                 billInfo.put("employeeID", orderRs.getInt("employeeID"));
+
+                if (orderRs.getObject("customerID") != null) {
+                    billInfo.put("customerID", orderRs.getInt("customerID"));
+                    billInfo.put("customerName", orderRs.getString("customerName"));
+                    billInfo.put("customerPhone", orderRs.getString("customerPhone"));
+                    billInfo.put("customerPoint", orderRs.getDouble("customerPoint"));
+                }
+                
+                double discount = orderRs.getDouble("Discount");
+                billInfo.put("discount", discount);
 
                 int orderID = orderRs.getInt("orderID");
 
@@ -426,6 +438,12 @@ public class ProductRespository implements IProductRespository {
 
                 billInfo.put("products", products);
                 billInfo.put("calculatedTotal", total);
+
+                // Tính và thêm totalAfterDiscount vào billInfo
+                double finalTotal = total - discount;
+                if (finalTotal < 0)
+                    finalTotal = 0;
+                billInfo.put("totalAfterDiscount", finalTotal);
 
                 detailRs.close();
                 detailStmt.close();
@@ -564,48 +582,49 @@ public class ProductRespository implements IProductRespository {
             connection.close();
         }
     }
+
     @Override
-public Map<Product, Integer> getProductsByOrderID(int orderID) throws SQLException, ClassNotFoundException {
-    Map<Product, Integer> products = new HashMap<>();
+    public Map<Product, Integer> getProductsByOrderID(int orderID) throws SQLException, ClassNotFoundException {
+        Map<Product, Integer> products = new HashMap<>();
 
-    String sql = """
-        SELECT p.*, od.quantity 
-        FROM OrderDetail od 
-        JOIN Product p ON od.productID = p.productID 
-        WHERE od.orderID = ?
-    """;
+        String sql = """
+                    SELECT p.*, od.quantity
+                    FROM OrderDetail od
+                    JOIN Product p ON od.productID = p.productID
+                    WHERE od.orderID = ?
+                """;
 
-    try (Connection connection = jdbcUtils.connect();
-         PreparedStatement stmt = connection.prepareStatement(sql)) {
+        try (Connection connection = jdbcUtils.connect();
+                PreparedStatement stmt = connection.prepareStatement(sql)) {
 
-        stmt.setInt(1, orderID);
-        try (ResultSet rs = stmt.executeQuery()) {
+            stmt.setInt(1, orderID);
+            try (ResultSet rs = stmt.executeQuery()) {
 
-            boolean hasData = false;
-            while (rs.next()) {
-                hasData = true;
+                boolean hasData = false;
+                while (rs.next()) {
+                    hasData = true;
 
-                Product product = new Product();
-                product.setProductID(rs.getInt("productID"));
-                product.setName(rs.getString("name"));
-                product.setPrice(rs.getDouble("price"));
-                product.setSize(rs.getString("size"));
-                product.setImage(rs.getString("image"));
+                    Product product = new Product();
+                    product.setProductID(rs.getInt("productID"));
+                    product.setName(rs.getString("name"));
+                    product.setPrice(rs.getDouble("price"));
+                    product.setSize(rs.getString("size"));
+                    product.setImage(rs.getString("image"));
 
-                int quantity = rs.getInt("quantity");
-                products.put(product, quantity);
+                    int quantity = rs.getInt("quantity");
+                    products.put(product, quantity);
+                }
+
+                if (!hasData) {
+                    System.out.println("⚠️ Không có sản phẩm nào cho orderID = " + orderID);
+                }
             }
 
-            if (!hasData) {
-                System.out.println("⚠️ Không có sản phẩm nào cho orderID = " + orderID);
-            }
+        } catch (SQLException e) {
+            System.err.println("❌ Lỗi khi truy vấn sản phẩm theo orderID: " + orderID);
+            e.printStackTrace();
+            throw e; // Re-throw nếu muốn phía gọi xử lý tiếp
         }
-
-    } catch (SQLException e) {
-        System.err.println("❌ Lỗi khi truy vấn sản phẩm theo orderID: " + orderID);
-        e.printStackTrace();
-        throw e; // Re-throw nếu muốn phía gọi xử lý tiếp
-    }
 
     return products;
 }

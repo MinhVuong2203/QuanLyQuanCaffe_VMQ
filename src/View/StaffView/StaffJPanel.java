@@ -1,5 +1,6 @@
 package View.StaffView;
 
+import Model.Customer;
 import Model.Product;
 import Repository.Product.ProductRespository;
 import Repository.Customer.CustomerRepository;
@@ -44,13 +45,17 @@ public class StaffJPanel extends JPanel {
     private JScrollPane scrollPane_Menu;
 
     private JLabel Label_TKKH;
-    
+
     public int tableID;
     public int empID;
     public String customerPhone;
 
     private Map<Product, Integer> tempOrderProducts = new HashMap<>(); // Lưu tạm các món được chọn
     private int tempOrderId = productDao.initTempOrderId();
+    private JTextField textField_Points;
+    private JTextField textField_Discount;
+    private double discountAmount = 0.0;
+    private Customer currentCustomer = null;
 
     /**
      * Create the panel.
@@ -131,6 +136,45 @@ public class StaffJPanel extends JPanel {
         Button_clear.setFont(new Font("Arial", Font.BOLD, 16));
         Button_clear.setBounds(445, 503, 85, 27);
         order.add(Button_clear);
+
+        // Trong phần khởi tạo giao diện, thêm các thành phần UI sau button_Pay
+        JButton Button_CheckPoints = new JButton("Kiểm tra điểm");
+        Button_CheckPoints.setFont(new Font("Arial", Font.BOLD, 16));
+        Button_CheckPoints.setBounds(88, 545, 150, 28);
+        order.add(Button_CheckPoints);
+        Button_CheckPoints.addActionListener(ac);
+
+        JButton Button_UsePoints = new JButton("Sử dụng điểm");
+        Button_UsePoints.setFont(new Font("Arial", Font.BOLD, 16));
+        Button_UsePoints.setBounds(255, 545, 150, 28);
+        order.add(Button_UsePoints);
+        Button_UsePoints.addActionListener(ac);
+
+        // Thêm label để hiển thị điểm và giảm giá
+        JLabel Label_Points = new JLabel("Điểm tích lũy:");
+        Label_Points.setFont(new Font("Arial", Font.PLAIN, 16));
+        Label_Points.setBounds(0, 585, 100, 28);
+        order.add(Label_Points);
+
+        textField_Points = new JTextField();
+        textField_Points.setFont(new Font("Arial", Font.PLAIN, 16));
+        textField_Points.setBounds(100, 585, 100, 28);
+        order.add(textField_Points);
+        textField_Points.setColumns(10);
+        textField_Points.setEditable(false);
+
+        JLabel Label_Discount = new JLabel("Giảm giá:");
+        Label_Discount.setFont(new Font("Arial", Font.PLAIN, 16));
+        Label_Discount.setBounds(220, 585, 80, 28);
+        order.add(Label_Discount);
+
+        textField_Discount = new JTextField();
+        textField_Discount.setFont(new Font("Arial", Font.PLAIN, 16));
+        textField_Discount.setBounds(300, 585, 120, 28);
+        order.add(textField_Discount);
+        textField_Discount.setColumns(10);
+        textField_Discount.setEditable(false);
+        textField_Discount.setText("0đ");
 
         // trái
         JPanel panel_Menu = new JPanel();
@@ -355,10 +399,6 @@ public class StaffJPanel extends JPanel {
                 return;
             } else {
                 customerPhone = phone;
-                String totalText = total_monney.getText().replace("đ", "").replace(",", ".").trim();
-                double totalmoney = Double.parseDouble(totalText);
-                int cusID = customerRespository.getCustomerIDByPhone(phone);
-                customerRespository.plusPoint(cusID, totalmoney); // Cộng điểm cho khách hàng
             }
         } catch (ClassNotFoundException | IOException | SQLException e) {
             e.printStackTrace();
@@ -366,13 +406,13 @@ public class StaffJPanel extends JPanel {
     }
 
     // private boolean orderContainsProduct(String productName) {
-    //     for (int i = 0; i < placedModel.size(); i++) {
-    //         String item = placedModel.getElementAt(i);
-    //         if (item.startsWith(productName)) {
-    //             return true;
-    //         }
-    //     }
-    //     return false;
+    // for (int i = 0; i < placedModel.size(); i++) {
+    // String item = placedModel.getElementAt(i);
+    // if (item.startsWith(productName)) {
+    // return true;
+    // }
+    // }
+    // return false;
     // }
 
     private void updateOrAddItem(String displayText, double price, int additionalQty) {
@@ -412,7 +452,12 @@ public class StaffJPanel extends JPanel {
                 System.err.println("Invalid item format: " + item);
             }
         }
-        total_monney.setText(String.format(VN, "%.1fđ", total));
+        
+        // Áp dụng giảm giá nếu có
+        double finalTotal = total - discountAmount;
+        if (finalTotal < 0) finalTotal = 0;
+        
+        total_monney.setText(String.format(VN, "%.1fđ", finalTotal));
     }
 
     private void deleteItem(DefaultListModel<String> model, JList<String> list) {
@@ -549,14 +594,6 @@ public class StaffJPanel extends JPanel {
         this.order = order;
     }
 
-    // public int getOrderId() {
-    // return orderId;
-    // }
-
-    // public void setOrderId(int orderId) {
-    // this.orderId = orderId;
-    // }
-
     public int getEmpID() {
         return empID;
     }
@@ -587,5 +624,37 @@ public class StaffJPanel extends JPanel {
 
     public void setLabel_TKKH(JLabel label_TKKH) {
         Label_TKKH = label_TKKH;
+    }
+
+    public JTextField getTextField_Points() {
+        return textField_Points;
+    }
+    
+    public void setTextField_Points(JTextField textField_Points) {
+        this.textField_Points = textField_Points;
+    }
+    
+    public JTextField getTextField_Discount() {
+        return textField_Discount;
+    }
+    
+    public void setTextField_Discount(JTextField textField_Discount) {
+        this.textField_Discount = textField_Discount;
+    }
+    
+    public double getDiscountAmount() {
+        return discountAmount;
+    }
+    
+    public void setDiscountAmount(double discountAmount) {
+        this.discountAmount = discountAmount;
+    }
+    
+    public Customer getCurrentCustomer() {
+        return currentCustomer;
+    }
+    
+    public void setCurrentCustomer(Customer currentCustomer) {
+        this.currentCustomer = currentCustomer;
     }
 }
