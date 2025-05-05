@@ -41,6 +41,9 @@ public class ManageProduct extends JPanel {
         JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
         searchField = new JTextField("Tìm kiếm...", 20);
         searchButton = new JButton("Tìm kiếm");
+        searchButton.setSize(new Dimension(100, 50));
+        searchButton.setFont(new Font("Tahoma", Font.BOLD, 14));
+        searchButton.setBackground(Color.GREEN);
         searchButton.addActionListener(e -> {
             String searchText = searchField.getText().toLowerCase();
             List<Product> filteredProducts = new ArrayList<>();
@@ -52,10 +55,22 @@ public class ManageProduct extends JPanel {
             showProducts(filteredProducts);
         });
         btnAll = new JButton("Tất cả");
+        btnAll.setSize(new Dimension(100, 50));
+        btnAll.setFont(new Font("Tahoma", Font.BOLD, 14));
+        btnAll.setBackground(Color.GREEN);
         btnAll.addActionListener(e -> showProducts(allProducts));
         btnCoffee = new JButton("Cà phê");
+        btnCoffee.setSize(new Dimension(100, 50));
+        btnCoffee.setFont(new Font("Tahoma", Font.BOLD, 14));
+        btnCoffee.setBackground(new Color(138,62,11));
         btnTea = new JButton("Trà");
+        btnTea.setSize(new Dimension(100, 50));
+        btnTea.setFont(new Font("Tahoma", Font.BOLD, 14));
+        btnTea.setBackground(new Color(106,162,50)); 
         btnCake = new JButton("Bánh");
+        btnCake.setSize(new Dimension(100, 50));
+        btnCake.setFont(new Font("Tahoma", Font.BOLD, 14));
+        btnCake.setBackground(new Color(255, 170, 100));
         topPanel.add(searchField);
         topPanel.add(searchButton);
         topPanel.add(btnCoffee);
@@ -80,8 +95,17 @@ public class ManageProduct extends JPanel {
         // Bottom: Control buttons
         JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
         btnAdd = new JButton("Thêm sản phẩm");
+        btnAdd.setSize(new Dimension(100, 50));
+        btnAdd.setFont(new Font("Tahoma", Font.BOLD, 14));
+        btnAdd.setBackground(Color.GREEN);
         btnEdit = new JButton("Sửa sản phẩm");
+        btnEdit.setSize(new Dimension(100, 50));
+        btnEdit.setFont(new Font("Tahoma", Font.BOLD, 14));
+        btnEdit.setBackground(Color.RED);
         btnDelete = new JButton("Ngừng bán");
+        btnDelete.setSize(new Dimension(100, 50));
+        btnDelete.setFont(new Font("Tahoma", Font.BOLD, 14));
+        btnDelete.setBackground(Color.YELLOW);
 
         btnAdd.addActionListener(e -> {
             // Logic to add a new product
@@ -338,8 +362,11 @@ public class ManageProduct extends JPanel {
             lblImage.setHorizontalAlignment(SwingConstants.CENTER);
     
             JLabel lblName = new JLabel(p.getName() + " size " + p.getSize(), SwingConstants.CENTER);
+            lblName.setFont(new Font("Tahoma", Font.BOLD, 15));
             JLabel lblPrice = new JLabel(p.getPrice() + "đ", SwingConstants.CENTER);
             lblPrice.setOpaque(true);
+            lblPrice.setFont(new Font("Tahoma", Font.BOLD, 15));
+            lblPrice.setForeground(Color.RED);
             lblPrice.setBackground(Color.LIGHT_GRAY);
     
             card.add(lblName, BorderLayout.NORTH);
@@ -398,8 +425,17 @@ public class ManageProduct extends JPanel {
         }
         return false;
     }
+    public static void main(String[] args) {
+        JFrame frame = new JFrame("Quản lý sản phẩm");
+        ManageProduct manageProduct = new ManageProduct();
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.add(manageProduct);
+        frame.setSize(1200, 800);
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
     
     
+}
 }
     
     
