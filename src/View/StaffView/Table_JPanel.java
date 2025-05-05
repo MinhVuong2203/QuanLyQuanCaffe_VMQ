@@ -6,6 +6,7 @@ import Model.Table;
 import Repository.Order.OrderRepository;
 import Repository.Table.ITableRespository;
 import Repository.Table.TableRepository;
+import Utils.HoverEffect;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -21,6 +22,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 
 public class Table_JPanel extends JPanel {
@@ -79,6 +81,8 @@ public class Table_JPanel extends JPanel {
 		JPanel leftPanel = new JPanel();
 		leftPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 30, 20));
 		this.add(leftPanel, BorderLayout.CENTER);
+		
+		
 		// Buttons
 		ImageIcon icon = new ImageIcon(imgPath);
 		Image scaledImage = icon.getImage().getScaledInstance(70, 70, Image.SCALE_SMOOTH);
@@ -95,12 +99,18 @@ public class Table_JPanel extends JPanel {
 			// 1 dòng này để xét màu background button được trên LookFeel
 			Button.setBorderPainted(false);
 			///////////////////////////////////////
-			if (table.getStatus().equalsIgnoreCase("Trống"))
+			if (table.getStatus().equalsIgnoreCase("Trống")){
 				Button.setBackground(new Color(144, 238, 144));
-			else if (table.getStatus().equalsIgnoreCase("Có khách"))
+				new HoverEffect(Button, new Color(144, 238, 144), new Color(104, 198, 104));
+			}
+			else if (table.getStatus().equalsIgnoreCase("Có khách")) {
 				Button.setBackground(new Color(236, 112, 99));
-			else if (table.getStatus().equalsIgnoreCase("Bảo trì"))
+				new HoverEffect(Button, new Color(236, 112, 99), new Color(196, 72, 59));
+			}
+			else if (table.getStatus().equalsIgnoreCase("Bảo trì")) {
 				Button.setBackground(new Color(255, 250, 205));
+				new HoverEffect(Button, new Color(255, 250, 205), new Color(215, 210, 165));
+			}
 			Button.addActionListener(ac);
 			tableButtons.add(Button);
 			leftPanel.add(tableButtons.get(tableButtons.size() - 1));
@@ -116,7 +126,7 @@ public class Table_JPanel extends JPanel {
 		btnNewButton = new JButton(); // Gọi món, thanh toán
 		btnNewButton.setFont(new Font("Arial", Font.PLAIN, 20));
 		btnNewButton.addActionListener(acRight);
-		btnNewButton.setBounds(163, 461, 159, 42);
+		btnNewButton.setBounds(163, 461, 187, 42);
 		rightPanel.add(btnNewButton);
 
 		table_people = "src\\image\\Table_image\\Table_People.png";
@@ -201,6 +211,10 @@ public class Table_JPanel extends JPanel {
 				if (table.getStatus().equals("Trống")) {
 					this.table_people = "src\\image\\Table_image\\Table_Empty.png";
 					this.btnNewButton.setText("Gọi món");
+					this.btnNewButton.setIcon(new ImageIcon(new ImageIcon("src\\image\\Table_image\\order.png").getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH)));
+					this.btnNewButton.setBackground(new Color(181, 147, 118));
+					this.btnNewButton.setBorderPainted(false);
+					new HoverEffect(btnNewButton, new Color(181, 147, 118), new Color(150, 120, 80));
 					this.rightPanel.setBackground(new Color(144, 238, 144));
 					this.TimeLabel.setText("");
 					if (orderButton != null && orderButton.getParent() != null) {
@@ -209,19 +223,31 @@ public class Table_JPanel extends JPanel {
 				} else if (table.getStatus().equalsIgnoreCase("Có khách")) {
 					this.table_people = "src\\image\\Table_image\\Table_People.png";
 					this.btnNewButton.setText("Thanh toán");
+					this.btnNewButton.setIcon(new ImageIcon(new ImageIcon("src\\image\\Table_image\\payment.png").getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH)));
+					this.btnNewButton.setBackground(new Color(168, 179, 100));
+					this.btnNewButton.setBorderPainted(false);
+					new HoverEffect(btnNewButton, new Color(168, 179, 100), new Color(120, 140, 60));			
 					this.rightPanel.setBackground(new Color(236, 112, 99));
 					OrderRepository o = new OrderRepository();
 					String timeOr = o.getTimeByTableID(this.tableID);
 					this.TimeLabel.setText("Giờ đến: " + timeOr);
 					orderButton = new JButton("Gọi món");
 					orderButton.setFont(new Font("Arial", Font.PLAIN, 20));
-					orderButton.setBounds(342, 461, 159, 42);
+					orderButton.setBounds(360, 461, 187, 42);
+					this.orderButton.setIcon(new ImageIcon(new ImageIcon("src\\image\\Table_image\\order.png").getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH)));
+					this.orderButton.setBackground(new Color(181, 147, 118));
+					this.orderButton.setBorderPainted(false);
+					new HoverEffect(orderButton, new Color(181, 147, 118), new Color(150, 120, 80));
 					rightPanel.add(orderButton);
 					ActionListener acRight = new TableRightController(this);
 					orderButton.addActionListener(acRight);
 				} else if (table.getStatus().equalsIgnoreCase("Bảo trì")) {
 					this.table_people = "src\\image\\Table_image\\repair_img.png";
 					this.btnNewButton.setText("Đang bảo trì");
+					this.btnNewButton.setIcon(new ImageIcon(new ImageIcon("src\\image\\Table_image\\repair.png").getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH)));
+					this.btnNewButton.setBackground(new Color(86, 210, 219));
+					this.btnNewButton.setBorderPainted(false);
+					new HoverEffect(btnNewButton, new Color(86, 210, 219), new Color(40, 180, 190));
 					this.TimeLabel.setText("");
 					
 					this.rightPanel.setBackground(new Color(254, 250, 220));

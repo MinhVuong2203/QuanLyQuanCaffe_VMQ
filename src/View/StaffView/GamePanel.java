@@ -230,8 +230,11 @@ public class GamePanel extends JPanel {
 
         // Nút quay xúc xắc
         JButton btn_Lac = new JButton("Quay");
-        btn_Lac.setFont(new Font("Arial", Font.PLAIN, 18));
+        btn_Lac.setBackground(new Color(255, 255, 128));
+        btn_Lac.setForeground(new Color(0, 255, 0));
+        btn_Lac.setFont(new Font("Arial", Font.BOLD, 18));
         btn_Lac.setBounds(891, 543, 116, 34);
+        btn_Lac.setBorderPainted(false);
         btn_Lac.addActionListener(ac);
         panel_Center.add(btn_Lac);
 
@@ -304,6 +307,8 @@ public class GamePanel extends JPanel {
 
         // Trường nhập số xu cược
         bet_text = new JTextField();
+        bet_text.setBackground(new Color(128, 255, 255));
+        bet_text.setForeground(new Color(255, 0, 0));
         bet_text.setFont(new Font("Arial", Font.BOLD, 14));
         bet_text.setBounds(749, 543, 100, 34);
         bet_text.setColumns(10);
@@ -361,7 +366,7 @@ public class GamePanel extends JPanel {
     public void plusBet_text() {
         if (bet_text.getText().isEmpty()) bet_text.setText("0");
         if (!ValidationUtils.isNumeric(bet_text.getText())) return;
-        double x = Double.parseDouble(bet_text.getText()) + 10;
+        double x = Double.parseDouble(bet_text.getText()) + 1;
         DecimalFormat df = new DecimalFormat("0");
         df.setGroupingUsed(false);
         bet_text.setText(df.format(x));
@@ -371,8 +376,8 @@ public class GamePanel extends JPanel {
         if (bet_text.getText().equals("0")) return;
         if (!ValidationUtils.isNumeric(bet_text.getText())) return;
         double x = Double.parseDouble(bet_text.getText());
-        if (x >= 10) {
-            x -= 10;
+        if (x >= 1) {
+            x -= 1;
             DecimalFormat df = new DecimalFormat("0");
             df.setGroupingUsed(false);
             bet_text.setText(df.format(x));
