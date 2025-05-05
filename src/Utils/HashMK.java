@@ -5,7 +5,7 @@ public class HashMK {
         String[] passwords = {
             "quy1234@",
             "minh123@",
-            "q",
+            "vuong123@",
             "pass1234@",
             "trinh1234@@",
             "Ngotrang123@",

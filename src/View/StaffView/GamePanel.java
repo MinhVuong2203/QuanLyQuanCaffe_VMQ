@@ -87,8 +87,10 @@ public class GamePanel extends JPanel {
 
         // Nút xác nhận số điện thoại
         confirmPhoneButton = new JButton("Xác nhận");
+        confirmPhoneButton.setBackground(new Color(0, 255, 64));
         confirmPhoneButton.setFont(new Font("Arial", Font.BOLD, 14));
         confirmPhoneButton.setBounds(1225, 7, 100, 29);
+        confirmPhoneButton.setBorderPainted(false);
         confirmPhoneButton.addActionListener(e -> {
             String phone = phone_text.getText().trim();
             if (phone.isEmpty() || !phone.matches("\\d{10}")) {
@@ -168,12 +170,12 @@ public class GamePanel extends JPanel {
 
         costLb = new JLabel("?");
         costLb.setFont(new Font("Tahoma", Font.BOLD, 16));
-        costLb.setBounds(1030, 70, 188, 29);
+        costLb.setBounds(1030, 70, 144, 29);
         costLb.setHorizontalAlignment(SwingConstants.RIGHT);
         panel_Center.add(costLb);
 
         JLabel imageCost = new JLabel("");
-        imageCost.setBounds(1220, 70, 34, 34);
+        imageCost.setBounds(1184, 70, 34, 34);
         imageCost.setIcon(new ImageIcon(new ImageIcon("src\\image\\Customer_Image\\coin.png").getImage().getScaledInstance(34, 34, Image.SCALE_SMOOTH)));
         panel_Center.add(imageCost);
 
@@ -230,13 +232,18 @@ public class GamePanel extends JPanel {
 
         // Nút quay xúc xắc
         JButton btn_Lac = new JButton("Quay");
-        btn_Lac.setFont(new Font("Arial", Font.PLAIN, 18));
+        btn_Lac.setBackground(new Color(255, 255, 128));
+        btn_Lac.setForeground(new Color(0, 255, 0));
+        btn_Lac.setFont(new Font("Arial", Font.BOLD, 18));
         btn_Lac.setBounds(891, 543, 116, 34);
+        btn_Lac.setBorderPainted(false);
         btn_Lac.addActionListener(ac);
         panel_Center.add(btn_Lac);
 
         // Thể lệ
         btn_TheLe = new JButton("Thể lệ");
+        btn_TheLe.setBorderPainted(false);
+        btn_TheLe.setBackground(new Color(255, 128, 64));
         btn_TheLe.setFont(new Font("Arial", Font.BOLD, 16));
         btn_TheLe.setBounds(10, 10, 100, 27);
         btn_TheLe.addActionListener(ac);
@@ -304,6 +311,8 @@ public class GamePanel extends JPanel {
 
         // Trường nhập số xu cược
         bet_text = new JTextField();
+        bet_text.setBackground(new Color(128, 255, 255));
+        bet_text.setForeground(new Color(255, 0, 0));
         bet_text.setFont(new Font("Arial", Font.BOLD, 14));
         bet_text.setBounds(749, 543, 100, 34);
         bet_text.setColumns(10);
@@ -361,7 +370,7 @@ public class GamePanel extends JPanel {
     public void plusBet_text() {
         if (bet_text.getText().isEmpty()) bet_text.setText("0");
         if (!ValidationUtils.isNumeric(bet_text.getText())) return;
-        double x = Double.parseDouble(bet_text.getText()) + 10;
+        double x = Double.parseDouble(bet_text.getText()) + 1;
         DecimalFormat df = new DecimalFormat("0");
         df.setGroupingUsed(false);
         bet_text.setText(df.format(x));
@@ -371,8 +380,8 @@ public class GamePanel extends JPanel {
         if (bet_text.getText().equals("0")) return;
         if (!ValidationUtils.isNumeric(bet_text.getText())) return;
         double x = Double.parseDouble(bet_text.getText());
-        if (x >= 10) {
-            x -= 10;
+        if (x >= 1) {
+            x -= 1;
             DecimalFormat df = new DecimalFormat("0");
             df.setGroupingUsed(false);
             bet_text.setText(df.format(x));

@@ -20,6 +20,10 @@ import java.util.Map;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
+import com.itextpdf.kernel.xmp.impl.Utils;
+
+import Utils.*;
+
 import Controller.StaffController.StaffJPanelController;
 
 public class StaffJPanel extends JPanel {
@@ -107,7 +111,7 @@ public class StaffJPanel extends JPanel {
 
         JButton Button_Pay = new JButton("Đặt món");
         Button_Pay.setFont(new Font("Arial", Font.BOLD, 16));
-        Button_Pay.setBounds(222, 503, 118, 28);
+        Button_Pay.setBounds(222, 503, 118, 27);
         order.add(Button_Pay);
         // Button_Pay.addActionListener(e -> printBill());
         Button_Pay.addActionListener(ac);
@@ -125,7 +129,7 @@ public class StaffJPanel extends JPanel {
             }
         });
         Button_delete.setFont(new Font("Arial", Font.BOLD, 16));
-        Button_delete.setBounds(350, 503, 85, 27);
+        Button_delete.setBounds(350, 503, 84, 27);
         order.add(Button_delete);
         JButton Button_clear = new JButton("Clear");
         Button_clear.addActionListener(new ActionListener() {
@@ -134,7 +138,7 @@ public class StaffJPanel extends JPanel {
             }
         });
         Button_clear.setFont(new Font("Arial", Font.BOLD, 16));
-        Button_clear.setBounds(445, 503, 85, 27);
+        Button_clear.setBounds(445, 503, 84, 27);
         order.add(Button_clear);
 
         // Trong phần khởi tạo giao diện, thêm các thành phần UI sau button_Pay
@@ -176,6 +180,17 @@ public class StaffJPanel extends JPanel {
         textField_Discount.setEditable(false);
         textField_Discount.setText("0đ");
 
+        Button_Pay.setBorderPainted(false);
+        Button_delete.setBorderPainted(false);
+        Button_clear.setBorderPainted(false);
+        Button_CheckPoints.setBorderPainted(false);
+        Button_UsePoints.setBorderPainted(false);
+
+        new HoverEffect(Button_Pay, new Color(144, 238, 144), new Color(255, 250, 205));
+        new HoverEffect(Button_delete, new Color(144, 238, 144), new Color(255, 250, 205));
+        new HoverEffect(Button_clear, new Color(144, 238, 144), new Color(255, 250, 205));
+        new HoverEffect(Button_CheckPoints, new Color(144, 238, 144), new Color(255, 250, 205));
+        new HoverEffect(Button_UsePoints, new Color(144, 238, 144), new Color(255, 250, 205));
         // trái
         JPanel panel_Menu = new JPanel();
         panel_Menu.setLayout(new BorderLayout());

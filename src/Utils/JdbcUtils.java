@@ -29,7 +29,6 @@ public class JdbcUtils {
 		String driver = properties.getProperty("driver");
 		Class.forName(driver);
 		this.connection = DriverManager.getConnection(url, username, password);
-        System.out.println("Kết nối thành công");
 		return this.connection;
 	}
 
