@@ -52,6 +52,7 @@ import com.itextpdf.layout.properties.UnitValue;
 import Controller.StaffController.PaymentController;
 import Repository.Product.IProductRespository;
 import Repository.Product.ProductRespository;
+import Utils.HoverEffect;
 
 public class Payment_Interface extends JPanel {
     private Locale VN = new Locale("vi", "VN");
@@ -146,6 +147,10 @@ public class Payment_Interface extends JPanel {
         // Thêm vào panel
         btnPanel.add(btnQuayLai);
         btnPanel.add(btnThanhToan);
+
+        // Tạo hiệu ứng hover cho nút
+        new HoverEffect(btnQuayLai, new Color(255, 204, 153), new Color(255, 153, 51));
+        new HoverEffect(btnThanhToan, new Color(153, 255, 153), new Color(51, 204, 51));
 
         // Đặt combo box ở giữa và nút ở hai bên
         buttonPanel.add(btnPanel, BorderLayout.EAST);
@@ -282,8 +287,8 @@ public class Payment_Interface extends JPanel {
                 data[i][0] = stt++;
                 data[i][1] = productName;
                 data[i][2] = quantity;
-                data[i][3] = currencyFormat.format(unitPrice).replace("₫", "").trim();
-                data[i][4] = currencyFormat.format(totalProductPrice).replace("₫", "").trim();
+                data[i][3] = currencyFormat.format(unitPrice);
+                data[i][4] = currencyFormat.format(totalProductPrice);
             }
 
             billTable = new JTable(data, columnNames);
