@@ -14,7 +14,7 @@ import javax.swing.*;
 
 public class ManageProduct extends JPanel {
     private JTextField searchField;
-    private JButton btnCoffee, btnTea, btnCake,btnAll,searchButton;
+    private JButton btnCoffee, btnTea, btnCake,btnAll;
     private JButton btnAdd, btnEdit, btnDelete;
     private JPanel productGridPanel;
 
@@ -41,21 +41,36 @@ public class ManageProduct extends JPanel {
 
         // Top: Search and filter
         JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
-        searchField = new JTextField("Tìm kiếm...", 20);
-        searchButton = new JButton("Tìm kiếm");
-        searchButton.setSize(new Dimension(200, 80));
-        searchButton.setFont(new Font("Tahoma", Font.BOLD, 14));
-        searchButton.setBackground(new Color(255,255,255));
-        searchButton.addActionListener(e -> {
-            String searchText = searchField.getText().toLowerCase();
-            List<Product> filteredProducts = new ArrayList<>();
-            for (Product p : allProducts) {
-                if (p.getName().toLowerCase().contains(searchText)) {
-                    filteredProducts.add(p);
-                }
+        searchField = new JTextField(10);
+        searchField.setFont(new Font("Tahoma", Font.PLAIN, 16));
+        searchField.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            @Override
+            public void insertUpdate(javax.swing.event.DocumentEvent e) {
+                searchProducts();
             }
-            showProducts(filteredProducts);
+
+            @Override
+            public void removeUpdate(javax.swing.event.DocumentEvent e) {
+                searchProducts();
+            }
+
+            @Override
+            public void changedUpdate(javax.swing.event.DocumentEvent e) {
+                searchProducts();
+            }
+
+            private void searchProducts() {
+                String searchText = searchField.getText().toLowerCase();
+                List<Product> filteredProducts = new ArrayList<>();
+                for (Product p : allProducts) {
+                    if (p.getName().toLowerCase().contains(searchText)) {
+                        filteredProducts.add(p);
+                    }
+                }
+                showProducts(filteredProducts);
+            }
         });
+        
         btnAll = new JButton("Tất cả");
         btnAll.setSize(new Dimension(200, 100));
         btnAll.setBorderPainted(false);
@@ -82,7 +97,6 @@ public class ManageProduct extends JPanel {
         btnCake.setBackground(new Color(255, 170, 100));
         HoverEffect hover3 = new HoverEffect(btnCake, new Color(255, 170, 100), Color.YELLOW);
         topPanel.add(searchField);
-        topPanel.add(searchButton);
         
         topPanel.add(btnCoffee);
         topPanel.add(btnTea);
