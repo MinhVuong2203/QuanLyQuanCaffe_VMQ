@@ -20,6 +20,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 
 
@@ -140,6 +141,8 @@ public class manageOrderAndSalary extends JPanel {
         add(headerPanel, BorderLayout.NORTH);
 
         String[] invoiceCols = {"ID hóa đơn", "ID nhân viên", "ID khách hàng", "Giá", "Giá giảm", "Tổng tiền mỗi hóa đơn"};
+        JTableHeader header = new JTableHeader();
+        header.setFont(new Font("Arial", Font.BOLD, 14));
         invoiceModel = new DefaultTableModel(invoiceCols, 0){
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -158,6 +161,8 @@ public class manageOrderAndSalary extends JPanel {
         invoicePanel.add(invoiceScrollPane, BorderLayout.CENTER);
 
         String[] salaryCols = {"ID nhân viên", "Tên nhân viên", "Thời gian làm (giờ)", "Lương/giờ", "Tổng tiền"};
+        JTableHeader salaryHeader = new JTableHeader();
+        salaryHeader.setFont(new Font("Arial", Font.BOLD, 14));
         salaryModel = new DefaultTableModel(salaryCols, 0){
             @Override
             public boolean isCellEditable(int row, int column) {

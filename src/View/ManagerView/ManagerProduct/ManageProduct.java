@@ -377,7 +377,12 @@ public class ManageProduct extends JPanel {
             JLabel lblImage = new JLabel(scaledIcon);
             lblImage.setHorizontalAlignment(SwingConstants.CENTER);
     
-            JLabel lblName = new JLabel(p.getName() + " size " + p.getSize(), SwingConstants.CENTER);
+            String displayName = p.getName();
+            if (!p.getName().toLowerCase().startsWith("bánh")) {
+                displayName += " size " + p.getSize();
+            }
+            JLabel lblName = new JLabel(displayName, SwingConstants.CENTER);
+
             lblName.setFont(new Font("Tahoma", Font.BOLD, 15));
             JLabel lblPrice = new JLabel(p.getPrice() + "đ", SwingConstants.CENTER);
             lblPrice.setOpaque(true);
