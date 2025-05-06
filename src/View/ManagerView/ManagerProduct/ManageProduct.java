@@ -2,6 +2,7 @@ package View.ManagerView.ManagerProduct;
 
 import Model.Product;
 import Repository.Product.ProductRespository;
+import Utils.HoverEffect;
 import java.awt.*;
 import java.io.File;
 import java.nio.file.Path;
@@ -42,7 +43,7 @@ public class ManageProduct extends JPanel {
         JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
         searchField = new JTextField("Tìm kiếm...", 20);
         searchButton = new JButton("Tìm kiếm");
-        searchButton.setSize(new Dimension(100, 50));
+        searchButton.setSize(new Dimension(200, 80));
         searchButton.setFont(new Font("Tahoma", Font.BOLD, 14));
         searchButton.setBackground(new Color(255,255,255));
         searchButton.addActionListener(e -> {
@@ -56,22 +57,30 @@ public class ManageProduct extends JPanel {
             showProducts(filteredProducts);
         });
         btnAll = new JButton("Tất cả");
-        btnAll.setSize(new Dimension(100, 50));
+        btnAll.setSize(new Dimension(200, 100));
+        btnAll.setBorderPainted(false);
+        HoverEffect hoverEffect = new HoverEffect(btnAll, Color.GREEN, Color.YELLOW);
         btnAll.setFont(new Font("Tahoma", Font.BOLD, 14));
-        btnAll.setBackground(Color.GREEN);
+        
         btnAll.addActionListener(e -> showProducts(allProducts));
         btnCoffee = new JButton("Cà phê");
-        btnCoffee.setSize(new Dimension(100, 50));
+        btnCoffee.setSize(new Dimension(200, 100));
+        btnCoffee.setBorderPainted(false);
         btnCoffee.setFont(new Font("Tahoma", Font.BOLD, 14));
         btnCoffee.setBackground(new Color(138,62,11));
+        HoverEffect hover1 = new HoverEffect(btnCoffee, new Color(138,62,11), Color.YELLOW);
         btnTea = new JButton("Trà");
-        btnTea.setSize(new Dimension(100, 50));
+        btnTea.setSize(new Dimension(200, 100));
+        btnTea.setBorderPainted(false);
         btnTea.setFont(new Font("Tahoma", Font.BOLD, 14));
         btnTea.setBackground(new Color(106,162,50)); 
+        HoverEffect hover2 = new HoverEffect(btnTea, new Color(106,162,50), Color.YELLOW);
         btnCake = new JButton("Bánh");
-        btnCake.setSize(new Dimension(100, 50));
+        btnCake.setSize(new Dimension(200, 100));
+        btnCake.setBorderPainted(false);
         btnCake.setFont(new Font("Tahoma", Font.BOLD, 14));
         btnCake.setBackground(new Color(255, 170, 100));
+        HoverEffect hover3 = new HoverEffect(btnCake, new Color(255, 170, 100), Color.YELLOW);
         topPanel.add(searchField);
         topPanel.add(searchButton);
         
@@ -97,17 +106,24 @@ public class ManageProduct extends JPanel {
         // Bottom: Control buttons
         JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
         btnAdd = new JButton("Thêm sản phẩm");
-        btnAdd.setSize(new Dimension(100, 50));
+        btnAdd.setSize(new Dimension(200, 120));
+        btnAdd.setBorderPainted(false);
         btnAdd.setFont(new Font("Tahoma", Font.BOLD, 14));
         btnAdd.setBackground(Color.GREEN);
+        HoverEffect hover4 = new HoverEffect(btnAdd, Color.GREEN, new Color(38,228,38));
         btnEdit = new JButton("Sửa sản phẩm");
-        btnEdit.setSize(new Dimension(100, 50));
+        btnEdit.setSize(new Dimension(200, 120));
+        btnEdit.setBorderPainted(false);
         btnEdit.setFont(new Font("Tahoma", Font.BOLD, 14));
         btnEdit.setBackground(Color.RED);
+        HoverEffect hover5 = new HoverEffect(btnEdit, Color.RED, new Color(225,41,41));
         btnDelete = new JButton("Ngừng bán");
-        btnDelete.setSize(new Dimension(100, 50));
+        btnDelete.setSize(new Dimension(200, 120));
+        btnDelete.setBorderPainted(false);
         btnDelete.setFont(new Font("Tahoma", Font.BOLD, 14));
         btnDelete.setBackground(Color.YELLOW);
+        HoverEffect hover6 = new HoverEffect(btnDelete, Color.YELLOW, new Color(229,229,55));
+
 
         btnAdd.addActionListener(e -> {
             // Logic to add a new product

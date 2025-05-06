@@ -283,8 +283,6 @@ public class manageOrderAndSalary extends JPanel {
                 totalLabel.setText(formatCurrency(totalSalary));
             } else {
                 setTotalLabelColor(totalInvoice + totalSalary);
-                System.out.println("Tổng tiền (hiển thị): " + formatCurrency(totalInvoice + totalSalary));
-
                 totalLabel.setText(formatCurrency(totalInvoice + totalSalary));
             }
             
