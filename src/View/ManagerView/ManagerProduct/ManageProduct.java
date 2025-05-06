@@ -425,15 +425,15 @@ public class ManageProduct extends JPanel {
         }
         return false;
     }
-    public static void main(String[] args) {
-        JFrame frame = new JFrame("Quản lý sản phẩm");
-        ManageProduct manageProduct = new ManageProduct();
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.add(manageProduct);
-        frame.setSize(1200, 800);
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
-    }
+    // public static void main(String[] args) {
+    //     JFrame frame = new JFrame("Quản lý sản phẩm");
+    //     ManageProduct manageProduct = new ManageProduct();
+    //     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    //     frame.add(manageProduct);
+    //     frame.setSize(1200, 800);
+    //     frame.setLocationRelativeTo(null);
+    //     frame.setVisible(true);
+    // }
     
 //     private void searchProducts() {
 //         String searchText = searchField.getText().toLowerCase();

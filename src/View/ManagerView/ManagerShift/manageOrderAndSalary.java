@@ -11,6 +11,7 @@ import Utils.HoverEffect;
 import java.awt.*;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
@@ -21,12 +22,15 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 
+
 public class manageOrderAndSalary extends JPanel {
     private JComboBox<String> comboBox;
     private JTable invoiceTable, salaryTable;
     private JLabel totalLabel;
     private LocalDate fromDate = null;
     private LocalDate toDate = null;
+    DecimalFormat df = new DecimalFormat("#,###");
+
 
     private OrderRepository orderRepository;
     private EmployeeRespository employeeRepository;
@@ -125,6 +129,8 @@ public class manageOrderAndSalary extends JPanel {
         JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         topPanel.setBackground(Color.CYAN);
         comboBox = new JComboBox<>(new String[]{"Tất cả", "Lương nhân viên", "Khách"});
+        comboBox.setFont(new Font("Arial", Font.BOLD, 16));
+        comboBox.setSize(new Dimension(200, 30));
         comboBox.addActionListener(e -> updateTableDisplay());
         topPanel.add(comboBox);
 
@@ -140,6 +146,8 @@ public class manageOrderAndSalary extends JPanel {
                 return false;
             }};
         invoiceTable = new JTable(invoiceModel);
+        invoiceTable.setFont(new Font("Arial", Font.PLAIN, 16));
+        invoiceTable.setRowHeight(30);
         styleTable(invoiceTable);
         invoiceTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
@@ -156,6 +164,8 @@ public class manageOrderAndSalary extends JPanel {
                 return false;
             }};
         salaryTable = new JTable(salaryModel);
+        salaryTable.setFont(new Font("Arial", Font.PLAIN, 16));
+        salaryTable.setRowHeight(30);
         styleTable(salaryTable);
         salaryTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
@@ -171,6 +181,8 @@ public class manageOrderAndSalary extends JPanel {
         totalLabel = new JLabel("0");
         totalLabel.setOpaque(true);
         totalLabel.setBackground(Color.PINK);
+        totalLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        
         totalPanel.add(totalLabel);
         salaryPanel.add(totalPanel, BorderLayout.SOUTH);
 
@@ -259,20 +271,67 @@ public class manageOrderAndSalary extends JPanel {
                 salaryModel.addRow(row);
             }
 
+            
+            
+
             String selected = (String) comboBox.getSelectedItem();
             if ("Khách".equals(selected)) {
-                totalLabel.setText(String.valueOf(totalInvoice));
+                setTotalLabelColor(totalInvoice);
+                totalLabel.setText(formatCurrency(totalInvoice));
             } else if ("Lương nhân viên".equals(selected)) {
-                totalLabel.setText(String.valueOf(totalSalary));
+                setTotalLabelColor(totalSalary);
+                totalLabel.setText(formatCurrency(totalSalary));
             } else {
-                totalLabel.setText(String.valueOf(totalInvoice + totalSalary));
+                setTotalLabelColor(totalInvoice + totalSalary);
+                System.out.println("Tổng tiền (hiển thị): " + formatCurrency(totalInvoice + totalSalary));
+
+                totalLabel.setText(formatCurrency(totalInvoice + totalSalary));
             }
+            
 
         } catch (Exception e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(this, "Lỗi khi lấy dữ liệu: " + e.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
         }
     }
+
+    private String formatCurrency(double amount) {
+        if (amount < 0) {
+            amount = -amount;
+            if (amount >= 1_000_000_000) {
+                double tr = amount / 1_000_000_000.0;
+                return String.format("-"+"%.2f Tỷ", tr);
+            } else if (amount >= 1_000_000) {
+                double tr = amount / 1_000_000.0;
+                return String.format("-"+"%.2f Tr.", tr);
+            } else if (amount >= 1_000) {
+                double tr = amount / 1_000.0;
+                return String.format("-"+"%.2f K", tr);
+            } else {
+                return String.format("-"+"%.2f", amount);
+            }
+        }
+        if (amount >= 1_000_000_000) {
+            double tr = amount / 1_000_000_000.0;
+            return String.format("%.2f Tỷ", tr);
+        } else if (amount >= 1_000_000) {
+            double tr = amount / 1_000_000.0;
+            return String.format("%.2f Tr.", tr);
+        } else if (amount >= 1_000) {
+            double tr = amount / 1_000.0;
+            return String.format("%.2f K", tr);
+        } else {
+            return String.format("%.2f", amount);
+        }
+    }
+    private void setTotalLabelColor(double total) {
+        if (total < 0) {
+            totalLabel.setForeground(Color.RED);
+        } else {
+            totalLabel.setForeground(Color.BLACK);
+        }
+    }
+    
 
     private void resizeTableColumns(JTable table) {
         final int maxWidth = 500; // Giới hạn độ rộng tối đa
