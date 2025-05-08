@@ -209,6 +209,15 @@ public class StaffJPanelController implements ActionListener {
                         // Tính giảm giá (1 điểm = 1000đ)
                         double discount = pointsToUse * 1000;
 
+                        // giảm giá không vượt quá tổng tiền của hóa đơn
+                        if (discount > total) {
+                            JOptionPane.showMessageDialog(staffJPanel,
+                                    "Số điểm vượt quá giá trị hóa đơn! Tối đa chỉ được dùng " +
+                                            String.format("%.1f", total / 1000) + " điểm.",
+                                    "Lỗi", JOptionPane.ERROR_MESSAGE);
+                            return;
+                        }
+
                         // Áp dụng giảm giá
                         staffJPanel.setDiscountAmount(discount);
                         staffJPanel.getTextField_Discount().setText(String.format("%,.0fđ", discount));
