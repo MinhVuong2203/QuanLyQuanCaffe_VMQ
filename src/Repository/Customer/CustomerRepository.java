@@ -25,7 +25,7 @@ public class CustomerRepository implements ICustomerRespository {
             String sql = "SELECT MAX(customerID) FROM Customer";
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) return rs.getInt(1); // Trả về ID lớn nhất
-        } catch (ClassNotFoundException | SQLException e){
+        } catch ( SQLException e){
         } finally {
             connection.close();
         }

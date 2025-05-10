@@ -1,39 +1,46 @@
 package Utils;
 
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
 public class JdbcUtils {
-    private Connection connection;
+    private static HikariDataSource dataSource;
     private Properties properties;
 
-    public JdbcUtils() throws IOException, ClassNotFoundException, SQLException{
+    public JdbcUtils() throws IOException, ClassNotFoundException, SQLException {
         this.properties = new Properties();
         properties.load(new FileInputStream("resource/database.properties"));
         properties.load(new FileInputStream("resource/message.properties"));
-        connect();
+
+        if (dataSource == null) { // Chỉ khởi tạo 1 lần duy nhất
+            HikariConfig config = new HikariConfig();
+            config.setJdbcUrl(properties.getProperty("url"));
+            config.setUsername(properties.getProperty("username"));
+            config.setPassword(properties.getProperty("password"));
+            config.setDriverClassName(properties.getProperty("driver"));
+            config.addDataSourceProperty("cachePrepStmts", "true");
+            config.addDataSourceProperty("prepStmtCacheSize", "250");
+            config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
+
+            dataSource = new HikariDataSource(config);
+            System.out.println("Khởi tạo connection pool thành công");
+        }
     }
 
-    public Connection connect() throws ClassNotFoundException, SQLException {
-		if (this.connection != null && !this.connection.isClosed()) {
-			return this.connection;
-		}
-
-		String url = properties.getProperty("url");
-		String username = properties.getProperty("username");
-		String password = properties.getProperty("password");
-		String driver = properties.getProperty("driver");
-		Class.forName(driver);
-		this.connection = DriverManager.getConnection(url, username, password);
-		return this.connection;
-	}
-
-    public void connectDatabase() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public Connection connect() throws SQLException {
+        return dataSource.getConnection();
     }
 
+    public void closePool() {
+        if (dataSource != null && !dataSource.isClosed()) {
+            dataSource.close();
+            System.out.println("Đã đóng connection pool");
+        }
+    }
 }

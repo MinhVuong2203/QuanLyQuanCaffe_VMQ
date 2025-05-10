@@ -20,24 +20,26 @@ public class UserAccountRepository implements IUserAccountRepository {
 
     public UserAccountRepository() throws IOException, ClassNotFoundException, SQLException {
         this.jdbcUtils = new JdbcUtils();
+        
     }
 
     public User login(String userName, String passWord) throws SQLException {
         try {
             connection = jdbcUtils.connect();
             Statement stmt = connection.createStatement();
-            String sql = "SELECT * FROM UserAccount";  // Lấy tất cả bản nhân viên
+            passWord = ConvertInto.hashPassword(passWord);
+            String sql = "SELECT * FROM UserAccount WHERE username = '" + userName + "' AND password = '" + passWord + "'";  // Lấy tất cả bản nhân viên
             ResultSet rs = stmt.executeQuery(sql);
         
-            while (rs.next()) {
-                if (userName.equals(rs.getString(2).trim()) && ConvertInto.verifyPassword(passWord, rs.getString(3).trim())){
+            if (rs.next()) {
+//                if (userName.equals(rs.getString(2).trim()) && ConvertInto.verifyPassword(passWord, rs.getString(3).trim())){
                     int getID = rs.getInt(1);
                     String getRole = rs.getString(4);
                     rs.close();
                     stmt.close();
                     return new User(getID,"", "", "", userName,  passWord, getRole);
                 }
-            }
+            
             rs.close();
             stmt.close();
         }

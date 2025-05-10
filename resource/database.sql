@@ -46,11 +46,6 @@ CREATE TABLE Orders(
     foreign key (customerID) references Customer(customerID)
 )
 
-alter table Orders
-ADD Discount decimal(10,0) NOT NULL DEFAULT 0;
-ALTER TABLE Orders
-ALTER COLUMN totalPrice decimal(10,0);
-
 create table [Product](
     productID int PRIMARY KEY,
     name nvarchar(50) NOT NULL,
@@ -82,57 +77,63 @@ CREATE TABLE EmployeeShift (
     startTime DATETIME NOT NULL,
     endTime DATETIME NOT NULL,
     hourWorked AS DATEDIFF(MINUTE, startTime, endTime) / 60.0 PERSISTED,
-    salary DECIMAL(10,2) NULL,
+	hourWage INT,
+    salary DECIMAL(10,2) NOT NULL DEFAULT 0,
 	status NVARCHAR(50) DEFAULT N'chưa điểm danh',
     FOREIGN KEY (employeeID) REFERENCES Employee(employeeID)
 );
 
-GO
 -- Dùng trigger để tự động lấy lương của nhân viên, và tính tiền lương theo ca
-go
+GO
 CREATE TRIGGER trg_CalculateSalary
 ON EmployeeShift
 AFTER INSERT, UPDATE
 AS
 BEGIN
     UPDATE es
-    SET es.salary = es.hourWorked * e.hourWage
+    SET es.salary = CASE 
+                        WHEN es.status = N'chưa điểm danh' THEN 0
+                        ELSE es.hourWorked * es.hourWage
+                    END
     FROM EmployeeShift es
-    JOIN Employee e ON es.employeeID = e.employeeID
-    WHERE es.salary IS NULL;
+    WHERE es.status = N'chưa điểm danh' OR es.salary != 
+        (CASE 
+             WHEN es.status = N'chưa điểm danh' THEN 0
+             ELSE es.hourWorked * es.hourWage
+         END);
 END;
 
 --Insert data
 
 -- userAccount
 INSERT INTO UserAccount (ID, username, password, role) VALUES
-(100001, 'quy123', 'FTQft1u8HZnOHAjCOVH13MCPokjIOIGKs1Gpm5Jqgag=', N'Quản lí'),
-(100002, 'minh123', 'RAycCtCJYS9iHENtq77sNQHSh/b3GosUgFxfc2OmzlI=', N'Quản lí'),
-(100003, 'vuong123', '6gS5n5kVDOUZ3xqtOqOwHpKJ65m4Q87KVY/JhGpwUZ8=', N'Quản lí'),
-(100004, 'duypham123', 'xpXHU8l//rn51AqG5/dVU+EV0JogOcj3TxUE04j61rI=', N'thu ngân'),
-(100005, 'maitrinh123', '2Y9HhBICzk7iWG8502bDsiK7rLBpgD8hOhLasONhL7Y=', N'thu ngân'),
-(100006, 'trangngo12', 'KDvuXso43zWo3Yda9Jc2gkMDUKrzd+0p7ta8c0O4MZ8=', N'pha chế'),
-(100007, 'lanvu123', 'XyxbQvbbzV8b0pq89FmvZZ4YRcfhcM1Oks4ckBiI2+g=', N'phục vụ'),
-(100008, 'hoang123', 'xXz4PwWcUCfIkgI4Cih6DaREk1vSIwCoAH3e3CnaT18=', N'thu ngân'),
-(100009, 'thanh123', 'CeESODFm5wP9G8MFQjiMMEMJ32KCoh5rrmOLCHQmRfo=', N'thu ngân'),
-(100010, 'linh123', '797rdUtaT8uXEVRqbRmCsmMhfxi0C5Wv+QoPe8HAf9M=', N'thu ngân'),
-(100011, 'nam1234', 'WrRhSUfoZtbJippliv4QkJ3HTXDmhNQ6EPvregdkA2c=', N'pha chế'),
-(100012, 'hien123', 'az5TUjq7GnULbEFHqdPQhVCZPlEisuKO1+OK1KuaOU0=', N'pha chế'),
-(100013, 'bao1234', 'ofJBCx09Zpu83nsYA1t2i0nxY9UYNZU0R9RMqCw8u54=', N'pha chế'),
-(100014, 'anh1234', 'b6kkYdT8Jhwiy7JjvoXQsjjrKI4AUNWml3UvkLRML9I=', N'pha chế'),
-(100015, 'tuan123', 'YBzjroEkmpnlpvrrX/XlDbn0aSXGzgjiEpmOfXREdKo=', N'phục vụ'),
-(100016, 'mai1234', 'jrtHoeBSjFU25drSeDaeCh+OJW08DN1bYu1xQ++WGCg=', N'phục vụ'),
-(100017, 'huy1234', 'M9O2ubw5yB/ITy+oE55PDXq1Izx/6pu3uuIMAU+mZC4=', N'phục vụ'),
-(100018, 'nga1234', 'pPD8F8150T4NTG8JARFc2BNqeN1vRa91bYBhd0PTVNs=', N'phục vụ'),
-(100019, 'khoa123', 'eylUcgwkgqu1rLFWApiV1ck4D8x+83k6q5NzMzhpMuw=', N'phục vụ'),
-(100020, 'phuc123', '+q3FjeeOBUtua31Y+uRMXEz0zumgvFXnTfyARKNpYag=', N'phục vụ'),
-(100021, 'tam1234', 'j7lm41E6uPiyUKgzwSRPPn4t6ffJum8gRTtf94rGhpw=', N'phục vụ'),
-(100022, 'yen1234', 'TwfM+L5CmTwS2ZsX5nzQpzUbxOaAVZDVXQob2CDaIT8=', N'phục vụ'),
-(100023, 'lam1234', 'gEhwYX6w0K5HQdTAaBKzCaV5dz/42BKZ9+XLtB3EzlI=', N'phục vụ'),
-(100024, 'dung123', 'zvsnGiZVOT9088XY0kDtMuXxb7pSdcrF2d/a6iEuJAM=', N'phục vụ'),
-(100025, 'nhi1234', 'hnh3I65sWxs+xAm4Opppj/LPwENk9E+j4nW17lx8U04=', N'phục vụ'),
-(100026, 'quang123', 'G16EM32yrrF6U1MhNH3skITfiDrtwKHedFkznDw+z/Y=', N'phục vụ'),
-(100027, 'thu1234', 'VcGL6wdv0SfrTf2K5eDB4y/mJP/8x1BBazFaIEIRxfg=', N'phục vụ');
+(100001, 'Quy123', 'FTQft1u8HZnOHAjCOVH13MCPokjIOIGKs1Gpm5Jqgag=', N'Quản lí'),
+(100002, 'Minh123', 'RAycCtCJYS9iHENtq77sNQHSh/b3GosUgFxfc2OmzlI=', N'Quản lí'),
+(100003, 'Vuong123', '6gS5n5kVDOUZ3xqtOqOwHpKJ65m4Q87KVY/JhGpwUZ8=', N'Quản lí'),
+(100004, 'Duypham123', 'xpXHU8l//rn51AqG5/dVU+EV0JogOcj3TxUE04j61rI=', N'thu ngân'),
+(100005, 'Maitrinh123', '2Y9HhBICzk7iWG8502bDsiK7rLBpgD8hOhLasONhL7Y=', N'thu ngân'),
+(100006, 'Trangngo12', '2ynqOtkczrsoULLeGzRQkPpn+ioB8kLVEMhZq2g65Js=', N'pha chế'),
+(100007, 'Lanvu123', 'XyxbQvbbzV8b0pq89FmvZZ4YRcfhcM1Oks4ckBiI2+g=', N'phục vụ'),
+(100008, 'Hoang123', 'xXz4PwWcUCfIkgI4Cih6DaREk1vSIwCoAH3e3CnaT18=', N'thu ngân'),
+(100009, 'Thanh123', 'CeESODFm5wP9G8MFQjiMMEMJ32KCoh5rrmOLCHQmRfo=', N'thu ngân'),
+(100010, 'Linh123', '797rdUtaT8uXEVRqbRmCsmMhfxi0C5Wv+QoPe8HAf9M=', N'thu ngân'),
+(100011, 'Nam1234', 'WrRhSUfoZtbJippliv4QkJ3HTXDmhNQ6EPvregdkA2c=', N'pha chế'),
+(100012, 'Hien123', 'az5TUjq7GnULbEFHqdPQhVCZPlEisuKO1+OK1KuaOU0=', N'pha chế'),
+(100013, 'Bao1234', 'ofJBCx09Zpu83nsYA1t2i0nxY9UYNZU0R9RMqCw8u54=', N'pha chế'),
+(100014, 'Anh1234', 'b6kkYdT8Jhwiy7JjvoXQsjjrKI4AUNWml3UvkLRML9I=', N'pha chế'),
+(100015, 'Tuan123', 'YBzjroEkmpnlpvrrX/XlDbn0aSXGzgjiEpmOfXREdKo=', N'phục vụ'),
+(100016, 'Mai1234', 'jrtHoeBSjFU25drSeDaeCh+OJW08DN1bYu1xQ++WGCg=', N'phục vụ'),
+(100017, 'Huy1234', 'M9O2ubw5yB/ITy+oE55PDXq1Izx/6pu3uuIMAU+mZC4=', N'phục vụ'),
+(100018, 'Nga1234', 'pPD8F8150T4NTG8JARFc2BNqeN1vRa91bYBhd0PTVNs=', N'phục vụ'),
+(100019, 'Khoa123', 'eylUcgwkgqu1rLFWApiV1ck4D8x+83k6q5NzMzhpMuw=', N'phục vụ'),
+(100020, 'Phuc123', '+q3FjeeOBUtua31Y+uRMXEz0zumgvFXnTfyARKNpYag=', N'phục vụ'),
+(100021, 'Tam1234', 'j7lm41E6uPiyUKgzwSRPPn4t6ffJum8gRTtf94rGhpw=', N'phục vụ'),
+(100022, 'Yen1234', 'TwfM+L5CmTwS2ZsX5nzQpzUbxOaAVZDVXQob2CDaIT8=', N'phục vụ'),
+(100023, 'Lam1234', 'gEhwYX6w0K5HQdTAaBKzCaV5dz/42BKZ9+XLtB3EzlI=', N'phục vụ'),
+(100024, 'Dung123', 'zvsnGiZVOT9088XY0kDtMuXxb7pSdcrF2d/a6iEuJAM=', N'phục vụ'),
+(100025, 'Nhi1234', 'hnh3I65sWxs+xAm4Opppj/LPwENk9E+j4nW17lx8U04=', N'phục vụ'),
+(100026, 'Quang123', 'G16EM32yrrF6U1MhNH3skITfiDrtwKHedFkznDw+z/Y=', N'phục vụ'),
+(100027, 'Thu1234', 'VcGL6wdv0SfrTf2K5eDB4y/mJP/8x1BBazFaIEIRxfg=', N'phục vụ');
 
 --Employee
 INSERT INTO Employee (employeeID, name, phone, hourWage, CCCD, birthDate, gender, image)
@@ -171,12 +172,12 @@ INSERT INTO [dbo].[Customer]([customerID],[name],[phone],[point])   -- Để ph�
 VALUES (100000, N'Khách vãng lai', '0000000000',0)
 INSERT INTO [dbo].[Customer] ([customerID], [name], [phone], [point])
 VALUES 
-(100001, N'Nguyễn Văn Hóa', '0878347892', 101),
+(100001, N'Nguyễn Văn Hóa', '0878347892', 30),
 (100002, N'Võ Thiện Linh', '0345698765', 30),
 (100003, N'Võ Hải Nam', '0345123789', 30),
 (100004, N'Minh Nghĩa', '0878347890', 30),
-(100005, N'Nguyễn Ly', '0962018371', 20),
-(100006, N'Hữu Nhân', '0123456789', 50);
+(100005, N'Nguyễn Ly', '0962018371', 30),
+(100006, N'Hữu Nhân', '0123456789', 30);
 
 --Product
 INSERT INTO Product (ProductID, name, price,size, image) VALUES
@@ -272,19 +273,24 @@ VALUES
 (3, 3, N'Ví điện tử', 49000.00, '2025-03-24 09:45:00'),
 (4, 4, N'Tiền mặt', 55000.00, '2025-03-24 10:15:00');
 
-INSERT INTO EmployeeShift (shiftID,employeeID, startTime, endTime)
+INSERT INTO EmployeeShift(shiftID,employeeID, startTime, endTime, hourWage, status)
 VALUES 
-(100, 100004,'2025-04-01 08:00:00', '2025-04-01 12:00:00'),
-(101, 100005 ,'2025-04-02 14:00:00', '2025-04-02 18:00:00'),
-(102, 100006,'2025-04-01 09:00:00', '2025-04-01 15:00:00'),
-(103, 100007,'2025-04-03 07:00:00', '2025-04-03 11:00:00'),
-(104, 100005,'2025-04-02 10:00:00', '2025-04-02 14:00:00'),
-(105, 100004,'2025-04-03 11:00:00', '2025-04-03 17:00:00')
+(100, 100004,'2025-04-01 08:00:00', '2025-04-01 12:00:00', 40000, N'Đã điểm danh'),
+(101, 100005 ,'2025-04-02 14:00:00', '2025-04-02 18:00:00', 40000, N'Đã điểm danh'),
+(102, 100006,'2025-04-01 09:00:00', '2025-04-01 15:00:00', 45000, N'Đã điểm danh'),
+(103, 100007,'2025-04-03 07:00:00', '2025-04-03 11:00:00', 32000, N'Đã điểm danh'),
+(104, 100005,'2025-04-02 10:00:00', '2025-04-02 14:00:00', 40000, N'chưa điểm danh'),
+(105, 100004,'2025-04-03 11:00:00', '2025-04-03 17:00:00', 40000, N'Đã điểm danh')
 
 
 
--- Xóa tất cả các bảng và chạy lại các dòng trên
--- Tắt kiểm tra khóa ngoại
-EXEC sp_msforeachtable "ALTER TABLE ? NOCHECK CONSTRAINT ALL"
--- Xóa toàn bộ bảng
-EXEC sp_msforeachtable "DROP TABLE ?"
+-- Xóa tất cả dữ liệu các bảng
+DELETE FROM OrderDetail;
+DELETE FROM Payment;
+DELETE FROM Orders;
+DELETE FROM EmployeeShift;
+DELETE FROM Employee;
+DELETE FROM Customer;
+DELETE FROM TableCaffe;
+DELETE FROM Product;
+DELETE FROM UserAccount;

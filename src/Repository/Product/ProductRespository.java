@@ -44,8 +44,6 @@ public class ProductRespository implements IProductRespository {
             return list;
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            connection.close();
         }
         return null;
     }
@@ -70,8 +68,6 @@ public class ProductRespository implements IProductRespository {
             stmt.close();
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            connection.close();
         }
         return product;
 
@@ -82,7 +78,6 @@ public class ProductRespository implements IProductRespository {
             throws SQLException {
         try {
             connection = jdbcUtils.connect();
-
             // Kiểm tra xem orderID đã tồn tại trong bảng Orders chưa
             String checkSql = "SELECT orderID FROM Orders WHERE orderID = ?";
             var checkStmt = connection.prepareStatement(checkSql);
@@ -143,8 +138,6 @@ public class ProductRespository implements IProductRespository {
             stmt.close();
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            connection.close();
         }
     }
 
@@ -160,15 +153,13 @@ public class ProductRespository implements IProductRespository {
             stmt.close();
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            connection.close();
         }
     }
 
     @Override
     public int initTempOrderId() throws SQLException {
         try {
-            connection = jdbcUtils.connect();
+            connection = jdbcUtils.connect(); 
             Statement stmt = connection.createStatement();
             String sql = "SELECT MAX(orderID) FROM Orders";
             ResultSet rs = stmt.executeQuery(sql);
@@ -177,7 +168,7 @@ public class ProductRespository implements IProductRespository {
                 return tempOrderId = rs.getInt(1) + 1;
             }
             return 1;
-        } catch (ClassNotFoundException | SQLException e) {
+        } catch ( SQLException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
@@ -251,8 +242,6 @@ public class ProductRespository implements IProductRespository {
             stmt.close();
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            connection.close();
         }
     }
 
@@ -325,8 +314,6 @@ public class ProductRespository implements IProductRespository {
             stmt.close();
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            connection.close();
         }
         return -1; // Return -1 if no product found
     }
@@ -346,8 +333,6 @@ public class ProductRespository implements IProductRespository {
             stmt.close();
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            connection.close();
         }
         return -1; // Return -1 if no product found
     }
@@ -362,8 +347,6 @@ public class ProductRespository implements IProductRespository {
             stmt.close();
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            connection.close();
         }
     }
 
@@ -374,7 +357,6 @@ public class ProductRespository implements IProductRespository {
 
         try {
             connection = jdbcUtils.connect();
-
             // Lấy thông tin cơ bản của đơn hàng
             String orderSql = """
                         SELECT t.TableID, t.tableName, o.orderID, o.totalPrice, o.orderTime, e.employeeID, e.name as employeeName, o.Discount, 
@@ -487,6 +469,7 @@ public class ProductRespository implements IProductRespository {
     public void updateProduct(Product product) throws SQLException {
         try {
             connection = jdbcUtils.connect();
+        
             String sql = "UPDATE Product SET name = ?, price = ?, size = ?, image = ? WHERE productID = ?";
             var stmt = connection.prepareStatement(sql);
             stmt.setString(1, product.getName());
@@ -593,7 +576,6 @@ public class ProductRespository implements IProductRespository {
                     JOIN Product p ON od.productID = p.productID
                     WHERE od.orderID = ?
                 """;
-
         try (Connection connection = jdbcUtils.connect();
                 PreparedStatement stmt = connection.prepareStatement(sql)) {
 
@@ -633,7 +615,7 @@ public class ProductRespository implements IProductRespository {
 public int getNextProductId() throws SQLException, IOException, ClassNotFoundException {
     String sql = "SELECT MAX(productID) FROM Product";
     try (Connection conn = new JdbcUtils().connect();
-         Statement stmt = conn.createStatement();
+    	 Statement stmt = conn.createStatement();
          ResultSet rs = stmt.executeQuery(sql)) {
         return rs.next() ? rs.getInt(1) + 1 : 1;
     }

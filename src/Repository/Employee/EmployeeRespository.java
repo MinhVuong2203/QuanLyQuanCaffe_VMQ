@@ -212,7 +212,6 @@ public class EmployeeRespository implements IEmployeeRespository {
                 " JOIN EmployeeShift es ON es.employeeID = e.employeeID\r\n" +
                 " JOIN UserAccount ua ON e.employeeID = ua.ID\r\n";
         // " FROM Employee \r\n";
-
         try (Connection connection = jdbcUtils.connect();
                 Statement stmt = connection.createStatement();
                 ResultSet rs = stmt.executeQuery(sql)) {
@@ -243,7 +242,6 @@ public class EmployeeRespository implements IEmployeeRespository {
                 + "FROM Employee e "
                 + "JOIN UserAccount ua ON e.employeeID = ua.ID";
         // " FROM Employee \r\n";
-
         try (Connection connection = jdbcUtils.connect();
                 Statement stmt = connection.createStatement();
                 ResultSet rs = stmt.executeQuery(sql)) {
@@ -427,7 +425,7 @@ public class EmployeeRespository implements IEmployeeRespository {
                         hourWage));
             }
             return employees;
-        } catch (SQLException | ClassNotFoundException e) {
+        } catch (SQLException e) {
             System.err.println("Error executing query: " + e.getMessage());
             e.printStackTrace();
         }
@@ -482,7 +480,6 @@ public class EmployeeRespository implements IEmployeeRespository {
 @Override
 public List<Employee> getShiftsBetweenDates(LocalDate fromDate, LocalDate toDate) throws SQLException, ClassNotFoundException {
     List<Employee> employees = new ArrayList<>();
-
     String sql = """
         SELECT E.* FROM EmployeeShift ES
         JOIN Employee E ON ES.employeeID = E.employeeID
