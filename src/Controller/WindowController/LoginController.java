@@ -14,13 +14,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.sql.SQLException;
+
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-
 
 public class LoginController implements ActionListener {   // Controller gọi view và service
     private LoginView loginView;  
@@ -36,70 +38,85 @@ public class LoginController implements ActionListener {   // Controller gọi v
         if (str.equals("Quay lại")) {
             loginView.dispose();
             SwingUtilities.invokeLater(() -> new WelcomeScreen().setVisible(true));
-        }else if (str.equals("Đăng ký")) {
+        } else if (str.equals("Đăng ký")) {
             loginView.dispose();
             new SignUpView();
-        }
-        else if (str.equals("Đăng nhập")) {
+        } else if (str.equals("Đăng nhập")) {
             // Đăng nhập
             String userName = loginView.getTextField().getText(); // Lấy tên đăng nhập từ TextField
             String password = new String(loginView.getPasswordField().getPassword()); // Lấy mật khẩu từ PasswordField
-            if (userName.isEmpty() || password.isEmpty()){
+            if (userName.isEmpty() || password.isEmpty()) {
                 loginView.showMessage("Vui lòng nhập đầy đủ tài khoản và mật khẩu!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             } else {
-                try {
-                    u = new UserAccountService(); // Gọi UserAccount Service
-                    User user = u.login(userName, password); // Thực hiện đăng nhập và trả về đối tượng User
-                    if (user == null){
-                        loginView.showMessage("Thông tin đăng nhập không đúng!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-                        return;
+            	this.OpenLoading();
+                // Sử dụng SwingWorker để đăng nhập
+                SwingWorker<User, Void> worker = new SwingWorker<>() {
+                    @Override
+                    protected User doInBackground() throws Exception {
+                        u = new UserAccountService(); // Gọi UserAccount Service
+                        return u.login(userName, password); // Thực hiện đăng nhập
                     }
-                        loginView.dispose();
-                            if (user.getRole().equalsIgnoreCase("Thu ngân") || user.getRole().equalsIgnoreCase("pha chế") || user.getRole().equalsIgnoreCase("phục vụ") ) {
-                            System.out.println("Giao diện nhân viên");
-                            try {
-                                Employee employee = u.getEmployeeFromID(user.getId());  // Lấy ra nhân viên khi đăng nhập đúng
-                                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+
+                    @Override
+                    protected void done() {
+                        try {
+                            User user = get();
+
+                            if (user == null) {
+                            	CloseLoading();
+                                loginView.showMessage("Thông tin đăng nhập không đúng!", "Lỗi", JOptionPane.ERROR_MESSAGE);                             
+                                return;
+                            }
+                            
+                            if (user.getRole().equalsIgnoreCase("Thu ngân") || user.getRole().equalsIgnoreCase("pha chế") || user.getRole().equalsIgnoreCase("phục vụ")) {
+                                System.out.println("Giao diện nhân viên");
+                                try {
+                                    Employee employee = u.getEmployeeFromID(user.getId());  // Lấy ra nhân viên khi đăng nhập đúng
+                                    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+                                    SwingUtilities.invokeLater(() -> {
+                                        try {
+                                            new StaffJFrame(employee).setVisible(true);
+                                            loginView.dispose();
+                                            CloseLoading();
+                                        } catch (ClassNotFoundException | IOException | SQLException e1) {
+                                            e1.printStackTrace();
+                                        }
+                                    });
+                                } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException ex) {
+                                    ex.printStackTrace();
+                                }
+                            } else if (user.getRole().equals("Quản lí")) {
+                                System.out.println("Giao diện quản lý");
+                                Manager manager = u.getManagerFromID(user.getId());  // Lấy ra nhân viên khi đăng nhập đúng
                                 SwingUtilities.invokeLater(() -> {
                                     try {
-                                        new StaffJFrame(employee).setVisible(true);
-                                    } catch (ClassNotFoundException | IOException | SQLException e1) {
-                                        e1.printStackTrace();
-                                    }
-                                });
-                            } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException ex) {
-                                ex.printStackTrace();
-                            }
-                        }
-                        else if (user.getRole().equals("Quản lí")){
-                            System.out.println("Giao diện quản lý");
-                           Manager manager = u.getManagerFromID(user.getId());  // Lấy ra nhân viên khi đăng nhập đúng
-                            SwingUtilities.invokeLater(() -> {
-                                    try {
                                         new ManagerJFrame(manager).setVisible(true);
+                                        loginView.dispose();
+                                        CloseLoading();
                                     } catch (ClassNotFoundException | IOException | SQLException e1) {
-                                        // TODO Auto-generated catch block
                                         e1.printStackTrace();
                                     }   
-                            });
+                                });
+                            }
+                        } catch (Exception ex) {
+                        	CloseLoading();
+                            loginView.showMessage("Lỗi đăng nhập: " + ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+                            ex.printStackTrace();
                         }
-                        
-                    } catch (IOException ex) {
-                } catch (ClassNotFoundException ex) {
-                } catch (SQLException ex) {
-                }
+                    }
+                };
+                worker.execute(); // Bắt đầu thực thi
             }
         }
 
-
-    if (e.getSource() instanceof JCheckBox) {
-        JCheckBox checkBox = (JCheckBox) e.getSource();
-        
-        if (checkBox == loginView.getShowMK()) { 
-            togglePasswordVisibility(loginView.getPasswordField(), checkBox);
+        if (e.getSource() instanceof JCheckBox) {
+            JCheckBox checkBox = (JCheckBox) e.getSource();
+            if (checkBox == loginView.getShowMK()) { 
+                togglePasswordVisibility(loginView.getPasswordField(), checkBox);
+            }
         }
     }
-    }
+
     private void togglePasswordVisibility(JPasswordField passwordField, JCheckBox checkBox) {
         if (checkBox.isSelected()) {
             passwordField.setEchoChar((char) 0); // Hiện mật khẩu
@@ -109,5 +126,16 @@ public class LoginController implements ActionListener {   // Controller gọi v
         passwordField.repaint();
         passwordField.revalidate();
     }
-
+    
+    public void CloseLoading() {
+    	// Ẩn loading, mở lại các nút
+    	loginView.getLoadingLabel().setVisible(false);
+    	loginView.getOverlayPanel().setVisible(false);
+    }
+    
+    public void OpenLoading() {
+    	 // Hiển thị loading và vô hiệu hóa các nút
+        loginView.getLoadingLabel().setVisible(true);
+        loginView.getOverlayPanel().setVisible(true);
+    }
 }
