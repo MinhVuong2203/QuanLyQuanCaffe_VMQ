@@ -9,10 +9,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.Map;
 
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 
 import Model.Customer;
-import Model.Employee;
 import Model.Product;
 import Repository.Customer.CustomerRepository;
 import Repository.Customer.ICustomerRespository;
@@ -20,16 +18,10 @@ import Repository.Order.IOrderRepository;
 import Repository.Order.OrderRepository;
 import Repository.Product.IProductRespository;
 import Repository.Product.ProductRespository;
-import Repository.Table.ITableRespository;
-import Repository.Table.TableRepository;
-import View.StaffView.StaffJFrame;
 import View.StaffView.TakeAwayJPanel;
 
 public class TakeAwayController implements ActionListener {
     private TakeAwayJPanel takeAwayJPanel;
-    private StaffJFrame staffJFrame;
-    private JPanel contentPanel;
-    private Employee employee;
     private LocalDateTime time = LocalDateTime.now();
 
     public TakeAwayController(TakeAwayJPanel takeAwayJPanel) {
@@ -41,7 +33,6 @@ public class TakeAwayController implements ActionListener {
         String str = e.getActionCommand();
         try {
             IProductRespository productRespository = new ProductRespository();
-            ITableRespository tableRespository = new TableRepository();
             ICustomerRespository customerRespository = new CustomerRepository();
             IOrderRepository orderRepository = new OrderRepository();
             if (str.equals("Đặt món")) {
@@ -54,37 +45,37 @@ public class TakeAwayController implements ActionListener {
                             takeAwayJPanel.getCurrentCustomer().getPoints());
                 }
 
-                    productRespository.addToOrder(takeAwayJPanel.getTempOrderId(), 0,
-                            takeAwayJPanel.getEmpID(),
-                            customerRespository.getCustomerIDByPhone(takeAwayJPanel.customerPhone), formattedTime);
-                    // Lưu từng món vào OrderDetail
-                    for (Map.Entry<Product, Integer> entry : takeAwayJPanel.getTempOrderProducts().entrySet()) {
-                        Product product = entry.getKey();
-                        Integer quantity = entry.getValue();
-                        productRespository.addProductToOrderDetail(
-                                takeAwayJPanel.getTempOrderId(),
-                                product.getProductID(),
-                                quantity,
-                                product.getPrice() * quantity,
-                                0);
-                    }
+                productRespository.addToOrder(takeAwayJPanel.getTempOrderId(), 0,
+                        takeAwayJPanel.getEmpID(),
+                        customerRespository.getCustomerIDByPhone(takeAwayJPanel.customerPhone), formattedTime);
+                // Lưu từng món vào OrderDetail
+                for (Map.Entry<Product, Integer> entry : takeAwayJPanel.getTempOrderProducts().entrySet()) {
+                    Product product = entry.getKey();
+                    Integer quantity = entry.getValue();
+                    productRespository.addProductToOrderDetail(
+                            takeAwayJPanel.getTempOrderId(),
+                            product.getProductID(),
+                            quantity,
+                            product.getPrice() * quantity,
+                            0);
+                }
 
-                    // Lưu thông tin giảm giá vào đơn hàng
-                    if (takeAwayJPanel.getDiscountAmount() > 0) {
-                        orderRepository.updateOrderDiscount(takeAwayJPanel.getTempOrderId(),
-                                takeAwayJPanel.getDiscountAmount());
-                    }
+                // Lưu thông tin giảm giá vào đơn hàng
+                if (takeAwayJPanel.getDiscountAmount() > 0) {
+                    orderRepository.updateOrderDiscount(takeAwayJPanel.getTempOrderId(),
+                            takeAwayJPanel.getDiscountAmount());
+                }
 
-                    // Cộng điểm cho khách hàng nếu có
-                    String phone = takeAwayJPanel.getTextField_TKKH().getText().trim();
-                    if (!phone.isEmpty() && !phone.equals("0000000000")) {
-                        String totalText = takeAwayJPanel.getTotal_monney().getText().replace("đ", "").replace(",", ".")
-                                .trim();
-                        double totalmoney = Double.parseDouble(totalText);
-                        int cusID = customerRespository.getCustomerIDByPhone(phone);
-                        customerRespository.plusPoint(cusID, totalmoney); // Cộng điểm cho khách hàng
-                    }
-//       
+                // Cộng điểm cho khách hàng nếu có
+                String phone = takeAwayJPanel.getTextField_TKKH().getText().trim();
+                if (!phone.isEmpty() && !phone.equals("0000000000")) {
+                    String totalText = takeAwayJPanel.getTotal_monney().getText().replace("đ", "").replace(",", ".")
+                            .trim();
+                    double totalmoney = Double.parseDouble(totalText);
+                    int cusID = customerRespository.getCustomerIDByPhone(phone);
+                    customerRespository.plusPoint(cusID, totalmoney); // Cộng điểm cho khách hàng
+                }
+                //
 
                 // Reset các trường giảm giá và điểm
                 takeAwayJPanel.setDiscountAmount(0);
@@ -101,7 +92,8 @@ public class TakeAwayController implements ActionListener {
             } else if (str.equals("Kiểm tra điểm")) {
                 String phone = takeAwayJPanel.getTextField_TKKH().getText().trim();
                 if (phone.isEmpty() || phone.equals("0000000000")) {
-                    JOptionPane.showMessageDialog(takeAwayJPanel, "Vui lòng nhập số điện thoại khách hàng!", "Thông báo",
+                    JOptionPane.showMessageDialog(takeAwayJPanel, "Vui lòng nhập số điện thoại khách hàng!",
+                            "Thông báo",
                             JOptionPane.WARNING_MESSAGE);
                     return;
                 }
@@ -109,7 +101,8 @@ public class TakeAwayController implements ActionListener {
                 try {
                     Customer customer = customerRespository.getCustomerByPhone(phone);
                     if (customer == null) {
-                        JOptionPane.showMessageDialog(takeAwayJPanel, "Không tìm thấy khách hàng với số điện thoại này!",
+                        JOptionPane.showMessageDialog(takeAwayJPanel,
+                                "Không tìm thấy khách hàng với số điện thoại này!",
                                 "Thông báo", JOptionPane.ERROR_MESSAGE);
                         return;
                     }
@@ -129,7 +122,8 @@ public class TakeAwayController implements ActionListener {
                 }
             } else if (str.equals("Sử dụng điểm")) {
                 if (takeAwayJPanel.getCurrentCustomer() == null) {
-                    JOptionPane.showMessageDialog(takeAwayJPanel, "Vui lòng kiểm tra điểm trước khi sử dụng!", "Thông báo",
+                    JOptionPane.showMessageDialog(takeAwayJPanel, "Vui lòng kiểm tra điểm trước khi sử dụng!",
+                            "Thông báo",
                             JOptionPane.WARNING_MESSAGE);
                     return;
                 }
