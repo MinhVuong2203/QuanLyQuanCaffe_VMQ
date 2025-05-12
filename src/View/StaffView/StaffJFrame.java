@@ -8,7 +8,10 @@ import java.awt.event.*;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.text.DateFormat;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
+
 import javax.swing.*;
 
 public class StaffJFrame extends JFrame {
@@ -29,6 +32,8 @@ public class StaffJFrame extends JFrame {
     private StaffJPanel staffInterface;
     private Panel menuPanel;
 
+    private static final Map<JTabbedPane, Integer> tabbedPaneCounters = new HashMap<>();
+
     public StaffJFrame(Employee employee) throws IOException, ClassNotFoundException, SQLException {
         setTitle("Giao Diện Thu Ngân - Quán Cafe");
         setIconImage(Toolkit.getDefaultToolkit().getImage("src\\image\\System_Image\\Quán Caffe MVQ _ Icon.png"));
@@ -38,7 +43,6 @@ public class StaffJFrame extends JFrame {
         setResizable(false);
         getContentPane().setLayout(new BorderLayout());
 
-       
         // Panel Header (Thông tin nhân viên)
         JPanel panel = new JPanel();
         panel.setLayout(null);
@@ -78,7 +82,7 @@ public class StaffJFrame extends JFrame {
         }
         lblNewLabel.setBounds(20, 10, 70, 70);
         panel.add(lblNewLabel);
-        
+
         System.out.println(employee);
         JLabel roleLabel = new JLabel("Chức vụ: " + employee.getRole());
         roleLabel.setFont(new Font("Arial", Font.ITALIC, 14));
@@ -93,23 +97,21 @@ public class StaffJFrame extends JFrame {
         menuPanel = new Panel();
         menuPanel.setLayout(new GridLayout(10, 1, 0, 0));
 
-        
-        JPanel contentPanel = new JPanel(new BorderLayout()); 
+        JPanel contentPanel = new JPanel(new BorderLayout());
         contentPanel.setBackground(Color.LIGHT_GRAY);
-        
+
         Table_JPanel table_JPanel = new Table_JPanel(employee.getId());
         contentPanel.add(table_JPanel, BorderLayout.CENTER);
         RollCall rollCall = new RollCall();
-        
 
         StaffJFrameController controller = new StaffJFrameController(this, contentPanel, employee); // Hành động
 
-        String[] buttonLabels = {"BÁN HÀNG", "MANG VỀ", "ĐIỂM DANH", "MINI GAME", "ĐĂNG XUẤT"};
-        String[] iconButtonLabels = { "src\\image\\SideBar_Image\\Sell.png", 
-                                      "src\\image\\SideBar_Image\\TakeAway.png", 
-                                      "src\\image\\SideBar_Image\\DiemDanh.png",
-                                      "src\\image\\SideBar_Image\\game_img.png",
-                                      "src\\image\\SideBar_Image\\SignOut.png"};
+        String[] buttonLabels = { "BÁN HÀNG", "MANG VỀ", "ĐIỂM DANH", "MINI GAME", "ĐĂNG XUẤT" };
+        String[] iconButtonLabels = { "src\\image\\SideBar_Image\\Sell.png",
+                "src\\image\\SideBar_Image\\TakeAway.png",
+                "src\\image\\SideBar_Image\\DiemDanh.png",
+                "src\\image\\SideBar_Image\\game_img.png",
+                "src\\image\\SideBar_Image\\SignOut.png" };
         int index_iconButtonLabels = 0;
         for (String label : buttonLabels) {
             JButton button = new JButton(label);
@@ -123,15 +125,16 @@ public class StaffJFrame extends JFrame {
             button.setHorizontalAlignment(SwingConstants.LEFT);
             // Thêm icon
             int width = 42, height = 42;
-        
-            if (index_iconButtonLabels == 0) button.setBackground(new Color(88, 214, 141)); // Màu focus đầu tiên mặc định
+
+            if (index_iconButtonLabels == 0)
+                button.setBackground(new Color(88, 214, 141)); // Màu focus đầu tiên mặc định
             ImageIcon iconButton = new ImageIcon(iconButtonLabels[index_iconButtonLabels++]);
             Image scale_iconButton = iconButton.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
             ImageIcon scaleIcon_first_img = new ImageIcon(scale_iconButton);
             button.setIcon(scaleIcon_first_img);
 
             button.addActionListener(controller.getButtonActionListener(label));
-            
+
             menuPanel.add(button);
         }
         sidebar.add(menuPanel, BorderLayout.CENTER);
@@ -212,6 +215,196 @@ public class StaffJFrame extends JFrame {
             }
         });
         timer.start();
+    }
+
+    /**
+     * Tạo và thêm một tab TakeAwayPanel mới vào JTabbedPane
+     * 
+     * @param tabbedPane JTabbedPane để thêm tab mới
+     * @param empID      ID của nhân viên đang đăng nhập
+     * @return Tab index của tab mới tạo nếu thành công, -1 nếu thất bại
+     */
+    public int addNewTakeAwayTab(JTabbedPane tabbedPane, int empID) {
+        try {
+            // Lấy và tăng counter cho tabbedPane cụ thể
+            Integer currentCount = tabbedPaneCounters.getOrDefault(tabbedPane, 0);
+            currentCount++;
+            tabbedPaneCounters.put(tabbedPane, currentCount);
+            final int tabDisplayNumber = currentCount;
+            
+            SwingWorker<TakeAwayJPanel, Void> worker = new SwingWorker<TakeAwayJPanel, Void>() {
+                @Override
+                protected TakeAwayJPanel doInBackground() throws Exception {
+                    return new TakeAwayJPanel(empID);
+                }
+
+                @Override
+                protected void done() {
+                    try {
+                        final TakeAwayJPanel newTakeAwayPanel = get();
+
+                        // Tạo panel chứa nội dung tab
+                        final JPanel tabContentPanel = new JPanel(new BorderLayout());
+                        tabContentPanel.add(newTakeAwayPanel, BorderLayout.CENTER);
+
+                        // Tạo panel tiêu đề tab
+                        final JPanel tabTitlePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+                        tabTitlePanel.setOpaque(false);
+
+                        // Tạo label hiển thị tiêu đề tab với số tab từ counter
+                        final JLabel titleLabel = new JLabel("Mang về " + tabDisplayNumber + " ");
+                        titleLabel.setFont(new Font("Arial", Font.BOLD, 12));
+
+                        // Tạo nút đóng tab
+                        final JButton closeButton = new JButton("×");
+                        closeButton.setFont(new Font("Arial", Font.BOLD, 12));
+                        closeButton.setPreferredSize(new Dimension(20, 20));
+                        closeButton.setMargin(new Insets(0, 0, 0, 0));
+                        closeButton.setContentAreaFilled(false);
+                        closeButton.setBorderPainted(false);
+                        closeButton.setFocusPainted(false);
+                        closeButton.setToolTipText("Đóng tab");
+
+                        // Thêm hiệu ứng hover
+                        closeButton.addMouseListener(new MouseAdapter() {
+                            @Override
+                            public void mouseEntered(MouseEvent e) {
+                                closeButton.setForeground(Color.RED);
+                            }
+
+                            @Override
+                            public void mouseExited(MouseEvent e) {
+                                closeButton.setForeground(Color.BLACK);
+                            }
+                        });
+
+                        // Xử lý đóng tab
+                        closeButton.addActionListener(new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                                // Lấy index của tab
+                                final int index = tabbedPane.indexOfComponent(tabContentPanel);
+                                if (index == -1)
+                                    return;
+
+                                // Xác nhận khi có đơn hàng chưa hoàn thành
+                                if (newTakeAwayPanel.getPlacedModel().size() > 0) {
+                                    int confirm = JOptionPane.showConfirmDialog(
+                                            tabbedPane,
+                                            "Đơn hàng mang về này chưa hoàn thành. Bạn có chắc muốn đóng?",
+                                            "Xác nhận đóng tab",
+                                            JOptionPane.YES_NO_OPTION);
+
+                                    if (confirm != JOptionPane.YES_OPTION) {
+                                        return;
+                                    }
+                                }
+
+                                // Đóng tab trong background thread
+                                SwingWorker<Void, Void> closeWorker = new SwingWorker<Void, Void>() {
+                                    @Override
+                                    protected Void doInBackground() throws Exception {
+                                        // Giải phóng tài nguyên
+                                        disposeResources(newTakeAwayPanel);
+                                        return null;
+                                    }
+
+                                    @Override
+                                    protected void done() {
+                                        // Đóng tab trong EDT
+                                        SwingUtilities.invokeLater(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                int currentIndex = tabbedPane.indexOfComponent(tabContentPanel);
+                                                if (currentIndex == -1)
+                                                    return;
+
+                                                // Xác định tab sẽ được chọn sau khi đóng
+                                                int newSelectedIndex = 0;
+                                                if (currentIndex > 0) {
+                                                    newSelectedIndex = currentIndex - 1;
+                                                } else if (tabbedPane.getTabCount() > 1) {
+                                                    newSelectedIndex = 0;
+                                                }
+
+                                                // Xóa tab
+                                                tabbedPane.removeTabAt(currentIndex);
+
+                                                // Cập nhật tab được chọn
+                                                if (tabbedPane.getTabCount() > 0) {
+                                                    tabbedPane.setSelectedIndex(newSelectedIndex);
+                                                }
+
+                                                // Cập nhật giao diện
+                                                tabbedPane.revalidate();
+                                                tabbedPane.repaint();
+
+                                                System.gc();
+                                            }
+                                        });
+                                    }
+                                };
+                                closeWorker.execute();
+                            }
+                        });
+
+                        // Thêm các thành phần vào panel tiêu đề tab
+                        tabTitlePanel.add(titleLabel);
+                        tabTitlePanel.add(closeButton);
+
+                        // Thêm tab mới vào JTabbedPane
+                        final int tabIndex = tabbedPane.getTabCount();
+                        tabbedPane.addTab(null, tabContentPanel);
+                        tabbedPane.setTabComponentAt(tabIndex, tabTitlePanel);
+                        tabbedPane.setSelectedIndex(tabIndex);
+                        tabbedPane.revalidate();
+                        tabbedPane.repaint();
+
+                    } catch (Exception ex) {
+                        JOptionPane.showMessageDialog(tabbedPane,
+                                "Lỗi khi tạo tab mang về: " + ex.getMessage(),
+                                "Lỗi", JOptionPane.ERROR_MESSAGE);
+                        ex.printStackTrace();
+                    }
+                }
+            };
+
+            worker.execute();
+            return currentCount;
+
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(tabbedPane,
+                    "Không thể tạo tab mang về mới: " + ex.getMessage(),
+                    "Lỗi", JOptionPane.ERROR_MESSAGE);
+            ex.printStackTrace();
+            return -1;
+        }
+    }
+
+    private void disposeResources(TakeAwayJPanel panel) {
+        try {
+            // Xóa listeners
+            for (MouseListener listener : panel.getMouseListeners()) {
+                panel.removeMouseListener(listener);
+            }
+
+            for (ComponentListener listener : panel.getComponentListeners()) {
+                panel.removeComponentListener(listener);
+            }
+
+            // Xóa dữ liệu trong các bộ chứa
+            panel.getTempOrderProducts().clear();
+            panel.getPlacedModel().clear();
+            panel.getMenuModel().clear();
+            panel.getPriceMap().clear();
+            panel.getImgMap().clear();
+
+            // Gọi removeAll để xóa các component
+            panel.removeAll();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     public JLabel getLblTime() {

@@ -6,6 +6,7 @@ import View.StaffView.RollCall;
 import View.StaffView.StaffJFrame;
 import View.StaffView.StaffJPanel;
 import View.StaffView.Table_JPanel;
+import View.StaffView.TakeAwayJPanel;
 import View.Window.WelcomeScreen;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -18,10 +19,11 @@ public class StaffJFrameController {
     private StaffJFrame staffJFrame;
     private JPanel contentPanel;
     private Employee employee;
+    private JTabbedPane takeAwayTabbedPane;
 
     public StaffJFrameController(StaffJFrame staffJFrame, JPanel contentPanel, Employee employee) {
         this.staffJFrame = staffJFrame;
-        this.contentPanel = contentPanel;        
+        this.contentPanel = contentPanel;
         this.employee = employee;
     }
 
@@ -37,15 +39,45 @@ public class StaffJFrameController {
                         }
                     }
                     ((JButton) e.getSource()).setBackground(new Color(88, 214, 141));
-                    
-                    if (!command.equalsIgnoreCase("ĐĂNG XUẤT")) contentPanel.removeAll();
+
+                    if (!command.equalsIgnoreCase("ĐĂNG XUẤT"))
+                        contentPanel.removeAll();
                     switch (command) {
                         case "BÁN HÀNG":
                             contentPanel.add(new Table_JPanel(employee.getId()), BorderLayout.CENTER);
                             break;
                         case "MANG VỀ":
-                            contentPanel.add(new StaffJPanel(0, employee.getId()), BorderLayout.CENTER);
+                            // Tạo JTabbedPane mới để chứa các tab đơn mang về
+                            takeAwayTabbedPane = new JTabbedPane();
+                            // contentPanel.add(new TakeAwayJPanel(employee.getId()), BorderLayout.CENTER);
                             System.out.println("ID NV: " + employee.getId());
+                            // Tạo panel điều khiển với nút thêm tab mới
+                            JPanel controlPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+                            controlPanel.setBackground(new Color(231, 215, 200));
+
+                            // Tạo nút thêm đơn mang về mới
+                            JButton addTakeAwayButton = new JButton("+ Thêm đơn mang về");
+                            addTakeAwayButton.setFont(new Font("Arial", Font.BOLD, 14));
+                            addTakeAwayButton.setBackground(new Color(144, 238, 144));
+                            addTakeAwayButton.setBorderPainted(false);
+                            addTakeAwayButton.setFocusPainted(false);
+
+                            // Thêm sự kiện cho nút
+                            addTakeAwayButton.addActionListener(new ActionListener() {
+                                @Override
+                                public void actionPerformed(ActionEvent e) {
+                                    staffJFrame.addNewTakeAwayTab(takeAwayTabbedPane, employee.getId());
+                                }
+                            });
+
+                            controlPanel.add(addTakeAwayButton);
+
+                            // Thêm các thành phần vào contentPanel
+                            contentPanel.setLayout(new BorderLayout());
+                            contentPanel.add(controlPanel, BorderLayout.NORTH);
+                            contentPanel.add(takeAwayTabbedPane, BorderLayout.CENTER);
+
+                            staffJFrame.addNewTakeAwayTab(takeAwayTabbedPane, employee.getId());
                             break;
                         case "ĐIỂM DANH":
                             contentPanel.add(new RollCall(), BorderLayout.CENTER);
