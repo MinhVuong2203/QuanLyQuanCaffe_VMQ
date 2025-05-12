@@ -4,6 +4,7 @@ import Model.Employee;
 import View.StaffView.GamePanel;
 import View.StaffView.RollCall;
 import View.StaffView.StaffJFrame;
+import View.StaffView.StaffJPanel;
 import View.StaffView.Table_JPanel;
 import View.Window.WelcomeScreen;
 import java.awt.*;
@@ -41,6 +42,10 @@ public class StaffJFrameController {
                     switch (command) {
                         case "BÁN HÀNG":
                             contentPanel.add(new Table_JPanel(employee.getId()), BorderLayout.CENTER);
+                            break;
+                        case "MANG VỀ":
+                            contentPanel.add(new StaffJPanel(0, employee.getId()), BorderLayout.CENTER);
+                            System.out.println("ID NV: " + employee.getId());
                             break;
                         case "ĐIỂM DANH":
                             contentPanel.add(new RollCall(), BorderLayout.CENTER);

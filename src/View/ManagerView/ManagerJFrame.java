@@ -120,8 +120,9 @@ public class ManagerJFrame extends JFrame {
 
         manageOrderAndSalary manageOrderAndSalary = new manageOrderAndSalary();
         
-        String[] buttonLabels = { "BÁN HÀNG", "ĐIỂM DANH","MINI GAME", "XẾP LỊCH", "BÀN", "NHÂN VIÊN", "SẢN PHẨM", "DOANH THU","ĐĂNG XUẤT"};
-        String[] iconButtonLabels = { "src\\image\\SideBar_Image\\Sell.png", 
+        String[] buttonLabels = { "BÁN HÀNG", "MANG VỀ", "ĐIỂM DANH","MINI GAME", "XẾP LỊCH", "BÀN", "NHÂN VIÊN", "SẢN PHẨM", "DOANH THU","ĐĂNG XUẤT"};
+        String[] iconButtonLabels = { "src\\image\\SideBar_Image\\Sell.png",
+                                      "src\\image\\SideBar_Image\\TakeAway.png",
                                       "src\\image\\SideBar_Image\\DiemDanh.png", 
                                       "src\\image\\SideBar_Image\\game_img.png",
                                       "src\\image\\SideBar_Image\\calendar.png", 

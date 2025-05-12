@@ -9,6 +9,7 @@ import View.ManagerView.ManagerTable.TablePanel;
 import View.ManagerView.ManagerShift.manageOrderAndSalary;
 import View.StaffView.GamePanel;
 import View.StaffView.RollCall;
+import View.StaffView.StaffJPanel;
 import View.StaffView.Table_JPanel;
 import View.Window.WelcomeScreen;
 import java.awt.*;
@@ -62,6 +63,10 @@ public class ManagerJFrameController {
                     switch (command) {
                         case "BÁN HÀNG":
                             contentPanel.add(new Table_JPanel(manager.getId()), BorderLayout.CENTER);
+                            break;
+                        case "MANG VỀ":
+                            contentPanel.add(new StaffJPanel(0, manager.getId()), BorderLayout.CENTER);
+                            System.out.println("ID QLY: " + manager.getId());
                             break;
                         case "ĐIỂM DANH":
                             contentPanel.add(new RollCall(), BorderLayout.CENTER);
