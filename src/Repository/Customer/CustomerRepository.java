@@ -7,134 +7,132 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 public class CustomerRepository implements ICustomerRespository {
-    private Connection connection;
-    private JdbcUtils jdbcUtils;
+    private final JdbcUtils jdbcUtils;
 
-    public CustomerRepository() throws IOException, ClassNotFoundException, SQLException{
-        jdbcUtils = new JdbcUtils();
+    public CustomerRepository() throws IOException, ClassNotFoundException, SQLException {
+        this.jdbcUtils = new JdbcUtils();
     }
 
     @Override
-    public int getIDMaxFromSQL() throws SQLException{
-        try {
-            connection = jdbcUtils.connect(); // Phải có để có connection
-            Statement stmt = connection.createStatement();
-            String sql = "SELECT MAX(customerID) FROM Customer";
-            ResultSet rs = stmt.executeQuery(sql);
-            if (rs.next()) return rs.getInt(1); // Trả về ID lớn nhất
-        } catch ( SQLException e){
-        } finally {
-            connection.close();
-        }
-        return 0; // Không có ID nào
-    }
-
-    @Override
-    public boolean checkEqualsPhone(String phone) throws SQLException{
-        try{
-            connection = jdbcUtils.connect(); // Phải có để có connection
-            Statement stmt = connection.createStatement();
-            String sql = "SELECT [phone]\r\n" + //
-                        "FROM [Customer]\r\n" + //
-                        "WHERE [phone] = '" + phone + "'";
-            ResultSet rs = stmt.executeQuery(sql);
-            if (rs.next()) return true; // Có tồn tại
-        } catch (Exception e){
-            e.printStackTrace();
-        } finally {
-			connection.close();
-		}
-        return false; // Không tồn tại
-    }
-
-    @Override
-    public void addCustomer(String name, String phone) throws SQLException{
-        try {
-            connection = jdbcUtils.connect(); // Phải có để có connection
-            Statement stmt = connection.createStatement();
-            String sqlMaxID = "SELECT MAX(customerID) FROM Customer";
-            ResultSet rs = stmt.executeQuery(sqlMaxID);
-            int id = 10000;
-            if (rs.next()) id = rs.getInt(1) + 1;
-            String sql = "INSERT INTO Customer (customerID, name, phone, point) VALUES (" + id +", N'" + name + "', '" + phone + "'," + 30 + ")";
-            stmt.executeUpdate(sql);
-            stmt.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            connection.close();
-        }
-    }
-
-    @Override
-    public int getCustomerIDByPhone(String phone) throws SQLException{
-        try {
-            connection = jdbcUtils.connect();
-            Statement stmt = connection.createStatement();
-            String sql = "SELECT customerID FROM Customer WHERE phone = '" + phone + "'";
-            ResultSet rs = stmt.executeQuery(sql);
-            if (rs.next()) return rs.getInt("customerID");
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            connection.close();
-        }
-        return 0; // Không có ID nào
-    }
-
-    @Override
-    public double plusPoint(int customerID, double money) throws SQLException{
-        try {
-            connection = jdbcUtils.connect();
-            Statement stmt = connection.createStatement();
-            String sql = "UPDATE Customer SET point = point + " + money / 100000 + " WHERE customerID = " + customerID;
-            stmt.executeUpdate(sql);
-            stmt.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return 0;
-    }
-
-    @Override
-    public Customer getCustomerByPhone(String phone) throws SQLException{
-        try {
-            connection = jdbcUtils.connect();
-            Statement stmt = connection.createStatement();
-            String sql = "SELECT * FROM Customer WHERE phone = '" + phone + "'";
-            ResultSet rs = stmt.executeQuery(sql);
+    public int getIDMaxFromSQL() throws SQLException {
+        String sql = "SELECT MAX(customerID) FROM Customer";
+        try (Connection connection = jdbcUtils.connect();
+             PreparedStatement stmt = connection.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
             if (rs.next()) {
-                int id = rs.getInt("customerID");
-                String name = rs.getString("name");
-                double point = rs.getDouble("point");
-                return new Customer(id, name, phone, point);
+                return rs.getInt(1);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            connection.close();
+        }
+        return 0; // Không có ID nào
+    }
+
+    @Override
+    public boolean checkEqualsPhone(String phone) throws SQLException {
+        if (phone == null || phone.isEmpty()) {
+            throw new IllegalArgumentException("Số điện thoại không hợp lệ");
+        }
+        String sql = "SELECT phone FROM Customer WHERE phone = ?";
+        try (Connection connection = jdbcUtils.connect();
+             PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, phone);
+            try (ResultSet rs = stmt.executeQuery()) {
+                return rs.next(); // Có tồn tại nếu rs.next() trả về true
+            }
+        }
+    }
+
+    @Override
+    public void addCustomer(String name, String phone) throws SQLException {
+        if (name == null || name.isEmpty() || phone == null || phone.isEmpty()) {
+            throw new IllegalArgumentException("Tên hoặc số điện thoại không hợp lệ");
+        }
+        String sqlMaxID = "SELECT MAX(customerID) FROM Customer";
+        String sqlInsert = "INSERT INTO Customer (customerID, name, phone, point) VALUES (?, ?, ?, ?)";
+        try (Connection connection = jdbcUtils.connect();
+             PreparedStatement stmtMaxID = connection.prepareStatement(sqlMaxID);
+             ResultSet rs = stmtMaxID.executeQuery()) {
+            int id = 10000;
+            if (rs.next()) {
+                id = rs.getInt(1) + 1;
+            }
+            try (PreparedStatement stmtInsert = connection.prepareStatement(sqlInsert)) {
+                stmtInsert.setInt(1, id);
+                stmtInsert.setString(2, name);
+                stmtInsert.setString(3, phone);
+                stmtInsert.setDouble(4, 30.0);
+                stmtInsert.executeUpdate();
+            }
+        }
+    }
+
+    @Override
+    public int getCustomerIDByPhone(String phone) throws SQLException {
+        if (phone == null || phone.isEmpty()) {
+            throw new IllegalArgumentException("Số điện thoại không hợp lệ");
+        }
+        String sql = "SELECT customerID FROM Customer WHERE phone = ?";
+        try (Connection connection = jdbcUtils.connect();
+             PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, phone);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("customerID");
+                }
+            }
+        }
+        return 0; // Không có ID nào
+    }
+
+    @Override
+    public double plusPoint(int customerID, double money) throws SQLException {
+        if (money < 0) {
+            throw new IllegalArgumentException("Số tiền không hợp lệ");
+        }
+        String sql = "UPDATE Customer SET point = point + ? WHERE customerID = ?";
+        try (Connection connection = jdbcUtils.connect();
+             PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setDouble(1, money / 100000);
+            stmt.setInt(2, customerID);
+            stmt.executeUpdate();
+            // Trả về số điểm đã cộng
+            return money / 100000;
+        }
+    }
+
+    @Override
+    public Customer getCustomerByPhone(String phone) throws SQLException {
+        if (phone == null || phone.isEmpty()) {
+            throw new IllegalArgumentException("Số điện thoại không hợp lệ");
+        }
+        String sql = "SELECT customerID, name, phone, point FROM Customer WHERE phone = ?";
+        try (Connection connection = jdbcUtils.connect();
+             PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, phone);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    int id = rs.getInt("customerID");
+                    String name = rs.getString("name");
+                    double point = rs.getDouble("point");
+                    return new Customer(id, name, phone, point);
+                }
+            }
         }
         return null; // Không tìm thấy khách hàng
     }
 
     @Override
-     public void updatePoint(int customerID, double newPoints) throws SQLException, ClassNotFoundException {
+    public void updatePoint(int customerID, double newPoints) throws SQLException {
+        if (newPoints < 0) {
+            throw new IllegalArgumentException("Điểm không hợp lệ");
+        }
+        String sql = "UPDATE Customer SET point = ? WHERE customerID = ?";
         try (Connection connection = jdbcUtils.connect();
-             PreparedStatement pstmt = connection.prepareStatement("UPDATE Customer SET point = ? WHERE customerID = ?")) {
-            pstmt.setDouble(1, newPoints);
-            pstmt.setInt(2, customerID);
-            pstmt.executeUpdate();
+             PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setDouble(1, newPoints);
+            stmt.setInt(2, customerID);
+            stmt.executeUpdate();
         }
     }
-
-	
-
-	
-
-	
-
-
 }

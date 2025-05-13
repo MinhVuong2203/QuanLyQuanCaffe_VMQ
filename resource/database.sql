@@ -245,7 +245,8 @@ INSERT INTO TableCaffe (TableID, status, tableName) VALUES
 (27, N'Trống', N'Bàn 27'),
 (28, N'Trống', N'Bàn 28'),
 (29, N'Trống', N'Bàn 29'),
-(30, N'Trống', N'Bàn 30');
+(30, N'Trống', N'Bàn 30'),
+(0,N'Trống',N'Mang về');
 -- Có bàn có khách thì ghi N'Có khách'
 
 -- Order

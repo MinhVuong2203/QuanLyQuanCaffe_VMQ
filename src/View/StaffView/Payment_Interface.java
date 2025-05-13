@@ -7,6 +7,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Label;
+import java.awt.event.ActionListener;
 import java.awt.Desktop;
 import java.io.File;
 import java.text.DateFormat;
@@ -50,6 +51,7 @@ import com.itextpdf.layout.properties.TextAlignment;
 import com.itextpdf.layout.properties.UnitValue;
 
 import Controller.StaffController.PaymentController;
+import Controller.StaffController.PaymentQRController;
 import Repository.Product.IProductRespository;
 import Repository.Product.ProductRespository;
 import Utils.HoverEffect;
@@ -65,12 +67,19 @@ public class Payment_Interface extends JPanel {
     private StaffJPanel staffInterface;
     private JButton btnThanhToan;
     private JButton btnQuayLai;
-    private JLabel qrCodeLabel;
+    public JLabel qrCodeLabel;
     private JScrollPane billScrollPane;
     public JComboBox<String> cboPaymentMethod;
     public int tableID;
     public int id;
+	public JLabel lblFooter;
+	public JLabel qrInfoLabel;
+	public JLabel valueTotal; // Tiền tổng
 
+	public Map<String, Object> billInfo; // info bill
+	public List<Map<String, Object>> products; // Sản phẩm
+	public double finalTotal;
+	
     public Payment_Interface(int tableID, int id) {
         setLayout(new BorderLayout(10, 10));
         setBackground(new Color(231, 215, 200));
@@ -130,8 +139,9 @@ public class Payment_Interface extends JPanel {
         btnQuayLai.setPreferredSize(buttonSize);
         btnThanhToan.setPreferredSize(buttonSize);
 
+        ActionListener paymentQRController = new PaymentQRController(this);
         // Tạo comboBox chọn phương thức thanh toán
-        String[] paymentMethods = { "Tiền mặt", "Thẻ ngân hàng", "Ví điện tử", "Chuyển khoản ngân hàng" };
+        String[] paymentMethods = { "Tiền mặt", "Chuyển khoản ngân hàng" };
         cboPaymentMethod = new JComboBox<>(paymentMethods);
         cboPaymentMethod.setFont(new Font("Arial", Font.PLAIN, 14));
         cboPaymentMethod.setBorder(BorderFactory.createTitledBorder(
@@ -143,6 +153,9 @@ public class Payment_Interface extends JPanel {
                 Color.BLACK));
         cboPaymentMethod.setBackground(Color.WHITE);
         cboPaymentMethod.setPreferredSize(new Dimension(200, 50));
+        cboPaymentMethod.addActionListener(paymentQRController);
+        
+        
 
         // Thêm vào panel
         btnPanel.add(btnQuayLai);
@@ -170,7 +183,7 @@ public class Payment_Interface extends JPanel {
     public void loadBillData() {
         try {
             IProductRespository productRespository = new ProductRespository();
-            Map<String, Object> billInfo = productRespository.getBillInfoByTableID(tableID);
+            billInfo = productRespository.getBillInfoByTableID(tableID);
 
             if (billInfo.isEmpty()) {
                 textArea_Bill.setText("Không có dữ liệu hóa đơn cho bàn này.");
@@ -258,7 +271,7 @@ public class Payment_Interface extends JPanel {
             }
 
             // Tạo bảng danh sách món
-            List<Map<String, Object>> products = (List<Map<String, Object>>) billInfo.get("products");
+            products = (List<Map<String, Object>>) billInfo.get("products");
             String[] columnNames = { "STT", "Tên món", "SL", "Đơn giá", "Thành tiền" };
             Object[][] data = new Object[products.size()][5];
 
@@ -330,7 +343,7 @@ public class Payment_Interface extends JPanel {
 
             // Lấy thông tin giảm giá và tổng tiền
             double discountAmount = billInfo.containsKey("discount") ? (Double) billInfo.get("discount") : 0;
-            double finalTotal = totalAmount - discountAmount;
+            finalTotal = totalAmount - discountAmount;
             if (finalTotal < 0)
                 finalTotal = 0;
 
@@ -349,7 +362,7 @@ public class Payment_Interface extends JPanel {
 
             JLabel lblTotal = new JLabel("Tổng thanh toán:");
             lblTotal.setFont(new Font("Arial", Font.BOLD, 14));
-            JLabel valueTotal = new JLabel(currencyFormat.format(finalTotal));
+            valueTotal = new JLabel(currencyFormat.format(finalTotal));
             valueTotal.setFont(new Font("Arial", Font.BOLD, 14));
             valueTotal.setHorizontalAlignment(SwingConstants.RIGHT);
 
@@ -372,32 +385,33 @@ public class Payment_Interface extends JPanel {
             JPanel footerPanel = new JPanel(new BorderLayout());
             footerPanel.setBackground(Color.WHITE);
 
-            JLabel lblFooter = new JLabel("Quý khách vui lòng kiểm tra kỹ hóa đơn trước khi thanh toán!",
-                    JLabel.CENTER);
+            lblFooter = new JLabel("Quý khách vui lòng kiểm tra kỹ hóa đơn trước khi thanh toán!", JLabel.CENTER);
             lblFooter.setFont(new Font("Arial", Font.ITALIC, 12));
             lblFooter.setAlignmentX(Component.CENTER_ALIGNMENT);
-            // // Tạo JLabel cho QR Code
+  ////          // // Tạo JLabel cho QR Code
             qrCodeLabel = new JLabel();
             qrCodeLabel.setHorizontalAlignment(JLabel.CENTER);
 
-            // Tải hình ảnh QR code
-            try {
-                // Đường dẫn có thể cần điều chỉnh tùy theo vị trí của file hình ảnh
-                ImageIcon qrIcon = new ImageIcon("src/image/System_Image/QR_Payment.jpg");
-                java.awt.Image scaledImage = qrIcon.getImage().getScaledInstance(150, 150,
-                        java.awt.Image.SCALE_SMOOTH);
-                qrCodeLabel.setIcon(new ImageIcon(scaledImage));
-            } catch (Exception e) {
-                qrCodeLabel.setText("QR Code không khả dụng");
-                e.printStackTrace();
-            }
+//            // Tải hình ảnh QR code
+//            try {
+//                // Đường dẫn có thể cần điều chỉnh tùy theo vị trí của file hình ảnh
+//                ImageIcon qrIcon = new ImageIcon("src/image/System_Image/QR_Payment.jpg");
+//                java.awt.Image scaledImage = qrIcon.getImage().getScaledInstance(150, 150,
+//                        java.awt.Image.SCALE_SMOOTH);
+//                qrCodeLabel.setIcon(new ImageIcon(scaledImage));
+//            } catch (Exception e) {
+//                qrCodeLabel.setText("QR Code không khả dụng");
+//                e.printStackTrace();
+//            }
+            
+            
 
             // Panel chứa QR code và thông tin
             JPanel qrPanel = new JPanel(new BorderLayout());
             qrPanel.setBackground(Color.WHITE);
             qrPanel.add(qrCodeLabel, BorderLayout.CENTER);
 
-            JLabel qrInfoLabel = new JLabel("Quét mã để thanh toán", JLabel.CENTER);
+            qrInfoLabel = new JLabel("", JLabel.CENTER);
             qrInfoLabel.setFont(new Font("Arial", Font.BOLD, 12));
             qrPanel.add(qrInfoLabel, BorderLayout.SOUTH);
 
@@ -572,7 +586,7 @@ public class Payment_Interface extends JPanel {
             // Footer
             document.add(new Paragraph("Quý khách vui lòng kiểm tra kỹ hóa đơn trước khi thanh toán!").setFont(font)
                     .setTextAlignment(TextAlignment.CENTER).setFontSize(10));
-
+            
             // Thêm QR code nếu có
             try {
                 ImageData imageData = ImageDataFactory.create("src/image/System_Image/QR_Payment.jpg");
@@ -619,8 +633,12 @@ public class Payment_Interface extends JPanel {
     public JButton getBtnThanhToan() {
         return btnThanhToan;
     }
+    
+
 
     public void setStaffInterface(StaffJPanel staffInterface) {
         this.staffInterface = staffInterface;
     }
+    
+    
 }

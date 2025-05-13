@@ -11,7 +11,7 @@ import com.toedter.calendar.JDateChooser;
 
 public interface IEmployeeRespository {
     public int getIdMaxFromSQL() throws SQLException;
-    public int getMaxShiftID();
+    public int getMaxShiftID() throws SQLException;
     public boolean checkEqualsPhone(String phone) throws SQLException;
     public boolean checkEqualsCCCD(String cccd) throws SQLException;
     public boolean checkEqualsUsername(String username) throws SQLException;
@@ -24,13 +24,13 @@ public interface IEmployeeRespository {
     public List<Employee> getAllEmployees() throws SQLException;
     public List<Employee> getAllEmployeesToManager() throws SQLException;
     public String getImgByID(int id) throws SQLException;
-    public void setStatusFromSQL(int id, String status, int shiftID);
-    public String getStatusFromSQL(int id, int shiftID);
-    public String[] getEachEmployeeShift(int id, JDateChooser startDay, JDateChooser endDay);
-    public void addShiftToSQL(int id, String dateString, String timeRange) ;
-    public void deleteShiftFromSQL(int id, String dateString) ;
-    public void updateShiftToSQL(int id, String dateString, String timeRange, String lastTimeRange);
-    public List<Employee> getAllEmployeesAllAttributes();
+    public void setStatusFromSQL(int id, String status, int shiftID) throws SQLException;
+    public String getStatusFromSQL(int id, int shiftID) throws SQLException;
+    public String[] getEachEmployeeShift(int id, JDateChooser startDay, JDateChooser endDay) throws SQLException;
+    public void addShiftToSQL(int id, String dateString, String timeRange) throws SQLException ;
+    public void deleteShiftFromSQL(int id, String dateString) throws SQLException ;
+    public void updateShiftToSQL(int id, String dateString, String timeRange, String lastTimeRange) throws SQLException;
+    public List<Employee> getAllEmployeesAllAttributes() throws SQLException;
     public EmployeeShift getEmployeeShiftByEmployeeID(int employeeID) throws SQLException, ClassNotFoundException;
     public List<Employee> getShiftsBetweenDates(LocalDate fromDate, LocalDate toDate) throws SQLException,ClassNotFoundException;
 }

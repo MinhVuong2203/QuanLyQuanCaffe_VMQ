@@ -6,140 +6,106 @@ import Repository.Product.ProductRespository;
 import Utils.JdbcUtils;
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class OrderRepository implements IOrderRepository {
-
-    private JdbcUtils jdbcUtils;
-    private Connection connection;
+    private final JdbcUtils jdbcUtils;
+    private final ProductRespository productRepository;
 
     public OrderRepository() throws IOException, ClassNotFoundException, SQLException {
-        jdbcUtils = new JdbcUtils();
+        this.jdbcUtils = new JdbcUtils();
+        this.productRepository = new ProductRespository();
     }
 
     @Override
     public List<Order> getAllOrders() throws SQLException {
         List<Order> orderList = new ArrayList<>();
-        ProductRespository productRepository;
-        try {
-            connection = jdbcUtils.connect();
-            productRepository = new ProductRespository(); // tạo 1 lần
-
-            String sql = "SELECT * FROM Orders";
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(sql);
-
-            while (resultSet.next()) {
-                int orderID = resultSet.getInt("orderID");
-                int employeeID = resultSet.getInt("employeeID");
-                int customerID = resultSet.getInt("customerID");
-                int tableID = resultSet.getInt("tableID");
-                String status = resultSet.getString("status");
-                Map<Product, Integer> products = productRepository.getProductsByOrderID(orderID); // Lấy danh sách sản
-                                                                                                  // phẩm theo orderID
-
-                // int productID = resultSet.getInt("productID");
-                // int quantity = resultSet.getInt("quantity");
-
-                // Map<Product, Integer> products = new HashMap<>();
-                // Product product = productRepository.getProductByID(productID);
-                // if (product != null) {
-                // products.put(product, quantity);
-                // }
-
-                Order order = new Order(orderID, employeeID, customerID, tableID, status, products);
-                orderList.add(order);
+        String sql = "SELECT orderID, employeeID, customerID, tableID, status FROM Orders";
+        try (Connection connection = jdbcUtils.connect();
+             PreparedStatement stmt = connection.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                int orderID = rs.getInt("orderID");
+                int employeeID = rs.getInt("employeeID");
+                int customerID = rs.getInt("customerID");
+                int tableID = rs.getInt("tableID");
+                String status = rs.getString("status");
+                Map<Product, Integer> products;
+				try {
+					products = productRepository.getProductsByOrderID(orderID);
+					Order order = new Order(orderID, employeeID, customerID, tableID, status, products);
+					orderList.add(order);
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
             }
-
-            statement.close();
-            resultSet.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (connection != null)
-                connection.close();
         }
         return orderList;
-
     }
 
     @Override
     public String getTimeByTableID(int tableID) throws SQLException {
-        try {
-            connection = jdbcUtils.connect();
-            String sql = "SELECT orderTime FROM Orders WHERE tableID = " + tableID + " AND status = N'Đang chuẩn bị'";
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(sql);
-            if (resultSet.next()) {
-                return resultSet.getString("orderTime");
+        if (tableID <= 0) {
+            throw new IllegalArgumentException("ID bàn không hợp lệ");
+        }
+        String sql = "SELECT orderTime FROM Orders WHERE tableID = ? AND status = N'Đang chuẩn bị'";
+        try (Connection connection = jdbcUtils.connect();
+             PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, tableID);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("orderTime");
+                }
             }
-            statement.close();
-            resultSet.close();
-        } catch (Exception e) {
-            e.printStackTrace();
         }
         return null;
     }
 
     @Override
-    public List<Order> getOrdersBetweenDates(LocalDate fromDate, LocalDate toDate)
-            throws SQLException, IOException, ClassNotFoundException {
-
+    public List<Order> getOrdersBetweenDates(LocalDate fromDate, LocalDate toDate) throws SQLException {
+        if (fromDate == null || toDate == null || fromDate.isAfter(toDate)) {
+            throw new IllegalArgumentException("Ngày không hợp lệ");
+        }
         List<Order> orderList = new ArrayList<>();
-        ProductRespository productRepository = new ProductRespository();
-
-        String sql = "SELECT * FROM Orders WHERE orderTime BETWEEN ? AND ?";
-
-        try (Connection conn = jdbcUtils.connect();
-                PreparedStatement statement = conn.prepareStatement(sql)) {
-
-            statement.setDate(1, java.sql.Date.valueOf(fromDate));
-            statement.setDate(2, java.sql.Date.valueOf(toDate));
-
-            try (ResultSet resultSet = statement.executeQuery()) {
-                while (resultSet.next()) {
-                    int orderID = resultSet.getInt("orderID");
-                    int employeeID = resultSet.getInt("employeeID");
-                    int customerID = resultSet.getInt("customerID");
-                    int tableID = resultSet.getInt("tableID");
-                    String status = resultSet.getString("status");
-
+        String sql = "SELECT orderID, employeeID, customerID, tableID, status FROM Orders WHERE orderTime BETWEEN ? AND ?";
+        try (Connection connection = jdbcUtils.connect();
+             PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setDate(1, Date.valueOf(fromDate));
+            stmt.setDate(2, Date.valueOf(toDate.plusDays(1))); // Bao gồm cả ngày cuối
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    int orderID = rs.getInt("orderID");
+                    int employeeID = rs.getInt("employeeID");
+                    int customerID = rs.getInt("customerID");
+                    int tableID = rs.getInt("tableID");
+                    String status = rs.getString("status");
                     Map<Product, Integer> products = productRepository.getProductsByOrderID(orderID);
-
                     Order order = new Order(orderID, employeeID, customerID, tableID, status, products);
                     orderList.add(order);
                 }
             }
-
-        } catch (SQLException | ClassNotFoundException e) {
-            throw e; // Bắn lại cho nơi gọi xử lý
-        } catch (Exception e) {
-            e.printStackTrace(); // Log các lỗi runtime bất ngờ
         }
-
         return orderList;
     }
 
-    public void updateOrderDiscount(int orderId, double discountAmount) throws SQLException, ClassNotFoundException, IOException {
-        try {
-            connection = jdbcUtils.connect();
-            String sql = "UPDATE Orders SET Discount = ? WHERE orderID = ?";
-            PreparedStatement pstmt = connection.prepareStatement(sql);
-            pstmt.setDouble(1, discountAmount);
-            pstmt.setInt(2, orderId);
-            pstmt.executeUpdate();
-        } finally {
-            if (connection != null) {
-                connection.close();
-            }
+    @Override
+    public void updateOrderDiscount(int orderId, double discountAmount) throws SQLException {
+        if (orderId <= 0 || discountAmount < 0) {
+            throw new IllegalArgumentException("ID đơn hàng hoặc số tiền giảm giá không hợp lệ");
+        }
+        String sql = "UPDATE Orders SET Discount = ? WHERE orderID = ?";
+        try (Connection connection = jdbcUtils.connect();
+             PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setDouble(1, discountAmount);
+            stmt.setInt(2, orderId);
+            stmt.executeUpdate();
         }
     }
-
 }

@@ -23,5 +23,16 @@
 	<classpathentry kind="lib" path="Libraries/log4j-core-2.23.1.jar"/>
 	<classpathentry kind="lib" path="Libraries/commons-compress-1.26.2.jar"/>
 	<classpathentry kind="lib" path="Libraries/HikariCP-5.1.0.jar"/>
+	<classpathentry kind="lib" path="Libraries/core-3.5.3.jar"/>
+	<classpathentry kind="lib" path="Libraries/javase-3.5.3.jar"/>
+	<classpathentry kind="lib" path="Libraries/payos-java-1.0.3.jar"/>
+	<classpathentry kind="lib" path="Libraries/httpclient5-5.2.3.jar"/>
+	<classpathentry kind="lib" path="Libraries/httpcore5-5.2.4.jar"/>
+	<classpathentry kind="lib" path="Libraries/jackson-annotations-2.15.2.jar"/>
+	<classpathentry kind="lib" path="Libraries/jackson-core-2.15.2.jar"/>
+	<classpathentry kind="lib" path="Libraries/jackson-databind-2.15.2.jar"/>
+	<classpathentry kind="lib" path="Libraries/slf4j-simple-2.0.9.jar"/>
+	<classpathentry kind="lib" path="Libraries/httpcore5-h2-5.2.4.jar"/>
+	<classpathentry kind="lib" path="Libraries/jsoup-1.17.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

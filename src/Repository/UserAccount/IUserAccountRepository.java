@@ -17,4 +17,5 @@ public interface IUserAccountRepository {
     public Manager getManagerFromID(int id) throws SQLException; // Lấy thông tin của Manager từ ID
     public Employee getEmployeeFromID(int id) throws SQLException; // Lấy thông tin của Employee từ ID
     public Customer getCustomerFromID(int id) throws SQLException; // Lấy thông tin của Customer từ ID
+	
 }

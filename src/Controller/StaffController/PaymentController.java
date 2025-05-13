@@ -22,7 +22,9 @@ public class PaymentController implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+    	
         String str = e.getActionCommand();
+        System.out.println(str);
         if (str.equals("Quay lại")) {
             BackToTable();
         } else if (str.equals("Thanh toán")) {
