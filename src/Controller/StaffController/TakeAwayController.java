@@ -307,7 +307,7 @@ public class TakeAwayController implements ActionListener {
         String cleanStr = moneyStr.replace("đ", "").trim();
 
         try {
-            // TRƯỜNG HỢP ĐẶC BIỆT: Xử lý chuỗi kết thúc bằng ".0" (thường do Java tạo ra)
+            // TRƯỜNG HỢP ĐẶC BIỆT: Xử lý chuỗi kết thúc bằng ".0"
             if (cleanStr.endsWith(".0")) {
                 cleanStr = cleanStr.substring(0, cleanStr.length() - 2);
             }
@@ -322,7 +322,6 @@ public class TakeAwayController implements ActionListener {
                 cleanStr = cleanStr.replace(".", "");
             }
 
-            // Thêm log để debug - ghi rõ các bước xử lý
             double result = Double.parseDouble(cleanStr);
             System.out.println("Parse money: '" + moneyStr + "' -> '" + cleanStr + "' = " + result);
             return result;
