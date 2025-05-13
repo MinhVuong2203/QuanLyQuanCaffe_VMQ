@@ -11,8 +11,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -20,10 +24,24 @@ import java.util.Map;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
+import com.itextpdf.io.font.PdfEncodings;
+import com.itextpdf.io.image.ImageData;
+import com.itextpdf.io.image.ImageDataFactory;
+import com.itextpdf.kernel.font.PdfFont;
+import com.itextpdf.kernel.font.PdfFontFactory;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.kernel.xmp.impl.Utils;
+import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.Cell;
+import com.itextpdf.layout.element.Paragraph;
+import com.itextpdf.layout.element.Table;
+import com.itextpdf.layout.properties.HorizontalAlignment;
+import com.itextpdf.layout.properties.TextAlignment;
+import com.itextpdf.layout.properties.UnitValue;
 
 import Utils.*;
-
+import Controller.StaffController.PaymentController;
 import Controller.StaffController.TakeAwayController;
 
 public class TakeAwayJPanel extends JPanel {
@@ -104,7 +122,7 @@ public class TakeAwayJPanel extends JPanel {
 
         ActionListener ac = new TakeAwayController(this);
 
-        JButton Button_Pay = new JButton("Đặt món");
+        JButton Button_Pay = new JButton("Thanh toán");
         Button_Pay.setFont(new Font("Arial", Font.BOLD, 16));
         Button_Pay.setBounds(222, 503, 118, 27);
         order.add(Button_Pay);
@@ -216,7 +234,6 @@ public class TakeAwayJPanel extends JPanel {
 
         scrollPane_Menu.setViewportView(listMenu);
         panel_Menu.add(scrollPane_Menu, BorderLayout.CENTER);
-
 
         setLayout(new BorderLayout());
         add(panel_Menu, BorderLayout.CENTER);
@@ -511,6 +528,197 @@ public class TakeAwayJPanel extends JPanel {
             updateTotalMoney();
         } else {
             JOptionPane.showMessageDialog(this, "Vui lòng chọn một món để xóa!");
+        }
+    }
+
+    public void printBill() {
+        try {
+            // Lấy thông tin hóa đơn
+            IProductRespository productRespository = new ProductRespository();
+            int orderID = getTempOrderId();
+            Map<String, Object> billInfo = productRespository.getBillInfoByOrderID(orderID);
+
+            if (billInfo.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Không có dữ liệu hóa đơn cho bàn này.");
+                return;
+            }
+
+            // Tạo thư mục Invoices nếu chưa tồn tại
+            File directory = new File("Invoices");
+            if (!directory.exists()) {
+                directory.mkdir();
+            }
+
+            // Tạo tên file với mã hóa đơn và thời gian hiện tại
+            String fileName = "Invoices/HoaDon_" + orderID + "_" +
+                    new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()) + ".pdf";
+
+            // Tạo PDF document
+            PdfWriter writer = new PdfWriter(fileName);
+            PdfDocument pdf = new PdfDocument(writer);
+            Document document = new Document(pdf);
+
+            // Tạo font từ file trong hệ thống
+            PdfFont font = PdfFontFactory.createFont("c:/windows/fonts/arial.ttf", PdfEncodings.IDENTITY_H);
+
+            // Thêm thông tin cửa hàng và hóa đơn
+            document.add(
+                    new Paragraph("CAFFEE VMQ").setFont(font).setTextAlignment(TextAlignment.CENTER).setFontSize(16));
+            document.add(
+                    new Paragraph("Địa chỉ: 478 Lê Văn Việt").setFont(font).setTextAlignment(TextAlignment.CENTER));
+            document.add(new Paragraph("Hotline: 0961892734").setFont(font).setTextAlignment(TextAlignment.CENTER));
+            document.add(new Paragraph("PHIẾU TẠM TÍNH").setFont(font).setTextAlignment(TextAlignment.CENTER)
+                    .setFontSize(14));
+
+            // Thêm thông tin hóa đơn
+            document.add(new Paragraph("Số: " + billInfo.get("orderID")).setFont(font));
+            document.add(new Paragraph("Ngày: " + new SimpleDateFormat("dd/MM/yyyy HH:mm").format(new Date()))
+                    .setFont(font));
+            document.add(new Paragraph("Thu ngân: " + billInfo.get("employeeName")).setFont(font));
+
+            if (billInfo.containsKey("customerName") && billInfo.get("customerName") != null) {
+                document.add(new Paragraph("Khách hàng: " + billInfo.get("customerName")).setFont(font));
+            } else {
+                document.add(new Paragraph("Khách hàng: vãng lai").setFont(font));
+            }
+
+            // Tạo bảng sản phẩm
+            float[] columnWidths = { 1, 5, 1, 2, 2 }; // Tỉ lệ độ rộng các cột
+            Table table = new Table(columnWidths);
+            table.setWidth(UnitValue.createPercentValue(100)); // Chiếm toàn bộ chiều rộng
+
+            // Thêm header cho bảng
+            table.addHeaderCell(
+                    new Cell().add(new Paragraph("TT")).setFont(font).setTextAlignment(TextAlignment.CENTER));
+            table.addHeaderCell(
+                    new Cell().add(new Paragraph("Tên món")).setFont(font).setTextAlignment(TextAlignment.LEFT));
+            table.addHeaderCell(
+                    new Cell().add(new Paragraph("SL")).setFont(font).setTextAlignment(TextAlignment.CENTER));
+            table.addHeaderCell(
+                    new Cell().add(new Paragraph("Đơn giá")).setFont(font).setTextAlignment(TextAlignment.RIGHT));
+            table.addHeaderCell(
+                    new Cell().add(new Paragraph("Thành tiền")).setFont(font).setTextAlignment(TextAlignment.RIGHT));
+
+            // Thêm từng sản phẩm vào bảng
+            List<Map<String, Object>> products = (List<Map<String, Object>>) billInfo.get("products");
+            int stt = 1;
+            double totalAmount = 0;
+            NumberFormat formatter = NumberFormat.getNumberInstance(VN);
+
+            for (Map<String, Object> product : products) {
+                String productName = (String) product.get("productName");
+                String size = (String) product.get("size");
+                if (size != null && !size.isEmpty()) {
+                    productName += " (" + size + ")";
+                }
+
+                int quantity = (Integer) product.get("quantity");
+                double unitPrice = (Double) product.get("unitPrice");
+                double totalProductPrice = (Double) product.get("totalProductPrice");
+
+                totalAmount += totalProductPrice;
+
+                // Thêm các cột vào bảng
+                table.addCell(new Cell().add(new Paragraph(String.valueOf(stt++))).setFont(font)
+                        .setTextAlignment(TextAlignment.CENTER));
+                table.addCell(new Cell().add(new Paragraph(productName)).setFont(font));
+                table.addCell(new Cell().add(new Paragraph(String.valueOf(quantity))).setFont(font)
+                        .setTextAlignment(TextAlignment.CENTER));
+                table.addCell(new Cell().add(new Paragraph(formatter.format(unitPrice))).setFont(font)
+                        .setTextAlignment(TextAlignment.RIGHT));
+                table.addCell(new Cell().add(new Paragraph(formatter.format(totalProductPrice))).setFont(font)
+                        .setTextAlignment(TextAlignment.RIGHT));
+            }
+
+            // Thêm bảng vào document
+            document.add(table);
+            document.add(new Paragraph(" "));
+
+            // Lấy giảm giá
+            double discountAmount = billInfo.containsKey("discount") ? (Double) billInfo.get("discount") : 0;
+
+            // Tính tổng tiền sau giảm giá
+            double finalTotal = totalAmount - discountAmount;
+            if (finalTotal < 0)
+                finalTotal = 0;
+
+            // Thêm tổng tiền và giảm giá
+            document.add(
+                    new Paragraph(String.format("Tiền hàng: %s", formatter.format(totalAmount) + "đ")).setFont(font)
+                            .setTextAlignment(TextAlignment.RIGHT));
+            document.add(
+                    new Paragraph(String.format("Giảm giá: %s", formatter.format(discountAmount) + "đ")).setFont(font)
+                            .setTextAlignment(TextAlignment.RIGHT));
+            document.add(new Paragraph(String.format("Tổng thanh toán: %s", formatter.format(finalTotal) + "đ"))
+                    .setFont(font)
+                    .setTextAlignment(TextAlignment.RIGHT));
+            document.add(
+                    new Paragraph(String.format("Cần phải thu: %s", formatter.format(finalTotal) + "đ")).setFont(font)
+                            .setTextAlignment(TextAlignment.RIGHT));
+            document.add(new Paragraph(" "));
+
+            // Footer
+            document.add(new Paragraph("Quý khách vui lòng kiểm tra kỹ hóa đơn trước khi thanh toán!").setFont(font)
+                    .setTextAlignment(TextAlignment.CENTER).setFontSize(10));
+
+            // Thêm QR code nếu có
+            try {
+                ImageData imageData = ImageDataFactory.create("src/image/System_Image/QR_Payment.jpg");
+                com.itextpdf.layout.element.Image qrImage = new com.itextpdf.layout.element.Image(imageData);
+                qrImage.setWidth(100);
+                qrImage.setHeight(100);
+                qrImage.setHorizontalAlignment(HorizontalAlignment.CENTER);
+                document.add(qrImage);
+                document.add(new Paragraph("Quét mã để thanh toán")
+                        .setFont(font)
+                        .setTextAlignment(TextAlignment.CENTER)
+                        .setFontSize(10));
+            } catch (Exception e) {
+                System.out.println("Không tìm thấy hình ảnh QR code: " + e.getMessage());
+            }
+
+            // Đóng document
+            document.close();
+
+            // Hiển thị thông báo thành công và mở file
+            JOptionPane.showMessageDialog(this, "Đã xuất hóa đơn thành công!\nVị trí: " + fileName);
+
+            // Mở file vừa tạo
+            try {
+                File pdfFile = new File(fileName);
+                if (pdfFile.exists()) {
+                    Desktop.getDesktop().open(pdfFile);
+                }
+            } catch (Exception e) {
+                System.out.println("Không thể mở file tự động: " + e.getMessage());
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Lỗi khi xuất hóa đơn: " + ex.getMessage(),
+                    "Lỗi Xuất PDF", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    //Khỏi tạo đơn hàng mới
+    public void initializeNewOrder() {
+        try {
+            // Tạo ID đơn hàng mới
+            IProductRespository productRepository = new ProductRespository();
+            this.tempOrderId = productRepository.getOrderIDByTableID(0);
+
+            // Làm mới các model
+            placedModel.clear();
+            tempOrderProducts.clear();
+
+            // Cập nhật giao diện
+            updateTotalMoney();
+            list_dishSelected.repaint();
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this,
+                    "Lỗi khi tạo đơn hàng mới: " + e.getMessage(),
+                    "Lỗi",
+                    JOptionPane.ERROR_MESSAGE);
         }
     }
 

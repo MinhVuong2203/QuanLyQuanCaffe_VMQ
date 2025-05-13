@@ -25,8 +25,8 @@ public class ProductRespository implements IProductRespository {
         List<Product> list = new ArrayList<>();
         String sql = "SELECT productID, name, price, size, image FROM Product";
         try (Connection connection = jdbcUtils.connect();
-             PreparedStatement stmt = connection.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
+                PreparedStatement stmt = connection.prepareStatement(sql);
+                ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
                 Product product = new Product();
                 product.setProductID(rs.getInt("productID"));
@@ -47,7 +47,7 @@ public class ProductRespository implements IProductRespository {
         }
         String sql = "SELECT productID, name, price, size, image FROM Product WHERE productID = ?";
         try (Connection connection = jdbcUtils.connect();
-             PreparedStatement stmt = connection.prepareStatement(sql)) {
+                PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, id);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
@@ -65,7 +65,8 @@ public class ProductRespository implements IProductRespository {
     }
 
     @Override
-    public void addProductToOrderDetail(int orderId, int productId, int quantity, double price, int tableID) throws SQLException {
+    public void addProductToOrderDetail(int orderId, int productId, int quantity, double price, int tableID)
+            throws SQLException {
         if (orderId <= 0 || productId <= 0 || quantity <= 0 || price < 0 || tableID <= 0) {
             throw new IllegalArgumentException("Thông tin đơn hàng không hợp lệ");
         }
@@ -126,7 +127,7 @@ public class ProductRespository implements IProductRespository {
         }
         String sql = "UPDATE OrderDetail SET quantity = ?, price = ? WHERE orderID = ? AND productID = ?";
         try (Connection connection = jdbcUtils.connect();
-             PreparedStatement stmt = connection.prepareStatement(sql)) {
+                PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, quantity);
             stmt.setDouble(2, price);
             stmt.setInt(3, orderId);
@@ -142,7 +143,7 @@ public class ProductRespository implements IProductRespository {
         }
         String sql = "DELETE FROM OrderDetail WHERE orderID = ? AND productID = ?";
         try (Connection connection = jdbcUtils.connect();
-             PreparedStatement stmt = connection.prepareStatement(sql)) {
+                PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, orderId);
             stmt.setInt(2, productId);
             stmt.executeUpdate();
@@ -153,8 +154,8 @@ public class ProductRespository implements IProductRespository {
     public int initTempOrderId() throws SQLException {
         String sql = "SELECT MAX(orderID) FROM Orders";
         try (Connection connection = jdbcUtils.connect();
-             PreparedStatement stmt = connection.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
+                PreparedStatement stmt = connection.prepareStatement(sql);
+                ResultSet rs = stmt.executeQuery()) {
             if (rs.next()) {
                 return rs.getInt(1) + 1;
             }
@@ -169,7 +170,7 @@ public class ProductRespository implements IProductRespository {
         }
         String sql = "SELECT productID, name, price, size, image FROM Product WHERE name = ?";
         try (Connection connection = jdbcUtils.connect();
-             PreparedStatement stmt = connection.prepareStatement(sql)) {
+                PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, name);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
@@ -187,8 +188,10 @@ public class ProductRespository implements IProductRespository {
     }
 
     @Override
-    public void addToOrder(int orderID, int tableID, int employeeID, int customerID, String orderTime) throws SQLException {
-        if (orderID <= 0 || tableID <= 0 || employeeID <= 0 || customerID <= 0 || orderTime == null || orderTime.isEmpty()) {
+    public void addToOrder(int orderID, int tableID, int employeeID, int customerID, String orderTime)
+            throws SQLException {
+        if (orderID <= 0 || tableID <= 0 || employeeID <= 0 || customerID <= 0 || orderTime == null
+                || orderTime.isEmpty()) {
             throw new IllegalArgumentException("Thông tin đơn hàng không hợp lệ");
         }
         try (Connection connection = jdbcUtils.connect()) {
@@ -243,7 +246,7 @@ public class ProductRespository implements IProductRespository {
         }
         String sql = "SELECT orderID FROM Orders WHERE tableID = ? AND status = N'Đang chuẩn bị'";
         try (Connection connection = jdbcUtils.connect();
-             PreparedStatement stmt = connection.prepareStatement(sql)) {
+                PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, tableID);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
@@ -300,7 +303,7 @@ public class ProductRespository implements IProductRespository {
         }
         String sql = "SELECT productID FROM Product WHERE name = ? AND size = ?";
         try (Connection connection = jdbcUtils.connect();
-             PreparedStatement stmt = connection.prepareStatement(sql)) {
+                PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, name);
             stmt.setString(2, size);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -319,7 +322,7 @@ public class ProductRespository implements IProductRespository {
         }
         String sql = "SELECT productID FROM Product WHERE name = ?";
         try (Connection connection = jdbcUtils.connect();
-             PreparedStatement stmt = connection.prepareStatement(sql)) {
+                PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, name);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
@@ -337,7 +340,7 @@ public class ProductRespository implements IProductRespository {
         }
         String sql = "DELETE FROM Product WHERE productID = ?";
         try (Connection connection = jdbcUtils.connect();
-             PreparedStatement stmt = connection.prepareStatement(sql)) {
+                PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, productId);
             stmt.executeUpdate();
         }
@@ -360,7 +363,7 @@ public class ProductRespository implements IProductRespository {
                 WHERE o.tableID = ? AND o.status = N'Đang chuẩn bị'
                 """;
         try (Connection connection = jdbcUtils.connect();
-             PreparedStatement orderStmt = connection.prepareStatement(orderSql)) {
+                PreparedStatement orderStmt = connection.prepareStatement(orderSql)) {
             orderStmt.setInt(1, tableID);
             try (ResultSet orderRs = orderStmt.executeQuery()) {
                 if (orderRs.next()) {
@@ -418,7 +421,7 @@ public class ProductRespository implements IProductRespository {
         }
         String sql = "INSERT INTO Product (productID, name, price, size, image) VALUES (?, ?, ?, ?, ?)";
         try (Connection connection = jdbcUtils.connect();
-             PreparedStatement stmt = connection.prepareStatement(sql)) {
+                PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, product.getProductID());
             stmt.setString(2, product.getName());
             stmt.setDouble(3, product.getPrice());
@@ -435,7 +438,7 @@ public class ProductRespository implements IProductRespository {
         }
         String sql = "UPDATE Product SET name = ?, price = ?, size = ?, image = ? WHERE productID = ?";
         try (Connection connection = jdbcUtils.connect();
-             PreparedStatement stmt = connection.prepareStatement(sql)) {
+                PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, product.getName());
             stmt.setDouble(2, product.getPrice());
             stmt.setString(3, product.getSize());
@@ -452,7 +455,7 @@ public class ProductRespository implements IProductRespository {
         }
         String sql = "UPDATE TableCaffe SET status = ? WHERE TableID = ?";
         try (Connection connection = jdbcUtils.connect();
-             PreparedStatement stmt = connection.prepareStatement(sql)) {
+                PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, status);
             stmt.setInt(2, tableID);
             stmt.executeUpdate();
@@ -460,8 +463,10 @@ public class ProductRespository implements IProductRespository {
     }
 
     @Override
-    public void updateOrder(int orderID, int tableID, int employeeID, int customerID, String orderTime) throws SQLException {
-        if (orderID <= 0 || tableID <= 0 || employeeID <= 0 || customerID <= 0 || orderTime == null || orderTime.isEmpty()) {
+    public void updateOrder(int orderID, int tableID, int employeeID, int customerID, String orderTime)
+            throws SQLException {
+        if (orderID <= 0 || tableID <= 0 || employeeID <= 0 || customerID <= 0 || orderTime == null
+                || orderTime.isEmpty()) {
             throw new IllegalArgumentException("Thông tin đơn hàng không hợp lệ");
         }
         try (Connection connection = jdbcUtils.connect()) {
@@ -501,7 +506,7 @@ public class ProductRespository implements IProductRespository {
         }
         String sql = "UPDATE Orders SET status = ? WHERE orderID = ?";
         try (Connection connection = jdbcUtils.connect();
-             PreparedStatement stmt = connection.prepareStatement(sql)) {
+                PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, status);
             stmt.setInt(2, orderID);
             stmt.executeUpdate();
@@ -521,7 +526,7 @@ public class ProductRespository implements IProductRespository {
                 WHERE od.orderID = ?
                 """;
         try (Connection connection = jdbcUtils.connect();
-             PreparedStatement stmt = connection.prepareStatement(sql)) {
+                PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, orderID);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
@@ -543,12 +548,115 @@ public class ProductRespository implements IProductRespository {
     public int getNextProductId() throws SQLException {
         String sql = "SELECT MAX(productID) FROM Product";
         try (Connection connection = jdbcUtils.connect();
-             PreparedStatement stmt = connection.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
+                PreparedStatement stmt = connection.prepareStatement(sql);
+                ResultSet rs = stmt.executeQuery()) {
             if (rs.next()) {
                 return rs.getInt(1) + 1;
             }
             return 1;
         }
+    }
+
+    @Override
+    public Map<String, Object> getBillInfoByOrderID(int orderID) throws SQLException {
+        Map<String, Object> result = new HashMap<>();
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+
+        try {
+            connection = jdbcUtils.connect();
+
+            // 1. Lấy thông tin đơn hàng
+            String sql = "SELECT o.orderID, o.tableID, o.employeeID, o.customerID, o.orderTime, o.totalPrice, o.status, "
+                    +
+                    "t.tableName AS tableName, e.name AS employeeName, c.name AS customerName, c.point AS customerPoint, "
+                    +
+                    "ISNULL(o.discount, 0) AS discount " + // Đảm bảo không NULL
+                    "FROM Orders o " +
+                    "LEFT JOIN TableCaffe t ON o.tableID = t.tableID " +
+                    "LEFT JOIN Employee e ON o.employeeID = e.employeeID " +
+                    "LEFT JOIN Customer c ON o.customerID = c.customerID " +
+                    "WHERE o.orderID = ?";
+
+            statement = connection.prepareStatement(sql);
+            statement.setInt(1, orderID);
+            resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                result.put("orderID", resultSet.getInt("orderID"));
+                result.put("tableID", resultSet.getInt("tableID"));
+                result.put("employeeID", resultSet.getInt("employeeID"));
+                result.put("customerID", resultSet.getInt("customerID"));
+                result.put("orderTime", resultSet.getString("orderTime"));
+                result.put("totalPrice", resultSet.getDouble("totalPrice"));
+                result.put("status", resultSet.getString("status"));
+                result.put("tableName",
+                        resultSet.getInt("tableID") == 0 ? "Mang đi" : resultSet.getString("tableName"));
+                result.put("employeeName", resultSet.getString("employeeName"));
+                result.put("customerName", resultSet.getString("customerName"));
+                result.put("customerPoint", resultSet.getInt("customerPoint"));
+                result.put("discount", resultSet.getDouble("discount"));
+            } else {
+                // Không tìm thấy đơn hàng
+                return result;
+            }
+
+            resultSet.close();
+            statement.close();
+
+            // 2. Lấy thông tin sản phẩm trong đơn hàng
+            sql = "SELECT od.productID, od.quantity, od.price, p.name AS productName, p.size, p.price AS unitPrice " +
+                    "FROM OrderDetail od " +
+                    "JOIN Product p ON od.productID = p.productID " +
+                    "WHERE od.orderID = ?";
+
+            statement = connection.prepareStatement(sql);
+            statement.setInt(1, orderID);
+            resultSet = statement.executeQuery();
+
+            List<Map<String, Object>> products = new ArrayList<>();
+            double totalAmount = 0;
+
+            while (resultSet.next()) {
+                Map<String, Object> product = new HashMap<>();
+                product.put("productID", resultSet.getInt("productID"));
+                product.put("productName", resultSet.getString("productName"));
+                product.put("size", resultSet.getString("size"));
+                product.put("quantity", resultSet.getInt("quantity"));
+                product.put("unitPrice", resultSet.getDouble("unitPrice"));
+
+                // Quan trọng: Sử dụng giá trị price từ database làm tổng giá sản phẩm
+                double totalProductPrice = resultSet.getDouble("price");
+                product.put("totalProductPrice", totalProductPrice);
+
+                totalAmount += totalProductPrice;
+                products.add(product);
+            }
+
+            result.put("products", products);
+            result.put("totalAmount", totalAmount);
+
+            // Tính lại và lưu tổng tiền sau giảm giá
+            double discount = (Double) result.get("discount");
+            double finalTotal = totalAmount - discount;
+            if (finalTotal < 0)
+                finalTotal = 0;
+            result.put("finalTotal", finalTotal);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new SQLException("Lỗi khi lấy thông tin hóa đơn: " + e.getMessage());
+        } finally {
+            // Đóng các resource
+            if (resultSet != null)
+                resultSet.close();
+            if (statement != null)
+                statement.close();
+            if (connection != null)
+                connection.close();
+        }
+
+        return result;
     }
 }

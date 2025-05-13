@@ -28,4 +28,5 @@ public interface IProductRespository {
     public void updateOrderStatus(int orderID, String status) throws SQLException;
     public Map<Product,Integer> getProductsByOrderID(int orderID) throws SQLException, ClassNotFoundException;
     public int getNextProductId() throws SQLException, ClassNotFoundException,IOException;
+    public Map<String, Object> getBillInfoByOrderID(int orderID) throws SQLException;
 }

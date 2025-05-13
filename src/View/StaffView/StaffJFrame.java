@@ -98,7 +98,7 @@ public class StaffJFrame extends JFrame {
         menuPanel.setLayout(new GridLayout(10, 1, 0, 0));
 
         JPanel contentPanel = new JPanel(new BorderLayout());
-        contentPanel.setBackground(Color.LIGHT_GRAY);
+        contentPanel.setBackground(new Color(231, 215, 200));
 
         Table_JPanel table_JPanel = new Table_JPanel(employee.getId());
         contentPanel.add(table_JPanel, BorderLayout.CENTER);
@@ -231,7 +231,7 @@ public class StaffJFrame extends JFrame {
             currentCount++;
             tabbedPaneCounters.put(tabbedPane, currentCount);
             final int tabDisplayNumber = currentCount;
-            
+
             SwingWorker<TakeAwayJPanel, Void> worker = new SwingWorker<TakeAwayJPanel, Void>() {
                 @Override
                 protected TakeAwayJPanel doInBackground() throws Exception {
