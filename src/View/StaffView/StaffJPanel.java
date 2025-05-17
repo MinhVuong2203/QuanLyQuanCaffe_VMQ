@@ -12,6 +12,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
@@ -349,7 +350,8 @@ public class StaffJPanel extends JPanel {
                     int qty = Integer.parseInt(quantity);
                     if (qty > 0) {
                         double price = priceMap.get(dishName);
-                        updateOrAddItem(dishName, price, qty);
+                        BigDecimal priceBD = BigDecimal.valueOf(price);
+                        updateOrAddItem(dishName, priceBD, qty);
                         int productId = productDao.getProductIdByName(dishName);
                         Product product = productDao.getProductByID(productId);
                         if (productId != -1) {
@@ -388,7 +390,8 @@ public class StaffJPanel extends JPanel {
                     int qty = Integer.parseInt(quantity);
                     if (qty > 0) {
                         double price = priceMap.get(displayText);
-                        updateOrAddItem(displayText, price, qty);
+                        BigDecimal priceBD = BigDecimal.valueOf(price);
+                        updateOrAddItem(displayText, priceBD, qty);
                         int productId = productDao.getProductIdByNameAndSize(dishName, selectedSize);
                         Product product = productDao.getProductByID(productId);
                         if (productId != -1) {
@@ -430,28 +433,28 @@ public class StaffJPanel extends JPanel {
     // return false;
     // }
 
-    private void updateOrAddItem(String displayText, double price, int additionalQty) {
+    private void updateOrAddItem(String displayText, BigDecimal price, int additionalQty) {
         String item;
-        double totalItemPrice;
+        BigDecimal totalItemPrice;
         for (int i = 0; i < placedModel.size(); i++) {
             item = placedModel.getElementAt(i);
             if (item.contains(displayText)) {
                 String[] parts = item.split(" - ");
                 int currentQty = Integer.parseInt(parts[2].replace("Số lượng: ", "").trim());
                 int newQty = currentQty + additionalQty;
-                totalItemPrice = price * newQty;
+                totalItemPrice = price.multiply(BigDecimal.valueOf(newQty));
                 placedModel.set(i,
                         displayText + " - " + price + "đ - Số lượng: " + newQty + " - " + totalItemPrice + "đ");
                 return;
             }
         }
-        totalItemPrice = price * additionalQty;
+        totalItemPrice = price.multiply(BigDecimal.valueOf(additionalQty));
         placedModel.addElement(
                 displayText + " - " + price + "đ - Số lượng: " + additionalQty + " - " + totalItemPrice + "đ");
     }
 
     public void updateTotalMoney() {
-        double total = 0.0;
+        BigDecimal total = BigDecimal.ZERO;
         for (int i = 0; i < placedModel.size(); i++) {
             String item = placedModel.getElementAt(i);
             String[] parts = item.split(" - ");
@@ -459,7 +462,7 @@ public class StaffJPanel extends JPanel {
                 String priceStr = parts[parts.length - 1].replace("đ", "").trim();
                 try {
                     double itemPrice = Double.parseDouble(priceStr);
-                    total += itemPrice;
+                    total = total.add(BigDecimal.valueOf(itemPrice));
                 } catch (NumberFormatException e) {
                     System.err.println("Error parsing price from item: " + item + " | Price string: " + priceStr);
                 }
@@ -469,8 +472,8 @@ public class StaffJPanel extends JPanel {
         }
         
         // Áp dụng giảm giá nếu có
-        double finalTotal = total - discountAmount;
-        if (finalTotal < 0) finalTotal = 0;
+        BigDecimal finalTotal = total.subtract(BigDecimal.valueOf(discountAmount));
+        if (finalTotal.compareTo(BigDecimal.ZERO) < 0) finalTotal = BigDecimal.ZERO;
         
         total_monney.setText(String.format(VN, "%.1fđ", finalTotal));
     }
