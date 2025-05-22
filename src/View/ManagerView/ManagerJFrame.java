@@ -251,6 +251,36 @@ public class ManagerJFrame extends JFrame {
      */
     public int addNewTakeAwayTab(JTabbedPane tabbedPane, int empID) {
         try {
+            // Thiết lập màu nền và UI cho JTabbedPane
+            final Color tabBackground = new Color(231, 215, 200);
+
+            // Áp dụng UI tùy chỉnh cho toàn bộ khu vực tab
+            tabbedPane.setUI(new javax.swing.plaf.basic.BasicTabbedPaneUI() {
+                @Override
+                protected void paintTabArea(Graphics g, int tabPlacement, int selectedIndex) {
+                    // Tô màu cho toàn bộ khu vực tab trước khi vẽ từng tab riêng lẻ
+                    Graphics2D g2d = (Graphics2D) g;
+                    g2d.setColor(tabBackground);
+                    g2d.fillRect(0, 0, tabbedPane.getWidth(),
+                            calculateTabAreaHeight(tabPlacement, runCount, maxTabHeight));
+                    super.paintTabArea(g, tabPlacement, selectedIndex);
+                }
+
+                @Override
+                protected void paintContentBorderTopEdge(Graphics g, int tabPlacement, int selectedIndex, int x, int y,
+                        int w, int h) {
+                    // Không vẽ viền trên của nội dung tab
+                }
+
+                @Override
+                protected void paintTabBackground(Graphics g, int tabPlacement, int tabIndex, int x, int y, int w,
+                        int h, boolean isSelected) {
+                    // Vẽ nền cho từng tab với cùng màu nền
+                    Graphics2D g2d = (Graphics2D) g;
+                    g2d.setColor(tabBackground);
+                    g2d.fillRect(x, y, w, h);
+                }
+            });
             // Lấy và tăng counter cho tabbedPane cụ thể
             Integer currentCount = tabbedPaneCounters.getOrDefault(tabbedPane, 0);
             currentCount++;
