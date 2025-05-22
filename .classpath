@@ -34,5 +34,8 @@
 	<classpathentry kind="lib" path="Libraries/slf4j-simple-2.0.9.jar"/>
 	<classpathentry kind="lib" path="Libraries/httpcore5-h2-5.2.4.jar"/>
 	<classpathentry kind="lib" path="Libraries/jsoup-1.17.2.jar"/>
+	<classpathentry kind="lib" path="Libraries/jakarta.activation-api-2.0.1.jar"/>
+	<classpathentry kind="lib" path="Libraries/jakarta.mail-2.0.1.jar"/>
+	<classpathentry kind="lib" path="Libraries/jakarta.activation-2.0.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

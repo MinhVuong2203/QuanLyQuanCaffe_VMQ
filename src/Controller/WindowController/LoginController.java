@@ -7,6 +7,7 @@ import Service.Implements.UserAccountService;
 import Service.Interface.IUserAccountService;
 import View.ManagerView.ManagerJFrame;
 import View.StaffView.StaffJFrame;
+import View.Window.ForgetPasswordView;
 import View.Window.LoginView;
 import View.Window.SignUpView;
 import View.Window.WelcomeScreen;
@@ -34,13 +35,16 @@ public class LoginController implements ActionListener {   // Controller gọi v
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        String str = e.getActionCommand();
+        String str = e.getActionCommand();      
         if (str.equals("Quay lại")) {
             loginView.dispose();
             SwingUtilities.invokeLater(() -> new WelcomeScreen().setVisible(true));
         } else if (str.equals("Đăng ký")) {
             loginView.dispose();
             new SignUpView();
+        } else if (str.equalsIgnoreCase("Quên mật khẩu?")) {
+        	loginView.dispose();
+        	new ForgetPasswordView();
         } else if (str.equals("Đăng nhập")) {
             // Đăng nhập
             String userName = loginView.getTextField().getText(); // Lấy tên đăng nhập từ TextField

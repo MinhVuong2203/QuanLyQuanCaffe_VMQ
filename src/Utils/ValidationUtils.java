@@ -98,10 +98,16 @@ public class ValidationUtils {
 				return listTable.indexOf(table);
 		return -1;
 	}
+    
     public static boolean indexListTableName(List<Table> listTable, String name) {
 		for (Table table : listTable)
 			if (table.getTableName().equals(name))
 				return true;
 		return false;
 	}
+    
+    // Kiểm tra Email
+    public static boolean isEmail(String email) {
+    	return email.matches("^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$");
+    }
 }

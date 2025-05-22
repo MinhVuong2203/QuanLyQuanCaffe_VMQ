@@ -84,7 +84,7 @@ public class LoginView extends JFrame {
  	// Thêm lớp phủ bán trong suốt
         overlayPanel = new JPanel();
         overlayPanel.setBackground(new Color(0, 0, 0, 0.3f)); // Màu đen, độ trong suốt 50%
-        overlayPanel.setBounds(0, 0, 594, 381); // Bao phủ toàn bộ frame
+        overlayPanel.setBounds(0, -1, 594, 381); // Bao phủ toàn bộ frame
         overlayPanel.setVisible(false); // Ban đầu ẩn
         contentPane.add(overlayPanel);
         
@@ -100,7 +100,7 @@ public class LoginView extends JFrame {
         btnNewButton.setForeground(new Color(255, 255, 255));
         btnNewButton.setBackground(new Color(255, 128, 64));
 		btnNewButton.setFont(new Font("Arial", Font.PLAIN, 16));
-		btnNewButton.setBounds(93, 212, 111, 26);
+		btnNewButton.setBounds(93, 230, 111, 26);
 		btnNewButton.setBorderPainted(false);
 		contentPane.add(btnNewButton);
         btnNewButton.addActionListener(ac);
@@ -130,7 +130,7 @@ public class LoginView extends JFrame {
         btnNewButton_1.setForeground(new Color(255, 255, 255));
         btnNewButton_1.setBackground(new Color(128, 64, 64));
 		btnNewButton_1.setFont(new Font("Arial", Font.PLAIN, 16));
-		btnNewButton_1.setBounds(229, 212, 111, 26);
+		btnNewButton_1.setBounds(229, 230, 111, 26);
         btnNewButton_1.addActionListener(ac);
         btnNewButton_1.setBorderPainted(false);
 		contentPane.add(btnNewButton_1);
@@ -147,14 +147,23 @@ public class LoginView extends JFrame {
 		showMK.addActionListener(ac);
 		contentPane.add(showMK);
 		
-		
+		JButton btnNewButton_3 = new JButton("Quên mật khẩu?");
+		btnNewButton_3.setBackground(new Color(242, 232, 220));
+		btnNewButton_3.setForeground(new Color(255, 0, 0));
+        btnNewButton_3.setBounds(216, 206, 107, 21);
+        contentPane.add(btnNewButton_3);
+        this.setVisible(true);
+        btnNewButton_3.setBorderPainted(false);
+        btnNewButton_3.addActionListener(ac);
 
         JLabel lblNewLabel_3 = new JLabel("\r\n");
-        lblNewLabel_3.setFont(new Font("Arial", Font.PLAIN, 10));
+        lblNewLabel_3.setForeground(new Color(255, 0, 0));
+        lblNewLabel_3.setFont(new Font("Arial", Font.PLAIN, 12));
         lblNewLabel_3.setIcon(new ImageIcon("src\\image\\System_Image\\background.png"));
         lblNewLabel_3.setBounds(0, -1, 594, 370);
         contentPane.add(lblNewLabel_3);
-        this.setVisible(true);
+        
+      
     }
 
     public User getUser() {

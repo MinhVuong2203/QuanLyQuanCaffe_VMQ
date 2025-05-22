@@ -24,6 +24,7 @@ import View.StaffView.StaffJPanel;
 import View.StaffView.Table_JPanel;
 
 public class StaffJPanelController implements ActionListener {
+	
     private StaffJPanel staffJPanel;
     private LocalDateTime time = LocalDateTime.now();
 
@@ -40,7 +41,7 @@ public class StaffJPanelController implements ActionListener {
             ICustomerRespository customerRespository = new CustomerRepository();
             IOrderRepository orderRepository = new OrderRepository();
             if (str.equals("Đặt món")) {
-                String formattedTime = time.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+            	String formattedTime = time.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
                 // Kiểm tra và cập nhật điểm của khách hàng trong database
                 if (staffJPanel.getCurrentCustomer() != null && staffJPanel.getDiscountAmount() > 0) {

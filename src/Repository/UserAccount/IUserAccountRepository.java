@@ -11,8 +11,13 @@ public interface IUserAccountRepository {
     public void signUp(String name, String sdt) throws SQLException; // Đăng ký tài khoản mới
     public int getIDMaxFromSQL() throws SQLException; // Lấy ID lớn nhất trong bảng UserAccount
     public boolean checkEqualsUserName(String username) throws SQLException; // Kiểm tra tên đăng nhập đã tồn tại chưa
+    public boolean checkEqualCCCD(int id, String cccd) throws SQLException;
+    public void fixPassword(int id, String passwordNew) throws SQLException;
+    public int getIDFromUsername(String username) throws SQLException;
+    
+    
     public void updatePoint(int id, double pointNew) throws SQLException;
-
+    
     // Lấy thông tin đối tượng
     public Manager getManagerFromID(int id) throws SQLException; // Lấy thông tin của Manager từ ID
     public Employee getEmployeeFromID(int id) throws SQLException; // Lấy thông tin của Employee từ ID

@@ -175,6 +175,51 @@ public class UserAccountRepository implements IUserAccountRepository {
             }
         }
     }
+    @Override
+    public boolean checkEqualCCCD(int id, String cccd) throws SQLException{
+        String sql = "SELECT CCCD FROM employee WHERE employeeID = ? AND CCCD = ?";
+        try (Connection connection = jdbcUtils.connect();
+             PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            stmt.setString(2, cccd);
+            try (ResultSet rs = stmt.executeQuery()) {
+                return rs.next();
+            }
+        }
+    }
+    
+    
+    @Override
+    public void fixPassword(int id, String passwordNew) throws SQLException{
+    	passwordNew = ConvertInto.hashPassword(passwordNew);
+    	String sql = "UPDATE UserAccount SET password = ? WHERE ID = ?";
+    	try(
+    		Connection connection = jdbcUtils.connect();
+    		PreparedStatement stmt = connection.prepareStatement(sql)
+    		){
+    			stmt.setString(1, passwordNew);
+    			stmt.setInt(2, id);
+    			stmt.executeUpdate();
+	
+    		}
+    		
+    }
+    
+    @Override
+    public int getIDFromUsername(String username) throws SQLException{
+    	String sql = "SELECT ID FROM UserAccount WHERE username = ?";
+        try (Connection connection = jdbcUtils.connect();
+             PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, username);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                	return rs.getInt("ID");
+                }
+            }
+        }
+        return -1;
+    }
+    
 
     @Override
     public Customer getCustomerFromID(int id) throws SQLException {

@@ -35,5 +35,31 @@ public class UserAccountService implements IUserAccountService  {
     public Manager getManagerFromID(int id) throws SQLException{
         return uRepository.getManagerFromID(id); // Lấy thông tin quản lý từ ID
     }
-
+    
+    @Override
+    public void fixPassword(int id, String passNew) throws SQLException {
+    	if (id == -1 ) {
+    		throw new IllegalArgumentException("Người dùng không tồn tại");
+    	}
+    	if (passNew == null || passNew.isEmpty()) {
+    		throw new IllegalArgumentException("Password mới không hợp lệ");
+    	}
+    	uRepository.fixPassword(id, passNew);
+    }
+    
+    @Override
+    public int getIDFromUsername(String username) throws SQLException{
+    	if (username == null || username.isEmpty()) {
+    		throw new IllegalArgumentException("Username không hợp lệ");
+    	}
+    	return uRepository.getIDFromUsername(username);
+    }
+    
+    @Override
+    public boolean checkEqualCCCD(int id, String cccd) throws SQLException{
+    	if (id == -1) {
+    		throw new IllegalArgumentException("Người dùng không tồn tại");  		
+    	}
+    	return uRepository.checkEqualCCCD(id, cccd);
+    }
 }
