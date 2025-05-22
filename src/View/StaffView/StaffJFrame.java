@@ -278,6 +278,17 @@ public class StaffJFrame extends JFrame {
                             }
                         });
 
+                        // Thêm icon cho tab
+                        try {
+                            ImageIcon takeawayIcon = new ImageIcon("src\\image\\SideBar_Image\\TakeAway.png");
+                            Image scaledIcon = takeawayIcon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
+                            JLabel iconLabel = new JLabel(new ImageIcon(scaledIcon));
+                            iconLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
+                            tabTitlePanel.add(iconLabel, 0);
+                        } catch (Exception ex) {
+                            // Bỏ qua nếu không tìm thấy icon
+                        }
+
                         // Xử lý đóng tab
                         closeButton.addActionListener(new ActionListener() {
                             @Override
@@ -361,6 +372,7 @@ public class StaffJFrame extends JFrame {
                         tabbedPane.repaint();
 
                     } catch (Exception ex) {
+                        
                         JOptionPane.showMessageDialog(tabbedPane,
                                 "Lỗi khi tạo tab mang về: " + ex.getMessage(),
                                 "Lỗi", JOptionPane.ERROR_MESSAGE);
