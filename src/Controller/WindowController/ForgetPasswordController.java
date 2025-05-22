@@ -81,7 +81,6 @@ public class ForgetPasswordController {
         	return;
         }
        
-        System.out.println(email);
         int id = -1;
 		try {
 			UserAccountService userAccountService = new UserAccountService(); 
@@ -91,19 +90,16 @@ public class ForgetPasswordController {
 				return;
 			}
 			
-			System.out.println(userAccountService.checkEqualCCCD(id, cccd));
-			
 			if (!userAccountService.checkEqualCCCD(id, cccd)) {
 				JOptionPane.showMessageDialog(forgetPasswordView, "CCCD không khớp", "Lỗi", JOptionPane.ERROR_MESSAGE);
 				return;
 			}
 			
 			String passwordNew = "VMQ" + randomCaptchaAndPasswordNew(8) + "@";
-			System.out.println(passwordNew);
+			JOptionPane.showMessageDialog(forgetPasswordView, "Vui lòng kiểm tra gmail để lấy mật khẩu!", "Thành công", JOptionPane.INFORMATION_MESSAGE);		
 			sendEmail(email, passwordNew);
 			// Gọi service để thực hiện update mật khẩu mới
 			userAccountService.fixPassword(id, passwordNew);			
-			JOptionPane.showMessageDialog(forgetPasswordView, "Vui lòng kiểm tra gmail để lấy mật khẩu!", "Thành công", JOptionPane.INFORMATION_MESSAGE);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
