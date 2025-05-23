@@ -1,4 +1,4 @@
-package View.ManagerView.ManagerStaff;
+package View.Window;
 
 import Utils.ConvertInto;
 import Utils.ValidationUtils;
@@ -7,11 +7,14 @@ import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Toolkit;
+import java.io.IOException;
+import java.sql.SQLException;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JSeparator;
@@ -20,7 +23,10 @@ import javax.swing.border.EmptyBorder;
 
 import com.itextpdf.layout.element.Image;
 
-public class ChangePasswordDialog extends JDialog {
+import Repository.UserAccount.IUserAccountRepository;
+import Repository.UserAccount.UserAccountRepository;
+
+public class ChangePasswordView extends JDialog {
 
     private static final long serialVersionUID = 1L;
     private final JPanel contentPanel = new JPanel();
@@ -39,12 +45,13 @@ public class ChangePasswordDialog extends JDialog {
     /**
      * Create the dialog.
      */
-    public ChangePasswordDialog(AddOrFixEmployeeJDialog parent) {
+    public ChangePasswordView(int id, String password) {
         setTitle("Đổi mật khẩu");
         setIconImage(Toolkit.getDefaultToolkit().getImage("src\\image\\System_Image\\Quán Caffe MVQ _ Icon.png"));
         setBounds(100, 100, 477, 308);
         setModal(true); // Đảm bảo tính modal
-        setLocationRelativeTo(parent); // Đặt vị trí tương đối với cửa sổ cha
+        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE); // ngăn đóng
+        setLocationRelativeTo(null); // Đặt vị trí tương đối với cửa sổ cha
         getContentPane().setLayout(new BorderLayout());
         contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
         getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -103,7 +110,7 @@ public class ChangePasswordDialog extends JDialog {
         confirmPasswordErrorLabel.setHorizontalAlignment(SwingConstants.RIGHT);
         contentPanel.add(confirmPasswordErrorLabel);
 
-        this.oldPassword = parent.getEmployee().getPassword();
+        this.oldPassword = ConvertInto.hashPassword(password);
 
         {
             JPanel buttonPane = new JPanel();
@@ -118,18 +125,27 @@ public class ChangePasswordDialog extends JDialog {
                     if (validatePassword()) {
                         this.newPassword = new String(newPasswordField.getPassword());
                         System.out.println("New Password: " + newPassword);
+                        try {
+							IUserAccountRepository iUserAccountRepository = new UserAccountRepository();
+							System.out.println("ID nè: " + id);
+							iUserAccountRepository.fixPassword(id, newPassword);
+							JOptionPane.showMessageDialog(this, "Đổi mật khẩu thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+						} catch (ClassNotFoundException | IOException | SQLException e1) {
+							JOptionPane.showMessageDialog(this, "Đổi mật khẩu không thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+							e1.printStackTrace();
+						}
                         dispose();
                     }
                 });
                 getRootPane().setDefaultButton(okButton);
             }
-            {
-                JButton cancelButton = new JButton("Cancel");
-                cancelButton.setFont(new Font("Tahoma", Font.BOLD, 16));
-                cancelButton.setActionCommand("Cancel");
-                buttonPane.add(cancelButton);
-                cancelButton.addActionListener(e -> dispose());
-            }
+//            {
+//                JButton cancelButton = new JButton("Cancel");
+//                cancelButton.setFont(new Font("Tahoma", Font.BOLD, 16));
+//                cancelButton.setActionCommand("Cancel");
+//                buttonPane.add(cancelButton);
+//                cancelButton.addActionListener(e -> dispose());
+//            }
         }
     }
 

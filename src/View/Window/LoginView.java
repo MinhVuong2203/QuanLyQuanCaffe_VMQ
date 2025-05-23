@@ -2,9 +2,10 @@ package View.Window;
 
 import Controller.WindowController.LoginController;
 import Model.User;
+import Components.*;
+
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionListener;
 import javax.swing.ImageIcon;
@@ -18,14 +19,16 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+import Components.CustomTextField;
+
 public class LoginView extends JFrame {
     private static final long serialVersionUID = 1L;
 
     // private LoginController ac; // Khai báo controller
 
     private JPanel contentPane;
-    private JTextField textField;
-    private JPasswordField passwordField;
+    private CustomTextField textField;
+    private CustomPasswordField passwordField;
     private JCheckBox showMK;
     private JLabel loadingLabel;
     private JPanel overlayPanel;
@@ -44,7 +47,7 @@ public class LoginView extends JFrame {
         return showMK;
     }
 
-    public void setPasswordField(JPasswordField passwordField) {
+    public void setPasswordField(CustomPasswordField passwordField) {
         this.passwordField = passwordField;
     }
 
@@ -96,24 +99,31 @@ public class LoginView extends JFrame {
 
         ActionListener ac = new LoginController(this); // Gọi controller
 
-        JButton btnNewButton = new JButton("Đăng nhập");
-        btnNewButton.setForeground(new Color(255, 255, 255));
-        btnNewButton.setBackground(new Color(255, 128, 64));
-		btnNewButton.setFont(new Font("Arial", Font.PLAIN, 16));
-		btnNewButton.setBounds(93, 230, 111, 26);
-		btnNewButton.setBorderPainted(false);
+        CustomRoundedButton btnNewButton = new CustomRoundedButton("Đăng nhập");
+        btnNewButton.setFont(new Font("Arial", Font.PLAIN, 16));
+        btnNewButton.setBounds(93, 230, 111, 32);
+        btnNewButton.setDefaultBackground(new Color(255, 128, 64));
+        btnNewButton.setDefaultForeground(new Color(255, 255, 255));
+        btnNewButton.setDefaultBorderColor(new Color(255,255,255));
+        btnNewButton.setHoverBackground(new Color(225, 255, 255));
+        btnNewButton.setHoverForeground(new Color(225, 108, 34));
+        btnNewButton.setHoverBorderColor(new Color(225, 108, 34));
+        btnNewButton.setPressedBackground(new Color(225, 108, 34));
+        btnNewButton.setPressedForeground(new Color(255,255,255));
 		contentPane.add(btnNewButton);
         btnNewButton.addActionListener(ac);
 
-        textField = new JTextField();
+        textField = new CustomTextField();
         textField.setBounds(129, 140, 172, 26);
         textField.setFont(new Font("Arial", Font.PLAIN, 16));
+        textField.setFocusBorderColor(new Color(242, 145, 145));
         contentPane.add(textField);
         textField.setColumns(10);
 
-        passwordField = new JPasswordField();
+        passwordField = new CustomPasswordField();
 		passwordField.setBounds(129, 176, 151, 26);
         passwordField.setFont(new Font("Arial", Font.PLAIN, 16));
+        passwordField.setFocusBorderColor(new Color(242, 145, 145));
 		contentPane.add(passwordField);
 
         JLabel lblNewLabel_1 = new JLabel("Tài khoản:");
@@ -126,13 +136,18 @@ public class LoginView extends JFrame {
         lblNewLabel_2.setBounds(39, 180, 85, 20);
         contentPane.add(lblNewLabel_2);
 
-        JButton btnNewButton_1 = new JButton("Đăng ký");
-        btnNewButton_1.setForeground(new Color(255, 255, 255));
-        btnNewButton_1.setBackground(new Color(128, 64, 64));
+        CustomRoundedButton btnNewButton_1 = new CustomRoundedButton("Đăng ký");
 		btnNewButton_1.setFont(new Font("Arial", Font.PLAIN, 16));
-		btnNewButton_1.setBounds(229, 230, 111, 26);
+		btnNewButton_1.setBounds(229, 230, 111, 32);
+		btnNewButton_1.setDefaultBackground(new Color(128, 64, 64));
+		btnNewButton_1.setDefaultForeground(new Color(255, 255, 255));
+		btnNewButton_1.setDefaultBorderColor(new Color(255,255,255));
+		btnNewButton_1.setHoverBackground(new Color(225, 255, 255));
+		btnNewButton_1.setHoverForeground(new Color(128, 64, 64));
+		btnNewButton_1.setHoverBorderColor(new Color(128, 64, 64));
+		btnNewButton_1.setPressedBackground(new Color(128, 64, 64));
+		btnNewButton_1.setPressedForeground(new Color(255,255,255));
         btnNewButton_1.addActionListener(ac);
-        btnNewButton_1.setBorderPainted(false);
 		contentPane.add(btnNewButton_1);
 
         JButton btnNewButton_2 = new JButton("Quay lại");
@@ -147,14 +162,17 @@ public class LoginView extends JFrame {
 		showMK.addActionListener(ac);
 		contentPane.add(showMK);
 		
-		JButton btnNewButton_3 = new JButton("Quên mật khẩu?");
-		btnNewButton_3.setBackground(new Color(242, 232, 220));
-		btnNewButton_3.setForeground(new Color(255, 0, 0));
-        btnNewButton_3.setBounds(216, 206, 107, 21);
-        contentPane.add(btnNewButton_3);
-        this.setVisible(true);
-        btnNewButton_3.setBorderPainted(false);
+		CustomRoundedButton btnNewButton_3 = new CustomRoundedButton("Quên mật khẩu?");
+		btnNewButton_3.setBounds(216, 206, 107, 21);
+		btnNewButton_3.setDefaultBackground(new Color(242, 232, 220));
+		btnNewButton_3.setHoverBackground(new Color(242, 232, 220));
+		btnNewButton_3.setPressedBackground(new Color(242, 232, 220));
+		btnNewButton_3.setDefaultForeground(new Color(205, 20, 20));
+		btnNewButton_3.setHoverForeground(new Color(255, 0, 0));
+		btnNewButton_3.setShowBorder(false);
+		
         btnNewButton_3.addActionListener(ac);
+        contentPane.add(btnNewButton_3);
 
         JLabel lblNewLabel_3 = new JLabel("\r\n");
         lblNewLabel_3.setForeground(new Color(255, 0, 0));
@@ -163,6 +181,7 @@ public class LoginView extends JFrame {
         lblNewLabel_3.setBounds(0, -1, 594, 370);
         contentPane.add(lblNewLabel_3);
         
+        this.setVisible(true);
       
     }
 

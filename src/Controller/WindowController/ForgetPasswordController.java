@@ -50,8 +50,6 @@ public class ForgetPasswordController {
             }
             sb.append(randomChar);
         }
-        System.out.println("Đã random ra chuỗi: " + sb.toString());
-       
         return sb.toString();
     }
 
@@ -96,7 +94,7 @@ public class ForgetPasswordController {
 			}
 			
 			String passwordNew = "VMQ" + randomCaptchaAndPasswordNew(8) + "@";
-			JOptionPane.showMessageDialog(forgetPasswordView, "Vui lòng kiểm tra gmail để lấy mật khẩu!", "Thành công", JOptionPane.INFORMATION_MESSAGE);		
+			JOptionPane.showMessageDialog(forgetPasswordView, "Vui lòng kiểm tra gmail: "+ email +" để lấy mật khẩu!\nNhấn Ok để nhận", "Thành công", JOptionPane.INFORMATION_MESSAGE);		
 			sendEmail(email, passwordNew);
 			// Gọi service để thực hiện update mật khẩu mới
 			userAccountService.fixPassword(id, passwordNew);			

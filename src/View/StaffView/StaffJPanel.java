@@ -23,6 +23,7 @@ import javax.swing.border.EmptyBorder;
 
 import com.itextpdf.kernel.xmp.impl.Utils;
 
+import Components.HoverEffect;
 import Utils.*;
 
 import Controller.StaffController.StaffJPanelController;

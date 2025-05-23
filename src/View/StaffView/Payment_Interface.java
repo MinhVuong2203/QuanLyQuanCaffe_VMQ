@@ -54,7 +54,7 @@ import Controller.StaffController.PaymentController;
 import Controller.StaffController.PaymentQRController;
 import Repository.Product.IProductRespository;
 import Repository.Product.ProductRespository;
-import Utils.HoverEffect;
+import Components.HoverEffect;
 
 public class Payment_Interface extends JPanel {
     private Locale VN = new Locale("vi", "VN");

@@ -6,7 +6,7 @@ import Model.Table;
 import Repository.Order.OrderRepository;
 import Repository.Table.ITableRespository;
 import Repository.Table.TableRepository;
-import Utils.HoverEffect;
+import Components.HoverEffect;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;

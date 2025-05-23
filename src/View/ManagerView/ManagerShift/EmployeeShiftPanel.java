@@ -26,7 +26,7 @@ import org.w3c.dom.events.MouseEvent;
 import javax.swing.JScrollPane;
 
 import Utils.ConvertInto;
-import Utils.HoverEffect;
+import Components.*;
 import Utils.ValidationUtils;
 import Utils.file;
 

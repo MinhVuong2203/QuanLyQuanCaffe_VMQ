@@ -270,8 +270,8 @@ VALUES
 INSERT INTO Payment (paymentID, orderID, paymentMethod, amount, paymentTime) 
 VALUES
 (1, 1, N'Tiền mặt', 49000.00, '2025-03-24 09:00:00'),
-(2, 2, N'Thẻ tín dụng', 55000.00, '2025-03-24 09:20:00'),
-(3, 3, N'Ví điện tử', 49000.00, '2025-03-24 09:45:00'),
+(2, 2, N'Chuyển khoản', 55000.00, '2025-03-24 09:20:00'),
+(3, 3, N'Chuyển khoản', 49000.00, '2025-03-24 09:45:00'),
 (4, 4, N'Tiền mặt', 55000.00, '2025-03-24 10:15:00');
 
 INSERT INTO EmployeeShift(shiftID,employeeID, startTime, endTime, hourWage, status)

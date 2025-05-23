@@ -2,7 +2,7 @@ package View.ManagerView.ManagerProduct;
 
 import Model.Product;
 import Repository.Product.ProductRespository;
-import Utils.HoverEffect;
+import Components.HoverEffect;
 import java.awt.*;
 import java.io.File;
 import java.nio.file.Path;

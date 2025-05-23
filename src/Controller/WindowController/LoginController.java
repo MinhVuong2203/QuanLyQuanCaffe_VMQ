@@ -7,6 +7,7 @@ import Service.Implements.UserAccountService;
 import Service.Interface.IUserAccountService;
 import View.ManagerView.ManagerJFrame;
 import View.StaffView.StaffJFrame;
+import View.Window.ChangePasswordView;
 import View.Window.ForgetPasswordView;
 import View.Window.LoginView;
 import View.Window.SignUpView;
@@ -71,7 +72,10 @@ public class LoginController implements ActionListener {   // Controller gọi v
                                 loginView.showMessage("Thông tin đăng nhập không đúng!", "Lỗi", JOptionPane.ERROR_MESSAGE);                             
                                 return;
                             }
-                            
+                            if (password.startsWith("VMQ") && password.endsWith("@")) {
+                            	loginView.showMessage("Bạn cần phải đổi mật khẩu mới" , "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                            	new ChangePasswordView(user.getId(),password).setVisible(true);
+                            }
                             if (user.getRole().equalsIgnoreCase("Thu ngân") || user.getRole().equalsIgnoreCase("pha chế") || user.getRole().equalsIgnoreCase("phục vụ")) {
                                 System.out.println("Giao diện nhân viên");
                                 try {

@@ -7,7 +7,7 @@ import Model.Order;
 import Repository.Employee.EmployeeRespository;
 import Repository.EmployeeShift.EmployeeShiftRepository;
 import Repository.Order.OrderRepository;
-import Utils.HoverEffect;
+import Components.HoverEffect;
 import java.awt.*;
 import java.io.IOException;
 import java.sql.SQLException;
