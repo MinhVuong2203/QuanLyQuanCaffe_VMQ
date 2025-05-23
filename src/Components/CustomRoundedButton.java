@@ -2,6 +2,7 @@ package Components;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.RoundRectangle2D;
 
 public class CustomRoundedButton extends JButton {
@@ -25,6 +26,8 @@ public class CustomRoundedButton extends JButton {
     private int shadowOffset = 0; // Độ lệch bóng
     // Kiểm soát hiển thị viền
     private boolean showBorder = true; // Hiển thị viền theo mặc định
+    // Tỷ lệ thu nhỏ khi nhấn
+    private double scaleFactor = 0.8; // Thu nhỏ còn 90% khi nhấn
 
     public CustomRoundedButton(String text) {
         super(text);
@@ -80,6 +83,18 @@ public class CustomRoundedButton extends JButton {
             ));
         }
 
+        // Lưu trạng thái Graphics2D
+        AffineTransform originalTransform = g2d.getTransform();
+
+        // Áp dụng scale khi nhấn giữ
+        if (getModel().isArmed()) {
+            // Tính toán để căn giữa nội dung sau khi scale
+            double offsetX = (getWidth() * (1 - scaleFactor)) / 2;
+            double offsetY = (getHeight() * (1 - scaleFactor)) / 2;
+            g2d.translate(offsetX, offsetY);
+            g2d.scale(scaleFactor, scaleFactor);
+        }
+
         // Cập nhật màu chữ dựa trên trạng thái
         if (getModel().isArmed()) {
             setForeground(pressedForeground); // Màu chữ khi nhấn
@@ -89,9 +104,11 @@ public class CustomRoundedButton extends JButton {
             setForeground(defaultForeground); // Màu chữ mặc định
         }
 
-        // Vẽ văn bản
-        super.paintComponent(g);
+        // Vẽ văn bản và icon
+        super.paintComponent(g2d);
 
+        // Khôi phục trạng thái Graphics2D
+        g2d.setTransform(originalTransform);
         g2d.dispose();
     }
 
@@ -210,6 +227,15 @@ public class CustomRoundedButton extends JButton {
 
     public void setShowBorder(boolean showBorder) {
         this.showBorder = showBorder;
+        repaint();
+    }
+
+    public double getScaleFactor() {
+        return scaleFactor;
+    }
+
+    public void setScaleFactor(double scaleFactor) {
+        this.scaleFactor = scaleFactor;
         repaint();
     }
 }

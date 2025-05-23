@@ -13,6 +13,7 @@ import View.StaffView.RollCall;
 import View.StaffView.StaffJPanel;
 import View.StaffView.Table_JPanel;
 import View.StaffView.TakeAwayJPanel;
+import View.Window.WelcomeScreen;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -24,6 +25,9 @@ import java.util.Locale;
 import java.util.Map;
 
 import javax.swing.*;
+
+import Components.CustomRoundedButton;
+import Components.GradientPanel;
 
 public class ManagerJFrame extends JFrame {
     private static final long serialVersionUID = 1L;
@@ -52,7 +56,18 @@ public class ManagerJFrame extends JFrame {
         getContentPane().setLayout(new BorderLayout());
 
         // Panel Header (Thông tin nhân viên)
-        JPanel panel = new JPanel();
+//        Color[] color = {new Color(242, 210, 121), new Color(232, 200 , 111),new Color(222, 190, 101), new Color(0, 0, 0)};
+        
+        Color[] color = {
+        	    new Color(228, 196, 245),
+        	    new Color(231, 196, 235),
+        	    new Color(234, 196, 226),
+        	    new Color(237, 196, 216),
+        	    new Color(240, 196, 207),
+        	    new Color(243, 196, 207),
+        	    new Color(245, 196, 202)
+        	};
+        GradientPanel panel = new GradientPanel(color, 45);
         panel.setLayout(null);
         panel.setPreferredSize(new Dimension(250, 100));
         getContentPane().add(panel, BorderLayout.NORTH);
@@ -139,14 +154,20 @@ public class ManagerJFrame extends JFrame {
                 "src\\image\\SideBar_Image\\SignOut.png" };
         int index_iconButtonLabels = 0;
         for (String label : buttonLabels) {
-            JButton button = new JButton(label);
-            button.setFocusPainted(false);
-            button.setBackground(new Color(39, 174, 96));
-            button.setForeground(Color.WHITE);
-            button.setOpaque(true);
-            button.setContentAreaFilled(true);
+            CustomRoundedButton button = new CustomRoundedButton(label);
+            button.setRadius(0);
+            button.setScaleFactor(0.9);
+            button.setDefaultBackground(new Color(39, 174, 96));
+            button.setHoverBackground(new Color(20,150,70));
+            button.setPressedBackground(new Color(70, 200, 130));
+            button.setDefaultForeground(Color.WHITE);
+            button.setHoverForeground(Color.WHITE);
+            button.setPressedForeground(Color.WHITE);
+            button.setDefaultBorderColor(new Color(39, 174, 96));
+            button.setHoverBackground(new Color(39, 174, 96));
+            button.setPressedBorderColor(new Color(39, 174, 96));
+            
             button.setFont(new Font("Arial", Font.BOLD, 14));
-            button.setBorderPainted(false);
             button.setHorizontalAlignment(SwingConstants.LEFT);
             // Thêm icon
             int width = 42, height = 42;
@@ -477,5 +498,6 @@ public class ManagerJFrame extends JFrame {
     public Panel getMenuPanel() {
         return this.menuPanel;
     }
+    
 
 }

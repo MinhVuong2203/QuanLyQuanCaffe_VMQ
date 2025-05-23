@@ -14,6 +14,9 @@ import java.util.Map;
 
 import javax.swing.*;
 
+import Components.CustomRoundedButton;
+import Components.GradientPanel;
+
 public class StaffJFrame extends JFrame {
     private Locale VN = new Locale("vi", "VN");
     private DateFormat formatTime = DateFormat.getTimeInstance(DateFormat.LONG, VN);
@@ -44,7 +47,16 @@ public class StaffJFrame extends JFrame {
         getContentPane().setLayout(new BorderLayout());
 
         // Panel Header (Thông tin nhân viên)
-        JPanel panel = new JPanel();
+        Color[] color = {
+        	    new Color(228, 196, 245),
+        	    new Color(231, 196, 235),
+        	    new Color(234, 196, 226),
+        	    new Color(237, 196, 216),
+        	    new Color(240, 196, 207),
+        	    new Color(243, 196, 207),
+        	    new Color(245, 196, 202)
+        	};
+        GradientPanel panel = new GradientPanel(color, 45);
         panel.setLayout(null);
         panel.setPreferredSize(new Dimension(250, 100));
         getContentPane().add(panel, BorderLayout.NORTH);
@@ -106,22 +118,29 @@ public class StaffJFrame extends JFrame {
 
         StaffJFrameController controller = new StaffJFrameController(this, contentPanel, employee); // Hành động
 
-        String[] buttonLabels = { "BÁN HÀNG", "MANG VỀ", "ĐIỂM DANH", "MINI GAME", "ĐĂNG XUẤT" };
+        String[] buttonLabels = { "BÁN HÀNG", "MANG VỀ", "ĐIỂM DANH", "ĐĂNG KÝ CA" ,"MINI GAME", "ĐĂNG XUẤT" };
         String[] iconButtonLabels = { "src\\image\\SideBar_Image\\Sell.png",
-                "src\\image\\SideBar_Image\\TakeAway.png",
-                "src\\image\\SideBar_Image\\DiemDanh.png",
-                "src\\image\\SideBar_Image\\game_img.png",
-                "src\\image\\SideBar_Image\\SignOut.png" };
+								      "src\\image\\SideBar_Image\\TakeAway.png",
+								      "src\\image\\SideBar_Image\\DiemDanh.png",
+								      "src\\image\\SideBar_Image\\RegisterWork.png",
+								      "src\\image\\SideBar_Image\\game_img.png",
+								      "src\\image\\SideBar_Image\\SignOut.png" };
         int index_iconButtonLabels = 0;
         for (String label : buttonLabels) {
-            JButton button = new JButton(label);
-            button.setFocusPainted(false);
-            button.setBackground(new Color(39, 174, 96));
-            button.setForeground(Color.WHITE);
-            button.setOpaque(true);
-            button.setContentAreaFilled(true);
-            button.setFont(new Font("Arial", Font.BOLD, 14));
-            button.setBorderPainted(false);
+            CustomRoundedButton button = new CustomRoundedButton(label);
+            button.setRadius(0);
+            button.setScaleFactor(0.9);
+            button.setDefaultBackground(new Color(39, 174, 96));
+            button.setHoverBackground(new Color(20,150,70));
+            button.setPressedBackground(new Color(70, 200, 130));
+            button.setDefaultForeground(Color.WHITE);
+            button.setHoverForeground(Color.WHITE);
+            button.setPressedForeground(Color.WHITE);
+            button.setDefaultBorderColor(new Color(39, 174, 96));
+            button.setHoverBackground(new Color(39, 174, 96));
+            button.setPressedBorderColor(new Color(39, 174, 96)); 
+            
+            button.setFont(new Font("Arial", Font.BOLD, 14)); 
             button.setHorizontalAlignment(SwingConstants.LEFT);
             // Thêm icon
             int width = 42, height = 42;
