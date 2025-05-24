@@ -11,7 +11,6 @@ import java.util.Date;
 import java.util.List;
 
 import javax.swing.JComboBox;
-import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -19,9 +18,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumn;
 
-import org.w3c.dom.events.MouseEvent;
 
 import javax.swing.JScrollPane;
 
@@ -40,9 +37,7 @@ import Repository.Employee.IEmployeeRespository;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Image;
-import java.awt.event.MouseAdapter;
 
-import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.ImageIcon;
 
@@ -107,11 +102,13 @@ public class EmployeeShiftPanel extends JPanel {
         });
         panel_top.add(comboBox);
 
-        JButton btnDongY = new JButton("Đồng ý");
-        btnDongY.setBackground(new Color(0, 255, 128));
-        btnDongY.setFont(new Font("Arial", Font.BOLD, 16));
+        CustomRoundedButton btnDongY = new CustomRoundedButton("Đồng ý");
+        btnDongY.setDefaultBackground(new Color(0, 255, 128));
+        btnDongY.setHoverBackground(new Color(0, 200, 100));
+        btnDongY.setPressedBackground(new Color(0,200, 100));
+        btnDongY.setShowBorder(false);
+        btnDongY.setFont(new Font("Arial", Font.BOLD, 14));
         btnDongY.setBounds(1024, 24, 103, 28);
-        btnDongY.setBorderPainted(false);
         panel_top.add(btnDongY);
         new HoverEffect(btnDongY, new Color(0, 255, 128), new Color(0, 200, 100));
         btnDongY.addActionListener(e -> {

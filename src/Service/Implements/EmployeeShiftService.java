@@ -31,11 +31,11 @@ public class EmployeeShiftService implements IEmployeeShiftService {
 
     // Thêm ca làm việc
     @Override
-    public void addShift(int id, String dateString, String timeRange) throws SQLException {
+    public void addShift(int id, String dateString, String timeRange, int hourWage) throws SQLException {
         if (timeRange == null || timeRange.isEmpty()) {
             throw new IllegalArgumentException("Thời gian ca làm việc không được để trống!");
         }
-        employeeRepository.addShiftToSQL(id, dateString, timeRange);
+        employeeRepository.addShiftToSQL(id, dateString, timeRange, hourWage);
     }
 
     // Cập nhật ca làm việc

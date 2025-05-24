@@ -1,7 +1,10 @@
 package Controller.ManagerController;
 
 import Service.Implements.EmployeeShiftService;
+import Service.Implements.UserAccountService;
 import Service.Interface.IEmployeeShiftService;
+import Service.Interface.IUserAccountService;
+
 import java.awt.event.MouseAdapter;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -10,6 +13,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+
+import Model.Employee;
+import Repository.UserAccount.IUserAccountRepository;
 
 public class EmployeeShiftController {
 
@@ -84,6 +90,9 @@ public class EmployeeShiftController {
                     try {
                         EmployeeShiftController controller = new EmployeeShiftController();
                         int id = (int) target.getValueAt(row, 0);
+                        IUserAccountService u = new UserAccountService();
+                        Employee employee = u.getEmployeeFromID(id);
+                        
                         String Title = columnNames[column];
                         // String dateString = Title.substring(Title.indexOf('(') + 1, Title.indexOf(')'));
                         String timeRange = selectedShift.substring(selectedShift.indexOf("(") + 1, selectedShift.indexOf(")"));
@@ -102,7 +111,7 @@ public class EmployeeShiftController {
                         else { // Nếu ban đầu nó rỗng thì chỉ Thêm ca làm việc
                             if (!selectedShift.equals("Xoá ca (Trống)"))
                             target.setValueAt(timeRange, row, column);
-                            controller.employeeShiftService.addShift(id, dateString, timeRange);
+                            controller.employeeShiftService.addShift(id, dateString, timeRange, employee.getHourlyWage());
 
                         }
                     }

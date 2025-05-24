@@ -1,6 +1,6 @@
 package Model;
 public class Employee extends User{
-    protected double hourlyWage;
+    protected int hourlyWage;
     protected String CCCD;
     protected String birthDate;
     protected String gender;
@@ -12,7 +12,7 @@ public class Employee extends User{
 	public Employee(int id, String name, String phone, String image, String username, String password, String role) {
 		super(id, name, phone, image, username, password, role);
 	}
-	public Employee(int id, String name, String phone, String image, String username, String password, String role, String CCCD, String birthDate, String gender, double hourlyWage) {
+	public Employee(int id, String name, String phone, String image, String username, String password, String role, String CCCD, String birthDate, String gender, int hourlyWage) {
         super(id, name, phone, image, username, password, role);
         this.hourlyWage = hourlyWage;
         this.CCCD = CCCD;
@@ -21,11 +21,11 @@ public class Employee extends User{
     }
     
 
-	public double getHourlyWage() {
+	public int getHourlyWage() {
 		return hourlyWage;
 	}
 
-	public void setHourlyWage(double hourlyWage) {
+	public void setHourlyWage(int hourlyWage) {
 		this.hourlyWage = hourlyWage;
 	}
 

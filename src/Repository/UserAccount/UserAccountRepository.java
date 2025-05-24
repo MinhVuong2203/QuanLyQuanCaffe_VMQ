@@ -119,7 +119,7 @@ public class UserAccountRepository implements IUserAccountRepository {
                         rs.getString("CCCD"),
                         rs.getString("birthDate"),
                         rs.getString("gender"),
-                        rs.getDouble("hourWage")
+                        rs.getInt("hourWage")
                     );
                 }
             }
@@ -153,7 +153,7 @@ public class UserAccountRepository implements IUserAccountRepository {
                         rs.getString("CCCD"),
                         rs.getString("birthDate"),
                         rs.getString("gender"),
-                        rs.getDouble("hourWage")
+                        rs.getInt("hourWage")
                     );
                 }
             }

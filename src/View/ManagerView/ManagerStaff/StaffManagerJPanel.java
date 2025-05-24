@@ -218,7 +218,7 @@ public class StaffManagerJPanel extends JPanel {
         String cccd = (String) table.getValueAt(row, 6);
         String birthDate = (String) table.getValueAt(row, 7);
         String gender = (String) table.getValueAt(row, 8);
-        double hourlyWage = (double) table.getValueAt(row, 9);
+        int hourlyWage = (int) table.getValueAt(row, 9);
         Employee employee = new Employee(id, name, phone, "", username, password, role, cccd, birthDate, gender, hourlyWage);
         EmployeeRespository employeeRespository = new EmployeeRespository();
         employee.setImage(employeeRespository.getImgByID(id));

@@ -1,11 +1,11 @@
 package Components;
 
-import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.LineBorder;
 
 public class CustomPasswordField extends JPasswordField {
     // Các thông số mặc định
@@ -30,7 +30,7 @@ public class CustomPasswordField extends JPasswordField {
         setBackground(Color.WHITE);
         setForeground(Color.BLACK);
         setFont(new Font("Tahoma", Font.PLAIN, 14));
-        setEchoChar('•'); // Ký tự ẩn mặc định
+        setEchoChar('●'); // Ký tự ẩn mặc định
 
         // Thêm FocusListener để xử lý sự kiện focus
         addFocusListener(new FocusListener() {

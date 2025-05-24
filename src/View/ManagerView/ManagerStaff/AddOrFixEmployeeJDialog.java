@@ -416,7 +416,7 @@ public class AddOrFixEmployeeJDialog extends JDialog {
 				employee.setBirthDate(""); // Hoặc giá trị mặc định nếu cần
 			}
 		if (!this.luongTextField.getText().isEmpty()) 
-			employee.setHourlyWage(Double.parseDouble(this.luongTextField.getText()));
+			employee.setHourlyWage(Integer.parseInt(this.luongTextField.getText()));
 		else 
 			employee.setHourlyWage(-1);
 		employee.setUsername(this.usernameTextField.getText());

@@ -81,9 +81,6 @@ public class GradientPanel extends JPanel {
         int width = getWidth();
         int height = getHeight();
 
-        // In fractions để debug
-        System.out.println("Fractions: " + java.util.Arrays.toString(fractions));
-
         // Tính toán tọa độ dựa trên góc độ
         double radians = Math.toRadians(angle);
         float x1 = 0; // Bắt đầu từ góc trên bên trái

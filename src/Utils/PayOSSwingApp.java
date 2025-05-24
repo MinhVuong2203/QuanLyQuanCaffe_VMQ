@@ -183,6 +183,7 @@ public class PayOSSwingApp {
                         String qrImageUrl = imgElement.attr("src");
                         if (qrImageUrl.startsWith("http")) {
                             BufferedImage qrImage = ImageIO.read(new URL(qrImageUrl));
+// Chỉnh kích thướt
                             qrIcon = new ImageIcon(qrImage);
                             SwingUtilities.invokeLater(() -> {
                                 this.payment_Interface.qrCodeLabel.setIcon(qrIcon);

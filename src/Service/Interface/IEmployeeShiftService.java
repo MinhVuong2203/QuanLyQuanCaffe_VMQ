@@ -15,7 +15,7 @@ public interface IEmployeeShiftService {
     String[] getEachEmployeeShift(int id, JDateChooser startDay, JDateChooser endDay) throws SQLException;
 
     // Thêm ca làm việc
-    void addShift(int id, String dateString, String timeRange) throws SQLException;
+    void addShift(int id, String dateString, String timeRange, int hourWage) throws SQLException;
 
     // Cập nhật ca làm việc
     void updateShift(int id, String dateString, String timeRange, String lastTimeRange) throws SQLException;

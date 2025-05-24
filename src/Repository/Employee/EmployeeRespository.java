@@ -340,20 +340,34 @@ public class EmployeeRespository implements IEmployeeRespository {
         }
         return shifts;
     }
+    
+    @Override
+    public String[] getOnlyRegesterEmployeeShift(int id, JDateChooser startDay, JDateChooser endDay, String regester) throws SQLException{
+    	if (id <= 0 || startDay == null || endDay == null || startDay.getDate() == null || endDay.getDate() == null) {
+            throw new IllegalArgumentException("Thông tin không hợp lệ");
+        }
+        int n = ValidationUtils.CalculateDate(startDay, endDay) + 1;
+        String[] shifts = new String[n];
+        for (int i = 0; i < n; i++) {
+            shifts[i] = "";
+        }
+    	return null;
+    }
 
     @Override
-    public void addShiftToSQL(int id, String dateString, String timeRange) throws SQLException {
+    public void addShiftToSQL(int id, String dateString, String timeRange, int hourWage) throws SQLException {
         if (id <= 0 || dateString == null || timeRange == null || !timeRange.matches("\\d{2}:\\d{2}\\s*-\\s*\\d{2}:\\d{2}")) {
             throw new IllegalArgumentException("Thông tin ca làm không hợp lệ");
         }
         String[] times = timeRange.split("-");
-        String sql = "INSERT INTO EmployeeShift (shiftID, employeeID, startTime, endTime) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO EmployeeShift (shiftID, employeeID, startTime, endTime, hourWage) VALUES (?, ?, ?, ?, ?)";
         try (Connection connection = jdbcUtils.connect();
              PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, getMaxShiftID() + 1);
             stmt.setInt(2, id);
             stmt.setString(3, dateString + " " + times[0].trim() + ":00");
             stmt.setString(4, dateString + " " + times[1].trim() + ":00");
+            stmt.setInt(5, hourWage);
             stmt.executeUpdate();
         }
     }
@@ -427,7 +441,7 @@ public class EmployeeRespository implements IEmployeeRespository {
                     rs.getString("CCCD"),
                     rs.getString("birthDate"),
                     rs.getString("gender"),
-                    rs.getDouble("hourWage")
+                    rs.getInt("hourWage")
                 ));
             }
         }
@@ -484,7 +498,7 @@ public class EmployeeRespository implements IEmployeeRespository {
                         rs.getString("CCCD"),
                         rs.getString("birthDate"),
                         rs.getString("gender"),
-                        rs.getDouble("hourWage")
+                        rs.getInt("hourWage")
                     ));
                 }
             }
