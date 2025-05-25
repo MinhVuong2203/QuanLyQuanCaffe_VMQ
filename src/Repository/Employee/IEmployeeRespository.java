@@ -32,7 +32,7 @@ public interface IEmployeeRespository {
     public void setStatusFromSQL(int id, String status, int shiftID) throws SQLException;
     public String getStatusFromSQL(int id, int shiftID) throws SQLException;
     public String[] getEachEmployeeShift(int id, JDateChooser startDay, JDateChooser endDay) throws SQLException;
-    public String[] getOnlyRegesterEmployeeShift(int id, JDateChooser startDay, JDateChooser endDay, String regester) throws SQLException;
+    public String[][] getOnlyRegesterEmployeeShift(int id, JDateChooser startDay, JDateChooser endDay, String[] regester) throws SQLException;
     
     public void addShiftToSQL(int id, String dateString, String timeRange, int hourWage) throws SQLException ;
     public void deleteShiftFromSQL(int id, String dateString) throws SQLException ;

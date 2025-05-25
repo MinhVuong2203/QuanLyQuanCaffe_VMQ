@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -341,17 +342,58 @@ public class EmployeeRespository implements IEmployeeRespository {
         return shifts;
     }
     
-    @Override
-    public String[] getOnlyRegesterEmployeeShift(int id, JDateChooser startDay, JDateChooser endDay, String regester) throws SQLException{
+    @Override  //Chuỗi regester phần tử có dạng 12:00 - 18:00, trả về mảng 2 chiều
+    public String[][] getOnlyRegesterEmployeeShift(int id, JDateChooser startDay, JDateChooser endDay, String[] regester) throws SQLException{
     	if (id <= 0 || startDay == null || endDay == null || startDay.getDate() == null || endDay.getDate() == null) {
             throw new IllegalArgumentException("Thông tin không hợp lệ");
         }
-        int n = ValidationUtils.CalculateDate(startDay, endDay) + 1;
-        String[] shifts = new String[n];
-        for (int i = 0; i < n; i++) {
-            shifts[i] = "";
+    	int n = regester.length;
+        int m = ValidationUtils.CalculateDate(startDay, endDay) + 1;
+        
+        String[][] shifts = new String[n][m];
+        
+        for (int i=0; i<n; i++) {
+        	String startTime = regester[i].split(" ")[0] + ":00";
+        	String endTime = regester[i].split(" ")[2] + ":00";
+        	System.out.println(startTime + " " + endTime);
+        	
+        	String startDayString = sdf.format(startDay.getDate());
+        	String endDayString = sdf.format(new Date(endDay.getDate().getTime() + 86400000));
+        	String sql = "SELECT endTime, status "
+        			+ "FROM EmployeeShift "
+        			+ "WHERE employeeID = ? AND startTime >= ? AND endTime < ? AND FORMAT(startTime, 'HH:mm:ss')= ? AND FORMAT(endTime, 'HH:mm:ss')=?";
+        	
+        	try (Connection connection = jdbcUtils.connect();
+        			PreparedStatement stmt = connection.prepareStatement(sql)) {
+        		stmt.setInt(1, id);
+        		stmt.setString(2, startDayString);
+        		stmt.setString(3, endDayString);
+        		stmt.setString(4, startTime);
+        		stmt.setString(5, endTime);
+        		
+        		try (ResultSet rs = stmt.executeQuery()) {
+        			while (rs.next()) {            
+        				int row = ValidationUtils.CalculateDate(startDayString, rs.getString("endTime").split(" ")[0]);
+        				String status = rs.getString("status");
+        				if (status.equalsIgnoreCase("Đã điểm danh")) shifts[i][row] = "Đã điểm danh";
+        				if (status.equalsIgnoreCase("Chưa điểm danh")) {
+        					// Lấy datetime hiện tại
+        					LocalDateTime now = LocalDateTime.now();
+        					DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        					String currentDateTime = now.format(formatter);
+        					if( ValidationUtils.CompareDateTime(currentDateTime, rs.getString("endTime")) < 0)
+        						shifts[i][row] = "Đã duyệt";
+        					else
+        						shifts[i][row] = "Vắng";  
+        				}
+        				if (status.equalsIgnoreCase("Chờ duyệt")) shifts[i][row] = "Chờ duyệt";
+        			}
+        		}
+        	}
+        	
         }
-    	return null;
+        
+    	return shifts;
     }
 
     @Override

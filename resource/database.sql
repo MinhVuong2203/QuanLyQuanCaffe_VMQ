@@ -84,24 +84,24 @@ CREATE TABLE EmployeeShift (
 );
 
 -- Dùng trigger để tự động lấy lương của nhân viên, và tính tiền lương theo ca
-GO
+-- Tạo trigger mới
 CREATE TRIGGER trg_CalculateSalary
 ON EmployeeShift
 AFTER INSERT, UPDATE
 AS
 BEGIN
+    SET NOCOUNT ON; -- Ngăn hiển thị số hàng bị ảnh hưởng
+
     UPDATE es
     SET es.salary = CASE 
-                        WHEN es.status = N'chưa điểm danh' THEN 0
-                        ELSE es.hourWorked * es.hourWage
+                        WHEN i.status = N'Đã điểm danh' THEN i.hourWorked * i.hourWage
+                        ELSE 0
                     END
     FROM EmployeeShift es
-    WHERE es.status = N'chưa điểm danh' OR es.salary != 
-        (CASE 
-             WHEN es.status = N'chưa điểm danh' THEN 0
-             ELSE es.hourWorked * es.hourWage
-         END);
+    INNER JOIN INSERTED i ON es.shiftID = i.shiftID; -- Sử dụng shiftID làm khóa chính
+
 END;
+GO
 
 --Insert data
 

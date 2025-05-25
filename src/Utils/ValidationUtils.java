@@ -92,6 +92,26 @@ public class ValidationUtils {
         return -1; // Trả về -1 nếu có lỗi xảy ra
     }
     
+    // Hàm so sánh 2 ngày định dạng là 2025-05-23 12:00:00
+    public static int CompareDateTime(String date1, String date2) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try {
+            Date d1 = sdf.parse(date1);
+            Date d2 = sdf.parse(date2);
+
+            if (d1.before(d2)) {
+                return -1;
+            } else if (d1.after(d2)) {
+                return 1;
+            } else {
+                return 0;
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+            throw new IllegalArgumentException("Định dạng ngày không hợp lệ! Phải là yyyy-MM-dd HH:mm:ss");
+        }
+    }
+    
     public static int indexListTableID(List<Table> listTable, int id) {
 		for (Table table : listTable)
 			if (table.getTableID() == id)

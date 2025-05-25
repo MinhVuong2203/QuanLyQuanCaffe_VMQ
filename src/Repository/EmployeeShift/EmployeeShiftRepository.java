@@ -19,6 +19,19 @@ public class EmployeeShiftRepository implements IEmployeeShiftRepository {
     public EmployeeShiftRepository() throws IOException, ClassNotFoundException, SQLException {
         this.jdbcUtils = new JdbcUtils();
     }
+    
+    @Override
+    public int getMaxShiftID() throws SQLException {
+        String sql = "SELECT MAX(shiftID) FROM EmployeeShift";
+        try (Connection connection = jdbcUtils.connect();
+             PreparedStatement stmt = connection.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        }
+        return 0;
+    }
 
     @Override
     public List<EmployeeShift> getAllEmployeeShift() throws SQLException {
@@ -82,5 +95,25 @@ public class EmployeeShiftRepository implements IEmployeeShiftRepository {
             }
         }
         return shiftList;
+    }
+    
+    @Override
+    public void addRegister(int employeeId, String startTime, String endTime, int hourWage, String status) throws SQLException {
+    	if (employeeId <=0 || startTime == null || endTime == null || hourWage<0 || status == null) {
+    		 throw new IllegalArgumentException("Thông tin không hợp lệ");
+    	}
+    	String sql = "INSERT INTO EmployeeShift(shiftID,employeeID, startTime, endTime, hourWage, status) "
+    				+ "VALUES (?, ?, ?, ?, ?, ?)";
+    	try (Connection connection = jdbcUtils.connect();
+    		PreparedStatement stmt = connection.prepareStatement(sql)){
+    		stmt.setInt(1, this.getMaxShiftID()+1);
+    		stmt.setInt(2, employeeId);
+    		stmt.setString(3, startTime);
+    		stmt.setString(4, endTime);
+    		stmt.setInt(5, hourWage);
+    		stmt.setString(6, status);
+    		stmt.executeUpdate();
+    	}
+		
     }
 }

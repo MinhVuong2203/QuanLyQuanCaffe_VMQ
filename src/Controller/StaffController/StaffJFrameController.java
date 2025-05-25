@@ -2,6 +2,7 @@ package Controller.StaffController;
 
 import Model.Employee;
 import View.StaffView.GamePanel;
+import View.StaffView.RegisterWorkJPanel;
 import View.StaffView.RollCall;
 import View.StaffView.StaffJFrame;
 import View.StaffView.StaffJPanel;
@@ -81,6 +82,9 @@ public class StaffJFrameController {
                             break;
                         case "ĐIỂM DANH":
                             contentPanel.add(new RollCall(), BorderLayout.CENTER);
+                            break;
+                        case "ĐĂNG KÝ CA":
+                            contentPanel.add(new RegisterWorkJPanel(employee), BorderLayout.CENTER);
                             break;
                         case "MINI GAME":
                             contentPanel.add(new GamePanel(), BorderLayout.CENTER);
