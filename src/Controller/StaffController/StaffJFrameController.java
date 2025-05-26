@@ -4,6 +4,7 @@ import Model.Employee;
 import View.StaffView.GamePanel;
 import View.StaffView.RegisterWorkJPanel;
 import View.StaffView.RollCall;
+import View.StaffView.StaffInforJpanel;
 import View.StaffView.StaffJFrame;
 import View.StaffView.StaffJPanel;
 import View.StaffView.Table_JPanel;
@@ -88,6 +89,18 @@ public class StaffJFrameController {
                             break;
                         case "MINI GAME":
                             contentPanel.add(new GamePanel(), BorderLayout.CENTER);
+                            break;
+                        case "THÔNG TIN CÁ NHÂN":
+                            StaffInforJpanel staffInfoPanel = new StaffInforJpanel();
+                            // Thiết lập thông tin nhân viên từ đối tượng employee
+                            staffInfoPanel.setUserInfo(
+                                    employee.getName(),
+                                    employee.getGender(),
+                                    employee.getBirthDate(),
+                                    employee.getCCCD(),
+                                    employee.getPhone(),
+                                    employee.getRole());
+                            contentPanel.add(staffInfoPanel, BorderLayout.CENTER);
                             break;
                         case "ĐĂNG XUẤT":
                             // Thêm logic đăng xuất (ví dụ: đóng frame, quay về màn hình đăng nhập)
