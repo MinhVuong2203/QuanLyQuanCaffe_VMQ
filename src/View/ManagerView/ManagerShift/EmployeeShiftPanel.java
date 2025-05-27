@@ -76,7 +76,7 @@ public class EmployeeShiftPanel extends JPanel {
 
     private static final long serialVersionUID = 1L;
     private JTable shiftTable; // Biến instance để truy cập bảng từ các hàm xuất
-    private JTable approvalTable;  // Biến instance để truy cập bảng từ các hàm xuất
+    
     private JButton btnRegister;
     private JButton btnStatusRegister;
     private JButton activeButton;
@@ -90,7 +90,14 @@ public class EmployeeShiftPanel extends JPanel {
 	private JButton btnExportExcel;
 	private CustomComboBox filterEmployeeID;
 	private CustomComboBox filterDate;
-	
+	private Panel panel_center;
+	private List<EmployeeShift> list;
+	private DefaultTableModel modelApproval; 
+	private JTable approvalTable;
+	private DateTimeFormatter dtf;
+	private SimpleDateFormat sdf ;
+	private IEmployeeShiftRepository esr;
+	private IEmployeeRespository er;
     /**
      * Create the panel.
      */
@@ -121,7 +128,12 @@ public class EmployeeShiftPanel extends JPanel {
         btnRegister.addActionListener(e -> {
             activeButton = btnRegister;
             this.showShiftTable();
-            this.createShiftTable(fromDateChooser, toDateChooser);
+            if (toDateChooser.getDate() == null) {
+            	this.panel_center.removeAll();
+            	this.panel_center.revalidate();
+                this.panel_center.repaint();
+            }
+            else this.createShiftTable(fromDateChooser, toDateChooser);
             panel_top.repaint();
         });
         panel_top.add(btnRegister);
@@ -228,12 +240,14 @@ public class EmployeeShiftPanel extends JPanel {
         filterEmployeeID.setFont(new Font("Segoe UI", Font.BOLD, 16));       
         filterEmployeeID.setBounds(198, 50, 158, 32);       
         filterEmployeeID.setVisible(false);
+        
         panel_top.add(filterEmployeeID);
         
         filterDate = new CustomComboBox();
         filterDate.setFont(new Font("Segoe UI", Font.BOLD, 16));
         filterDate.setBounds(42, 50, 145, 30);
         filterDate.setVisible(false);
+       
         panel_top.add(filterDate);
 
         // Xử lý sự kiện cho nút Xuất PDF
@@ -255,7 +269,7 @@ public class EmployeeShiftPanel extends JPanel {
         });
 
         // Center
-        Panel panel_center = new Panel();
+        panel_center = new Panel();
         panel_center.setLayout(new BorderLayout());
         add(panel_center, BorderLayout.CENTER);
     }
@@ -402,7 +416,7 @@ public class EmployeeShiftPanel extends JPanel {
                 scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED); // Thanh cuộn dọc khi cần
 
                 // Thêm bảng vào panel_center
-                Panel panel_center = (Panel) getComponent(1);  // Lấy panel center
+//                Panel panel_center = (Panel) getComponent(1);  // Lấy panel center
                 panel_center.removeAll();  // Xóa các thành phần cũ
                 panel_center.add(scrollPane, BorderLayout.CENTER); // Thêm JScrollPane vào panel
 
@@ -415,14 +429,15 @@ public class EmployeeShiftPanel extends JPanel {
     }
     
     public void createApprovalShift() throws ClassNotFoundException, IOException, SQLException {
-    	IEmployeeShiftRepository esr = new EmployeeShiftRepository();
-    	IEmployeeRespository er = new EmployeeRespository();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
+    	esr = new EmployeeShiftRepository();
+    	er = new EmployeeRespository();
+        sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
+        dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         Date now = new Date();
         String dateTimeString = sdf.format(now);
-        List<EmployeeShift> list = esr.getShiftApproval(dateTimeString);
+        
+        
+        list = esr.getShiftApproval(dateTimeString);
         for (EmployeeShift employeeShift : list) {
             System.out.println(employeeShift);
         }
@@ -451,9 +466,19 @@ public class EmployeeShiftPanel extends JPanel {
         }
         this.filterEmployeeID.setModel(new DefaultComboBoxModel<>(employeeIDCombox.toArray(new String[0])));
         this.filterDate.setModel(new DefaultComboBoxModel<>(dateTimeCombox.toArray(new String[0])));
-
+        
+        this.filterEmployeeID.addActionListener(e -> {
+			try {filterData();} catch (SQLException e1) {e1.printStackTrace();} 			
+		});
+        this.filterDate.addActionListener(e -> {
+			try {filterData();} catch (SQLException e1) {e1.printStackTrace();} 
+		});
+        
+        
         String[] columnNames = new String[]{"Mã ca", "Mã nhân viên", "Tên nhân viên", "Bắt đầu", "Kết thúc", "Số giờ", "Lương/h", "Hành động"};
         int column = columnNames.length;
+
+        
         Object[][] data = new Object[n][column];
         for (int i = 0; i < n; i++) {
             data[i][0] = list.get(i).getShiftID();
@@ -466,7 +491,7 @@ public class EmployeeShiftPanel extends JPanel {
             data[i][7] = null;
         }
      // Tạo model cho bảng
-        DefaultTableModel model = new DefaultTableModel(data, columnNames) {
+        modelApproval = new DefaultTableModel(data, columnNames) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return column == 7; // Chỉ cột Actions có thể chỉnh sửa
@@ -477,8 +502,12 @@ public class EmployeeShiftPanel extends JPanel {
             }
         };
         
-        approvalTable = new JTable(model);
+        approvalTable = new JTable(modelApproval);
         approvalTable.setRowSelectionAllowed(false);
+        approvalTable.setAutoCreateRowSorter(true);  // Bật tính năng sort trong table
+        UIManager.put("Table.ascendingSortIcon", new ImageIcon(new ImageIcon("src\\image\\System_Image\\up.png").getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH)));
+        UIManager.put("Table.descendingSortIcon", new ImageIcon(new ImageIcon("src\\image\\System_Image\\down.png").getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH)));
+        
         
      // Thiết lập renderer cho cột hành động
         approvalTable.getColumnModel().getColumn(7).setCellRenderer(new ButtonRenderer());
@@ -491,7 +520,7 @@ public class EmployeeShiftPanel extends JPanel {
         approvalTable.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 16));
 
         // Đặt chiều rộng cột
-        approvalTable.getColumnModel().getColumn(0).setMaxWidth(90);
+        approvalTable.getColumnModel().getColumn(0).setMinWidth(90);
         approvalTable.getColumnModel().getColumn(1).setMinWidth(120);
         approvalTable.getColumnModel().getColumn(2).setMinWidth(230);
         approvalTable.getColumnModel().getColumn(3).setMinWidth(180);
@@ -515,7 +544,7 @@ public class EmployeeShiftPanel extends JPanel {
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         this.setRowColors(approvalTable);
         // Thêm bảng vào panel_center
-        Panel panel_center = (Panel) getComponent(1); // Lấy panel center
+//        Panel panel_center = (Panel) getComponent(1); // Lấy panel center
         panel_center.removeAll();
         panel_center.add(scrollPane, BorderLayout.CENTER);
         panel_center.revalidate();
@@ -636,6 +665,33 @@ public class EmployeeShiftPanel extends JPanel {
         table.repaint(); // Đảm bảo bảng được vẽ lại
     }
 
+    void filterData() throws SQLException {
+    	String selectedDate = (String) this.filterDate.getSelectedItem();
+    	String selectedEmployeeID = (String) this.filterEmployeeID.getSelectedItem();
+    	
+    	this.modelApproval.setRowCount(0);  // Xóa hết
+    	for (EmployeeShift employeeShift : this.list) {
+    		boolean mathDate = selectedDate.equals("Ngày") || selectedDate.equals(employeeShift.getStartTime().format(dtf).split(" ")[0]);
+    		boolean mathEmployeeID = selectedEmployeeID.equals("Mã nhân viên") || selectedEmployeeID.equals(String.valueOf(employeeShift.getEmployeeID()));
+    		if (mathDate && mathEmployeeID) {
+    			this.modelApproval.addRow(new Object[] {
+    					employeeShift.getShiftID(),
+    					employeeShift.getEmployeeID(),
+    					this.er.getNameFromID(employeeShift.getEmployeeID()),
+    					employeeShift.getStartTime().format(dtf),
+    					employeeShift.getEndTime().format(dtf),
+    					employeeShift.getHourWorked(),
+    					employeeShift.getHourWage(),
+    					null
+    					});
+    		}    		
+    	}
+    	
+    	 panel_center.revalidate();
+         panel_center.repaint();
+
+    }
+ 
     public static void main(String[] args) throws ClassNotFoundException, IOException, SQLException {
         JFrame frame = new JFrame("Register Work Panel");
         Employee employee = new Employee();

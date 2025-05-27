@@ -163,7 +163,7 @@ public class LoginView extends JFrame {
 		contentPane.add(showMK);
 		
 		CustomRoundedButton btnNewButton_3 = new CustomRoundedButton("Quên mật khẩu?");
-		btnNewButton_3.setBounds(216, 206, 107, 21);
+		btnNewButton_3.setBounds(216, 206, 120, 21);
 		btnNewButton_3.setDefaultBackground(new Color(242, 232, 220));
 		btnNewButton_3.setHoverBackground(new Color(242, 232, 220));
 		btnNewButton_3.setPressedBackground(new Color(242, 232, 220));
