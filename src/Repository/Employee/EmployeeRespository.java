@@ -32,8 +32,8 @@ public class EmployeeRespository implements IEmployeeRespository {
     public int getIdMaxFromSQL() throws SQLException {
         String sql = "SELECT MAX(employeeID) FROM Employee";
         try (Connection connection = jdbcUtils.connect();
-             PreparedStatement stmt = connection.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
+                PreparedStatement stmt = connection.prepareStatement(sql);
+                ResultSet rs = stmt.executeQuery()) {
             if (rs.next()) {
                 return rs.getInt(1);
             }
@@ -45,8 +45,8 @@ public class EmployeeRespository implements IEmployeeRespository {
     public int getMaxShiftID() throws SQLException {
         String sql = "SELECT MAX(shiftID) FROM EmployeeShift";
         try (Connection connection = jdbcUtils.connect();
-             PreparedStatement stmt = connection.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
+                PreparedStatement stmt = connection.prepareStatement(sql);
+                ResultSet rs = stmt.executeQuery()) {
             if (rs.next()) {
                 return rs.getInt(1);
             }
@@ -61,7 +61,7 @@ public class EmployeeRespository implements IEmployeeRespository {
         }
         String sql = "SELECT 1 FROM Employee WHERE phone = ?";
         try (Connection connection = jdbcUtils.connect();
-             PreparedStatement stmt = connection.prepareStatement(sql)) {
+                PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, phone);
             try (ResultSet rs = stmt.executeQuery()) {
                 return rs.next();
@@ -76,7 +76,7 @@ public class EmployeeRespository implements IEmployeeRespository {
         }
         String sql = "SELECT 1 FROM Employee WHERE CCCD = ?";
         try (Connection connection = jdbcUtils.connect();
-             PreparedStatement stmt = connection.prepareStatement(sql)) {
+                PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, cccd);
             try (ResultSet rs = stmt.executeQuery()) {
                 return rs.next();
@@ -91,7 +91,7 @@ public class EmployeeRespository implements IEmployeeRespository {
         }
         String sql = "SELECT 1 FROM UserAccount WHERE username = ?";
         try (Connection connection = jdbcUtils.connect();
-             PreparedStatement stmt = connection.prepareStatement(sql)) {
+                PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, username);
             try (ResultSet rs = stmt.executeQuery()) {
                 return rs.next();
@@ -106,7 +106,7 @@ public class EmployeeRespository implements IEmployeeRespository {
         }
         String sql = "SELECT 1 FROM Employee WHERE phone = ? AND employeeID != ?";
         try (Connection connection = jdbcUtils.connect();
-             PreparedStatement stmt = connection.prepareStatement(sql)) {
+                PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, phone);
             stmt.setInt(2, excludeId);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -122,7 +122,7 @@ public class EmployeeRespository implements IEmployeeRespository {
         }
         String sql = "SELECT 1 FROM Employee WHERE CCCD = ? AND employeeID != ?";
         try (Connection connection = jdbcUtils.connect();
-             PreparedStatement stmt = connection.prepareStatement(sql)) {
+                PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, cccd);
             stmt.setInt(2, excludeId);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -138,7 +138,7 @@ public class EmployeeRespository implements IEmployeeRespository {
         }
         String sql = "SELECT 1 FROM UserAccount WHERE username = ? AND ID != ?";
         try (Connection connection = jdbcUtils.connect();
-             PreparedStatement stmt = connection.prepareStatement(sql)) {
+                PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, username);
             stmt.setInt(2, excludeId);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -149,7 +149,8 @@ public class EmployeeRespository implements IEmployeeRespository {
 
     @Override
     public void addEmployee(Employee employee) throws SQLException {
-        if (employee == null || employee.getId() <= 0 || employee.getUsername() == null || employee.getPassword() == null) {
+        if (employee == null || employee.getId() <= 0 || employee.getUsername() == null
+                || employee.getPassword() == null) {
             throw new IllegalArgumentException("Thông tin nhân viên không hợp lệ");
         }
         try (Connection connection = jdbcUtils.connect()) {
@@ -178,7 +179,8 @@ public class EmployeeRespository implements IEmployeeRespository {
 
     @Override
     public void updateEmployee(Employee employee) throws SQLException {
-        if (employee == null || employee.getId() <= 0 || employee.getUsername() == null || employee.getPassword() == null) {
+        if (employee == null || employee.getId() <= 0 || employee.getUsername() == null
+                || employee.getPassword() == null) {
             throw new IllegalArgumentException("Thông tin nhân viên không hợp lệ");
         }
         try (Connection connection = jdbcUtils.connect()) {
@@ -209,12 +211,12 @@ public class EmployeeRespository implements IEmployeeRespository {
     public List<Employee> getAllEmployees() throws SQLException {
         List<Employee> employees = new ArrayList<>();
         String sql = "SELECT e.image, e.employeeID, e.name, es.shiftID, es.startTime, es.endTime, ua.role, es.status " +
-                     "FROM Employee e " +
-                     "JOIN EmployeeShift es ON es.employeeID = e.employeeID " +
-                     "JOIN UserAccount ua ON e.employeeID = ua.ID";
+                "FROM Employee e " +
+                "JOIN EmployeeShift es ON es.employeeID = e.employeeID " +
+                "JOIN UserAccount ua ON e.employeeID = ua.ID";
         try (Connection connection = jdbcUtils.connect();
-             PreparedStatement stmt = connection.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
+                PreparedStatement stmt = connection.prepareStatement(sql);
+                ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
                 Employee employee = new Employee();
                 employee.setImage(rs.getString("image"));
@@ -241,12 +243,12 @@ public class EmployeeRespository implements IEmployeeRespository {
     public List<Employee> getAllEmployeesToManager() throws SQLException {
         List<Employee> employees = new ArrayList<>();
         String sql = "SELECT e.employeeID, e.image, e.name, ua.role " +
-                     "FROM Employee e " +
-                     "JOIN UserAccount ua ON e.employeeID = ua.ID " +
-                     "WHERE ua.role NOT IN (N'Quản lí', N'Nghỉ việc')";
+                "FROM Employee e " +
+                "JOIN UserAccount ua ON e.employeeID = ua.ID " +
+                "WHERE ua.role NOT IN (N'Quản lí', N'Nghỉ việc')";
         try (Connection connection = jdbcUtils.connect();
-             PreparedStatement stmt = connection.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
+                PreparedStatement stmt = connection.prepareStatement(sql);
+                ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
                 Employee employee = new Employee();
                 employee.setId(rs.getInt("employeeID"));
@@ -267,7 +269,7 @@ public class EmployeeRespository implements IEmployeeRespository {
         }
         String sql = "SELECT image FROM Employee WHERE employeeID = ?";
         try (Connection connection = jdbcUtils.connect();
-             PreparedStatement stmt = connection.prepareStatement(sql)) {
+                PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, id);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
@@ -285,7 +287,7 @@ public class EmployeeRespository implements IEmployeeRespository {
         }
         String sql = "UPDATE EmployeeShift SET status = ? WHERE employeeID = ? AND shiftID = ?";
         try (Connection connection = jdbcUtils.connect();
-             PreparedStatement stmt = connection.prepareStatement(sql)) {
+                PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, status);
             stmt.setInt(2, id);
             stmt.setInt(3, shiftID);
@@ -300,7 +302,7 @@ public class EmployeeRespository implements IEmployeeRespository {
         }
         String sql = "SELECT status FROM EmployeeShift WHERE employeeID = ? AND shiftID = ?";
         try (Connection connection = jdbcUtils.connect();
-             PreparedStatement stmt = connection.prepareStatement(sql)) {
+                PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, id);
             stmt.setInt(2, shiftID);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -326,7 +328,7 @@ public class EmployeeRespository implements IEmployeeRespository {
         String endDayString = sdf.format(new Date(endDay.getDate().getTime() + 86400000));
         String sql = "SELECT startTime, endTime FROM EmployeeShift WHERE employeeID = ? AND startTime >= ? AND endTime < ?";
         try (Connection connection = jdbcUtils.connect();
-             PreparedStatement stmt = connection.prepareStatement(sql)) {
+                PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, id);
             stmt.setString(2, startDayString);
             stmt.setString(3, endDayString);
@@ -341,70 +343,74 @@ public class EmployeeRespository implements IEmployeeRespository {
         }
         return shifts;
     }
-    
-    @Override  //Chuỗi regester phần tử có dạng 12:00 - 18:00, trả về mảng 2 chiều
-    public String[][] getOnlyRegesterEmployeeShift(int id, JDateChooser startDay, JDateChooser endDay, String[] regester) throws SQLException{
-    	if (id <= 0 || startDay == null || endDay == null || startDay.getDate() == null || endDay.getDate() == null) {
+
+    @Override // Chuỗi regester phần tử có dạng 12:00 - 18:00, trả về mảng 2 chiều
+    public String[][] getOnlyRegesterEmployeeShift(int id, JDateChooser startDay, JDateChooser endDay,
+            String[] regester) throws SQLException {
+        if (id <= 0 || startDay == null || endDay == null || startDay.getDate() == null || endDay.getDate() == null) {
             throw new IllegalArgumentException("Thông tin không hợp lệ");
         }
-    	int n = regester.length;
+        int n = regester.length;
         int m = ValidationUtils.CalculateDate(startDay, endDay) + 1;
-        
+
         String[][] shifts = new String[n][m];
-        
-        for (int i=0; i<n; i++) {
-        	String startTime = regester[i].split(" ")[0] + ":00";
-        	String endTime = regester[i].split(" ")[2] + ":00";
-        	System.out.println(startTime + " " + endTime);
-        	
-        	String startDayString = sdf.format(startDay.getDate());
-        	String endDayString = sdf.format(new Date(endDay.getDate().getTime() + 86400000));
-        	String sql = "SELECT endTime, status "
-        			+ "FROM EmployeeShift "
-        			+ "WHERE employeeID = ? AND startTime >= ? AND endTime < ? AND FORMAT(startTime, 'HH:mm:ss')= ? AND FORMAT(endTime, 'HH:mm:ss')=?";
-        	
-        	try (Connection connection = jdbcUtils.connect();
-        			PreparedStatement stmt = connection.prepareStatement(sql)) {
-        		stmt.setInt(1, id);
-        		stmt.setString(2, startDayString);
-        		stmt.setString(3, endDayString);
-        		stmt.setString(4, startTime);
-        		stmt.setString(5, endTime);
-        		
-        		try (ResultSet rs = stmt.executeQuery()) {
-        			while (rs.next()) {            
-        				int row = ValidationUtils.CalculateDate(startDayString, rs.getString("endTime").split(" ")[0]);
-        				String status = rs.getString("status");
-        				if (status.equalsIgnoreCase("Đã điểm danh")) shifts[i][row] = "Đã điểm danh";
-        				if (status.equalsIgnoreCase("Chưa điểm danh")) {
-        					// Lấy datetime hiện tại
-        					LocalDateTime now = LocalDateTime.now();
-        					DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        					String currentDateTime = now.format(formatter);
-        					if( ValidationUtils.CompareDateTime(currentDateTime, rs.getString("endTime")) < 0)
-        						shifts[i][row] = "Đã duyệt";
-        					else
-        						shifts[i][row] = "Vắng";  
-        				}
-        				if (status.equalsIgnoreCase("Chờ duyệt")) shifts[i][row] = "Chờ duyệt";
-        			}
-        		}
-        	}
-        	
+
+        for (int i = 0; i < n; i++) {
+            String startTime = regester[i].split(" ")[0] + ":00";
+            String endTime = regester[i].split(" ")[2] + ":00";
+            System.out.println(startTime + " " + endTime);
+
+            String startDayString = sdf.format(startDay.getDate());
+            String endDayString = sdf.format(new Date(endDay.getDate().getTime() + 86400000));
+            String sql = "SELECT endTime, status "
+                    + "FROM EmployeeShift "
+                    + "WHERE employeeID = ? AND startTime >= ? AND endTime < ? AND FORMAT(startTime, 'HH:mm:ss')= ? AND FORMAT(endTime, 'HH:mm:ss')=?";
+
+            try (Connection connection = jdbcUtils.connect();
+                    PreparedStatement stmt = connection.prepareStatement(sql)) {
+                stmt.setInt(1, id);
+                stmt.setString(2, startDayString);
+                stmt.setString(3, endDayString);
+                stmt.setString(4, startTime);
+                stmt.setString(5, endTime);
+
+                try (ResultSet rs = stmt.executeQuery()) {
+                    while (rs.next()) {
+                        int row = ValidationUtils.CalculateDate(startDayString, rs.getString("endTime").split(" ")[0]);
+                        String status = rs.getString("status");
+                        if (status.equalsIgnoreCase("Đã điểm danh"))
+                            shifts[i][row] = "Đã điểm danh";
+                        if (status.equalsIgnoreCase("Chưa điểm danh")) {
+                            // Lấy datetime hiện tại
+                            LocalDateTime now = LocalDateTime.now();
+                            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                            String currentDateTime = now.format(formatter);
+                            if (ValidationUtils.CompareDateTime(currentDateTime, rs.getString("endTime")) < 0)
+                                shifts[i][row] = "Đã duyệt";
+                            else
+                                shifts[i][row] = "Vắng";
+                        }
+                        if (status.equalsIgnoreCase("Chờ duyệt"))
+                            shifts[i][row] = "Chờ duyệt";
+                    }
+                }
+            }
+
         }
-        
-    	return shifts;
+
+        return shifts;
     }
 
     @Override
     public void addShiftToSQL(int id, String dateString, String timeRange, int hourWage) throws SQLException {
-        if (id <= 0 || dateString == null || timeRange == null || !timeRange.matches("\\d{2}:\\d{2}\\s*-\\s*\\d{2}:\\d{2}")) {
+        if (id <= 0 || dateString == null || timeRange == null
+                || !timeRange.matches("\\d{2}:\\d{2}\\s*-\\s*\\d{2}:\\d{2}")) {
             throw new IllegalArgumentException("Thông tin ca làm không hợp lệ");
         }
         String[] times = timeRange.split("-");
         String sql = "INSERT INTO EmployeeShift (shiftID, employeeID, startTime, endTime, hourWage) VALUES (?, ?, ?, ?, ?)";
         try (Connection connection = jdbcUtils.connect();
-             PreparedStatement stmt = connection.prepareStatement(sql)) {
+                PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, getMaxShiftID() + 1);
             stmt.setInt(2, id);
             stmt.setString(3, dateString + " " + times[0].trim() + ":00");
@@ -421,7 +427,7 @@ public class EmployeeRespository implements IEmployeeRespository {
         }
         String sql = "DELETE FROM EmployeeShift WHERE employeeID = ? AND CAST(startTime AS DATE) = ?";
         try (Connection connection = jdbcUtils.connect();
-             PreparedStatement stmt = connection.prepareStatement(sql)) {
+                PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, id);
             stmt.setString(2, dateString);
             stmt.executeUpdate();
@@ -429,16 +435,18 @@ public class EmployeeRespository implements IEmployeeRespository {
     }
 
     @Override
-    public void updateShiftToSQL(int id, String dateString, String timeRange, String lastTimeRange) throws SQLException {
+    public void updateShiftToSQL(int id, String dateString, String timeRange, String lastTimeRange)
+            throws SQLException {
         if (id <= 0 || dateString == null || timeRange == null || lastTimeRange == null ||
-            !timeRange.matches("\\d{2}:\\d{2}\\s*-\\s*\\d{2}:\\d{2}") || !lastTimeRange.matches("\\d{2}:\\d{2}\\s*-\\s*\\d{2}:\\d{2}")) {
+                !timeRange.matches("\\d{2}:\\d{2}\\s*-\\s*\\d{2}:\\d{2}")
+                || !lastTimeRange.matches("\\d{2}:\\d{2}\\s*-\\s*\\d{2}:\\d{2}")) {
             throw new IllegalArgumentException("Thông tin ca làm không hợp lệ");
         }
         String[] times = timeRange.split("-");
         String[] lastTimes = lastTimeRange.split("-");
         String sql = "UPDATE EmployeeShift SET startTime = ?, endTime = ? WHERE employeeID = ? AND startTime = ? AND endTime = ?";
         try (Connection connection = jdbcUtils.connect();
-             PreparedStatement stmt = connection.prepareStatement(sql)) {
+                PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, dateString + " " + times[0].trim() + ":00");
             stmt.setString(2, dateString + " " + times[1].trim() + ":00");
             stmt.setInt(3, id);
@@ -455,7 +463,7 @@ public class EmployeeRespository implements IEmployeeRespository {
         }
         String sql = "UPDATE UserAccount SET role = N'Nghỉ việc' WHERE ID = ?";
         try (Connection connection = jdbcUtils.connect();
-             PreparedStatement stmt = connection.prepareStatement(sql)) {
+                PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, id);
             stmt.executeUpdate();
         }
@@ -464,27 +472,27 @@ public class EmployeeRespository implements IEmployeeRespository {
     @Override
     public List<Employee> getAllEmployeesAllAttributes() throws SQLException {
         List<Employee> employees = new ArrayList<>();
-        String sql = "SELECT e.employeeID, e.name, e.phone, e.image, u.username, u.password, u.role, e.CCCD, e.birthDate, e.gender, e.hourWage " +
-                     "FROM Employee e " +
-                     "JOIN UserAccount u ON e.employeeID = u.ID " +
-                     "WHERE u.role NOT IN (N'Quản lí', N'Nghỉ việc')";
+        String sql = "SELECT e.employeeID, e.name, e.phone, e.image, u.username, u.password, u.role, e.CCCD, e.birthDate, e.gender, e.hourWage "
+                +
+                "FROM Employee e " +
+                "JOIN UserAccount u ON e.employeeID = u.ID " +
+                "WHERE u.role NOT IN (N'Quản lí', N'Nghỉ việc')";
         try (Connection connection = jdbcUtils.connect();
-             PreparedStatement stmt = connection.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
+                PreparedStatement stmt = connection.prepareStatement(sql);
+                ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
                 employees.add(new Employee(
-                    rs.getInt("employeeID"),
-                    rs.getString("name"),
-                    rs.getString("phone"),
-                    rs.getString("image"),
-                    rs.getString("username"),
-                    rs.getString("password"),
-                    rs.getString("role"),
-                    rs.getString("CCCD"),
-                    rs.getString("birthDate"),
-                    rs.getString("gender"),
-                    rs.getInt("hourWage")
-                ));
+                        rs.getInt("employeeID"),
+                        rs.getString("name"),
+                        rs.getString("phone"),
+                        rs.getString("image"),
+                        rs.getString("username"),
+                        rs.getString("password"),
+                        rs.getString("role"),
+                        rs.getString("CCCD"),
+                        rs.getString("birthDate"),
+                        rs.getString("gender"),
+                        rs.getInt("hourWage")));
             }
         }
         return employees;
@@ -497,7 +505,7 @@ public class EmployeeRespository implements IEmployeeRespository {
         }
         String sql = "SELECT startTime, endTime FROM EmployeeShift WHERE employeeID = ?";
         try (Connection connection = jdbcUtils.connect();
-             PreparedStatement stmt = connection.prepareStatement(sql)) {
+                PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, employeeID);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
@@ -518,34 +526,93 @@ public class EmployeeRespository implements IEmployeeRespository {
             throw new IllegalArgumentException("Ngày không hợp lệ");
         }
         List<Employee> employees = new ArrayList<>();
-        String sql = "SELECT DISTINCT e.employeeID, e.name, e.phone, e.image, u.username, u.password, u.role, e.CCCD, e.birthDate, e.gender, e.hourWage " +
-                     "FROM EmployeeShift es " +
-                     "JOIN Employee e ON es.employeeID = e.employeeID " +
-                     "JOIN UserAccount u ON e.employeeID = u.ID " +
-                     "WHERE es.startTime BETWEEN ? AND ?";
+        String sql = "SELECT DISTINCT e.employeeID, e.name, e.phone, e.image, u.username, u.password, u.role, e.CCCD, e.birthDate, e.gender, e.hourWage "
+                +
+                "FROM EmployeeShift es " +
+                "JOIN Employee e ON es.employeeID = e.employeeID " +
+                "JOIN UserAccount u ON e.employeeID = u.ID " +
+                "WHERE es.startTime BETWEEN ? AND ?";
         try (Connection connection = jdbcUtils.connect();
-             PreparedStatement stmt = connection.prepareStatement(sql)) {
+                PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setTimestamp(1, Timestamp.valueOf(fromDate.atStartOfDay()));
             stmt.setTimestamp(2, Timestamp.valueOf(toDate.plusDays(1).atStartOfDay()));
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     employees.add(new Employee(
-                        rs.getInt("employeeID"),
-                        rs.getString("name"),
-                        rs.getString("phone"),
-                        rs.getString("image"),
-                        rs.getString("username"),
-                        rs.getString("password"),
-                        rs.getString("role"),
-                        rs.getString("CCCD"),
-                        rs.getString("birthDate"),
-                        rs.getString("gender"),
-                        rs.getInt("hourWage")
-                    ));
+                            rs.getInt("employeeID"),
+                            rs.getString("name"),
+                            rs.getString("phone"),
+                            rs.getString("image"),
+                            rs.getString("username"),
+                            rs.getString("password"),
+                            rs.getString("role"),
+                            rs.getString("CCCD"),
+                            rs.getString("birthDate"),
+                            rs.getString("gender"),
+                            rs.getInt("hourWage")));
                 }
             }
         }
         return employees;
+    }
+
+    @Override
+    public void updateInforEmployee(int empID, String cccd, String phone, String role, String image) throws SQLException {
+        if (cccd == null || phone == null || role == null || cccd.isEmpty() || phone.isEmpty() || role.isEmpty()) {
+            throw new IllegalArgumentException("Thông tin không hợp lệ");
+        }
+
+        String sql = "UPDATE Employee SET CCCD = ?, phone = ?, image = ? WHERE employeeID = ?";
+
+        try (Connection connection = jdbcUtils.connect();
+                PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, cccd);
+            stmt.setString(2, phone);
+            stmt.setString(3, image);
+            stmt.setInt(4, empID);
+            stmt.executeUpdate();
+        }
+
+        // Cập nhật role trong bảng UserAccount
+        String sqlRole = "UPDATE UserAccount SET role = ? WHERE ID = ?";
+        try (Connection connection = jdbcUtils.connect();
+                PreparedStatement stmt = connection.prepareStatement(sqlRole)) {
+            stmt.setString(1, role);
+            stmt.setInt(2, empID);
+            stmt.executeUpdate();
+        }
+    }
+
+    @Override
+    public Employee getEmployeeInfor(int empID) throws SQLException {
+        String sql = "SELECT e.employeeID, e.name, e.phone, e.image, e.CCCD, e.birthDate, e.gender, u.role " +
+                "FROM Employee e " +
+                "JOIN UserAccount u ON e.employeeID = u.ID " +
+                "WHERE e.employeeID = ?";
+
+        try (Connection connection = jdbcUtils.connect();
+                PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, empID);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return new Employee(
+                            rs.getInt("employeeID"),
+                            rs.getString("name"),
+                            rs.getString("phone"),
+                            rs.getString("image"),
+                            "", 
+                            "", 
+                            rs.getString("role"),
+                            rs.getString("CCCD"),
+                            rs.getString("birthDate"),
+                            rs.getString("gender"),
+                            0 
+                    );
+                }
+            }
+        }
+        // Nếu không tìm thấy thông tin, trả về null
+        return null;
     }
 
     public static void main(String[] args) {
@@ -554,10 +621,10 @@ public class EmployeeRespository implements IEmployeeRespository {
             List<Employee> employees = employeeRepository.getAllEmployees();
             for (Employee employee : employees) {
                 System.out.println(employee.getImage() + " " + employee.getName() + " " +
-                                   employee.getEmployeeShift().getShiftID() + " Thời gian bắt đầu: " +
-                                   employee.getEmployeeShift().getStartTime() + " Thời gian kết thúc: " +
-                                   employee.getEmployeeShift().getEndTime() + " " + employee.getRole() +
-                                   " ID: " + employee.getId() + " Status: " + employee.getEmployeeShift().getStatus());
+                        employee.getEmployeeShift().getShiftID() + " Thời gian bắt đầu: " +
+                        employee.getEmployeeShift().getStartTime() + " Thời gian kết thúc: " +
+                        employee.getEmployeeShift().getEndTime() + " " + employee.getRole() +
+                        " ID: " + employee.getId() + " Status: " + employee.getEmployeeShift().getStatus());
             }
         } catch (Exception e) {
             e.printStackTrace();

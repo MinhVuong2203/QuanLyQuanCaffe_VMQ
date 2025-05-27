@@ -91,15 +91,15 @@ public class StaffJFrameController {
                             contentPanel.add(new GamePanel(), BorderLayout.CENTER);
                             break;
                         case "THÔNG TIN CÁ NHÂN":
-                            StaffInforJpanel staffInfoPanel = new StaffInforJpanel();
+                            StaffInforJpanel staffInfoPanel = new StaffInforJpanel(employee);
                             // Thiết lập thông tin nhân viên từ đối tượng employee
-                            staffInfoPanel.setUserInfo(
-                                    employee.getName(),
-                                    employee.getGender(),
-                                    employee.getBirthDate(),
-                                    employee.getCCCD(),
-                                    employee.getPhone(),
-                                    employee.getRole());
+                            // staffInfoPanel.setUserInfo(
+                            //         employee.getName(),
+                            //         employee.getGender(),
+                            //         employee.getBirthDate(),
+                            //         employee.getCCCD(),
+                            //         employee.getPhone(),
+                            //         employee.getRole());
                             contentPanel.add(staffInfoPanel, BorderLayout.CENTER);
                             break;
                         case "ĐĂNG XUẤT":

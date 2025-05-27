@@ -40,4 +40,7 @@ public interface IEmployeeRespository {
     public List<Employee> getAllEmployeesAllAttributes() throws SQLException;
     public EmployeeShift getEmployeeShiftByEmployeeID(int employeeID) throws SQLException, ClassNotFoundException;
     public List<Employee> getShiftsBetweenDates(LocalDate fromDate, LocalDate toDate) throws SQLException,ClassNotFoundException;
+
+    public void updateInforEmployee(int empID, String cccd, String phone, String role, String image) throws SQLException, ClassNotFoundException;
+    public Employee getEmployeeInfor(int empID) throws SQLException, ClassNotFoundException;
 }

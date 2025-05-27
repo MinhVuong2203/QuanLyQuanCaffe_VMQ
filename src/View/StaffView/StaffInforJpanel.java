@@ -1,8 +1,10 @@
 package View.StaffView;
 
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -10,10 +12,16 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import Controller.StaffController.StaffInforController;
+import Model.Employee;
+import Repository.Employee.EmployeeRespository;
+import Repository.Employee.IEmployeeRespository;
 
 import java.awt.*;
+import java.io.IOException;
+import java.sql.SQLException;
 
 public class StaffInforJpanel extends JPanel {
+    private JPanel infoPanel;
     private JTextField txtHoTen;
     private JComboBox<String> cboGioiTinh;
     private JTextField txtNgaySinh;
@@ -21,6 +29,10 @@ public class StaffInforJpanel extends JPanel {
     private JTextField txtPhone;
     private JTextField txtRole;
     private JButton btnUpdateInfo;
+    private JLabel lblAvatar;
+    private String imagePath;
+    private JButton btnChooseImage;
+    private int empID;
 
     public JTextField getTxtHoTen() {
         return txtHoTen;
@@ -78,8 +90,10 @@ public class StaffInforJpanel extends JPanel {
         this.btnUpdateInfo = btnCapNhat;
     }
 
-    public StaffInforJpanel() {
+    public StaffInforJpanel(Employee employee) {
         initComponents();
+        this.empID = employee.getId();
+        setUserInfo();
     }
 
     private void initComponents() {
@@ -97,20 +111,10 @@ public class StaffInforJpanel extends JPanel {
         titlePanel.add(lblTitle);
 
         // Panel chứa thông tin với Absolute Layout
-        JPanel infoPanel = new JPanel();
+        infoPanel = new JPanel();
         infoPanel.setLayout(null); // Sử dụng null để tạo Absolute Layout
         infoPanel.setBackground(Color.WHITE);
         infoPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
-
-        // // Khai báo các kích thước và vị trí
-        // int labelwith = 100;
-        // int inputWidth = 300;
-        // int height = 30;
-        // int startX = 50;
-        // int labelx = startX;
-        // int inputX = labelX + labelWidth + 20;
-        // int startY = 30;
-        // int gap = 50; // Khoảng cách giữa các dòng
 
         // Họ tên
         JLabel lblHoTen = new JLabel("Họ tên:");
@@ -179,7 +183,30 @@ public class StaffInforJpanel extends JPanel {
         infoPanel.add(lblRole);
         infoPanel.add(txtRole);
 
+        // Panel hình ảnh nhân viên (đặt bên phải)
+        JPanel avatarPanel = new JPanel();
+        avatarPanel.setLayout(null);
+        avatarPanel.setBackground(Color.WHITE);
+        avatarPanel.setBounds(430, 35, 200, 325); // Đặt vị trí cụ thể trong infoPanel
+        infoPanel.add(avatarPanel);
+
+        // Label hiển thị hình ảnh
+        lblAvatar = new JLabel();
+        lblAvatar.setBounds(25, 40, 150, 150); // Điều chỉnh vị trí trong avatarPanel
+        lblAvatar.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
+        lblAvatar.setHorizontalAlignment(JLabel.CENTER);
+        avatarPanel.add(lblAvatar);
+
         StaffInforController staffInforController = new StaffInforController(this);
+
+        // Nút chọn ảnh (chỉ hiển thị khi đang chỉnh sửa)
+        btnChooseImage = new JButton("Đổi ảnh");
+        btnChooseImage.setFont(new Font("Arial", Font.PLAIN, 12));
+        btnChooseImage.setBounds(50, 210, 100, 30); // Điều chỉnh vị trí trong avatarPanel
+        btnChooseImage.setVisible(false); // Ban đầu ẩn nút, chỉ hiển thị khi chỉnh sửa
+        avatarPanel.add(btnChooseImage);
+        btnChooseImage.addActionListener(staffInforController);
+
 
         btnUpdateInfo = new JButton("Chỉnh Sửa");
         btnUpdateInfo.setFont(new Font("Arial", Font.BOLD, 14));
@@ -206,19 +233,43 @@ public class StaffInforJpanel extends JPanel {
         add(mainPanel);
     }
 
-    // Thêm phương thức này để đặt lại vị trí nút sau khi panel được thêm vào
-    // container
-    // @Override
-    // public void addNotify() {
-    //     super.addNotify();
-    //     // Đặt lại vị trí của nút Cập Nhật sau khi biết kích thước thực tế của panel
-    //     if (btnCapNhat != null) {
-    //         Container parent = btnCapNhat.getParent();
-    //         if (parent != null) {
-    //             btnCapNhat.setBounds(180, 380, 100, 35);
-    //         }
-    //     }
-    // }
+    // Phương thức để hiển thị hình ảnh nhân viên
+    private void displayImage(String path) {
+        if (path == null || path.isEmpty()) {
+            // Hiển thị ảnh mặc định nếu không có đường dẫn
+            ImageIcon defaultIcon = new ImageIcon(getClass().getResource("/image/default_avatar.png"));
+            if (defaultIcon.getIconWidth() == -1) {
+                // Nếu không tìm thấy ảnh mặc định, hiển thị biểu tượng người dùng đơn giản
+                lblAvatar.setText("No Image");
+                lblAvatar.setHorizontalAlignment(JLabel.CENTER);
+                lblAvatar.setVerticalAlignment(JLabel.CENTER);
+            } else {
+                Image defaultImg = defaultIcon.getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH);
+                lblAvatar.setIcon(new ImageIcon(defaultImg));
+            }
+            return;
+        }
+
+        try {
+            java.io.File imgFile = new java.io.File(path);
+            if (imgFile.exists()) {
+                ImageIcon originalIcon = new ImageIcon(path);
+                Image originalImg = originalIcon.getImage();
+                Image scaledImg = originalImg.getScaledInstance(150, 150, Image.SCALE_SMOOTH);
+                lblAvatar.setIcon(new ImageIcon(scaledImg));
+            } else {
+                // Nếu file không tồn tại, hiển thị thông báo
+                lblAvatar.setText("Image not found");
+                lblAvatar.setHorizontalAlignment(JLabel.CENTER);
+                lblAvatar.setVerticalAlignment(JLabel.CENTER);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            lblAvatar.setText("Error loading image");
+            lblAvatar.setHorizontalAlignment(JLabel.CENTER);
+            lblAvatar.setVerticalAlignment(JLabel.CENTER);
+        }
+    }
 
     // Phương thức để đặt giá trị cho các trường
     public void setUserInfo(String hoTen, String gioiTinh, String ngaySinh,
@@ -229,6 +280,38 @@ public class StaffInforJpanel extends JPanel {
         txtCCCD.setText(CCCD);
         txtPhone.setText(phone);
         txtRole.setText(role);
+    }
+
+    public void setUserInfo() {
+        try {
+            IEmployeeRespository employeeRespository = new EmployeeRespository();
+            // Lấy thông tin nhân viên từ cơ sở dữ liệu
+            Employee employee = employeeRespository.getEmployeeInfor(empID);
+
+            if (employee != null) {
+                // Hiển thị thông tin lên giao diện
+                txtHoTen.setText(employee.getName());
+                cboGioiTinh.setSelectedItem(employee.getGender());
+                txtNgaySinh.setText(employee.getBirthDate());
+                txtCCCD.setText(employee.getCCCD());
+                txtPhone.setText(employee.getPhone());
+                txtRole.setText(employee.getRole());
+
+                // Hiển thị ảnh nhân viên từ đường dẫn lưu trong đối tượng employee
+                imagePath = employee.getImage(); // Giả sử Employee có phương thức getImage() trả về đường dẫn
+                displayImage(imagePath);
+            } else {
+                // Xử lý khi không tìm thấy thông tin
+                JOptionPane.showMessageDialog(this,
+                        "Không tìm thấy thông tin nhân viên trong hệ thống!",
+                        "Lỗi", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (ClassNotFoundException | IOException | SQLException e) {
+            JOptionPane.showMessageDialog(this,
+                    "Đã xảy ra lỗi khi truy xuất thông tin: " + e.getMessage(),
+                    "Lỗi", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
     }
 
     // Phương thức để lấy thông tin từ các trường
@@ -243,24 +326,108 @@ public class StaffInforJpanel extends JPanel {
         return info;
     }
 
-    //Phương thức để chỉnh sửa thông tin
-    public void enableEdit() {
+    public void chooseFile() {
+        try {
+            // Tạo file chooser
+            JFileChooser fc = new JFileChooser();
+            fc.setDialogTitle("Chọn hình ảnh nhân viên");
+
+            // Thêm bộ lọc file để chỉ hiển thị file hình ảnh
+            fc.setFileFilter(new javax.swing.filechooser.FileFilter() {
+                @Override
+                public boolean accept(java.io.File file) {
+                    // Chấp nhận thư mục để có thể duyệt folder
+                    if (file.isDirectory()) {
+                        return true;
+                    }
+
+                    // Chỉ chấp nhận các file ảnh phổ biến
+                    String fileName = file.getName().toLowerCase();
+                    return fileName.endsWith(".jpg") || fileName.endsWith(".jpeg") ||
+                            fileName.endsWith(".png") || fileName.endsWith(".gif") ||
+                            fileName.endsWith(".bmp");
+                }
+
+                @Override
+                public String getDescription() {
+                    return "Image Files (*.jpg, *.jpeg, *.png, *.gif, *.bmp)";
+                }
+            });
+
+            // Hiển thị hộp thoại chọn file
+            int returnValue = fc.showOpenDialog(this);
+
+            if (returnValue == JFileChooser.APPROVE_OPTION) {
+                // Lấy đường dẫn file đã chọn
+                java.io.File selectedFile = fc.getSelectedFile();
+                this.imagePath = selectedFile.getAbsolutePath();
+
+                // Kiểm tra xem file có phải là file ảnh không
+                String fileName = selectedFile.getName().toLowerCase();
+                if (fileName.endsWith(".jpg") || fileName.endsWith(".jpeg") ||
+                        fileName.endsWith(".png") || fileName.endsWith(".gif") ||
+                        fileName.endsWith(".bmp")) {
+
+                    // Hiển thị ảnh đã chọn
+                    displayImage(imagePath);
+
+                    // Cập nhật hình ảnh vào cơ sở dữ liệu
+                    // (Chú ý: Bạn có thể muốn chuyển phần này vào phương thức saveChanges)
+                    // IEmployeeRespository employeeRespository = new EmployeeRespository();
+                    // employeeRespository.updateEmployeeImage(empID, imagePath);
+                } else {
+                    JOptionPane.showMessageDialog(this,
+                            "Vui lòng chọn tệp hình ảnh hợp lệ (*.jpg, *.jpeg, *.png, *.gif, *.bmp)",
+                            "Lỗi định dạng file", JOptionPane.WARNING_MESSAGE);
+                }
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this,
+                    "Đã xảy ra lỗi khi chọn hình ảnh: " + e.getMessage(),
+                    "Lỗi", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
+    }
+
+    // Phương thức để chỉnh sửa thông tin cho nhân viên
+    public void enableEditForEmp() {
+        txtHoTen.setEditable(true);
+        cboGioiTinh.setEnabled(true);
+        txtNgaySinh.setEditable(true);
+        txtCCCD.setEditable(true);
+        txtPhone.setEditable(true);
+
+        // Hiển thị nút đổi ảnh
+        btnChooseImage.setVisible(true);
+        System.out.println("empID: " + empID);
+    }
+
+    // Phương thức để chỉnh sửa thông tin cho quản lý
+    public void enableEditForManager() {
         txtHoTen.setEditable(true);
         cboGioiTinh.setEnabled(true);
         txtNgaySinh.setEditable(true);
         txtCCCD.setEditable(true);
         txtPhone.setEditable(true);
         txtRole.setEditable(true);
+        // Hiển thị nút đổi ảnh
+        btnChooseImage.setVisible(true);
     }
 
     // Phương thức để lưu thông tin đã chỉnh sửa
-    public void saveChanges() {
+    public void saveChanges() throws ClassNotFoundException, IOException, SQLException {
         // Lấy thông tin đã chỉnh sửa từ các trường
         // String[] updatedInfo = getUserInfo();
-        
+        IEmployeeRespository employeeRespository = new EmployeeRespository();
+        employeeRespository.updateInforEmployee(
+                empID,
+                txtCCCD.getText(),
+                txtPhone.getText(),
+                txtRole.getText(),
+                imagePath);
         // Hiển thị thông báo thành công
         JOptionPane.showMessageDialog(this, "Thông tin đã được cập nhật thành công!");
-        
+
         // Vô hiệu hóa các trường sau khi lưu
         txtHoTen.setEditable(false);
         cboGioiTinh.setEnabled(false);
@@ -268,5 +435,7 @@ public class StaffInforJpanel extends JPanel {
         txtCCCD.setEditable(false);
         txtPhone.setEditable(false);
         txtRole.setEditable(false);
+        // Ẩn nút đổi ảnh
+        btnChooseImage.setVisible(false);
     }
 }

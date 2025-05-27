@@ -2,6 +2,8 @@ package Controller.StaffController;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.sql.SQLException;
 
 import View.StaffView.StaffInforJpanel;
 
@@ -16,10 +18,17 @@ public class StaffInforController implements ActionListener {
         String src = e.getActionCommand();
         if (src.equals("Chỉnh Sửa")) {
             staffInforJpanel.getBtnUpdateInfo().setText("Cập Nhật");
-            staffInforJpanel.enableEdit();
+            staffInforJpanel.enableEditForEmp();
         } else if (src.equals("Cập Nhật")) {
-            staffInforJpanel.saveChanges();
-            staffInforJpanel.getBtnUpdateInfo().setText("Chỉnh Sửa");
+            try {
+                staffInforJpanel.saveChanges();
+                staffInforJpanel.getBtnUpdateInfo().setText("Chỉnh Sửa");
+            } catch (ClassNotFoundException | IOException | SQLException e1) {
+                e1.printStackTrace();
+            }
+        } else if (src.equals("Đổi ảnh")) {
+            staffInforJpanel.chooseFile();
         }
     }
+    
 }
