@@ -187,12 +187,12 @@ public class StaffInforJpanel extends JPanel {
         JPanel avatarPanel = new JPanel();
         avatarPanel.setLayout(null);
         avatarPanel.setBackground(Color.WHITE);
-        avatarPanel.setBounds(430, 35, 200, 325); // Đặt vị trí cụ thể trong infoPanel
+        avatarPanel.setBounds(430, 35, 300, 380);
         infoPanel.add(avatarPanel);
 
         // Label hiển thị hình ảnh
         lblAvatar = new JLabel();
-        lblAvatar.setBounds(25, 40, 150, 150); // Điều chỉnh vị trí trong avatarPanel
+        lblAvatar.setBounds(0, 0, 250, 350);
         lblAvatar.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
         lblAvatar.setHorizontalAlignment(JLabel.CENTER);
         avatarPanel.add(lblAvatar);
@@ -202,11 +202,10 @@ public class StaffInforJpanel extends JPanel {
         // Nút chọn ảnh (chỉ hiển thị khi đang chỉnh sửa)
         btnChooseImage = new JButton("Đổi ảnh");
         btnChooseImage.setFont(new Font("Arial", Font.PLAIN, 12));
-        btnChooseImage.setBounds(50, 210, 100, 30); // Điều chỉnh vị trí trong avatarPanel
-        btnChooseImage.setVisible(false); // Ban đầu ẩn nút, chỉ hiển thị khi chỉnh sửa
+        btnChooseImage.setBounds(75, 355, 100, 25);
+        btnChooseImage.setVisible(false);
         avatarPanel.add(btnChooseImage);
         btnChooseImage.addActionListener(staffInforController);
-
 
         btnUpdateInfo = new JButton("Chỉnh Sửa");
         btnUpdateInfo.setFont(new Font("Arial", Font.BOLD, 14));
@@ -244,7 +243,7 @@ public class StaffInforJpanel extends JPanel {
                 lblAvatar.setHorizontalAlignment(JLabel.CENTER);
                 lblAvatar.setVerticalAlignment(JLabel.CENTER);
             } else {
-                Image defaultImg = defaultIcon.getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH);
+                Image defaultImg = defaultIcon.getImage().getScaledInstance(250, 350, Image.SCALE_SMOOTH);
                 lblAvatar.setIcon(new ImageIcon(defaultImg));
             }
             return;
@@ -255,7 +254,8 @@ public class StaffInforJpanel extends JPanel {
             if (imgFile.exists()) {
                 ImageIcon originalIcon = new ImageIcon(path);
                 Image originalImg = originalIcon.getImage();
-                Image scaledImg = originalImg.getScaledInstance(150, 150, Image.SCALE_SMOOTH);
+
+                Image scaledImg = originalImg.getScaledInstance(250, 350, Image.SCALE_SMOOTH);
                 lblAvatar.setIcon(new ImageIcon(scaledImg));
             } else {
                 // Nếu file không tồn tại, hiển thị thông báo

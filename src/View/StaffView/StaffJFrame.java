@@ -128,7 +128,7 @@ public class StaffJFrame extends JFrame {
 
         StaffJFrameController controller = new StaffJFrameController(this, contentPanel, employee); // Hành động
 
-        String[] buttonLabels = { "BÁN HÀNG", "MANG VỀ", "ĐIỂM DANH", "ĐĂNG KÝ CA" ,"MINI GAME", "THÔNG TIN CÁ NHÂN", "ĐĂNG XUẤT" };
+        String[] buttonLabels = { "BÁN HÀNG", "MANG VỀ", "ĐIỂM DANH", "ĐĂNG KÝ CA" ,"MINI GAME", "<html>THÔNG TIN CÁ <br>NHÂN</html>", "ĐĂNG XUẤT" };
         String[] iconButtonLabels = { "src\\image\\SideBar_Image\\Sell.png",
 								      "src\\image\\SideBar_Image\\TakeAway.png",
 								      "src\\image\\SideBar_Image\\DiemDanh.png",

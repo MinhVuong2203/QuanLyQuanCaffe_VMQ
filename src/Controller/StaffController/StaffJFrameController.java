@@ -90,7 +90,7 @@ public class StaffJFrameController {
                         case "MINI GAME":
                             contentPanel.add(new GamePanel(), BorderLayout.CENTER);
                             break;
-                        case "THÔNG TIN CÁ NHÂN":
+                        case "<html>THÔNG TIN CÁ <br>NHÂN</html>":
                             StaffInforJpanel staffInfoPanel = new StaffInforJpanel(employee);
                             // Thiết lập thông tin nhân viên từ đối tượng employee
                             // staffInfoPanel.setUserInfo(
