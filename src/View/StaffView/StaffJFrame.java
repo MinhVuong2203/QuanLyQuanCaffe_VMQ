@@ -149,8 +149,7 @@ public class StaffJFrame extends JFrame {
             button.setPressedForeground(Color.WHITE);
             button.setDefaultBorderColor(new Color(39, 174, 96));
             button.setHoverBackground(new Color(39, 174, 96));
-            button.setPressedBorderColor(new Color(39, 174, 96)); 
-            
+            button.setPressedBorderColor(new Color(39, 174, 96));             
             button.setFont(new Font("Arial", Font.BOLD, 14)); 
             button.setHorizontalAlignment(SwingConstants.LEFT);
             // Thêm icon
@@ -168,7 +167,37 @@ public class StaffJFrame extends JFrame {
             menuPanel.add(button);
         }
         sidebar.add(menuPanel, BorderLayout.CENTER);
-
+        
+        btnTheme = new JButton();
+        btnTheme.setBounds(1300, 10, 70, 60);
+        btnTheme.setFont(new Font("Arial", Font.PLAIN, 16));
+        btnTheme.setHorizontalTextPosition(SwingConstants.CENTER);    // icon ở trên
+        btnTheme.setVerticalTextPosition(SwingConstants.BOTTOM);      // Chữ ở dưới
+        btnTheme.setIconTextGap(2);  // Khoảng cách giữa icon và chữ
+        btnTheme.setContentAreaFilled(false);
+        btnTheme.setFocusPainted(false);
+        this.btnThemeLight();
+        btnTheme.addActionListener(e -> {
+     	   try {
+     			if (this.themeLight == true) {
+     				this.btnThemeDark();							
+ 					UIManager.setLookAndFeel(new FlatDarkLaf());
+ 		            UIManager.put("Label.foreground", Color.BLACK);
+ 		            UIManager.put("Button.foreground", Color.BLACK);
+// 		            UIManager.put("Table.foreground", Color.BLACK);
+ 				} else {
+ 					this.btnThemeLight();				
+ 					UIManager.setLookAndFeel(new FlatLightLaf());
+ 				}
+     			SwingUtilities.updateComponentTreeUI(this);  // this là JFrame hoặc JPanel
+     			this.repaint();  // Làm mới
+     	        this.revalidate();  // Cập nhật layout
+ 			} catch (UnsupportedLookAndFeelException e1) {		
+ 				e1.printStackTrace();
+ 			}	   
+        });
+        panel.add(btnTheme);
+        
         // JSplitPane để sidebar có thể thay đổi kích thước
         splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, sidebar, contentPanel);
         splitPane.setDividerSize(5);

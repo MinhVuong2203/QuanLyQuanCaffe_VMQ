@@ -260,11 +260,7 @@ public class EmployeeShiftPanel extends JPanel {
         add(panel_center, BorderLayout.CENTER);
     }
 
-    
-    
-    
-    
-    
+   
     // Phương thức đặt màu dựa trên vai trò (role)
     private void setConditionalRowColorsByRole(JTable table) {
         table.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
@@ -482,19 +478,16 @@ public class EmployeeShiftPanel extends JPanel {
         };
         
         approvalTable = new JTable(model);
+        approvalTable.setRowSelectionAllowed(false);
         
      // Thiết lập renderer cho cột hành động
         approvalTable.getColumnModel().getColumn(7).setCellRenderer(new ButtonRenderer());
         approvalTable.getColumnModel().getColumn(7).setCellEditor(new ButtonEditor(new JCheckBox()));
         
-        
-        
-//        actionColumn.setPreferredWidth(120); // Đảm bảo đủ rộng
-
         // Trang trí
         approvalTable.setFont(new Font("Segoe UI", Font.PLAIN, 16));
         approvalTable.setRowHeight(60);
-        approvalTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF); // Tắt tự động điều chỉnh để kiểm soát thủ công
+        approvalTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS); 
         approvalTable.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 16));
 
         // Đặt chiều rộng cột
@@ -503,23 +496,24 @@ public class EmployeeShiftPanel extends JPanel {
         approvalTable.getColumnModel().getColumn(2).setMinWidth(230);
         approvalTable.getColumnModel().getColumn(3).setMinWidth(180);
         approvalTable.getColumnModel().getColumn(4).setMinWidth(180);
+        approvalTable.getColumnModel().getColumn(7).setMinWidth(100);
 
         // Xét căn phải, trái, giữa
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
         DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
         rightRenderer.setHorizontalAlignment(SwingConstants.RIGHT);
+        
         approvalTable.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
         approvalTable.getColumnModel().getColumn(3).setCellRenderer(centerRenderer);
         approvalTable.getColumnModel().getColumn(4).setCellRenderer(centerRenderer);
         approvalTable.getColumnModel().getColumn(5).setCellRenderer(rightRenderer);
         approvalTable.getColumnModel().getColumn(6).setCellRenderer(rightRenderer);
-//        approvalTable.getColumnModel().getColumn(7).setCellRenderer(centerRenderer);
 
         // Thêm bảng vào JScrollPane
         JScrollPane scrollPane = new JScrollPane(approvalTable);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-
+        this.setRowColors(approvalTable);
         // Thêm bảng vào panel_center
         Panel panel_center = (Panel) getComponent(1); // Lấy panel center
         panel_center.removeAll();
@@ -535,8 +529,13 @@ public class EmployeeShiftPanel extends JPanel {
 
         public ButtonRenderer() {
             setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-            yesButton = new JButton("Yes");
-            noButton = new JButton("No");
+            yesButton = new JButton();
+            yesButton.setIcon(new ImageIcon(new ImageIcon("src\\image\\Manager_Image\\yesButton.png").getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH)));
+            noButton = new JButton();
+            noButton.setIcon(new ImageIcon(new ImageIcon("src\\image\\Manager_Image\\noButton.png").getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH)));       
+            yesButton.setContentAreaFilled(false);
+            noButton.setContentAreaFilled(false);
+            
             add(yesButton);
             add(noButton);
         }
@@ -544,10 +543,15 @@ public class EmployeeShiftPanel extends JPanel {
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value,
                 boolean isSelected, boolean hasFocus, int row, int column) {
-            if (isSelected) {
-                setBackground(table.getSelectionBackground());
+            // Áp dụng màu xen kẽ
+            if (!isSelected) {
+                if (row % 2 == 0) {
+                    setBackground(new Color(220, 240, 230)); // Màu cho hàng chẵn
+                } else {
+                    setBackground(new Color(245, 245, 240)); // Màu cho hàng lẻ
+                }
             } else {
-                setBackground(table.getBackground());
+                setBackground(table.getSelectionBackground());
             }
             return this;
         }
@@ -565,9 +569,12 @@ public class EmployeeShiftPanel extends JPanel {
             panel = new JPanel();
             panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
             
-            yesButton = new JButton("Yes");
-            noButton = new JButton("No");
-            
+            yesButton = new JButton();
+            yesButton.setIcon(new ImageIcon(new ImageIcon("src\\image\\Manager_Image\\yesButton.png").getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH)));
+            noButton = new JButton();
+            noButton.setIcon(new ImageIcon(new ImageIcon("src\\image\\Manager_Image\\noButton.png").getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH)));
+            yesButton.setContentAreaFilled(false);
+            noButton.setContentAreaFilled(false);
             yesButton.addActionListener(e -> {
                 currentValue = "Yes";
                 fireEditingStopped();
@@ -597,6 +604,36 @@ public class EmployeeShiftPanel extends JPanel {
         public Object getCellEditorValue() {
             return currentValue;
         }
+    }
+    
+    // Vẽ màu chẳn lẻ trừ cột hành động
+    public void setRowColors(JTable table) {
+        DefaultTableCellRenderer colorRenderer = new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(
+                    JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                // Màu xen kẽ cho hàng chẵn và lẻ
+                if (!isSelected) {
+                    if (row % 2 == 0) {
+                        c.setBackground(new Color(220, 240, 230)); // Màu cho hàng chẵn
+                    } else {
+                        c.setBackground(new Color(245, 245, 240)); // Màu cho hàng lẻ
+                    }
+                } else {
+                    c.setBackground(table.getSelectionBackground());
+                }
+                return c;
+            }
+        };
+
+        // Áp dụng renderer màu xen kẽ cho tất cả các cột, trừ cột "Hành động" (cột 7)
+        for (int i = 0; i < table.getColumnCount(); i++) {
+            if (i != 7) { // Bỏ qua cột "Hành động"
+                table.getColumnModel().getColumn(i).setCellRenderer(colorRenderer);
+            }
+        }
+        table.repaint(); // Đảm bảo bảng được vẽ lại
     }
 
     public static void main(String[] args) throws ClassNotFoundException, IOException, SQLException {
