@@ -50,9 +50,8 @@ public class RegisterWorkJPanel extends JPanel {
 
     private static final long serialVersionUID = 1L;
     private Employee employee;
-    private JButton btnRegister;
-    private JButton btnStatusRegister;
-    private JButton activeButton;
+  
+   
     private JTable shiftTable;
     private JLabel statusLabel;
     private String[][] selectedCells;
@@ -64,44 +63,12 @@ public class RegisterWorkJPanel extends JPanel {
         es = new EmployeeShiftRepository();
         this.setLayout(new BorderLayout(0, 0));
 
-        Panel panel_top = new Panel() {
-            @Override
-            public void paint(Graphics g) {
-                super.paint(g);
-                if (activeButton != null) {
-                    g.setColor(new Color(255, 165, 0));
-                    g.fillRect(activeButton.getX(), activeButton.getY() + activeButton.getHeight(), activeButton.getWidth(), 3);
-                }
-            }
-        };
+        Panel panel_top = new Panel();
         add(panel_top, BorderLayout.NORTH);
         panel_top.setPreferredSize(new Dimension(250, 100));
         panel_top.setLayout(null);
 
-        btnRegister = new JButton("Đăng ký ca làm");
-        btnRegister.setFont(new Font("Segoe UI", Font.BOLD, 16));
-        btnRegister.setBounds(10, 10, 149, 30);
-        btnRegister.setContentAreaFilled(false);
-        btnRegister.setFocusPainted(false);
-        btnRegister.addActionListener(e -> {
-            activeButton = btnRegister;
-            panel_top.repaint();
-        });
-        panel_top.add(btnRegister);
-
-        btnStatusRegister = new JButton("Trạng thái đăng ký");
-        btnStatusRegister.setFont(new Font("Segoe UI", Font.BOLD, 16));
-        btnStatusRegister.setBounds(181, 10, 176, 30);
-        btnStatusRegister.setContentAreaFilled(false);
-        btnStatusRegister.setFocusPainted(false);
-        btnStatusRegister.addActionListener(e -> {
-            activeButton = btnStatusRegister;
-            panel_top.repaint();
-        });
-        panel_top.add(btnStatusRegister);
-
-        activeButton = btnRegister;
-        panel_top.repaint();
+        
 
         JLabel lblNewLabel = new JLabel("Từ ngày:");
         lblNewLabel.setFont(new Font("Segoe UI", Font.BOLD, 18));
@@ -345,19 +312,28 @@ public class RegisterWorkJPanel extends JPanel {
                                         }
                                         selectedCells[row][currentColumn] = "Chờ duyệt";
                                         label.setIcon(awaiting);
-                                        if (oldShiftTime != null) 
-                                            System.out.println("Khung giờ cũ bị thay thế: " + oldShiftTime);
-										else
-											try {
-												es.addRegister(employee.getId(), startTime, endTime, employee.getHourlyWage(), "Chờ duyệt");
-											} catch (SQLException e1) {	
-												e1.printStackTrace();
-											}
+                                    	try {
+                                    		if (oldShiftTime == null) // Nếu không khung giờ cũ => add shift mới
+                                    		es.addRegister(employee.getId(), startTime, endTime, employee.getHourlyWage(), "Chờ duyệt");
+                                    		else { // Nếu có khung giờ cũ => thay thế shift
+                                    			String startTimeOld =  columnDateStr + " " + oldShiftTime.split(" - ")[0] + ":00";
+                                    			String endTimeOld =  columnDateStr + " " + oldShiftTime.split(" - ")[1] + ":00";
+                                    			es.resplayRegister(employee.getId(), startTimeOld, endTimeOld, startTime, endTime);
+                                    		}            		
+                                    	} catch (SQLException e1) {	
+                                    		e1.printStackTrace();
+                                    	}
+										
                                         	
                                         System.out.println("Đã đặt ca: Ngày " + columnDateStr + ", Giờ " + shiftTime);
-                                    } else if ("Chờ duyệt".equals(currentStatus)) {
-                                        selectedCells[row][currentColumn] = "Trống";
-                                        label.setIcon(null);  
+                                    } else if ("Chờ duyệt".equals(currentStatus)) {  // đặt lại trạng thái trống => xóa ca trong database
+                                        try {
+                                        	selectedCells[row][currentColumn] = "Trống";
+                                        	label.setIcon(null);  
+											es.deleteRegister(employee.getId(), startTime, endTime);
+										} catch (SQLException e1) {	
+											e1.printStackTrace();
+										}
                                     }
                                     shiftTable.repaint();
                                     fireEditingStopped();
@@ -487,12 +463,10 @@ public class RegisterWorkJPanel extends JPanel {
                 shiftTable.getColumnModel().getColumn(i).setPreferredWidth(150);
             }
 
-            JButton confirmButton = new JButton("Xác nhận ca làm");
-            confirmButton.setFont(new Font("Segoe UI", Font.BOLD, 14));
-            confirmButton.setBackground(new Color(144, 238, 144));
+    
             statusLabel = new JLabel("Chưa chọn ca nào");
-            statusLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-            statusLabel.setForeground(Color.DARK_GRAY);
+            statusLabel.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+            statusLabel.setForeground(Color.CYAN);
 
             Panel panel_center = (Panel) getComponent(1);
             panel_center.setBackground(new Color(222, 184, 135));
@@ -502,7 +476,7 @@ public class RegisterWorkJPanel extends JPanel {
             scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
             scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
             panel_center.add(scrollPane, BorderLayout.CENTER);
-            panel_center.add(confirmButton, BorderLayout.SOUTH);
+
 
             panel_center.revalidate();
             panel_center.repaint();

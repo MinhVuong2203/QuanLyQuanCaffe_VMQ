@@ -12,6 +12,7 @@ import com.toedter.calendar.JDateChooser;
 public interface IEmployeeRespository {
     public int getIdMaxFromSQL() throws SQLException;
     public int getMaxShiftID() throws SQLException;
+    public String getNameFromID(int id) throws SQLException;
     
     public boolean checkEqualsPhone(String phone) throws SQLException;
     public boolean checkEqualsCCCD(String cccd) throws SQLException;

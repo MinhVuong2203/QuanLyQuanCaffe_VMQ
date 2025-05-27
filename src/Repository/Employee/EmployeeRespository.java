@@ -55,6 +55,21 @@ public class EmployeeRespository implements IEmployeeRespository {
     }
 
     @Override
+    public String getNameFromID(int id) throws SQLException{
+    	String sql = "SELECT name FROM Employee WHERE employeeID = ?";
+        try (Connection connection = jdbcUtils.connect();
+            PreparedStatement stmt = connection.prepareStatement(sql)){
+            	stmt.setInt(1, id);
+            	try (ResultSet rs = stmt.executeQuery()) {
+            		if (rs.next())
+            		return rs.getString("name");
+            		return null;
+            	}            	
+            }
+    }
+    
+    
+    @Override
     public boolean checkEqualsPhone(String phone) throws SQLException {
         if (phone == null || phone.isEmpty()) {
             throw new IllegalArgumentException("Số điện thoại không hợp lệ");
@@ -326,7 +341,7 @@ public class EmployeeRespository implements IEmployeeRespository {
         }
         String startDayString = sdf.format(startDay.getDate());
         String endDayString = sdf.format(new Date(endDay.getDate().getTime() + 86400000));
-        String sql = "SELECT startTime, endTime FROM EmployeeShift WHERE employeeID = ? AND startTime >= ? AND endTime < ?";
+        String sql = "SELECT startTime, endTime FROM EmployeeShift WHERE employeeID = ? AND startTime >= ? AND endTime < ? AND status <> N'Chờ duyệt'";
         try (Connection connection = jdbcUtils.connect();
                 PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, id);

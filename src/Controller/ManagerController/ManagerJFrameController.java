@@ -106,7 +106,7 @@ public class ManagerJFrameController {
                         case "MINI GAME":
                             contentPanel.add(new GamePanel(), BorderLayout.CENTER);
                             break;
-                        case "XẾP LỊCH":
+                        case "XẾP LỊCH":                     	
                             contentPanel.add(employeeShiftPanel, BorderLayout.CENTER);
                             break;
                         case "BÀN":

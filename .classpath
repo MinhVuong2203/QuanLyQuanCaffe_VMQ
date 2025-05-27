@@ -37,5 +37,6 @@
 	<classpathentry kind="lib" path="Libraries/jakarta.activation-api-2.0.1.jar"/>
 	<classpathentry kind="lib" path="Libraries/jakarta.mail-2.0.1.jar"/>
 	<classpathentry kind="lib" path="Libraries/jakarta.activation-2.0.1.jar"/>
+	<classpathentry kind="lib" path="Libraries/flatlaf-3.6.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

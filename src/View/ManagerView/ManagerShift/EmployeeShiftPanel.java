@@ -2,51 +2,95 @@ package View.ManagerView.ManagerShift;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.Panel;
+import java.awt.Point;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+import java.util.TreeSet;
 
 import javax.swing.JComboBox;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-
-
+import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 import javax.swing.JScrollPane;
 
 import Utils.ConvertInto;
 import Components.*;
 import Utils.ValidationUtils;
 import Utils.file;
+import View.StaffView.RegisterWorkJPanel;
+import View.Window.WelcomeScreen;
 
+import com.formdev.flatlaf.FlatDarkLaf;
+import com.formdev.flatlaf.FlatLightLaf;
 import com.toedter.calendar.JDateChooser;
 
 import Controller.ManagerController.EmployeeShiftController;
 import Model.Employee;
+import Model.EmployeeShift;
 import Repository.Employee.EmployeeRespository;
 import Repository.Employee.IEmployeeRespository;
+import Repository.EmployeeShift.EmployeeShiftRepository;
+import Repository.EmployeeShift.IEmployeeShiftRepository;
 
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Image;
+import java.awt.Insets;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.ImageIcon;
+import javax.swing.AbstractCellEditor;
+import javax.swing.BorderFactory;
+import javax.swing.DefaultCellEditor;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListCellRenderer;
 
 
 public class EmployeeShiftPanel extends JPanel {
 
     private static final long serialVersionUID = 1L;
     private JTable shiftTable; // Biến instance để truy cập bảng từ các hàm xuất
-
+    private JTable approvalTable;  // Biến instance để truy cập bảng từ các hàm xuất
+    private JButton btnRegister;
+    private JButton btnStatusRegister;
+    private JButton activeButton;
+	private JLabel lblNewLabel;
+	private JDateChooser fromDateChooser;
+	private JComboBox<String> comboBox;
+	private JLabel lblnNgy;
+	private JDateChooser toDateChooser;
+	private CustomRoundedButton btnDongY;
+	private JButton btnExportPDF;
+	private JButton btnExportExcel;
+	private CustomComboBox filterEmployeeID;
+	private CustomComboBox filterDate;
+	
     /**
      * Create the panel.
      */
@@ -54,40 +98,83 @@ public class EmployeeShiftPanel extends JPanel {
         setLayout(new BorderLayout(0, 0));
 
         // Top
-        Panel panel_top = new Panel();
+        
+        Panel panel_top = new Panel() {
+            @Override
+            public void paint(Graphics g) {
+                super.paint(g);
+                if (activeButton != null) {
+                    g.setColor(new Color(255, 165, 0));
+                    g.fillRect(activeButton.getX(), activeButton.getY() + activeButton.getHeight(), activeButton.getWidth(), 3);
+                }
+            }
+        };
         add(panel_top, BorderLayout.NORTH);
-        panel_top.setPreferredSize(new Dimension(300, 150));             
+        panel_top.setPreferredSize(new Dimension(300, 100));             
         panel_top.setLayout(null);
+        
+        btnRegister = new JButton("Phân ca");
+        btnRegister.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        btnRegister.setBounds(32, 10, 91, 30);
+        btnRegister.setContentAreaFilled(false);
+        btnRegister.setFocusPainted(false);
+        btnRegister.addActionListener(e -> {
+            activeButton = btnRegister;
+            this.showShiftTable();
+            this.createShiftTable(fromDateChooser, toDateChooser);
+            panel_top.repaint();
+        });
+        panel_top.add(btnRegister);
 
-        JLabel lblNewLabel = new JLabel("Từ ngày:");
+        btnStatusRegister = new JButton("Duyệt ca");
+        btnStatusRegister.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        btnStatusRegister.setBounds(153, 10, 99, 30);
+        btnStatusRegister.setContentAreaFilled(false);
+        btnStatusRegister.setFocusPainted(false);
+        btnStatusRegister.addActionListener(e -> {
+            activeButton = btnStatusRegister;
+            this.showApprovalShift();
+            try {
+				this.createApprovalShift();
+			} catch (ClassNotFoundException | IOException | SQLException e1) {
+				e1.printStackTrace();
+			}
+            panel_top.repaint();
+        });
+        panel_top.add(btnStatusRegister);
+
+        activeButton = btnRegister;
+        panel_top.repaint();
+
+        lblNewLabel = new JLabel("Từ ngày:");
         lblNewLabel.setFont(new Font("Arial", Font.BOLD, 18));
-        lblNewLabel.setBounds(272, 24, 78, 22);
+        lblNewLabel.setBounds(42, 53, 78, 22);
         panel_top.add(lblNewLabel);
             // từ ngày
-            JDateChooser fromDateChooser = new JDateChooser();
+            fromDateChooser = new JDateChooser();
             fromDateChooser.setDate(new Date()); // Lấy ngày hiện tại hiển thị mặc định
             fromDateChooser.setDateFormatString("yyyy-MM-dd"); // Thiết lập định dạng ngày
-            fromDateChooser.setBounds(360, 24, 165, 28);
+            fromDateChooser.setBounds(130, 53, 165, 28);
             panel_top.add(fromDateChooser);
             ((JTextField) fromDateChooser.getDateEditor().getUiComponent()).setFont(new Font("Arial", Font.PLAIN, 16));
 
-        JLabel lblnNgy = new JLabel("Đến ngày:");
+        lblnNgy = new JLabel("Đến ngày:");
         lblnNgy.setFont(new Font("Arial", Font.BOLD, 18));
-        lblnNgy.setBounds(740, 24, 89, 22);
+        lblnNgy.setBounds(410, 53, 89, 22);
         panel_top.add(lblnNgy);
             // Đến ngày
-            JDateChooser toDateChooser = new JDateChooser();
+            toDateChooser = new JDateChooser();
             toDateChooser.setDateFormatString("yyyy-MM-dd"); // Thiết lập định dạng ngày
-            toDateChooser.setBounds(838, 24, 165, 28);
+            toDateChooser.setBounds(509, 50, 165, 28);
             panel_top.add(toDateChooser);
             ((JTextField) toDateChooser.getDateEditor().getUiComponent()).setFont(new Font("Arial", Font.PLAIN, 16));
 
         // Combobox    
         String[] listTime = {"Chọn", "1 tuần", "2 tuần", "3 tuần", "4 tuần"};
-        JComboBox comboBox = new JComboBox<String>(listTime);
+        comboBox = new JComboBox<String>(listTime);
         comboBox.setBackground(new Color(255, 255, 128));
         comboBox.setFont(new Font("Arial", Font.BOLD, 16));
-        comboBox.setBounds(587, 21, 94, 31);
+        comboBox.setBounds(305, 50, 94, 31);
         comboBox.addActionListener(e -> {
             String selected = comboBox.getSelectedItem().toString();
             System.out.println(selected);
@@ -102,13 +189,13 @@ public class EmployeeShiftPanel extends JPanel {
         });
         panel_top.add(comboBox);
 
-        CustomRoundedButton btnDongY = new CustomRoundedButton("Đồng ý");
+        btnDongY = new CustomRoundedButton("Đồng ý");
         btnDongY.setDefaultBackground(new Color(0, 255, 128));
         btnDongY.setHoverBackground(new Color(0, 200, 100));
         btnDongY.setPressedBackground(new Color(0,200, 100));
         btnDongY.setShowBorder(false);
         btnDongY.setFont(new Font("Arial", Font.BOLD, 14));
-        btnDongY.setBounds(1024, 24, 103, 28);
+        btnDongY.setBounds(684, 51, 103, 28);
         panel_top.add(btnDongY);
         new HoverEffect(btnDongY, new Color(0, 255, 128), new Color(0, 200, 100));
         btnDongY.addActionListener(e -> {
@@ -117,25 +204,37 @@ public class EmployeeShiftPanel extends JPanel {
         });
 
         // Thêm hai nút Xuất PDF và Xuất Excel
-        JButton btnExportPDF = new JButton("Xuất PDF");
+        btnExportPDF = new JButton("Xuất PDF");
         btnExportPDF.setIcon(new ImageIcon(new ImageIcon("src\\image\\Manager_Image\\pdf_img.png").getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH)));
         btnExportPDF.setForeground(new Color(255, 0, 0));
         btnExportPDF.setBackground(new Color(240, 240, 240));
         btnExportPDF.setFont(new Font("Arial", Font.PLAIN, 18));
-        btnExportPDF.setBounds(437, 70, 181, 41);
+        btnExportPDF.setBounds(849, 40, 181, 41);
         btnExportPDF.setBorderPainted(false);
         new HoverEffect(btnExportPDF, new Color(255,255,255), new Color(196, 155, 155));
         panel_top.add(btnExportPDF);
 
-        JButton btnExportExcel = new JButton("Xuất Excel");
+        btnExportExcel = new JButton("Xuất Excel");
         btnExportExcel.setForeground(new Color(128, 255, 0));
         btnExportExcel.setBackground(new Color(255, 255, 255));
         btnExportExcel.setFont(new Font("Arial", Font.PLAIN, 18));
-        btnExportExcel.setBounds(720, 70, 181, 41);
+        btnExportExcel.setBounds(1048, 40, 181, 41);
         btnExportExcel.setIcon(new ImageIcon(new ImageIcon("src\\image\\Manager_Image\\excel_img.png").getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH)));
         btnExportExcel.setBorderPainted(false);
         new HoverEffect(btnExportExcel, new Color(255,255,255), new Color(155, 196, 164));
         panel_top.add(btnExportExcel);
+        
+        filterEmployeeID = new CustomComboBox();
+        filterEmployeeID.setFont(new Font("Segoe UI", Font.BOLD, 16));       
+        filterEmployeeID.setBounds(198, 50, 158, 32);       
+        filterEmployeeID.setVisible(false);
+        panel_top.add(filterEmployeeID);
+        
+        filterDate = new CustomComboBox();
+        filterDate.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        filterDate.setBounds(42, 50, 145, 30);
+        filterDate.setVisible(false);
+        panel_top.add(filterDate);
 
         // Xử lý sự kiện cho nút Xuất PDF
         btnExportPDF.addActionListener(e -> {
@@ -161,6 +260,11 @@ public class EmployeeShiftPanel extends JPanel {
         add(panel_center, BorderLayout.CENTER);
     }
 
+    
+    
+    
+    
+    
     // Phương thức đặt màu dựa trên vai trò (role)
     private void setConditionalRowColorsByRole(JTable table) {
         table.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
@@ -194,6 +298,35 @@ public class EmployeeShiftPanel extends JPanel {
                 return c;
             }
         });
+    }
+    
+    public void showShiftTable() {
+    	this.lblNewLabel.setVisible(true);
+    	this.fromDateChooser.setVisible(true);
+    	this.comboBox.setVisible(true);
+    	this.lblnNgy.setVisible(true);
+    	this.toDateChooser.setVisible(true);
+    	this.btnDongY.setVisible(true);
+    	this.btnExportPDF.setVisible(true);
+    	this.btnExportExcel.setVisible(true);
+    	
+    	this.filterDate.setVisible(false);
+    	this.filterEmployeeID.setVisible(false);
+    	
+    }
+    
+    public void showApprovalShift() {
+    	this.lblNewLabel.setVisible(false);
+    	this.fromDateChooser.setVisible(false);
+    	this.comboBox.setVisible(false);
+    	this.lblnNgy.setVisible(false);
+    	this.toDateChooser.setVisible(false);
+    	this.btnDongY.setVisible(false);
+    	this.btnExportPDF.setVisible(false);
+    	this.btnExportExcel.setVisible(false);
+    	
+    	this.filterDate.setVisible(true);
+    	this.filterEmployeeID.setVisible(true);
     }
 
     public void checkDate(JDateChooser fromDateChooser, JDateChooser toDateChooser) {
@@ -284,5 +417,207 @@ public class EmployeeShiftPanel extends JPanel {
             }
         }
     }
-   
+    
+    public void createApprovalShift() throws ClassNotFoundException, IOException, SQLException {
+    	IEmployeeShiftRepository esr = new EmployeeShiftRepository();
+    	IEmployeeRespository er = new EmployeeRespository();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+        Date now = new Date();
+        String dateTimeString = sdf.format(now);
+        List<EmployeeShift> list = esr.getShiftApproval(dateTimeString);
+        for (EmployeeShift employeeShift : list) {
+            System.out.println(employeeShift);
+        }
+        int n = list.size();
+
+        Comparator<String> customComparator = (s1, s2) -> {
+            boolean isS1Letter = Character.isLetter(s1.charAt(0));
+            boolean isS2Letter = Character.isLetter(s2.charAt(0));
+
+            if (isS1Letter && !isS2Letter) {
+                return -1;
+            } else if (!isS1Letter && isS2Letter) {
+                return 1;
+            } else {
+                return s1.compareTo(s2);
+            }
+        };
+
+        Set<String> employeeIDCombox = new TreeSet<>(customComparator);
+        Set<String> dateTimeCombox = new TreeSet<>(customComparator);
+        employeeIDCombox.add("Mã nhân viên");
+        dateTimeCombox.add("Ngày");
+        for (int i = 0; i < n; i++) {
+            employeeIDCombox.add(String.valueOf(list.get(i).getEmployeeID()));
+            dateTimeCombox.add(String.valueOf(list.get(i).getStartTime()).split("T")[0]);
+        }
+        this.filterEmployeeID.setModel(new DefaultComboBoxModel<>(employeeIDCombox.toArray(new String[0])));
+        this.filterDate.setModel(new DefaultComboBoxModel<>(dateTimeCombox.toArray(new String[0])));
+
+        String[] columnNames = new String[]{"Mã ca", "Mã nhân viên", "Tên nhân viên", "Bắt đầu", "Kết thúc", "Số giờ", "Lương/h", "Hành động"};
+        int column = columnNames.length;
+        Object[][] data = new Object[n][column];
+        for (int i = 0; i < n; i++) {
+            data[i][0] = list.get(i).getShiftID();
+            data[i][1] = list.get(i).getEmployeeID();
+            data[i][2] = er.getNameFromID(list.get(i).getEmployeeID());
+            data[i][3] = list.get(i).getStartTime().format(dtf);
+            data[i][4] = list.get(i).getEndTime().format(dtf);
+            data[i][5] = list.get(i).getHourWorked();
+            data[i][6] = list.get(i).getHourWage();
+            data[i][7] = null;
+        }
+     // Tạo model cho bảng
+        DefaultTableModel model = new DefaultTableModel(data, columnNames) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return column == 7; // Chỉ cột Actions có thể chỉnh sửa
+            }            
+            @Override
+            public Class<?> getColumnClass(int columnIndex) {
+                return columnIndex == 7 ? Object.class : super.getColumnClass(columnIndex);
+            }
+        };
+        
+        approvalTable = new JTable(model);
+        
+     // Thiết lập renderer cho cột hành động
+        approvalTable.getColumnModel().getColumn(7).setCellRenderer(new ButtonRenderer());
+        approvalTable.getColumnModel().getColumn(7).setCellEditor(new ButtonEditor(new JCheckBox()));
+        
+        
+        
+//        actionColumn.setPreferredWidth(120); // Đảm bảo đủ rộng
+
+        // Trang trí
+        approvalTable.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+        approvalTable.setRowHeight(60);
+        approvalTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF); // Tắt tự động điều chỉnh để kiểm soát thủ công
+        approvalTable.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 16));
+
+        // Đặt chiều rộng cột
+        approvalTable.getColumnModel().getColumn(0).setMaxWidth(90);
+        approvalTable.getColumnModel().getColumn(1).setMinWidth(120);
+        approvalTable.getColumnModel().getColumn(2).setMinWidth(230);
+        approvalTable.getColumnModel().getColumn(3).setMinWidth(180);
+        approvalTable.getColumnModel().getColumn(4).setMinWidth(180);
+
+        // Xét căn phải, trái, giữa
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+        DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
+        rightRenderer.setHorizontalAlignment(SwingConstants.RIGHT);
+        approvalTable.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+        approvalTable.getColumnModel().getColumn(3).setCellRenderer(centerRenderer);
+        approvalTable.getColumnModel().getColumn(4).setCellRenderer(centerRenderer);
+        approvalTable.getColumnModel().getColumn(5).setCellRenderer(rightRenderer);
+        approvalTable.getColumnModel().getColumn(6).setCellRenderer(rightRenderer);
+//        approvalTable.getColumnModel().getColumn(7).setCellRenderer(centerRenderer);
+
+        // Thêm bảng vào JScrollPane
+        JScrollPane scrollPane = new JScrollPane(approvalTable);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+
+        // Thêm bảng vào panel_center
+        Panel panel_center = (Panel) getComponent(1); // Lấy panel center
+        panel_center.removeAll();
+        panel_center.add(scrollPane, BorderLayout.CENTER);
+        panel_center.revalidate();
+        panel_center.repaint();
+    }
+
+ // Custom renderer cho cột chứa nút
+    class ButtonRenderer extends JPanel implements TableCellRenderer {
+        private JButton yesButton;
+        private JButton noButton;
+
+        public ButtonRenderer() {
+            setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+            yesButton = new JButton("Yes");
+            noButton = new JButton("No");
+            add(yesButton);
+            add(noButton);
+        }
+
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value,
+                boolean isSelected, boolean hasFocus, int row, int column) {
+            if (isSelected) {
+                setBackground(table.getSelectionBackground());
+            } else {
+                setBackground(table.getBackground());
+            }
+            return this;
+        }
+    }
+
+    // Custom editor cho cột chứa nút
+    class ButtonEditor extends DefaultCellEditor {
+        private JPanel panel;
+        private JButton yesButton;
+        private JButton noButton;
+        private String currentValue;
+
+        public ButtonEditor(JCheckBox checkBox) {
+            super(checkBox);
+            panel = new JPanel();
+            panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+            
+            yesButton = new JButton("Yes");
+            noButton = new JButton("No");
+            
+            yesButton.addActionListener(e -> {
+                currentValue = "Yes";
+                fireEditingStopped();
+            });
+            
+            noButton.addActionListener(e -> {
+                currentValue = "No";
+                fireEditingStopped();
+            });
+            
+            panel.add(yesButton);
+            panel.add(noButton);
+        }
+
+        @Override
+        public Component getTableCellEditorComponent(JTable table, Object value,
+                boolean isSelected, int row, int column) {
+            if (isSelected) {
+                panel.setBackground(table.getSelectionBackground());
+            } else {
+                panel.setBackground(table.getBackground());
+            }
+            return panel;
+        }
+
+        @Override
+        public Object getCellEditorValue() {
+            return currentValue;
+        }
+    }
+
+    public static void main(String[] args) throws ClassNotFoundException, IOException, SQLException {
+        JFrame frame = new JFrame("Register Work Panel");
+        Employee employee = new Employee();
+        employee.setId(100019);
+        employee.setHourlyWage(32000);
+        try {
+            UIManager.setLookAndFeel(new FlatLightLaf());
+
+        } catch (Exception e) {
+            System.out.println("Error setting look and feel: " + e.getMessage());
+        }
+        EmployeeShiftPanel panel = new EmployeeShiftPanel();
+       
+        frame.getContentPane().add(panel);
+        frame.setSize(1200, 400);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setVisible(true);
+    }
 }
+    
+    
+    

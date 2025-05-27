@@ -14,6 +14,9 @@ import java.util.Map;
 
 import javax.swing.*;
 
+import com.formdev.flatlaf.FlatDarkLaf;
+import com.formdev.flatlaf.FlatLightLaf;
+
 import Components.CustomRoundedButton;
 import Components.GradientPanel;
 
@@ -34,6 +37,9 @@ public class StaffJFrame extends JFrame {
     private Timer mouseTracker;
     private StaffJPanel staffInterface;
     private Panel menuPanel;
+	private JButton btnTheme;
+	private boolean themeLight = true;
+	
 
     private static final Map<JTabbedPane, Integer> tabbedPaneCounters = new HashMap<>();
 
@@ -77,6 +83,10 @@ public class StaffJFrame extends JFrame {
         lblTime.setFont(new Font("Arial", Font.PLAIN, 16));
         clock();
         panel.add(lblTime);
+        
+       
+       
+        
 
         JLabel lblNewLabel = new JLabel();
         lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -437,6 +447,18 @@ public class StaffJFrame extends JFrame {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+    }
+    
+    public void btnThemeLight() {
+    	this.btnTheme.setIcon(new ImageIcon(new ImageIcon("src\\image\\System_Image\\sun.png").getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH)));
+    	this.btnTheme.setText("Sáng"); 	
+    	this.themeLight = true;
+    }
+    
+    public void btnThemeDark() {
+    	this.btnTheme.setIcon(new ImageIcon(new ImageIcon("src\\image\\System_Image\\moon.png").getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH)));
+    	this.btnTheme.setText("Tối");
+    	this.themeLight = false;
     }
 
     public JLabel getLblTime() {

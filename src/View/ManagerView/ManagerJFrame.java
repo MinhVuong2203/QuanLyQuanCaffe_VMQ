@@ -26,6 +26,9 @@ import java.util.Map;
 
 import javax.swing.*;
 
+import com.formdev.flatlaf.FlatDarkLaf;
+import com.formdev.flatlaf.FlatLightLaf;
+
 import Components.CustomRoundedButton;
 import Components.GradientPanel;
 
@@ -44,6 +47,8 @@ public class ManagerJFrame extends JFrame {
     private String formattedTime;
     private String formattedDate;
     JLabel lblTime;
+    private JButton btnTheme;
+    private boolean themeLight = true;
 
     private static final Map<JTabbedPane, Integer> tabbedPaneCounters = new HashMap<>();
 
@@ -88,6 +93,8 @@ public class ManagerJFrame extends JFrame {
         lblTime.setFont(new Font("Arial", Font.PLAIN, 16));
         clock();
         panel.add(lblTime);
+        
+        
 
         // JLabel lblShift = new JLabel("Ca làm:");
         // lblShift.setBounds(780, 50, 150, 30);
@@ -128,18 +135,52 @@ public class ManagerJFrame extends JFrame {
                                                                        // trong quản lí nên không tạo
         contentPanel.add(table_JPanel, BorderLayout.CENTER);
 
-        EmployeeShiftPanel employeeShiftView = new EmployeeShiftPanel(); // Tạo đối tượng EmployeeShiftView để quay lại
+        EmployeeShiftPanel employeeShiftPanel = new EmployeeShiftPanel(); // Tạo đối tượng EmployeeShiftView để quay lại
                                                                          // vẫn còn dữ liệu
-
         TablePanel tablePanel = new TablePanel();
 
         StaffManagerJPanel staffManagerJPanel = new StaffManagerJPanel(); // Tạo đối tượng StaffManagerJPanel để quay
                                                                           // lại vẫn còn dữ liệu
-
         ManageProduct managerProduct = new ManageProduct(); // Tạo đối tượng ManageProduct để quay lại vẫn còn dữ liệu
 
         manageOrderAndSalary manageOrderAndSalary = new manageOrderAndSalary();
 
+        btnTheme = new JButton();
+        btnTheme.setBounds(1300, 10, 70, 60);
+        btnTheme.setFont(new Font("Arial", Font.PLAIN, 16));
+        btnTheme.setHorizontalTextPosition(SwingConstants.CENTER);    // icon ở trên
+        btnTheme.setVerticalTextPosition(SwingConstants.BOTTOM);      // Chữ ở dưới
+        btnTheme.setIconTextGap(2);  // Khoảng cách giữa icon và chữ
+        btnTheme.setContentAreaFilled(false);
+        btnTheme.setFocusPainted(false);
+        this.btnThemeLight();
+        btnTheme.addActionListener(e -> {
+     	   try {
+     			if (this.themeLight == true) {
+     				this.btnThemeDark();							
+ 					UIManager.setLookAndFeel(new FlatDarkLaf());
+ 		            UIManager.put("Label.foreground", Color.BLACK);
+ 		            UIManager.put("Button.foreground", Color.BLACK);
+// 		            UIManager.put("Table.foreground", Color.BLACK);
+ 				} else {
+ 					this.btnThemeLight();				
+ 					UIManager.setLookAndFeel(new FlatLightLaf());
+ 				}
+     			SwingUtilities.updateComponentTreeUI(this);  // this là JFrame hoặc JPanel
+     			SwingUtilities.updateComponentTreeUI(employeeShiftPanel); 
+     			SwingUtilities.updateComponentTreeUI(tablePanel); 
+     			SwingUtilities.updateComponentTreeUI(staffManagerJPanel); 
+     			SwingUtilities.updateComponentTreeUI(managerProduct); 
+     			SwingUtilities.updateComponentTreeUI(manageOrderAndSalary); 
+     			this.repaint();  // Làm mới
+     	        this.revalidate();  // Cập nhật layout
+ 			} catch (UnsupportedLookAndFeelException e1) {		
+ 				e1.printStackTrace();
+ 			}	   
+        });
+        panel.add(btnTheme);
+        
+        
         String[] buttonLabels = { "BÁN HÀNG", "MANG VỀ", "ĐIỂM DANH", "MINI GAME", "XẾP LỊCH", "BÀN", "NHÂN VIÊN",
                 "SẢN PHẨM", "DOANH THU", "ĐĂNG XUẤT" };
         String[] iconButtonLabels = { "src\\image\\SideBar_Image\\Sell.png",
@@ -177,7 +218,7 @@ public class ManagerJFrame extends JFrame {
             button.setIcon(scaleIcon_first_img);
 
             ManagerJFrameController controller = new ManagerJFrameController(this, contentPanel, manager,
-                    employeeShiftView, tablePanel, staffManagerJPanel, managerProduct, manageOrderAndSalary); // Hành
+                    employeeShiftPanel, tablePanel, staffManagerJPanel, managerProduct, manageOrderAndSalary); // Hành
                                                                                                               // động
 
             button.addActionListener(controller.getButtonActionListener(label)); // Thêm ActionListener cho button
@@ -467,6 +508,19 @@ public class ManagerJFrame extends JFrame {
             ex.printStackTrace();
             return -1;
         }
+    }
+    
+    
+    public void btnThemeLight() {
+    	this.btnTheme.setIcon(new ImageIcon(new ImageIcon("src\\image\\System_Image\\sun.png").getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH)));
+    	this.btnTheme.setText("Sáng"); 	
+    	this.themeLight = true;
+    }
+    
+    public void btnThemeDark() {
+    	this.btnTheme.setIcon(new ImageIcon(new ImageIcon("src\\image\\System_Image\\moon.png").getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH)));
+    	this.btnTheme.setText("Tối");
+    	this.themeLight = false;
     }
 
     private void disposeResources(TakeAwayJPanel panel) {
