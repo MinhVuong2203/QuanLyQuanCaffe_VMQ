@@ -24,6 +24,8 @@ import Repository.Customer.CustomerRepository;
 import Repository.Customer.ICustomerRespository;
 import Repository.Order.IOrderRepository;
 import Repository.Order.OrderRepository;
+import Repository.Payment.IPaymentRepository;
+import Repository.Payment.PaymentRepository;
 import Repository.Product.IProductRespository;
 import Repository.Product.ProductRespository;
 import Utils.JdbcUtils;
@@ -172,7 +174,7 @@ public class TakeAwayController implements ActionListener {
             double finalTotal = parseMoneyString(takeAwayJPanel.getTotal_monney().getText());
 
             // Chọn phương thức thanh toán
-            String[] paymentOptions = { "Tiền mặt", "Chuyển khoản", "Quẹt thẻ" };
+            String[] paymentOptions = { "Tiền mặt", "Chuyển khoản" };
             int paymentMethodIndex = JOptionPane.showOptionDialog(takeAwayJPanel,
                     "Chọn phương thức thanh toán:",
                     "Thanh toán",
@@ -214,6 +216,34 @@ public class TakeAwayController implements ActionListener {
                 // Cập nhật trạng thái đơn hàng
                 IProductRespository productRespository = new ProductRespository();
                 productRespository.updateOrderStatus(orderID, "Đã thanh toán");
+
+                // Thêm thông tin thanh toán vào bảng Payment
+                Date now = new Date();
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                String paymentTime = formatter.format(now);
+
+                // Tính số tiền thanh toán (sau khi đã trừ giảm giá)
+                double finalAmount = calculateTotalPrice(); // Hoặc lấy từ displayedTotal
+
+                // Thêm vào bảng Payment
+                try {
+                    IPaymentRepository paymentRepository = new PaymentRepository();
+                    int paymentID = paymentRepository.addPayment(
+                            orderID,
+                            paymentMethod, // phương thức thanh toán đã chọn từ dialog
+                            finalAmount,
+                            paymentTime);
+
+                    if (paymentID > 0) {
+                        System.out.println("Đã thêm thanh toán mới với ID: " + paymentID);
+                    } else {
+                        System.out.println("Không thể thêm thông tin thanh toán!");
+                    }
+                } catch (Exception paymentEx) {
+                    System.err.println("Lỗi khi thêm thông tin thanh toán: " + paymentEx.getMessage());
+                    paymentEx.printStackTrace();
+                    // Không ảnh hưởng đến luồng chính nếu lưu payment thất bại
+                }
 
                 // Xử lý điểm khách hàng
                 if (takeAwayJPanel.getCurrentCustomer() != null) {

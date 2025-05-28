@@ -700,20 +700,35 @@ public class TakeAwayJPanel extends JPanel {
         }
     }
 
-    //Khỏi tạo đơn hàng mới
+    // Khỏi tạo đơn hàng mới
     public void initializeNewOrder() {
         try {
             // Tạo ID đơn hàng mới
             IProductRespository productRepository = new ProductRespository();
-            this.tempOrderId = productRepository.getOrderIDByTableID(0);
+            int newOrderId = productRepository.initTempOrderId(); 
+
+            System.out.println("Tạo đơn hàng mới với ID: " + newOrderId +
+                    " (ID cũ: " + this.tempOrderId + ")");
+
+            this.tempOrderId = newOrderId;
 
             // Làm mới các model
             placedModel.clear();
             tempOrderProducts.clear();
 
+            // Reset giảm giá
+            this.discountAmount = 0;
+            textField_Discount.setText("0đ");
+            textField_Points.setText("");
+
+            // Reset thông tin khách hàng
+            textField_TKKH.setText("");
+            currentCustomer = null;
+
             // Cập nhật giao diện
             updateTotalMoney();
             list_dishSelected.repaint();
+
         } catch (Exception e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(this,

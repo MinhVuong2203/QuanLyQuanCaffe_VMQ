@@ -8,6 +8,8 @@ import java.util.Map;
 
 import javax.swing.JOptionPane;
 
+import Repository.Payment.IPaymentRepository;
+import Repository.Payment.PaymentRepository;
 import Repository.Product.IProductRespository;
 import Repository.Product.ProductRespository;
 import View.StaffView.Payment_Interface;
@@ -22,7 +24,7 @@ public class PaymentController implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-    	
+
         String str = e.getActionCommand();
         System.out.println(str);
         if (str.equals("Quay lại")) {
@@ -74,25 +76,37 @@ public class PaymentController implements ActionListener {
                     SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     String paymentTime = formatter.format(now);
 
-                    // Thêm payment vào database (cần viết phương thức này)
-                    // productRespository.addPayment(orderID, paymentMethod, totalAmount, paymentTime);
+                    // Thêm thanh toán vào database
+                    IPaymentRepository paymentRepository = new PaymentRepository();
+                    int paymentID = paymentRepository.addPayment(orderID, paymentMethod, totalAmount, paymentTime);
 
-                    // Xóa order sau khi thanh toán
-                    // productRespository.delOrder(orderID, paymentInterface.tableID);
-                    productRespository.updateTableStatus(paymentInterface.tableID, "Trống");
-                    JOptionPane.showMessageDialog(paymentInterface,
-                    "Thanh toán thành công bằng " + paymentMethod + "!",
-                    "Thông báo",
-                    JOptionPane.INFORMATION_MESSAGE);
-                    paymentInterface.printBill();
-                    productRespository.updateOrderStatus(orderID, "Đã thanh toán");
-                    BackToTable();
+                    if (paymentID > 0) {
+                        // Cập nhật trạng thái bàn và đơn hàng
+                        productRespository.updateTableStatus(paymentInterface.tableID, "Trống");
+                        // In hóa đơn
+                        paymentInterface.printBill();
+                        
+                        productRespository.updateOrderStatus(orderID, "Đã thanh toán");
+
+                        JOptionPane.showMessageDialog(paymentInterface,
+                                "Thanh toán thành công bằng " + paymentMethod + "!",
+                                "Thông báo",
+                                JOptionPane.INFORMATION_MESSAGE);
+
+
+                        // Quay lại màn hình bàn
+                        BackToTable();
+                    } else {
+                        JOptionPane.showMessageDialog(paymentInterface,
+                                "Có lỗi xảy ra khi lưu thông tin thanh toán!",
+                                "Lỗi",
+                                JOptionPane.ERROR_MESSAGE);
+                    }
                 } else {
                     JOptionPane.showMessageDialog(paymentInterface,
                             "Thanh toán đã bị hủy.",
                             "Thông báo",
                             JOptionPane.INFORMATION_MESSAGE);
-
                 }
             }
         } catch (Exception e) {
