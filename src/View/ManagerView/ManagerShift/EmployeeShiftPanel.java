@@ -28,6 +28,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
@@ -504,6 +505,8 @@ public class EmployeeShiftPanel extends JPanel {
         
         approvalTable = new JTable(modelApproval);
         approvalTable.setRowSelectionAllowed(false);
+        approvalTable.setCellSelectionEnabled(false);
+        approvalTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         approvalTable.setAutoCreateRowSorter(true);  // Bật tính năng sort trong table
         UIManager.put("Table.ascendingSortIcon", new ImageIcon(new ImageIcon("src\\image\\System_Image\\up.png").getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH)));
         UIManager.put("Table.descendingSortIcon", new ImageIcon(new ImageIcon("src\\image\\System_Image\\down.png").getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH)));
@@ -553,18 +556,19 @@ public class EmployeeShiftPanel extends JPanel {
 
  // Custom renderer cho cột chứa nút
     class ButtonRenderer extends JPanel implements TableCellRenderer {
-        private JButton yesButton;
-        private JButton noButton;
+        private CustomRoundedButton yesButton;
+        private CustomRoundedButton noButton;
 
         public ButtonRenderer() {
             setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-            yesButton = new JButton();
+            yesButton = new CustomRoundedButton();
             yesButton.setIcon(new ImageIcon(new ImageIcon("src\\image\\Manager_Image\\yesButton.png").getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH)));
-            noButton = new JButton();
+            noButton = new CustomRoundedButton();
             noButton.setIcon(new ImageIcon(new ImageIcon("src\\image\\Manager_Image\\noButton.png").getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH)));       
-            yesButton.setContentAreaFilled(false);
-            noButton.setContentAreaFilled(false);
-            
+            yesButton.setShowBorder(false);
+            noButton.setShowBorder(false);
+            yesButton.setShowBackground(false);
+            noButton.setShowBackground(false);
             add(yesButton);
             add(noButton);
         }
@@ -573,15 +577,11 @@ public class EmployeeShiftPanel extends JPanel {
         public Component getTableCellRendererComponent(JTable table, Object value,
                 boolean isSelected, boolean hasFocus, int row, int column) {
             // Áp dụng màu xen kẽ
-            if (!isSelected) {
-                if (row % 2 == 0) {
+            
+                if (row % 2 == 0)
                     setBackground(new Color(220, 240, 230)); // Màu cho hàng chẵn
-                } else {
-                    setBackground(new Color(245, 245, 240)); // Màu cho hàng lẻ
-                }
-            } else {
-                setBackground(table.getSelectionBackground());
-            }
+                 else 
+                    setBackground(new Color(245, 245, 240)); // Màu cho hàng lẻ              
             return this;
         }
     }
@@ -589,28 +589,61 @@ public class EmployeeShiftPanel extends JPanel {
     // Custom editor cho cột chứa nút
     class ButtonEditor extends DefaultCellEditor {
         private JPanel panel;
-        private JButton yesButton;
-        private JButton noButton;
+        private CustomRoundedButton yesButton;
+        private CustomRoundedButton noButton;
         private String currentValue;
+        private int currentRow; // Lưu hàng
 
         public ButtonEditor(JCheckBox checkBox) {
             super(checkBox);
             panel = new JPanel();
             panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
             
-            yesButton = new JButton();
+            yesButton = new CustomRoundedButton();
             yesButton.setIcon(new ImageIcon(new ImageIcon("src\\image\\Manager_Image\\yesButton.png").getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH)));
-            noButton = new JButton();
+            noButton = new CustomRoundedButton();
             noButton.setIcon(new ImageIcon(new ImageIcon("src\\image\\Manager_Image\\noButton.png").getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH)));
-            yesButton.setContentAreaFilled(false);
-            noButton.setContentAreaFilled(false);
+            yesButton.setShowBorder(false);
+            noButton.setShowBorder(false);
+            yesButton.setShowBackground(false);
+            noButton.setShowBackground(false);
+            
             yesButton.addActionListener(e -> {
                 currentValue = "Yes";
+                try {
+                	int shitfID = Integer.parseInt(approvalTable.getValueAt(currentRow, 0).toString());
+					esr.approvalShiftActivity(shitfID); // Xóa ở cơ sở dữ liệu
+					list.removeIf(shift -> shift.getShiftID() == shitfID);  // Xóa ở list
+					modelApproval.removeRow(currentRow);  // Xóa hàng ở bảng hiển thị	
+					panel_center.revalidate();
+			        panel_center.repaint();
+				} catch (NumberFormatException | SQLException e1) {				
+					e1.printStackTrace();
+				}              
                 fireEditingStopped();
             });
             
             noButton.addActionListener(e -> {
                 currentValue = "No";
+                int result = JOptionPane.showConfirmDialog(
+                	    null,
+                	    "Bạn chắc chắn từ chối ca này?",
+                	    "Thông báo",
+                	    JOptionPane.OK_CANCEL_OPTION,
+                	    JOptionPane.QUESTION_MESSAGE
+                	);
+                if (result == JOptionPane.OK_OPTION) {
+                	try {
+                		int shitfID = Integer.parseInt(approvalTable.getValueAt(currentRow, 0).toString());
+						esr.deleteRegister(shitfID);
+						list.removeIf(shift -> shift.getShiftID() == shitfID);  // Xóa ở list
+						modelApproval.removeRow(currentRow);  // Xóa hàng ở bảng hiển thị	
+						panel_center.revalidate();
+						panel_center.repaint();
+					} catch (SQLException e1) {						
+						e1.printStackTrace();
+					} 
+                }
                 fireEditingStopped();
             });
             
@@ -620,12 +653,13 @@ public class EmployeeShiftPanel extends JPanel {
 
         @Override
         public Component getTableCellEditorComponent(JTable table, Object value,
-                boolean isSelected, int row, int column) {
-            if (isSelected) {
-                panel.setBackground(table.getSelectionBackground());
-            } else {
-                panel.setBackground(table.getBackground());
-            }
+                boolean isSelected, int row, int column) {     
+        	this.currentRow = row; // Lưu hàng khi click
+        	if (row % 2 == 0)
+                panel.setBackground(new Color(220, 240, 230)); // Màu cho hàng chẵn
+             else 
+                panel.setBackground(new Color(245, 245, 240)); // Màu cho hàng lẻ      
+        	
             return panel;
         }
 

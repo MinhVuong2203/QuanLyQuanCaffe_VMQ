@@ -26,9 +26,18 @@ public class CustomRoundedButton extends JButton {
     private int shadowOffset = 0; // Độ lệch bóng
     // Kiểm soát hiển thị viền
     private boolean showBorder = true; // Hiển thị viền theo mặc định
+    private boolean showBackground = true; // Mặc định hiển thị background
+
     // Tỷ lệ thu nhỏ khi nhấn
     private double scaleFactor = 0.8; // Thu nhỏ còn 90% khi nhấn
 
+    public CustomRoundedButton() {   	
+        setContentAreaFilled(false); // Tắt nền mặc định của Look and Feel
+        setBorderPainted(false); // Tắt viền mặc định
+        setFocusPainted(false); // Tắt viền focus
+        setForeground(defaultForeground); // Đặt màu chữ mặc định
+    }
+    
     public CustomRoundedButton(String text) {
         super(text);
         setContentAreaFilled(false); // Tắt nền mặc định của Look and Feel
@@ -42,45 +51,47 @@ public class CustomRoundedButton extends JButton {
         Graphics2D g2d = (Graphics2D) g.create();
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        // Vẽ bóng
-        g2d.setColor(shadowColor);
-        g2d.fill(new RoundRectangle2D.Double(
-            shadowOffset, shadowOffset,
-            getWidth() - shadowOffset - 1,
-            getHeight() - shadowOffset - 1,
-            radius, radius
-        ));
+        if (showBackground) {
+            // Vẽ bóng
+            g2d.setColor(shadowColor);
+            g2d.fill(new RoundRectangle2D.Double(
+                shadowOffset, shadowOffset,
+                getWidth() - shadowOffset - 1,
+                getHeight() - shadowOffset - 1,
+                radius, radius
+            ));
 
-        // Vẽ nền bo góc
-        if (getModel().isArmed()) {
-            g2d.setColor(pressedBackground); // Màu nền khi nhấn
-        } else if (getModel().isRollover()) {
-            g2d.setColor(hoverBackground); // Màu nền khi hover
-        } else {
-            g2d.setColor(defaultBackground); // Màu nền mặc định
-        }
-        g2d.fill(new RoundRectangle2D.Double(
-            0, 0,
-            getWidth() - shadowOffset - 1,
-            getHeight() - shadowOffset - 1,
-            radius, radius
-        ));
-
-        // Vẽ viền bo góc (nếu showBorder = true)
-        if (showBorder) {
+            // Vẽ nền bo góc
             if (getModel().isArmed()) {
-                g2d.setColor(pressedBorderColor); // Màu viền khi nhấn
+                g2d.setColor(pressedBackground); // Màu nền khi nhấn
             } else if (getModel().isRollover()) {
-                g2d.setColor(hoverBorderColor); // Màu viền khi hover
+                g2d.setColor(hoverBackground); // Màu nền khi hover
             } else {
-                g2d.setColor(defaultBorderColor); // Màu viền mặc định
+                g2d.setColor(defaultBackground); // Màu nền mặc định
             }
-            g2d.draw(new RoundRectangle2D.Double(
+            g2d.fill(new RoundRectangle2D.Double(
                 0, 0,
                 getWidth() - shadowOffset - 1,
                 getHeight() - shadowOffset - 1,
                 radius, radius
             ));
+
+            // Vẽ viền bo góc (nếu showBorder = true)
+            if (showBorder) {
+                if (getModel().isArmed()) {
+                    g2d.setColor(pressedBorderColor); // Màu viền khi nhấn
+                } else if (getModel().isRollover()) {
+                    g2d.setColor(hoverBorderColor); // Màu viền khi hover
+                } else {
+                    g2d.setColor(defaultBorderColor); // Màu viền mặc định
+                }
+                g2d.draw(new RoundRectangle2D.Double(
+                    0, 0,
+                    getWidth() - shadowOffset - 1,
+                    getHeight() - shadowOffset - 1,
+                    radius, radius
+                ));
+            }
         }
 
         // Lưu trạng thái Graphics2D
@@ -88,7 +99,6 @@ public class CustomRoundedButton extends JButton {
 
         // Áp dụng scale khi nhấn giữ
         if (getModel().isArmed()) {
-            // Tính toán để căn giữa nội dung sau khi scale
             double offsetX = (getWidth() * (1 - scaleFactor)) / 2;
             double offsetY = (getHeight() * (1 - scaleFactor)) / 2;
             g2d.translate(offsetX, offsetY);
@@ -97,20 +107,20 @@ public class CustomRoundedButton extends JButton {
 
         // Cập nhật màu chữ dựa trên trạng thái
         if (getModel().isArmed()) {
-            setForeground(pressedForeground); // Màu chữ khi nhấn
+            setForeground(pressedForeground);
         } else if (getModel().isRollover()) {
-            setForeground(hoverForeground); // Màu chữ khi hover
+            setForeground(hoverForeground);
         } else {
-            setForeground(defaultForeground); // Màu chữ mặc định
+            setForeground(defaultForeground);
         }
 
         // Vẽ văn bản và icon
         super.paintComponent(g2d);
 
-        // Khôi phục trạng thái Graphics2D
         g2d.setTransform(originalTransform);
         g2d.dispose();
     }
+
 
     // Getter và Setter
     public int getRadius() {
@@ -236,6 +246,15 @@ public class CustomRoundedButton extends JButton {
 
     public void setScaleFactor(double scaleFactor) {
         this.scaleFactor = scaleFactor;
+        repaint();
+    }
+    
+    public boolean isShowBackground() {
+        return showBackground;
+    }
+
+    public void setShowBackground(boolean showBackground) {
+        this.showBackground = showBackground;
         repaint();
     }
 }

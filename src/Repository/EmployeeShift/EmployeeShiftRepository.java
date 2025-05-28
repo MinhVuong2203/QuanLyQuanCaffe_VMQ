@@ -157,6 +157,20 @@ public class EmployeeShiftRepository implements IEmployeeShiftRepository {
     		stmt.executeUpdate();
     	}
     }
+    
+    @Override
+    public void deleteRegister(int shiftID) throws SQLException{
+    	if (shiftID <=0 ) {
+   		 throw new IllegalArgumentException("Thông tin không hợp lệ");
+   	}
+   	String sql = "DELETE FROM EmployeeShift "
+   				+ "WHERE shiftID = ?";
+	   	try (Connection connection = jdbcUtils.connect();
+	   		PreparedStatement stmt = connection.prepareStatement(sql)){
+	   		stmt.setInt(1, shiftID);
+	   		stmt.executeUpdate();
+	   	}
+    }
 
     @Override  // Lấy Shift Approval lớn hơn ngày String dạng 2025-05-26 12:00:00
     public List<EmployeeShift> getShiftApproval(String day) throws SQLException{
@@ -182,5 +196,20 @@ public class EmployeeShiftRepository implements IEmployeeShiftRepository {
         }   	
     	return list;
     }
+    
+    @Override
+    public void approvalShiftActivity(int shiftID) throws SQLException{
+    	if (shiftID < 0) {
+   		 throw new IllegalArgumentException("Thông tin không hợp lệ");
+   	}
+   	String sql = "UPDATE EmployeeShift SET status = N'chưa điểm danh' WHERE shiftID = ?";
+	   	try (Connection connection = jdbcUtils.connect();
+	   		PreparedStatement stmt = connection.prepareStatement(sql)){
+	   		stmt.setInt(1, shiftID);
+	   		stmt.executeUpdate();
+	   	}
+   }
+    	
+    
  
 }
