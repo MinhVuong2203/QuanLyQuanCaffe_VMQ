@@ -93,14 +93,14 @@ public class LoginView extends JFrame {
         
         JLabel lblNewLabel = new JLabel("Đăng nhập");
         lblNewLabel.setBackground(new Color(255, 255, 255));
-        lblNewLabel.setFont(new Font("Arial", Font.BOLD | Font.ITALIC, 24));
+        lblNewLabel.setFont(new Font("Segoe UI", Font.BOLD | Font.ITALIC, 24));
         lblNewLabel.setBounds(157, 101, 200, 29);
         contentPane.add(lblNewLabel);
 
         ActionListener ac = new LoginController(this); // Gọi controller
 
         CustomRoundedButton btnNewButton = new CustomRoundedButton("Đăng nhập");
-        btnNewButton.setFont(new Font("Arial", Font.PLAIN, 16));
+        btnNewButton.setFont(new Font("Segoe UI", Font.PLAIN, 16));
         btnNewButton.setBounds(93, 230, 111, 32);
         btnNewButton.setDefaultBackground(new Color(255, 128, 64));
         btnNewButton.setDefaultForeground(new Color(255, 255, 255));
@@ -115,29 +115,29 @@ public class LoginView extends JFrame {
 
         textField = new CustomTextField();
         textField.setBounds(129, 140, 172, 26);
-        textField.setFont(new Font("Arial", Font.PLAIN, 16));
+        textField.setFont(new Font("Segoe UI", Font.PLAIN, 16));
         textField.setFocusBorderColor(new Color(242, 145, 145));
         contentPane.add(textField);
         textField.setColumns(10);
 
         passwordField = new CustomPasswordField();
 		passwordField.setBounds(129, 176, 151, 26);
-        passwordField.setFont(new Font("Arial", Font.PLAIN, 16));
+        passwordField.setFont(new Font("Segoe UI", Font.PLAIN, 16));
         passwordField.setFocusBorderColor(new Color(242, 145, 145));
 		contentPane.add(passwordField);
 
         JLabel lblNewLabel_1 = new JLabel("Tài khoản:");
-        lblNewLabel_1.setFont(new Font("Arial", Font.PLAIN, 18));
+        lblNewLabel_1.setFont(new Font("Segoe UI", Font.PLAIN, 18));
         lblNewLabel_1.setBounds(34, 143, 87, 23);
         contentPane.add(lblNewLabel_1);
 
         JLabel lblNewLabel_2 = new JLabel("Mật khẩu:");
-        lblNewLabel_2.setFont(new Font("Arial", Font.PLAIN, 18));
+        lblNewLabel_2.setFont(new Font("Segoe UI", Font.PLAIN, 18));
         lblNewLabel_2.setBounds(39, 180, 85, 20);
         contentPane.add(lblNewLabel_2);
 
         CustomRoundedButton btnNewButton_1 = new CustomRoundedButton("Đăng ký");
-		btnNewButton_1.setFont(new Font("Arial", Font.PLAIN, 16));
+		btnNewButton_1.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		btnNewButton_1.setBounds(229, 230, 111, 32);
 		btnNewButton_1.setDefaultBackground(new Color(128, 64, 64));
 		btnNewButton_1.setDefaultForeground(new Color(255, 255, 255));
@@ -152,7 +152,7 @@ public class LoginView extends JFrame {
 
         JButton btnNewButton_2 = new JButton("Quay lại");
         btnNewButton_2.setBackground(new Color(242, 232, 220));
-        btnNewButton_2.setFont(new Font("Arial", Font.BOLD, 14));
+        btnNewButton_2.setFont(new Font("Segoe UI", Font.BOLD, 14));
         btnNewButton_2.setBounds(26, 20, 95, 29);
         contentPane.add(btnNewButton_2);
         btnNewButton_2.addActionListener(ac);
@@ -176,7 +176,7 @@ public class LoginView extends JFrame {
 
         JLabel lblNewLabel_3 = new JLabel("\r\n");
         lblNewLabel_3.setForeground(new Color(255, 0, 0));
-        lblNewLabel_3.setFont(new Font("Arial", Font.PLAIN, 12));
+        lblNewLabel_3.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         lblNewLabel_3.setIcon(new ImageIcon("src\\image\\System_Image\\background.png"));
         lblNewLabel_3.setBounds(0, -1, 594, 370);
         contentPane.add(lblNewLabel_3);

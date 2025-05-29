@@ -63,23 +63,23 @@ public class manageOrderAndSalary extends JPanel {
         panel_top.setPreferredSize(new Dimension(100, 150));
 
         JLabel lblFromDate = new JLabel("Từ ngày:");
-        lblFromDate.setFont(new Font("Arial", Font.BOLD, 18));
+        lblFromDate.setFont(new Font("Segoe UI", Font.BOLD, 18));
         lblFromDate.setBounds(272, 24, 78, 22);
         panel_top.add(lblFromDate);
 
         JTextField fromDateField = new JTextField(fromDate.toString());
-        fromDateField.setFont(new Font("Arial", Font.PLAIN, 16));
+        fromDateField.setFont(new Font("Segoe UI", Font.PLAIN, 16));
         fromDateField.setBounds(360, 24, 165, 28);
         fromDateField.setToolTipText("Định dạng: yyyy-MM-dd");
         panel_top.add(fromDateField);
 
         JLabel lblToDate = new JLabel("Đến ngày:");
-        lblToDate.setFont(new Font("Arial", Font.BOLD, 18));
+        lblToDate.setFont(new Font("Segoe UI", Font.BOLD, 18));
         lblToDate.setBounds(740, 24, 89, 22);
         panel_top.add(lblToDate);
 
         JTextField toDateField = new JTextField(toDate.toString());
-        toDateField.setFont(new Font("Arial", Font.PLAIN, 16));
+        toDateField.setFont(new Font("Segoe UI", Font.PLAIN, 16));
         toDateField.setBounds(838, 24, 165, 28);
         toDateField.setToolTipText("Định dạng: yyyy-MM-dd");
         panel_top.add(toDateField);
@@ -87,7 +87,7 @@ public class manageOrderAndSalary extends JPanel {
         String[] listTime = {"Chọn", "1 tuần", "2 tuần", "3 tuần", "4 tuần"};
         JComboBox<String> dateBox = new JComboBox<>(listTime);
         dateBox.setBackground(new Color(255, 255, 128));
-        dateBox.setFont(new Font("Arial", Font.BOLD, 16));
+        dateBox.setFont(new Font("Segoe UI", Font.BOLD, 16));
         dateBox.setBounds(587, 21, 94, 31);
         dateBox.addActionListener(e -> {
             String selected = dateBox.getSelectedItem().toString();
@@ -106,7 +106,7 @@ public class manageOrderAndSalary extends JPanel {
 
         JButton btnDongY = new JButton("Đồng ý");
         btnDongY.setBackground(new Color(0, 255, 128));
-        btnDongY.setFont(new Font("Arial", Font.BOLD, 16));
+        btnDongY.setFont(new Font("Segoe UI", Font.BOLD, 16));
         btnDongY.setBounds(1024, 24, 103, 28);
         btnDongY.setBorderPainted(false);
         panel_top.add(btnDongY);
@@ -130,7 +130,7 @@ public class manageOrderAndSalary extends JPanel {
         JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         topPanel.setBackground(Color.CYAN);
         comboBox = new JComboBox<>(new String[]{"Tất cả", "Lương nhân viên", "Khách"});
-        comboBox.setFont(new Font("Arial", Font.BOLD, 16));
+        comboBox.setFont(new Font("Segoe UI", Font.BOLD, 16));
         comboBox.setSize(new Dimension(200, 30));
         comboBox.addActionListener(e -> updateTableDisplay());
         topPanel.add(comboBox);
@@ -142,14 +142,14 @@ public class manageOrderAndSalary extends JPanel {
 
         String[] invoiceCols = {"ID hóa đơn", "ID nhân viên", "ID khách hàng", "Giá", "Giá giảm", "Tổng tiền mỗi hóa đơn"};
         JTableHeader header = new JTableHeader();
-        header.setFont(new Font("Arial", Font.BOLD, 14));
+        header.setFont(new Font("Segoe UI", Font.BOLD, 14));
         invoiceModel = new DefaultTableModel(invoiceCols, 0){
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
             }};
         invoiceTable = new JTable(invoiceModel);
-        invoiceTable.setFont(new Font("Arial", Font.PLAIN, 16));
+        invoiceTable.setFont(new Font("Segoe UI", Font.PLAIN, 16));
         invoiceTable.setRowHeight(30);
         styleTable(invoiceTable);
         invoiceTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -162,14 +162,14 @@ public class manageOrderAndSalary extends JPanel {
 
         String[] salaryCols = {"ID nhân viên", "Tên nhân viên", "Thời gian làm (giờ)", "Lương/giờ", "Tổng tiền"};
         JTableHeader salaryHeader = new JTableHeader();
-        salaryHeader.setFont(new Font("Arial", Font.BOLD, 14));
+        salaryHeader.setFont(new Font("Segoe UI", Font.BOLD, 14));
         salaryModel = new DefaultTableModel(salaryCols, 0){
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
             }};
         salaryTable = new JTable(salaryModel);
-        salaryTable.setFont(new Font("Arial", Font.PLAIN, 16));
+        salaryTable.setFont(new Font("Segoe UI", Font.PLAIN, 16));
         salaryTable.setRowHeight(30);
         styleTable(salaryTable);
         salaryTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -186,7 +186,7 @@ public class manageOrderAndSalary extends JPanel {
         totalLabel = new JLabel("0");
         totalLabel.setOpaque(true);
         totalLabel.setBackground(Color.PINK);
-        totalLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        totalLabel.setFont(new Font("Segoe UI", Font.BOLD, 18));
         
         totalPanel.add(totalLabel);
         salaryPanel.add(totalPanel, BorderLayout.SOUTH);

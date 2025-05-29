@@ -73,7 +73,7 @@ public class StaffManagerJPanel extends JPanel {
                 }
             });
             table.setShowGrid(false);
-            table.setFont(new Font("Arial", Font.PLAIN, 16));
+            table.setFont(new Font("Segoe UI", Font.PLAIN, 16));
             table.setRowHeight(40);
             table.getTableHeader().setPreferredSize(new Dimension(100, 40));
             table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
@@ -86,7 +86,7 @@ public class StaffManagerJPanel extends JPanel {
                     Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
                     c.setBackground(new Color(175, 238, 238));
                     c.setForeground(Color.BLACK);
-                    setFont(new Font("Arial", Font.BOLD, 16));
+                    setFont(new Font("Segoe UI", Font.BOLD, 16));
                     setHorizontalAlignment(CENTER);
                     return c;
                 }

@@ -95,7 +95,7 @@ public class Table_JPanel extends JPanel {
 			Button.setPreferredSize(new Dimension(170, 70));
 			// Lưu tableID vào thuộc tính của button để dễ truy xuất sau này
 			Button.putClientProperty("tableID", table.getTableID());
-			Button.setFont(new Font("Arial", Font.BOLD, 15));
+			Button.setFont(new Font("Segoe UI", Font.BOLD, 15));
 			// 1 dòng này để xét màu background button được trên LookFeel
 			Button.setBorderPainted(false);
 			///////////////////////////////////////
@@ -124,7 +124,7 @@ public class Table_JPanel extends JPanel {
 		rightPanel.setBackground(new Color(254, 250, 220));
 		// Các thành phần
 		btnNewButton = new JButton(); // Gọi món, thanh toán
-		btnNewButton.setFont(new Font("Arial", Font.PLAIN, 20));
+		btnNewButton.setFont(new Font("Segoe UI", Font.PLAIN, 20));
 		btnNewButton.addActionListener(acRight);
 		btnNewButton.setBounds(163, 461, 187, 42);
 		rightPanel.add(btnNewButton);
@@ -144,23 +144,23 @@ public class Table_JPanel extends JPanel {
 		rightPanel.add(TableLabel);
 
 //		JLabel lblNewLabel_2 = new JLabel("Giờ đến:");
-//		lblNewLabel_2.setFont(new Font("Arial", Font.PLAIN, 22));
+//		lblNewLabel_2.setFont(new Font("Segoe UI", Font.PLAIN, 22));
 //		lblNewLabel_2.setBounds(53, 337, 87, 26);
 //		rightPanel.add(lblNewLabel_2);
 
 		
 		TimeLabel = new JLabel();
-		TimeLabel.setFont(new Font("Arial", Font.PLAIN, 22));
+		TimeLabel.setFont(new Font("Segoe UI", Font.PLAIN, 22));
 		TimeLabel.setBounds(53, 337, 400, 26);
 		rightPanel.add(TimeLabel);
 
 		JLabel lblNewLabel_2_2 = new JLabel("Trạng thái:");
-		lblNewLabel_2_2.setFont(new Font("Arial", Font.PLAIN, 22));
+		lblNewLabel_2_2.setFont(new Font("Segoe UI", Font.PLAIN, 22));
 		lblNewLabel_2_2.setBounds(53, 369, 106, 26);
 		rightPanel.add(lblNewLabel_2_2);
 
 		statusLabel = new JLabel("Trống");
-		statusLabel.setFont(new Font("Arial", Font.PLAIN, 22));
+		statusLabel.setFont(new Font("Segoe UI", Font.PLAIN, 22));
 		statusLabel.setBounds(169, 369, 421, 26);
 		rightPanel.add(statusLabel);
 
@@ -232,7 +232,7 @@ public class Table_JPanel extends JPanel {
 					String timeOr = o.getTimeByTableID(this.tableID);
 					this.TimeLabel.setText("Giờ đến: " + timeOr);
 					orderButton = new JButton("Gọi món");
-					orderButton.setFont(new Font("Arial", Font.PLAIN, 20));
+					orderButton.setFont(new Font("Segoe UI", Font.PLAIN, 20));
 					orderButton.setBounds(360, 461, 187, 42);
 					this.orderButton.setIcon(new ImageIcon(new ImageIcon("src\\image\\Table_image\\order.png").getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH)));
 					this.orderButton.setBackground(new Color(181, 147, 118));

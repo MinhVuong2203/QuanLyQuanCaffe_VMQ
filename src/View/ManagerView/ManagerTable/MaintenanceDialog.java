@@ -27,7 +27,7 @@ public class MaintenanceDialog extends JDialog {
         contentPanel.setLayout(null);
 
         JLabel idLabel = new JLabel("Nhập ID bàn:");
-        idLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        idLabel.setFont(new Font("Segoe UI", Font.BOLD, 16));
         idLabel.setBounds(60, 45, 120, 19);
         contentPanel.add(idLabel);
 

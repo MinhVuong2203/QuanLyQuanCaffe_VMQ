@@ -48,7 +48,7 @@ public class RollCall extends JPanel {
         listInfor = new JList<>(Model_Infor);
         listInfor.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         listInfor.setLayoutOrientation(JList.VERTICAL);
-        listInfor.setFont(new Font("Arial", Font.BOLD, 20));
+        listInfor.setFont(new Font("Segoe UI", Font.BOLD, 20));
         setColor_Select(listInfor);
         listInfor.setVisibleRowCount(-1);
         setInfor();
@@ -143,11 +143,11 @@ public class RollCall extends JPanel {
 
                 infoLabel = new JLabel();
                 infoLabel.setBounds(100, 440, 400, 160);
-                infoLabel.setFont(new Font("Arial", Font.PLAIN, 20));
+                infoLabel.setFont(new Font("Segoe UI", Font.PLAIN, 20));
 
                 Label_Status = new JLabel("Trạng thái: " + selected.getEmployeeShift().getStatus());
                 Label_Status.setBounds(100, 567, 400, 30);
-                Label_Status.setFont(new Font("Arial", Font.PLAIN, 20));
+                Label_Status.setFont(new Font("Segoe UI", Font.PLAIN, 20));
                 if (selected.getEmployeeShift().getStatus().equals("Đã điểm danh")) {
                     Label_Status.setForeground(Color.GREEN);
                 } else {
@@ -156,7 +156,7 @@ public class RollCall extends JPanel {
 
                 btnCallRoll = new JButton("Điểm danh");
                 btnCallRoll.setBounds(100, 600, 200, 30);
-                btnCallRoll.setFont(new Font("Arial", Font.BOLD, 20));
+                btnCallRoll.setFont(new Font("Segoe UI", Font.BOLD, 20));
                 System.out.println("Trạng thái: " + selected.getEmployeeShift().getStatus() +
                         "EmployeeID: " + selected.getId());
                 btnCallRoll.addActionListener(e -> {

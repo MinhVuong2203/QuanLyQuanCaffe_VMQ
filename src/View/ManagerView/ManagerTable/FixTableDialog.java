@@ -38,7 +38,7 @@ public class FixTableDialog extends JDialog {
 		contentPanel.setLayout(null);
 
 		JLabel idLabel = new JLabel("Nhập ID bàn:");
-		idLabel.setFont(new Font("Arial", Font.BOLD, 16));
+		idLabel.setFont(new Font("Segoe UI", Font.BOLD, 16));
 		idLabel.setBounds(59, 43, 98, 19);
 		contentPanel.add(idLabel);
 
@@ -49,7 +49,7 @@ public class FixTableDialog extends JDialog {
 		idTextField.setColumns(10);
 
 		JLabel lblTenBan = new JLabel("Nhập Tên bàn mới:");
-		lblTenBan.setFont(new Font("Arial", Font.BOLD, 16));
+		lblTenBan.setFont(new Font("Segoe UI", Font.BOLD, 16));
 		lblTenBan.setBounds(12, 89, 145, 19);
 		contentPanel.add(lblTenBan);
 

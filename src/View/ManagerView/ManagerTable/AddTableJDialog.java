@@ -38,7 +38,7 @@ public class AddTableJDialog extends JDialog {
 		contentPanel.setLayout(null);
 		
 		JLabel idLable = new JLabel("ID bàn:");
-		idLable.setFont(new Font("Arial", Font.BOLD, 16));
+		idLable.setFont(new Font("Segoe UI", Font.BOLD, 16));
 		idLable.setBounds(78, 43, 54, 19);
 		contentPanel.add(idLable);
 		
@@ -49,7 +49,7 @@ public class AddTableJDialog extends JDialog {
 		idTextField.setColumns(10);
 		
 		JLabel lblTnBn = new JLabel("Tên bàn:");
-		lblTnBn.setFont(new Font("Arial", Font.BOLD, 16));
+		lblTnBn.setFont(new Font("Segoe UI", Font.BOLD, 16));
 		lblTnBn.setBounds(65, 89, 67, 19);
 		contentPanel.add(lblTnBn);
 		

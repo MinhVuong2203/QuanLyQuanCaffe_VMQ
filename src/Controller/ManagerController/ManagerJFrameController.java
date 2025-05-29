@@ -79,7 +79,7 @@ public class ManagerJFrameController {
 
                             // Tạo nút thêm đơn mang về mới
                             JButton addTakeAwayButton = new JButton("+ Thêm đơn mang về");
-                            addTakeAwayButton.setFont(new Font("Arial", Font.BOLD, 14));
+                            addTakeAwayButton.setFont(new Font("Segoe UI", Font.BOLD, 14));
                             addTakeAwayButton.setBackground(new Color(144, 238, 144));
                             addTakeAwayButton.setBorderPainted(false);
                             addTakeAwayButton.setFocusPainted(false);

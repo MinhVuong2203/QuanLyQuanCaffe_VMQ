@@ -57,7 +57,7 @@ public class TablePanel extends JPanel {
                 }
 
                 table = new JTable();
-                table.setFont(new Font("Arial", Font.PLAIN, 16));
+                table.setFont(new Font("Segoe UI", Font.PLAIN, 16));
                 table.setRowHeight(50);
                 table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
                 table.setShowGrid(false); // Tắt grid lines
@@ -72,7 +72,7 @@ public class TablePanel extends JPanel {
                         Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
                         c.setBackground(new Color(255, 204, 204)); // Màu nền hồng nhạt
                         c.setForeground(Color.BLACK);
-                        setFont(new Font("Arial", Font.BOLD, 16));
+                        setFont(new Font("Segoe UI", Font.BOLD, 16));
                         setHorizontalAlignment(CENTER);
                         setBorder(javax.swing.BorderFactory.createLineBorder(Color.BLACK, 1));
                         return c;
@@ -128,7 +128,7 @@ public class TablePanel extends JPanel {
         panel_South.setLayout(new FlowLayout(FlowLayout.CENTER, 100, 25));
 
         JButton btnThem = new JButton("Thêm bàn");
-        btnThem.setFont(new Font("Arial", Font.BOLD, 16));
+        btnThem.setFont(new Font("Segoe UI", Font.BOLD, 16));
         btnThem.setPreferredSize(new Dimension(160, 50));
         btnThem.setIcon(new ImageIcon(new ImageIcon("src\\image\\Manager_Image\\plus.png").getImage().getScaledInstance(45, 45, java.awt.Image.SCALE_SMOOTH)));
         btnThem.setBorder(null);
@@ -137,7 +137,7 @@ public class TablePanel extends JPanel {
         panel_South.add(btnThem);
 
         JButton btnSuaban = new JButton("Sửa bàn");
-        btnSuaban.setFont(new Font("Arial", Font.BOLD, 16));
+        btnSuaban.setFont(new Font("Segoe UI", Font.BOLD, 16));
         btnSuaban.setPreferredSize(new Dimension(160, 50));
         btnSuaban.setIcon(new ImageIcon(new ImageIcon("src\\image\\Manager_Image\\edit.png").getImage().getScaledInstance(40, 40, java.awt.Image.SCALE_SMOOTH)));
         btnSuaban.setBorder(null);
@@ -146,7 +146,7 @@ public class TablePanel extends JPanel {
         panel_South.add(btnSuaban);
 
         JButton btnBaotri = new JButton("Bảo trì");
-        btnBaotri.setFont(new Font("Arial", Font.BOLD, 16));
+        btnBaotri.setFont(new Font("Segoe UI", Font.BOLD, 16));
         btnBaotri.setPreferredSize(new Dimension(160, 50));
         btnBaotri.setIcon(new ImageIcon(new ImageIcon("src\\image\\Manager_Image\\repair.png").getImage().getScaledInstance(55, 55, java.awt.Image.SCALE_SMOOTH)));
         btnBaotri.setBorder(null);
@@ -182,7 +182,7 @@ public class TablePanel extends JPanel {
                     }
                 });
 
-                table.setFont(new Font("Arial", Font.PLAIN, 16));
+                table.setFont(new Font("Segoe UI", Font.PLAIN, 16));
                 table.setRowHeight(50);
                 table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
                 table.setShowGrid(false); // Tắt grid lines
@@ -197,7 +197,7 @@ public class TablePanel extends JPanel {
                         Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
                         c.setBackground(new Color(255, 204, 204));
                         c.setForeground(Color.BLACK);
-                        setFont(new Font("Arial", Font.BOLD, 16));
+                        setFont(new Font("Segoe UI", Font.BOLD, 16));
                         setHorizontalAlignment(CENTER);
                         setBorder(javax.swing.BorderFactory.createLineBorder(Color.BLACK, 1));
                         return c;

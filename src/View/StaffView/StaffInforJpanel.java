@@ -122,7 +122,7 @@ public class StaffInforJpanel extends JPanel {
         JPanel titlePanel = new JPanel();
         titlePanel.setBackground(Color.WHITE);
         JLabel lblTitle = new JLabel("THÔNG TIN CÁ NHÂN");
-        lblTitle.setFont(new Font("Arial", Font.BOLD, 18));
+        lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 18));
         titlePanel.add(lblTitle);
 
         // Panel chứa thông tin với Absolute Layout
@@ -136,10 +136,10 @@ public class StaffInforJpanel extends JPanel {
         employeeSelectPanel.setBackground(Color.WHITE);
 
         JLabel lblSelectEmployee = new JLabel("Chọn nhân viên:");
-        lblSelectEmployee.setFont(new Font("Arial", Font.BOLD, 14));
+        lblSelectEmployee.setFont(new Font("Segoe UI", Font.BOLD, 14));
 
         cboEmployees = new JComboBox<>();
-        cboEmployees.setFont(new Font("Arial", Font.PLAIN, 14));
+        cboEmployees.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         cboEmployees.setPreferredSize(new Dimension(250, 30));
 
         // Thêm sự kiện khi chọn nhân viên khác
@@ -173,9 +173,9 @@ public class StaffInforJpanel extends JPanel {
 
         // Họ tên
         JLabel lblHoTen = new JLabel("Họ tên:");
-        lblHoTen.setFont(new Font("Arial", Font.PLAIN, 14));
+        lblHoTen.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         txtHoTen = new JTextField(20);
-        txtHoTen.setFont(new Font("Arial", Font.PLAIN, 14));
+        txtHoTen.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         txtHoTen.setEditable(false);
         lblHoTen.setBounds(55, 35, 120, 50);
         txtHoTen.setBounds(180, 35, 200, 50);
@@ -184,10 +184,10 @@ public class StaffInforJpanel extends JPanel {
 
         // Giới tính
         JLabel lblGioiTinh = new JLabel("Giới tính:");
-        lblGioiTinh.setFont(new Font("Arial", Font.PLAIN, 14));
+        lblGioiTinh.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         String[] gioiTinh = { "Nam", "Nữ", "Khác" };
         cboGioiTinh = new JComboBox<>(gioiTinh);
-        cboGioiTinh.setFont(new Font("Arial", Font.PLAIN, 14));
+        cboGioiTinh.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         cboGioiTinh.setEnabled(false);
         lblGioiTinh.setBounds(55, 90, 120, 50);
         cboGioiTinh.setBounds(180, 90, 200, 50);
@@ -196,9 +196,9 @@ public class StaffInforJpanel extends JPanel {
 
         // Ngày sinh
         JLabel lblNgaySinh = new JLabel("Ngày sinh:");
-        lblNgaySinh.setFont(new Font("Arial", Font.PLAIN, 14));
+        lblNgaySinh.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         txtNgaySinh = new JTextField(20);
-        txtNgaySinh.setFont(new Font("Arial", Font.PLAIN, 14));
+        txtNgaySinh.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         txtNgaySinh.setEditable(false);
         lblNgaySinh.setBounds(55, 145, 120, 50);
         txtNgaySinh.setBounds(180, 145, 200, 50);
@@ -207,9 +207,9 @@ public class StaffInforJpanel extends JPanel {
 
         // CCCD
         JLabel lblCCCD = new JLabel("CCCD:");
-        lblCCCD.setFont(new Font("Arial", Font.PLAIN, 14));
+        lblCCCD.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         txtCCCD = new JTextField(20);
-        txtCCCD.setFont(new Font("Arial", Font.PLAIN, 14));
+        txtCCCD.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         txtCCCD.setEditable(false);
         lblCCCD.setBounds(55, 200, 120, 50);
         txtCCCD.setBounds(180, 200, 200, 50);
@@ -218,9 +218,9 @@ public class StaffInforJpanel extends JPanel {
 
         // Số điện thoại
         JLabel lblPhone = new JLabel("Điện thoại:");
-        lblPhone.setFont(new Font("Arial", Font.PLAIN, 14));
+        lblPhone.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         txtPhone = new JTextField(20);
-        txtPhone.setFont(new Font("Arial", Font.PLAIN, 14));
+        txtPhone.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         txtPhone.setEditable(false);
         lblPhone.setBounds(55, 255, 120, 50);
         txtPhone.setBounds(180, 255, 200, 50);
@@ -229,9 +229,9 @@ public class StaffInforJpanel extends JPanel {
 
         // Chức vụ
         JLabel lblRole = new JLabel("Chức vụ:");
-        lblRole.setFont(new Font("Arial", Font.PLAIN, 14));
+        lblRole.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         txtRole = new JTextField(20);
-        txtRole.setFont(new Font("Arial", Font.PLAIN, 14));
+        txtRole.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         txtRole.setEditable(false);
         lblRole.setBounds(55, 310, 120, 50);
         txtRole.setBounds(180, 310, 200, 50);
@@ -256,14 +256,14 @@ public class StaffInforJpanel extends JPanel {
 
         // Nút chọn ảnh (chỉ hiển thị khi đang chỉnh sửa)
         btnChooseImage = new JButton("Đổi ảnh");
-        btnChooseImage.setFont(new Font("Arial", Font.PLAIN, 12));
+        btnChooseImage.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         btnChooseImage.setBounds(75, 355, 100, 25);
         btnChooseImage.setVisible(false);
         avatarPanel.add(btnChooseImage);
         btnChooseImage.addActionListener(staffInforController);
 
         btnUpdateInfo = new JButton("Chỉnh Sửa");
-        btnUpdateInfo.setFont(new Font("Arial", Font.BOLD, 14));
+        btnUpdateInfo.setFont(new Font("Segoe UI", Font.BOLD, 14));
         btnUpdateInfo.setBackground(new Color(0, 123, 255));
         btnUpdateInfo.setForeground(Color.WHITE);
         btnUpdateInfo.setBorderPainted(false);

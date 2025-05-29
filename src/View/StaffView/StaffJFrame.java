@@ -68,19 +68,19 @@ public class StaffJFrame extends JFrame {
         getContentPane().add(panel, BorderLayout.NORTH);
 
         JLabel lblName = new JLabel(employee.getName());
-        lblName.setFont(new Font("Arial", Font.BOLD, 16));
+        lblName.setFont(new Font("Segoe UI", Font.BOLD, 16));
         lblName.setBounds(103, 12, 195, 22);
         panel.add(lblName);
 
         JLabel lblID = new JLabel("ID: " + employee.getId());
         lblID.setForeground(Color.RED);
-        lblID.setFont(new Font("Arial", Font.PLAIN, 16));
+        lblID.setFont(new Font("Segoe UI", Font.PLAIN, 16));
         lblID.setBounds(103, 44, 140, 18);
         panel.add(lblID);
 
         lblTime = new JLabel("");
         lblTime.setBounds(780, 10, 450, 30);
-        lblTime.setFont(new Font("Arial", Font.PLAIN, 16));
+        lblTime.setFont(new Font("Segoe UI", Font.PLAIN, 16));
         clock();
         panel.add(lblTime);
         
@@ -107,7 +107,7 @@ public class StaffJFrame extends JFrame {
 
         System.out.println(employee);
         JLabel roleLabel = new JLabel("Chức vụ: " + employee.getRole());
-        roleLabel.setFont(new Font("Arial", Font.ITALIC, 14));
+        roleLabel.setFont(new Font("Segoe UI", Font.ITALIC, 14));
         roleLabel.setBounds(103, 67, 220, 19);
         panel.add(roleLabel);
 
@@ -150,7 +150,7 @@ public class StaffJFrame extends JFrame {
             button.setDefaultBorderColor(new Color(39, 174, 96));
             button.setHoverBackground(new Color(39, 174, 96));
             button.setPressedBorderColor(new Color(39, 174, 96));             
-            button.setFont(new Font("Arial", Font.BOLD, 14)); 
+            button.setFont(new Font("Segoe UI", Font.BOLD, 14)); 
             button.setHorizontalAlignment(SwingConstants.LEFT);
             // Thêm icon
             int width = 42, height = 42;
@@ -170,7 +170,7 @@ public class StaffJFrame extends JFrame {
         
         btnTheme = new JButton();
         btnTheme.setBounds(1300, 10, 70, 60);
-        btnTheme.setFont(new Font("Arial", Font.PLAIN, 16));
+        btnTheme.setFont(new Font("Segoe UI", Font.PLAIN, 16));
         btnTheme.setHorizontalTextPosition(SwingConstants.CENTER);    // icon ở trên
         btnTheme.setVerticalTextPosition(SwingConstants.BOTTOM);      // Chữ ở dưới
         btnTheme.setIconTextGap(2);  // Khoảng cách giữa icon và chữ
@@ -184,7 +184,7 @@ public class StaffJFrame extends JFrame {
  					UIManager.setLookAndFeel(new FlatDarkLaf());
  		            UIManager.put("Label.foreground", Color.BLACK);
  		            UIManager.put("Button.foreground", Color.BLACK);
-// 		            UIManager.put("Table.foreground", Color.BLACK);
+ 		            UIManager.put("Table.foreground", Color.BLACK);
  				} else {
  					this.btnThemeLight();				
  					UIManager.setLookAndFeel(new FlatLightLaf());
@@ -312,11 +312,11 @@ public class StaffJFrame extends JFrame {
 
                         // Tạo label hiển thị tiêu đề tab với số tab từ counter
                         final JLabel titleLabel = new JLabel("Mang về " + tabDisplayNumber + " ");
-                        titleLabel.setFont(new Font("Arial", Font.BOLD, 12));
+                        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 12));
 
                         // Tạo nút đóng tab
                         final JButton closeButton = new JButton("×");
-                        closeButton.setFont(new Font("Arial", Font.BOLD, 12));
+                        closeButton.setFont(new Font("Segoe UI", Font.BOLD, 12));
                         closeButton.setPreferredSize(new Dimension(20, 20));
                         closeButton.setMargin(new Insets(0, 0, 0, 0));
                         closeButton.setContentAreaFilled(false);

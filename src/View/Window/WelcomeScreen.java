@@ -53,7 +53,7 @@ public class WelcomeScreen extends JFrame {
    
         startButton = new JButton("",icon);
         startButton.addActionListener(action);
-        startButton.setFont(new Font("Arial", Font.BOLD, 16));
+        startButton.setFont(new Font("Segoe UI", Font.BOLD, 16));
         startButton.setBackground(new Color(179, 129, 115));
         startButton.setForeground(Color.WHITE);
         startButton.setContentAreaFilled(false);

@@ -149,7 +149,7 @@ public class AddOrFixEmployeeJDialog extends JDialog {
 		BirthdayTextField = new JDateChooser();
 		BirthdayTextField.setBounds(141, 181, 201, 26);
 		BirthdayTextField.setDateFormatString("yyyy-MM-dd"); // Thiết lập định dạng ngày
-		((JTextField) BirthdayTextField.getDateEditor().getUiComponent()).setFont(new Font("Arial", Font.PLAIN, 16));
+		((JTextField) BirthdayTextField.getDateEditor().getUiComponent()).setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		contentPanel.add(BirthdayTextField);
 		
 		JLabel lblNewLabel_1_4 = new JLabel("Giới tính:");

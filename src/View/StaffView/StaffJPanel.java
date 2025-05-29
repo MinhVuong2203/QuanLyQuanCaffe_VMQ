@@ -83,24 +83,24 @@ public class StaffJPanel extends JPanel {
         order.setLayout(null);
 
         JLabel Label_monney = new JLabel("Tổng tiền:");
-        Label_monney.setFont(new Font("Arial", Font.BOLD, 16));
+        Label_monney.setFont(new Font("Segoe UI", Font.BOLD, 16));
         Label_monney.setBounds(0, 503, 78, 28);
         order.add(Label_monney);
 
         total_monney = new JTextField();
-        total_monney.setFont(new Font("Arial", Font.PLAIN, 16));
+        total_monney.setFont(new Font("Segoe UI", Font.PLAIN, 16));
         total_monney.setBounds(88, 503, 118, 28);
         order.add(total_monney);
         total_monney.setColumns(10);
         total_monney.setEditable(false);
 
         Label_TKKH = new JLabel("SĐT khách hàng: ");
-        Label_TKKH.setFont(new Font("Arial", Font.PLAIN, 16));
+        Label_TKKH.setFont(new Font("Segoe UI", Font.PLAIN, 16));
         Label_TKKH.setBounds(10, 21, 162, 24);
         order.add(Label_TKKH);
 
         textField_TKKH = new JTextField();
-        textField_TKKH.setFont(new Font("Arial", Font.PLAIN, 20));
+        textField_TKKH.setFont(new Font("Segoe UI", Font.PLAIN, 20));
         textField_TKKH.setBounds(170, 15, 170, 36);
         order.add(textField_TKKH);
         textField_TKKH.setColumns(10);
@@ -112,7 +112,7 @@ public class StaffJPanel extends JPanel {
         ActionListener ac = new StaffJPanelController(this);
 
         JButton Button_Pay = new JButton("Đặt món");
-        Button_Pay.setFont(new Font("Arial", Font.BOLD, 16));
+        Button_Pay.setFont(new Font("Segoe UI", Font.BOLD, 16));
         Button_Pay.setBounds(222, 503, 118, 27);
         order.add(Button_Pay);
         // Button_Pay.addActionListener(e -> printBill());
@@ -120,7 +120,7 @@ public class StaffJPanel extends JPanel {
 
         placedModel = new DefaultListModel<>();
         list_dishSelected = new JList(placedModel);
-        list_dishSelected.setFont(new Font("Arial", Font.PLAIN, 20));
+        list_dishSelected.setFont(new Font("Segoe UI", Font.PLAIN, 20));
         setColor_Select(list_dishSelected);
         scrollPane_dishSelected.setViewportView(list_dishSelected);
 
@@ -130,7 +130,7 @@ public class StaffJPanel extends JPanel {
                 deleteItem(placedModel, list_dishSelected);
             }
         });
-        Button_delete.setFont(new Font("Arial", Font.BOLD, 16));
+        Button_delete.setFont(new Font("Segoe UI", Font.BOLD, 16));
         Button_delete.setBounds(350, 503, 84, 27);
         order.add(Button_delete);
         JButton Button_clear = new JButton("Clear");
@@ -139,43 +139,43 @@ public class StaffJPanel extends JPanel {
                 clearItem();
             }
         });
-        Button_clear.setFont(new Font("Arial", Font.BOLD, 16));
+        Button_clear.setFont(new Font("Segoe UI", Font.BOLD, 16));
         Button_clear.setBounds(445, 503, 84, 27);
         order.add(Button_clear);
 
         // Trong phần khởi tạo giao diện, thêm các thành phần UI sau button_Pay
         JButton Button_CheckPoints = new JButton("Kiểm tra điểm");
-        Button_CheckPoints.setFont(new Font("Arial", Font.BOLD, 16));
+        Button_CheckPoints.setFont(new Font("Segoe UI", Font.BOLD, 16));
         Button_CheckPoints.setBounds(88, 545, 150, 28);
         order.add(Button_CheckPoints);
         Button_CheckPoints.addActionListener(ac);
 
         JButton Button_UsePoints = new JButton("Sử dụng điểm");
-        Button_UsePoints.setFont(new Font("Arial", Font.BOLD, 16));
+        Button_UsePoints.setFont(new Font("Segoe UI", Font.BOLD, 16));
         Button_UsePoints.setBounds(255, 545, 150, 28);
         order.add(Button_UsePoints);
         Button_UsePoints.addActionListener(ac);
 
         // Thêm label để hiển thị điểm và giảm giá
         JLabel Label_Points = new JLabel("Điểm tích lũy:");
-        Label_Points.setFont(new Font("Arial", Font.PLAIN, 16));
+        Label_Points.setFont(new Font("Segoe UI", Font.PLAIN, 16));
         Label_Points.setBounds(0, 585, 100, 28);
         order.add(Label_Points);
 
         textField_Points = new JTextField();
-        textField_Points.setFont(new Font("Arial", Font.PLAIN, 16));
+        textField_Points.setFont(new Font("Segoe UI", Font.PLAIN, 16));
         textField_Points.setBounds(100, 585, 100, 28);
         order.add(textField_Points);
         textField_Points.setColumns(10);
         textField_Points.setEditable(false);
 
         JLabel Label_Discount = new JLabel("Giảm giá:");
-        Label_Discount.setFont(new Font("Arial", Font.PLAIN, 16));
+        Label_Discount.setFont(new Font("Segoe UI", Font.PLAIN, 16));
         Label_Discount.setBounds(220, 585, 80, 28);
         order.add(Label_Discount);
 
         textField_Discount = new JTextField();
-        textField_Discount.setFont(new Font("Arial", Font.PLAIN, 16));
+        textField_Discount.setFont(new Font("Segoe UI", Font.PLAIN, 16));
         textField_Discount.setBounds(300, 585, 120, 28);
         order.add(textField_Discount);
         textField_Discount.setColumns(10);
@@ -231,7 +231,7 @@ public class StaffJPanel extends JPanel {
 
     private JList<String> createHorizontalList(DefaultListModel<String> model) {
         JList<String> list = new JList<>(model);
-        list.setFont(new Font("Arial", Font.PLAIN, 16));
+        list.setFont(new Font("Segoe UI", Font.PLAIN, 16));
         list.setBackground(new Color(231, 215, 200));
         list.setLayoutOrientation(JList.HORIZONTAL_WRAP);
         list.setVisibleRowCount(0);
@@ -282,7 +282,7 @@ public class StaffJPanel extends JPanel {
 
                 // Tạo nhãn cho tên món
                 JLabel nameLabel = new JLabel(dishName);
-                nameLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+                nameLabel.setFont(new Font("Segoe UI", Font.PLAIN, 16));
                 nameLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
                 // Thêm hình ảnh và tên vào panel

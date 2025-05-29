@@ -124,7 +124,7 @@ public class Payment_Interface extends JPanel {
         btnThanhToan = new JButton("Thanh toán");
 
         // Thiết lập style cho nút
-        Font buttonFont = new Font("Arial", Font.BOLD, 14);
+        Font buttonFont = new Font("Segoe UI", Font.BOLD, 14);
         btnQuayLai.setFont(buttonFont);
         btnThanhToan.setFont(buttonFont);
 
@@ -143,13 +143,13 @@ public class Payment_Interface extends JPanel {
         // Tạo comboBox chọn phương thức thanh toán
         String[] paymentMethods = { "Tiền mặt", "Chuyển khoản ngân hàng" };
         cboPaymentMethod = new JComboBox<>(paymentMethods);
-        cboPaymentMethod.setFont(new Font("Arial", Font.PLAIN, 14));
+        cboPaymentMethod.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         cboPaymentMethod.setBorder(BorderFactory.createTitledBorder(
                 null,
                 "Phương thức thanh toán",
                 TitledBorder.CENTER,
                 TitledBorder.DEFAULT_POSITION,
-                new Font("Arial", Font.BOLD, 12),
+                new Font("Segoe UI", Font.BOLD, 12),
                 Color.BLACK));
         cboPaymentMethod.setBackground(Color.WHITE);
         cboPaymentMethod.setPreferredSize(new Dimension(200, 50));
@@ -209,23 +209,23 @@ public class Payment_Interface extends JPanel {
 
             // Thêm thông tin cửa hàng và hóa đơn vào header
             JLabel lblTitle = new JLabel("CAFFEE VMQ", JLabel.CENTER);
-            lblTitle.setFont(new Font("Arial", Font.BOLD, 18));
+            lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 18));
             lblTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
 
             JLabel lblAddress = new JLabel("Địa chỉ: 478 Lê Văn Việt", JLabel.CENTER);
-            lblAddress.setFont(new Font("Arial", Font.PLAIN, 14));
+            lblAddress.setFont(new Font("Segoe UI", Font.PLAIN, 14));
             lblAddress.setAlignmentX(Component.CENTER_ALIGNMENT);
 
             JLabel lblHotline = new JLabel("Hotline: 0961892734", JLabel.CENTER);
-            lblHotline.setFont(new Font("Arial", Font.PLAIN, 14));
+            lblHotline.setFont(new Font("Segoe UI", Font.PLAIN, 14));
             lblHotline.setAlignmentX(Component.CENTER_ALIGNMENT);
 
             JLabel lblDivider1 = new JLabel("----------------------------------------", JLabel.CENTER);
-            lblDivider1.setFont(new Font("Arial", Font.PLAIN, 14));
+            lblDivider1.setFont(new Font("Segoe UI", Font.PLAIN, 14));
             lblDivider1.setAlignmentX(Component.CENTER_ALIGNMENT);
 
             JLabel lblBillTitle = new JLabel("PHIẾU TẠM TÍNH", JLabel.CENTER);
-            lblBillTitle.setFont(new Font("Arial", Font.BOLD, 16));
+            lblBillTitle.setFont(new Font("Segoe UI", Font.BOLD, 16));
             lblBillTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
 
             headerPanel.add(lblTitle);
@@ -240,17 +240,17 @@ public class Payment_Interface extends JPanel {
             infoPanel.setBackground(Color.WHITE);
 
             JLabel lblOrderID = new JLabel("Số: " + billInfo.get("orderID"));
-            lblOrderID.setFont(new Font("Arial", Font.PLAIN, 14));
+            lblOrderID.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 
             JLabel lblDate = new JLabel("Ngày: " + dateFormat.format(new Date()));
-            lblDate.setFont(new Font("Arial", Font.PLAIN, 14));
+            lblDate.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 
             JLabel lblTable = new JLabel("Bàn: " + billInfo.get("tableName"));
-            lblTable.setFont(new Font("Arial", Font.PLAIN, 14));
+            lblTable.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 
             String staffName = (String) billInfo.get("employeeName");
             JLabel lblStaff = new JLabel("Thu ngân: " + staffName);
-            lblStaff.setFont(new Font("Arial", Font.PLAIN, 14));
+            lblStaff.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 
             infoPanel.add(lblOrderID);
             infoPanel.add(lblDate);
@@ -261,11 +261,11 @@ public class Payment_Interface extends JPanel {
             if (billInfo.containsKey("customerName") && billInfo.get("customerName") != null) {
                 String customerName = (String) billInfo.get("customerName");
                 lblCustomer = new JLabel("Khách hàng: " + customerName);
-                lblCustomer.setFont(new Font("Arial", Font.PLAIN, 14));
+                lblCustomer.setFont(new Font("Segoe UI", Font.PLAIN, 14));
                 infoPanel.add(lblCustomer);
             } else {
                 lblCustomer = new JLabel("Khách hàng: vãng lai");
-                lblCustomer.setFont(new Font("Arial", Font.PLAIN, 14));
+                lblCustomer.setFont(new Font("Segoe UI", Font.PLAIN, 14));
                 infoPanel.add(lblCustomer);
                 
             }
@@ -305,9 +305,9 @@ public class Payment_Interface extends JPanel {
             }
 
             billTable = new JTable(data, columnNames);
-            billTable.setFont(new Font("Arial", Font.PLAIN, 14));
+            billTable.setFont(new Font("Segoe UI", Font.PLAIN, 14));
             billTable.setRowHeight(25);
-            billTable.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
+            billTable.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));
             billTable.setEnabled(false); // Không cho phép chỉnh sửa
 
             // Căn giữa cột STT và SL, căn phải cột đơn giá và thành tiền
@@ -338,7 +338,7 @@ public class Payment_Interface extends JPanel {
             summaryPanel.setBackground(Color.WHITE);
 
             JLabel lblDivider2 = new JLabel("----------------------------------------", JLabel.CENTER);
-            lblDivider2.setFont(new Font("Arial", Font.PLAIN, 14));
+            lblDivider2.setFont(new Font("Segoe UI", Font.PLAIN, 14));
             lblDivider2.setAlignmentX(Component.CENTER_ALIGNMENT);
 
             // Lấy thông tin giảm giá và tổng tiền
@@ -349,27 +349,27 @@ public class Payment_Interface extends JPanel {
 
             // Thêm các dòng tính tiền
             JLabel lblSubTotal = new JLabel("Tiền hàng:");
-            lblSubTotal.setFont(new Font("Arial", Font.PLAIN, 14));
+            lblSubTotal.setFont(new Font("Segoe UI", Font.PLAIN, 14));
             JLabel valueSubTotal = new JLabel(currencyFormat.format(totalAmount));
-            valueSubTotal.setFont(new Font("Arial", Font.PLAIN, 14));
+            valueSubTotal.setFont(new Font("Segoe UI", Font.PLAIN, 14));
             valueSubTotal.setHorizontalAlignment(SwingConstants.RIGHT);
 
             JLabel lblDiscount = new JLabel("Giảm giá:");
-            lblDiscount.setFont(new Font("Arial", Font.PLAIN, 14));
+            lblDiscount.setFont(new Font("Segoe UI", Font.PLAIN, 14));
             JLabel valueDiscount = new JLabel(currencyFormat.format(discountAmount));
-            valueDiscount.setFont(new Font("Arial", Font.PLAIN, 14));
+            valueDiscount.setFont(new Font("Segoe UI", Font.PLAIN, 14));
             valueDiscount.setHorizontalAlignment(SwingConstants.RIGHT);
 
             JLabel lblTotal = new JLabel("Tổng thanh toán:");
-            lblTotal.setFont(new Font("Arial", Font.BOLD, 14));
+            lblTotal.setFont(new Font("Segoe UI", Font.BOLD, 14));
             valueTotal = new JLabel(currencyFormat.format(finalTotal));
-            valueTotal.setFont(new Font("Arial", Font.BOLD, 14));
+            valueTotal.setFont(new Font("Segoe UI", Font.BOLD, 14));
             valueTotal.setHorizontalAlignment(SwingConstants.RIGHT);
 
             JLabel lblFinalAmount = new JLabel("Cần phải thu:");
-            lblFinalAmount.setFont(new Font("Arial", Font.BOLD, 14));
+            lblFinalAmount.setFont(new Font("Segoe UI", Font.BOLD, 14));
             JLabel valueFinalAmount = new JLabel(currencyFormat.format(finalTotal));
-            valueFinalAmount.setFont(new Font("Arial", Font.BOLD, 14));
+            valueFinalAmount.setFont(new Font("Segoe UI", Font.BOLD, 14));
             valueFinalAmount.setHorizontalAlignment(SwingConstants.RIGHT);
 
             summaryPanel.add(lblSubTotal);
@@ -386,7 +386,7 @@ public class Payment_Interface extends JPanel {
             footerPanel.setBackground(Color.WHITE);
 
             lblFooter = new JLabel("Quý khách vui lòng kiểm tra kỹ hóa đơn trước khi thanh toán!", JLabel.CENTER);
-            lblFooter.setFont(new Font("Arial", Font.ITALIC, 12));
+            lblFooter.setFont(new Font("Segoe UI", Font.ITALIC, 12));
             lblFooter.setAlignmentX(Component.CENTER_ALIGNMENT);
   ////          // // Tạo JLabel cho QR Code
             qrCodeLabel = new JLabel();
@@ -412,7 +412,7 @@ public class Payment_Interface extends JPanel {
             qrPanel.add(qrCodeLabel, BorderLayout.CENTER);
 
             qrInfoLabel = new JLabel("", JLabel.CENTER);
-            qrInfoLabel.setFont(new Font("Arial", Font.BOLD, 12));
+            qrInfoLabel.setFont(new Font("Segoe UI", Font.BOLD, 12));
             qrPanel.add(qrInfoLabel, BorderLayout.SOUTH);
 
             footerPanel.add(lblFooter, BorderLayout.CENTER);
@@ -484,7 +484,7 @@ public class Payment_Interface extends JPanel {
             Document document = new Document(pdf);
 
             // Tạo font từ file trong hệ thống
-            PdfFont font = PdfFontFactory.createFont("c:/windows/fonts/arial.ttf", PdfEncodings.IDENTITY_H);
+            PdfFont font = PdfFontFactory.createFont("c:/windows/fonts/Segoe UI.ttf", PdfEncodings.IDENTITY_H);
 
             // Thêm thông tin cửa hàng và hóa đơn
             document.add(
