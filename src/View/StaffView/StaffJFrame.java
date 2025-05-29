@@ -134,7 +134,7 @@ public class StaffJFrame extends JFrame {
 								      "src\\image\\SideBar_Image\\DiemDanh.png",
 								      "src\\image\\SideBar_Image\\RegisterWork.png",
 								      "src\\image\\SideBar_Image\\game_img.png",
-                                      "src\\image\\SideBar_Image\\game_img.png",
+                                      "src\\image\\SideBar_Image\\StaffInfor.png",
 								      "src\\image\\SideBar_Image\\SignOut.png" };
         int index_iconButtonLabels = 0;
         for (String label : buttonLabels) {

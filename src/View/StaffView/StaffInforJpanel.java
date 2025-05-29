@@ -19,6 +19,7 @@ import Repository.Employee.IEmployeeRespository;
 import java.awt.*;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
 
 public class StaffInforJpanel extends JPanel {
     private JPanel infoPanel;
@@ -33,6 +34,9 @@ public class StaffInforJpanel extends JPanel {
     private String imagePath;
     private JButton btnChooseImage;
     private int empID;
+    private JComboBox<Employee> cboEmployees;
+    private JPanel employeeSelectPanel;
+    private boolean isManager = false; // Biến để kiểm tra người dùng hiện tại có phải là quản lý không
 
     public JTextField getTxtHoTen() {
         return txtHoTen;
@@ -90,6 +94,17 @@ public class StaffInforJpanel extends JPanel {
         this.btnUpdateInfo = btnCapNhat;
     }
 
+    public StaffInforJpanel(Employee employee, boolean isManager) {
+        this.isManager = isManager;
+        this.empID = employee.getId();
+        initComponents();
+        if (isManager) {
+            loadAllEmployees(); // Nếu là quản lý, tải danh sách nhân viên
+        } else {
+            setUserInfo(); // Nếu là nhân viên bình thường, chỉ hiển thị thông tin của chính mình
+        }
+    }
+
     public StaffInforJpanel(Employee employee) {
         initComponents();
         this.empID = employee.getId();
@@ -115,6 +130,46 @@ public class StaffInforJpanel extends JPanel {
         infoPanel.setLayout(null); // Sử dụng null để tạo Absolute Layout
         infoPanel.setBackground(Color.WHITE);
         infoPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
+
+        // Panel chọn nhân viên (chỉ hiển thị khi đăng nhập là quản lý)
+        employeeSelectPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        employeeSelectPanel.setBackground(Color.WHITE);
+
+        JLabel lblSelectEmployee = new JLabel("Chọn nhân viên:");
+        lblSelectEmployee.setFont(new Font("Arial", Font.BOLD, 14));
+
+        cboEmployees = new JComboBox<>();
+        cboEmployees.setFont(new Font("Arial", Font.PLAIN, 14));
+        cboEmployees.setPreferredSize(new Dimension(250, 30));
+
+        // Thêm sự kiện khi chọn nhân viên khác
+        cboEmployees.addActionListener(e -> {
+            if (cboEmployees.getSelectedItem() != null) {
+                Employee selectedEmployee = (Employee) cboEmployees.getSelectedItem();
+                this.empID = selectedEmployee.getId();
+                setUserInfo();
+            }
+        });
+
+        employeeSelectPanel.add(lblSelectEmployee);
+        employeeSelectPanel.add(cboEmployees);
+        employeeSelectPanel.setVisible(isManager); // Chỉ hiển thị khi là quản lý
+
+        // Thêm dòng này
+        if (isManager) {
+            // Nếu là quản lý, thêm panel lựa chọn nhân viên vào giữa titlePanel và
+            // infoPanel
+            JPanel northContainer = new JPanel(new BorderLayout());
+            northContainer.setBackground(Color.WHITE);
+            northContainer.add(titlePanel, BorderLayout.NORTH);
+            northContainer.add(employeeSelectPanel, BorderLayout.CENTER);
+            mainPanel.add(northContainer, BorderLayout.NORTH);
+        } else {
+            mainPanel.add(titlePanel, BorderLayout.NORTH);
+        }
+
+        mainPanel.add(infoPanel, BorderLayout.CENTER);
+
 
         // Họ tên
         JLabel lblHoTen = new JLabel("Họ tên:");
@@ -220,8 +275,8 @@ public class StaffInforJpanel extends JPanel {
         infoPanel.add(btnUpdateInfo);
 
         // Thêm các panel vào panel chính
-        mainPanel.add(titlePanel, BorderLayout.NORTH);
-        mainPanel.add(infoPanel, BorderLayout.CENTER);
+        // mainPanel.add(titlePanel, BorderLayout.NORTH);
+        // mainPanel.add(infoPanel, BorderLayout.CENTER);
 
         // Đặt border cho panel chính
         mainPanel.setBackground(Color.WHITE);
@@ -230,6 +285,37 @@ public class StaffInforJpanel extends JPanel {
                 BorderFactory.createLineBorder(Color.LIGHT_GRAY)));
 
         add(mainPanel);
+    }
+
+    private void loadAllEmployees() {
+        try {
+            IEmployeeRespository employeeRepository = new EmployeeRespository();
+            List<Employee> employees = employeeRepository.getAllEmployees();
+
+            // Xóa tất cả items hiện có
+            cboEmployees.removeAllItems();
+
+            // Thêm tất cả nhân viên vào combobox
+            for (Employee emp : employees) {
+                cboEmployees.addItem(emp);
+            }
+
+            // Chọn nhân viên hiện tại
+            for (int i = 0; i < cboEmployees.getItemCount(); i++) {
+                Employee emp = cboEmployees.getItemAt(i);
+                if (emp.getId() == this.empID) {
+                    cboEmployees.setSelectedIndex(i);
+                    break;
+                }
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this,
+                    "Lỗi khi tải danh sách nhân viên: " + e.getMessage(),
+                    "Lỗi",
+                    JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
     }
 
     // Phương thức để hiển thị hình ảnh nhân viên

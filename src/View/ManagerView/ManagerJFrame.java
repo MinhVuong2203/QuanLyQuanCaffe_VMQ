@@ -126,7 +126,7 @@ public class ManagerJFrame extends JFrame {
         // GradientPanel menuPanel = new GradientPanel(new Color(27, 94, 32), new
         // Color(56, 142, 60)); // Màu chuyển
         menuPanel = new Panel();
-        menuPanel.setLayout(new GridLayout(10, 1, 0, 0));
+        menuPanel.setLayout(new GridLayout(11, 1, 0, 0));
 
         JPanel contentPanel = new JPanel(new BorderLayout());
         contentPanel.setBackground(Color.LIGHT_GRAY);
@@ -182,7 +182,7 @@ public class ManagerJFrame extends JFrame {
         
         
         String[] buttonLabels = { "BÁN HÀNG", "MANG VỀ", "ĐIỂM DANH", "MINI GAME", "XẾP LỊCH", "BÀN", "NHÂN VIÊN",
-                "SẢN PHẨM", "DOANH THU", "ĐĂNG XUẤT" };
+                "SẢN PHẨM", "DOANH THU", "<html>THÔNG TIN NHÂN<br>VIÊN</html>", "ĐĂNG XUẤT" };
         String[] iconButtonLabels = { "src\\image\\SideBar_Image\\Sell.png",
                 "src\\image\\SideBar_Image\\TakeAway.png",
                 "src\\image\\SideBar_Image\\DiemDanh.png",
@@ -192,6 +192,7 @@ public class ManagerJFrame extends JFrame {
                 "src\\image\\Employee_Image\\Employee_default.png",
                 "src\\image\\SideBar_Image\\product_img.png",
                 "src\\image\\SideBar_Image\\Revenue.png",
+                "src\\image\\SideBar_Image\\StaffInfor.png",
                 "src\\image\\SideBar_Image\\SignOut.png" };
         int index_iconButtonLabels = 0;
         for (String label : buttonLabels) {
