@@ -91,7 +91,7 @@ public class StaffJFrameController {
                             contentPanel.add(new GamePanel(), BorderLayout.CENTER);
                             break;
                         case "<html>THÔNG TIN CÁ <br>NHÂN</html>":
-                            StaffInforJpanel staffInfoPanel = new StaffInforJpanel(employee, false);
+                            StaffInforJpanel staffInfoPanel = new StaffInforJpanel(employee);
                             // Thiết lập thông tin nhân viên từ đối tượng employee
                             // staffInfoPanel.setUserInfo(
                             //         employee.getName(),

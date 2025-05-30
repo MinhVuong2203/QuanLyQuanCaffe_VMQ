@@ -17,9 +17,9 @@ public class StaffInforController implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         String src = e.getActionCommand();
         if (src.equals("Chỉnh Sửa")) {
-            staffInforJpanel.getBtnUpdateInfo().setText("Cập Nhật");
+            staffInforJpanel.getBtnUpdateInfo().setText("Yêu Cầu");
             staffInforJpanel.enableEditForEmp();
-        } else if (src.equals("Cập Nhật")) {
+        } else if (src.equals("Yêu Cầu")) {
             try {
                 staffInforJpanel.saveChanges();
                 staffInforJpanel.getBtnUpdateInfo().setText("Chỉnh Sửa");

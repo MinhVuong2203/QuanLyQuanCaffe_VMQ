@@ -94,7 +94,7 @@ CREATE TABLE ChangeInfoEmployee(
 	status NVARCHAR(50) DEFAULT N'Chờ duyệt'	
 )
 
-
+go
 -- Dùng trigger để tự động lấy lương của nhân viên, và tính tiền lương theo ca
 -- Tạo trigger mới
 CREATE TRIGGER trg_CalculateSalary

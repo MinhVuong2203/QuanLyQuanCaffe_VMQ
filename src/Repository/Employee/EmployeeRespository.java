@@ -55,20 +55,19 @@ public class EmployeeRespository implements IEmployeeRespository {
     }
 
     @Override
-    public String getNameFromID(int id) throws SQLException{
-    	String sql = "SELECT name FROM Employee WHERE employeeID = ?";
+    public String getNameFromID(int id) throws SQLException {
+        String sql = "SELECT name FROM Employee WHERE employeeID = ?";
         try (Connection connection = jdbcUtils.connect();
-            PreparedStatement stmt = connection.prepareStatement(sql)){
-            	stmt.setInt(1, id);
-            	try (ResultSet rs = stmt.executeQuery()) {
-            		if (rs.next())
-            		return rs.getString("name");
-            		return null;
-            	}            	
+                PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next())
+                    return rs.getString("name");
+                return null;
             }
+        }
     }
-    
-    
+
     @Override
     public boolean checkEqualsPhone(String phone) throws SQLException {
         if (phone == null || phone.isEmpty()) {
@@ -572,35 +571,85 @@ public class EmployeeRespository implements IEmployeeRespository {
     }
 
     @Override
-    public void updateInforEmployee(int empID, String cccd, String phone, String role, String image) throws SQLException {
-        if (cccd == null || phone == null || role == null || cccd.isEmpty() || phone.isEmpty() || role.isEmpty()) {
-            throw new IllegalArgumentException("Thông tin không hợp lệ");
-        }
+    public void requestUpdateInforEmployee(int empID, String phone, String username, String password, String birthday,
+            String image) throws SQLException {
+        Connection connection = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
 
-        String sql = "UPDATE Employee SET CCCD = ?, phone = ?, image = ? WHERE employeeID = ?";
+        try {
+            // Kết nối đến database
+            connection = jdbcUtils.connect();
 
-        try (Connection connection = jdbcUtils.connect();
-                PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setString(1, cccd);
-            stmt.setString(2, phone);
-            stmt.setString(3, image);
-            stmt.setInt(4, empID);
-            stmt.executeUpdate();
-        }
+            // Lấy changeID lớn nhất hiện tại và tăng thêm 1
+            String maxIdQuery = "SELECT MAX(changeID) FROM ChangeInfoEmployee";
+            stmt = connection.prepareStatement(maxIdQuery);
+            rs = stmt.executeQuery();
 
-        // Cập nhật role trong bảng UserAccount
-        String sqlRole = "UPDATE UserAccount SET role = ? WHERE ID = ?";
-        try (Connection connection = jdbcUtils.connect();
-                PreparedStatement stmt = connection.prepareStatement(sqlRole)) {
-            stmt.setString(1, role);
+            int changeID = 1; // Mặc định là 1 nếu bảng trống
+            if (rs.next() && rs.getInt(1) > 0) {
+                changeID = rs.getInt(1) + 1;
+            }
+
+            // Đóng ResultSet và PreparedStatement để tái sử dụng
+            rs.close();
+            stmt.close();
+
+            // Chuẩn bị câu lệnh SQL để thêm dữ liệu
+            String insertQuery = "INSERT INTO ChangeInfoEmployee (changeID, employeeID, phone, username, password, birthday, [image], status) "
+                    +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, N'Chờ duyệt')";
+
+            stmt = connection.prepareStatement(insertQuery);
+            stmt.setInt(1, changeID);
             stmt.setInt(2, empID);
-            stmt.executeUpdate();
+            stmt.setString(3, phone);
+
+            // Kiểm tra các giá trị có thể null và xử lý tương ứng
+            if (username == null || username.isEmpty()) {
+                stmt.setNull(4, java.sql.Types.VARCHAR);
+            } else {
+                stmt.setString(4, username);
+            }
+
+            if (password == null || password.isEmpty()) {
+                stmt.setNull(5, java.sql.Types.VARCHAR);
+            } else {
+                stmt.setString(5, password);
+            }
+
+            if (birthday == null || birthday.isEmpty()) {
+                stmt.setNull(6, java.sql.Types.DATE);
+            } else {
+                stmt.setString(6, birthday);
+            }
+
+            if (image == null || image.isEmpty()) {
+                stmt.setNull(7, java.sql.Types.NVARCHAR);
+            } else {
+                stmt.setString(7, image);
+            }
+
+            // Thực thi câu lệnh SQL
+            int rowsAffected = stmt.executeUpdate();
+
+            if (rowsAffected > 0) {
+                System.out.println("Đã thêm yêu cầu cập nhật thông tin nhân viên với ID: " + changeID);
+            } else {
+                System.out.println("Không thể thêm yêu cầu cập nhật thông tin nhân viên!");
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Lỗi khi thêm yêu cầu cập nhật thông tin nhân viên: " + e.getMessage());
+            e.printStackTrace();
+            throw new SQLException("Không thể thêm yêu cầu cập nhật: " + e.getMessage());
         }
     }
 
     @Override
     public Employee getEmployeeInfor(int empID) throws SQLException {
-        String sql = "SELECT e.employeeID, e.name, e.phone, e.image, e.CCCD, e.birthDate, e.gender, u.role " +
+        String sql = "SELECT e.employeeID, e.name, e.phone, e.image, u.username, u.password, e.CCCD, e.birthDate, e.gender, u.role "
+                +
                 "FROM Employee e " +
                 "JOIN UserAccount u ON e.employeeID = u.ID " +
                 "WHERE e.employeeID = ?";
@@ -615,19 +664,157 @@ public class EmployeeRespository implements IEmployeeRespository {
                             rs.getString("name"),
                             rs.getString("phone"),
                             rs.getString("image"),
-                            "", 
-                            "", 
+                            rs.getString("username"),
+                            rs.getString("password"),
                             rs.getString("role"),
                             rs.getString("CCCD"),
                             rs.getString("birthDate"),
                             rs.getString("gender"),
-                            0 
-                    );
+                            0);
                 }
             }
         }
         // Nếu không tìm thấy thông tin, trả về null
         return null;
+    }
+
+    @Override
+    public void acceptUpdateInforEmployee(int changeID, String request) throws SQLException {
+        Connection connection = null;
+        PreparedStatement stmtSelect = null;
+        PreparedStatement stmtUpdateEmployee = null;
+        PreparedStatement stmtUpdateUserAccount = null;
+        PreparedStatement stmtUpdateStatus = null;
+        ResultSet rs = null;
+
+        try {
+            // Kết nối đến database
+            connection = jdbcUtils.connect();
+            // Bắt đầu transaction
+            connection.setAutoCommit(false);
+
+            // Kiểm tra action là chấp nhận hay từ chối
+            if (request.equalsIgnoreCase("Từ chối")) {
+                // Nếu từ chối, chỉ cập nhật trạng thái thành "Đã từ chối"
+                String updateStatusQuery = "UPDATE ChangeInfoEmployee SET status = N'Đã từ chối' WHERE changeID = ?";
+                stmtUpdateStatus = connection.prepareStatement(updateStatusQuery);
+                stmtUpdateStatus.setInt(1, changeID);
+                stmtUpdateStatus.executeUpdate();
+
+                // Commit transaction
+                connection.commit();
+                System.out.println("Đã từ chối yêu cầu cập nhật thông tin có ID: " + changeID);
+                return;
+            }
+
+            // Lấy thông tin từ bảng ChangeInfoEmployee
+            String selectQuery = "SELECT employeeID, phone, username, password, birthday, [image] " +
+                    "FROM ChangeInfoEmployee WHERE changeID = ? AND status = N'Chờ duyệt'";
+            stmtSelect = connection.prepareStatement(selectQuery);
+            stmtSelect.setInt(1, changeID);
+            rs = stmtSelect.executeQuery();
+
+            if (rs.next()) {
+                int employeeID = rs.getInt("employeeID");
+                String phone = rs.getString("phone");
+                String username = rs.getString("username");
+                String password = rs.getString("password");
+                String birthday = rs.getString("birthday");
+                String image = rs.getString("image");
+
+                // Cập nhật thông tin nhân viên trong bảng Employee
+                if (phone != null || birthday != null || image != null) {
+                    StringBuilder sqlEmployee = new StringBuilder("UPDATE Employee SET ");
+                    boolean needComma = false;
+
+                    if (phone != null) {
+                        sqlEmployee.append("phone = ?");
+                        needComma = true;
+                    }
+                    if (birthday != null) {
+                        if (needComma)
+                            sqlEmployee.append(", ");
+                        sqlEmployee.append("birthDate = ?");
+                        needComma = true;
+                    }
+                    if (image != null) {
+                        if (needComma)
+                            sqlEmployee.append(", ");
+                        sqlEmployee.append("[image] = ?");
+                    }
+                    sqlEmployee.append(" WHERE employeeID = ?");
+
+                    stmtUpdateEmployee = connection.prepareStatement(sqlEmployee.toString());
+                    int paramIndex = 1;
+
+                    if (phone != null) {
+                        stmtUpdateEmployee.setString(paramIndex++, phone);
+                    }
+                    if (birthday != null) {
+                        stmtUpdateEmployee.setString(paramIndex++, birthday);
+                    }
+                    if (image != null) {
+                        stmtUpdateEmployee.setString(paramIndex++, image);
+                    }
+                    stmtUpdateEmployee.setInt(paramIndex, employeeID);
+                    stmtUpdateEmployee.executeUpdate();
+                }
+
+                // Cập nhật thông tin tài khoản trong bảng UserAccount nếu có
+                if (username != null || password != null) {
+                    StringBuilder sqlUserAccount = new StringBuilder("UPDATE UserAccount SET ");
+                    boolean needComma = false;
+
+                    if (username != null) {
+                        sqlUserAccount.append("username = ?");
+                        needComma = true;
+                    }
+                    if (password != null) {
+                        if (needComma)
+                            sqlUserAccount.append(", ");
+                        sqlUserAccount.append("[password] = ?");
+                    }
+                    sqlUserAccount.append(" WHERE ID = ?");
+
+                    stmtUpdateUserAccount = connection.prepareStatement(sqlUserAccount.toString());
+                    int paramIndex = 1;
+
+                    if (username != null) {
+                        stmtUpdateUserAccount.setString(paramIndex++, username);
+                    }
+                    if (password != null) {
+                        stmtUpdateUserAccount.setString(paramIndex++, password);
+                    }
+                    stmtUpdateUserAccount.setInt(paramIndex, employeeID);
+                    stmtUpdateUserAccount.executeUpdate();
+                }
+
+                // Cập nhật trạng thái của yêu cầu thành "Đã duyệt"
+                String updateStatusQuery = "UPDATE ChangeInfoEmployee SET status = N'Đã duyệt' WHERE changeID = ?";
+                stmtUpdateStatus = connection.prepareStatement(updateStatusQuery);
+                stmtUpdateStatus.setInt(1, changeID);
+                stmtUpdateStatus.executeUpdate();
+
+                // Commit transaction nếu tất cả các thao tác đều thành công
+                connection.commit();
+                System.out.println("Đã duyệt và cập nhật thông tin nhân viên với changeID: " + changeID);
+            } else {
+                System.out.println("Không tìm thấy yêu cầu cập nhật thông tin có ID: " + changeID
+                        + " hoặc yêu cầu đã được duyệt/từ chối");
+            }
+        } catch (SQLException e) {
+            // Rollback transaction nếu có lỗi
+            if (connection != null) {
+                try {
+                    connection.rollback();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+            System.err.println("Lỗi khi duyệt yêu cầu cập nhật thông tin: " + e.getMessage());
+            e.printStackTrace();
+            throw new SQLException("Không thể duyệt yêu cầu cập nhật: " + e.getMessage());
+        }
     }
 
     public static void main(String[] args) {

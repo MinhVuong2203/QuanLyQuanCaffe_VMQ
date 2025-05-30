@@ -3,6 +3,7 @@ package Repository.Employee;
 import Model.Employee;
 import Model.EmployeeShift;
 
+import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
@@ -42,6 +43,7 @@ public interface IEmployeeRespository {
     public EmployeeShift getEmployeeShiftByEmployeeID(int employeeID) throws SQLException, ClassNotFoundException;
     public List<Employee> getShiftsBetweenDates(LocalDate fromDate, LocalDate toDate) throws SQLException,ClassNotFoundException;
 
-    public void updateInforEmployee(int empID, String cccd, String phone, String role, String image) throws SQLException, ClassNotFoundException;
+    public void requestUpdateInforEmployee(int empID, String phone, String username, String password, String birthday, String image) throws SQLException, ClassNotFoundException;
     public Employee getEmployeeInfor(int empID) throws SQLException, ClassNotFoundException;
+    public void acceptUpdateInforEmployee(int changeID, String request) throws SQLException, ClassNotFoundException;
 }

@@ -8,6 +8,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
@@ -19,7 +20,6 @@ import Repository.Employee.IEmployeeRespository;
 import java.awt.*;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.List;
 
 public class StaffInforJpanel extends JPanel {
     private JPanel infoPanel;
@@ -29,15 +29,14 @@ public class StaffInforJpanel extends JPanel {
     private JTextField txtCCCD;
     private JTextField txtPhone;
     private JTextField txtRole;
+    private JTextField txtUsername;
+    private JPasswordField txtPassword;
     private JButton btnUpdateInfo;
     private JLabel lblAvatar;
     private String imagePath;
     private JButton btnChooseImage;
     private int empID;
-    private JComboBox<Employee> cboEmployees;
-    private JPanel employeeSelectPanel;
-    private boolean isManager = false; // Biến để kiểm tra người dùng hiện tại có phải là quản lý không
-
+    
     public JTextField getTxtHoTen() {
         return txtHoTen;
     }
@@ -94,21 +93,26 @@ public class StaffInforJpanel extends JPanel {
         this.btnUpdateInfo = btnCapNhat;
     }
 
-    public StaffInforJpanel(Employee employee, boolean isManager) {
-        this.isManager = isManager;
-        this.empID = employee.getId();
-        initComponents();
-        if (isManager) {
-            loadAllEmployees(); // Nếu là quản lý, tải danh sách nhân viên
-        } else {
-            setUserInfo(); // Nếu là nhân viên bình thường, chỉ hiển thị thông tin của chính mình
-        }
-    }
-
     public StaffInforJpanel(Employee employee) {
         initComponents();
         this.empID = employee.getId();
         setUserInfo();
+    }
+
+    public JTextField getTxtUsername() {
+        return txtUsername;
+    }
+
+    public void setTxtUsername(JTextField txtUsername) {
+        this.txtUsername = txtUsername;
+    }
+
+    public JTextField getTxtPassword() {
+        return txtPassword;
+    }
+
+    public void setTxtPassword(JPasswordField txtPassword) {
+        this.txtPassword = txtPassword;
     }
 
     private void initComponents() {
@@ -130,46 +134,6 @@ public class StaffInforJpanel extends JPanel {
         infoPanel.setLayout(null); // Sử dụng null để tạo Absolute Layout
         infoPanel.setBackground(Color.WHITE);
         infoPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
-
-        // Panel chọn nhân viên (chỉ hiển thị khi đăng nhập là quản lý)
-        employeeSelectPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        employeeSelectPanel.setBackground(Color.WHITE);
-
-        JLabel lblSelectEmployee = new JLabel("Chọn nhân viên:");
-        lblSelectEmployee.setFont(new Font("Segoe UI", Font.BOLD, 14));
-
-        cboEmployees = new JComboBox<>();
-        cboEmployees.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        cboEmployees.setPreferredSize(new Dimension(250, 30));
-
-        // Thêm sự kiện khi chọn nhân viên khác
-        cboEmployees.addActionListener(e -> {
-            if (cboEmployees.getSelectedItem() != null) {
-                Employee selectedEmployee = (Employee) cboEmployees.getSelectedItem();
-                this.empID = selectedEmployee.getId();
-                setUserInfo();
-            }
-        });
-
-        employeeSelectPanel.add(lblSelectEmployee);
-        employeeSelectPanel.add(cboEmployees);
-        employeeSelectPanel.setVisible(isManager); // Chỉ hiển thị khi là quản lý
-
-        // Thêm dòng này
-        if (isManager) {
-            // Nếu là quản lý, thêm panel lựa chọn nhân viên vào giữa titlePanel và
-            // infoPanel
-            JPanel northContainer = new JPanel(new BorderLayout());
-            northContainer.setBackground(Color.WHITE);
-            northContainer.add(titlePanel, BorderLayout.NORTH);
-            northContainer.add(employeeSelectPanel, BorderLayout.CENTER);
-            mainPanel.add(northContainer, BorderLayout.NORTH);
-        } else {
-            mainPanel.add(titlePanel, BorderLayout.NORTH);
-        }
-
-        mainPanel.add(infoPanel, BorderLayout.CENTER);
-
 
         // Họ tên
         JLabel lblHoTen = new JLabel("Họ tên:");
@@ -238,6 +202,26 @@ public class StaffInforJpanel extends JPanel {
         infoPanel.add(lblRole);
         infoPanel.add(txtRole);
 
+        JLabel lblUsername = new JLabel("Tài khoản:");
+        lblUsername.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        txtUsername = new JTextField(20);
+        txtUsername.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        txtUsername.setEditable(false);
+        lblUsername.setBounds(55, 365, 120, 50);
+        txtUsername.setBounds(180, 365, 200, 50);
+        infoPanel.add(lblUsername);
+        infoPanel.add(txtUsername);
+
+        JLabel lblPassword = new JLabel("Mật khẩu:");
+        lblPassword.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        txtPassword = new JPasswordField(20);
+        txtPassword.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        txtPassword.setEditable(false);
+        lblPassword.setBounds(55, 420, 120, 50);
+        txtPassword.setBounds(180, 420, 200, 50);
+        infoPanel.add(lblPassword);
+        infoPanel.add(txtPassword);
+
         // Panel hình ảnh nhân viên (đặt bên phải)
         JPanel avatarPanel = new JPanel();
         avatarPanel.setLayout(null);
@@ -268,15 +252,15 @@ public class StaffInforJpanel extends JPanel {
         btnUpdateInfo.setForeground(Color.WHITE);
         btnUpdateInfo.setBorderPainted(false);
         btnUpdateInfo.setFocusPainted(false);
-        btnUpdateInfo.setBounds(180, 380, 120, 35);
+        btnUpdateInfo.setBounds(180, 480, 120, 40);
 
         btnUpdateInfo.addActionListener(staffInforController);
 
         infoPanel.add(btnUpdateInfo);
 
         // Thêm các panel vào panel chính
-        // mainPanel.add(titlePanel, BorderLayout.NORTH);
-        // mainPanel.add(infoPanel, BorderLayout.CENTER);
+        mainPanel.add(titlePanel, BorderLayout.NORTH);
+        mainPanel.add(infoPanel, BorderLayout.CENTER);
 
         // Đặt border cho panel chính
         mainPanel.setBackground(Color.WHITE);
@@ -285,37 +269,6 @@ public class StaffInforJpanel extends JPanel {
                 BorderFactory.createLineBorder(Color.LIGHT_GRAY)));
 
         add(mainPanel);
-    }
-
-    private void loadAllEmployees() {
-        try {
-            IEmployeeRespository employeeRepository = new EmployeeRespository();
-            List<Employee> employees = employeeRepository.getAllEmployees();
-
-            // Xóa tất cả items hiện có
-            cboEmployees.removeAllItems();
-
-            // Thêm tất cả nhân viên vào combobox
-            for (Employee emp : employees) {
-                cboEmployees.addItem(emp);
-            }
-
-            // Chọn nhân viên hiện tại
-            for (int i = 0; i < cboEmployees.getItemCount(); i++) {
-                Employee emp = cboEmployees.getItemAt(i);
-                if (emp.getId() == this.empID) {
-                    cboEmployees.setSelectedIndex(i);
-                    break;
-                }
-            }
-
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this,
-                    "Lỗi khi tải danh sách nhân viên: " + e.getMessage(),
-                    "Lỗi",
-                    JOptionPane.ERROR_MESSAGE);
-            e.printStackTrace();
-        }
     }
 
     // Phương thức để hiển thị hình ảnh nhân viên
@@ -382,6 +335,8 @@ public class StaffInforJpanel extends JPanel {
                 txtCCCD.setText(employee.getCCCD());
                 txtPhone.setText(employee.getPhone());
                 txtRole.setText(employee.getRole());
+                txtUsername.setText(employee.getUsername());
+                txtPassword.setText(employee.getPassword());
 
                 // Hiển thị ảnh nhân viên từ đường dẫn lưu trong đối tượng employee
                 imagePath = employee.getImage(); // Giả sử Employee có phương thức getImage() trả về đường dẫn
@@ -477,39 +432,26 @@ public class StaffInforJpanel extends JPanel {
 
     // Phương thức để chỉnh sửa thông tin cho nhân viên
     public void enableEditForEmp() {
-        txtHoTen.setEditable(true);
-        cboGioiTinh.setEnabled(true);
-        txtNgaySinh.setEditable(true);
-        txtCCCD.setEditable(true);
         txtPhone.setEditable(true);
-
+        txtUsername.setEditable(true);
+        txtPassword.setEditable(true);
+        txtNgaySinh.setEditable(true);
         // Hiển thị nút đổi ảnh
         btnChooseImage.setVisible(true);
         System.out.println("empID: " + empID);
     }
 
-    // Phương thức để chỉnh sửa thông tin cho quản lý
-    public void enableEditForManager() {
-        txtHoTen.setEditable(true);
-        cboGioiTinh.setEnabled(true);
-        txtNgaySinh.setEditable(true);
-        txtCCCD.setEditable(true);
-        txtPhone.setEditable(true);
-        txtRole.setEditable(true);
-        // Hiển thị nút đổi ảnh
-        btnChooseImage.setVisible(true);
-    }
-
-    // Phương thức để lưu thông tin đã chỉnh sửa
+    // Phương thức để lưu thông tin đã yêu cầu chỉnh sửa
     public void saveChanges() throws ClassNotFoundException, IOException, SQLException {
         // Lấy thông tin đã chỉnh sửa từ các trường
         // String[] updatedInfo = getUserInfo();
         IEmployeeRespository employeeRespository = new EmployeeRespository();
-        employeeRespository.updateInforEmployee(
+        employeeRespository.requestUpdateInforEmployee(
                 empID,
-                txtCCCD.getText(),
                 txtPhone.getText(),
-                txtRole.getText(),
+                txtUsername.getText(),
+                txtPassword.getText(),
+                txtNgaySinh.getText(),
                 imagePath);
         // Hiển thị thông báo thành công
         JOptionPane.showMessageDialog(this, "Thông tin đã được cập nhật thành công!");
