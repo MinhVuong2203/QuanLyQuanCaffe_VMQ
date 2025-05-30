@@ -83,6 +83,18 @@ CREATE TABLE EmployeeShift (
     FOREIGN KEY (employeeID) REFERENCES Employee(employeeID)
 );
 
+CREATE TABLE ChangeInfoEmployee(
+	changeID INT PRIMARY KEY,
+	employeeID INT NOT NULL,
+	phone char(10) NOT NULL CHECK (phone LIKE '[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]'),
+	username varchar(100),
+	password varchar(100),
+	birthday DATE,
+	[image] NVARCHAR(255),
+	status NVARCHAR(50) DEFAULT N'Chờ duyệt'	
+)
+
+
 -- Dùng trigger để tự động lấy lương của nhân viên, và tính tiền lương theo ca
 -- Tạo trigger mới
 CREATE TRIGGER trg_CalculateSalary

@@ -3,6 +3,7 @@ package Components;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
 import java.awt.geom.RoundRectangle2D;
 
 public class CustomRoundedButton extends JButton {
@@ -27,10 +28,17 @@ public class CustomRoundedButton extends JButton {
     // Kiểm soát hiển thị viền
     private boolean showBorder = true; // Hiển thị viền theo mặc định
     private boolean showBackground = true; // Mặc định hiển thị background
-
     // Tỷ lệ thu nhỏ khi nhấn
-    private double scaleFactor = 0.8; // Thu nhỏ còn 90% khi nhấn
-
+    private double scaleFactor = 0.9; // Thu nhỏ còn 80% khi nhấn
+    private double hoverScaleFactor = 1.1; // to khi hover (khi bật chức năng màu chuyển)
+    private boolean useGradient = false;
+    private Color[] gradientColors = {
+    	new Color(84, 178, 84),
+        new Color(144, 238, 144),
+        new Color(255, 255, 255),
+    };
+    private float gradientAngle = 90.0f; // Góc gradient mặc định (90 độ: từ trên xuống dưới)
+    
     public CustomRoundedButton() {   	
         setContentAreaFilled(false); // Tắt nền mặc định của Look and Feel
         setBorderPainted(false); // Tắt viền mặc định
@@ -61,13 +69,45 @@ public class CustomRoundedButton extends JButton {
                 radius, radius
             ));
 
-            // Vẽ nền bo góc
-            if (getModel().isArmed()) {
-                g2d.setColor(pressedBackground); // Màu nền khi nhấn
-            } else if (getModel().isRollover()) {
-                g2d.setColor(hoverBackground); // Màu nền khi hover
+         // Vẽ nền bo góc
+            if (useGradient) {
+                // Tính toán điểm bắt đầu và kết thúc dựa trên góc gradient
+                double radians = Math.toRadians(gradientAngle);
+                double width = getWidth() - shadowOffset - 1;
+                double height = getHeight() - shadowOffset - 1;
+                double centerX = width / 2;
+                double centerY = height / 2;
+                double length = Math.max(width, height); // Chiều dài để đảm bảo gradient phủ hết nút
+
+                // Tính toán điểm bắt đầu và kết thúc dựa trên góc
+                float startX = (float) (centerX + (length / 2) * Math.cos(radians));
+                float startY = (float) (centerY - (length / 2) * Math.sin(radians));
+                float endX = (float) (centerX - (length / 2) * Math.cos(radians));
+                float endY = (float) (centerY + (length / 2) * Math.sin(radians));
+
+                // Tạo mảng fractions cho gradient (phân bố đều)
+                float[] fractions = new float[gradientColors.length];
+                for (int i = 0; i < fractions.length; i++) {
+                    fractions[i] = (float) i / (fractions.length - 1);
+                }
+
+                // Sử dụng LinearGradientPaint
+                LinearGradientPaint gradient = new LinearGradientPaint(
+                    new Point2D.Float(startX, startY), // Điểm bắt đầu
+                    new Point2D.Float(endX, endY),     // Điểm kết thúc
+                    fractions,                         // Phân bố màu
+                    gradientColors                     // Danh sách màu
+                );
+                g2d.setPaint(gradient);
             } else {
-                g2d.setColor(defaultBackground); // Màu nền mặc định
+                // Sử dụng màu đơn sắc dựa trên trạng thái
+                if (getModel().isArmed()) {
+                    g2d.setColor(pressedBackground);
+                } else if (getModel().isRollover()) {
+                    g2d.setColor(hoverBackground);
+                } else {
+                    g2d.setColor(defaultBackground);
+                }
             }
             g2d.fill(new RoundRectangle2D.Double(
                 0, 0,
@@ -79,11 +119,11 @@ public class CustomRoundedButton extends JButton {
             // Vẽ viền bo góc (nếu showBorder = true)
             if (showBorder) {
                 if (getModel().isArmed()) {
-                    g2d.setColor(pressedBorderColor); // Màu viền khi nhấn
+                    g2d.setColor(pressedBorderColor);
                 } else if (getModel().isRollover()) {
-                    g2d.setColor(hoverBorderColor); // Màu viền khi hover
+                    g2d.setColor(hoverBorderColor);
                 } else {
-                    g2d.setColor(defaultBorderColor); // Màu viền mặc định
+                    g2d.setColor(defaultBorderColor);
                 }
                 g2d.draw(new RoundRectangle2D.Double(
                     0, 0,
@@ -97,12 +137,17 @@ public class CustomRoundedButton extends JButton {
         // Lưu trạng thái Graphics2D
         AffineTransform originalTransform = g2d.getTransform();
 
-        // Áp dụng scale khi nhấn giữ
+     // Áp dụng scale khi nhấn hoặc hover
         if (getModel().isArmed()) {
             double offsetX = (getWidth() * (1 - scaleFactor)) / 2;
             double offsetY = (getHeight() * (1 - scaleFactor)) / 2;
             g2d.translate(offsetX, offsetY);
             g2d.scale(scaleFactor, scaleFactor);
+        } else if (getModel().isRollover() && useGradient) {
+            double offsetX = (getWidth() * (1 - hoverScaleFactor)) / 2;
+            double offsetY = (getHeight() * (1 - hoverScaleFactor)) / 2;
+            g2d.translate(offsetX, offsetY);
+            g2d.scale(hoverScaleFactor, hoverScaleFactor);
         }
 
         // Cập nhật màu chữ dựa trên trạng thái
@@ -257,4 +302,35 @@ public class CustomRoundedButton extends JButton {
         this.showBackground = showBackground;
         repaint();
     }
+    
+    public boolean isUseGradient() {
+        return useGradient;
+    }
+
+    public void setUseGradient(boolean useGradient) {
+        this.useGradient = useGradient;
+        repaint();
+    }
+
+    public Color[] getGradientColors() {
+        return gradientColors;
+    }
+
+    public void setGradientColors(Color[] gradientColors) {
+        if (gradientColors != null && gradientColors.length >= 2) {
+            this.gradientColors = gradientColors;
+            repaint();
+        }
+    }
+
+    // Getter và Setter cho gradientAngle
+    public float getGradientAngle() {
+        return gradientAngle;
+    }
+
+    public void setGradientAngle(float gradientAngle) {
+        this.gradientAngle = gradientAngle % 360; // Đảm bảo góc nằm trong [0, 360)
+        repaint();
+    }
+
 }

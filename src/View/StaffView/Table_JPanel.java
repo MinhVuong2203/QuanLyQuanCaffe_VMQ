@@ -6,6 +6,7 @@ import Model.Table;
 import Repository.Order.OrderRepository;
 import Repository.Table.ITableRespository;
 import Repository.Table.TableRepository;
+import Components.CustomRoundedButton;
 import Components.HoverEffect;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -85,31 +86,31 @@ public class Table_JPanel extends JPanel {
 		
 		// Buttons
 		ImageIcon icon = new ImageIcon(imgPath);
-		Image scaledImage = icon.getImage().getScaledInstance(70, 70, Image.SCALE_SMOOTH);
+		Image scaledImage = icon.getImage().getScaledInstance(60, 60, Image.SCALE_SMOOTH);
 		ImageIcon scaleIcon = new ImageIcon(scaledImage);
 
 		tableButtons = new ArrayList<>();
 		for (Table table : listTables) {
-			JButton Button = new JButton(table.getTableName());
+			CustomRoundedButton Button = new CustomRoundedButton(table.getTableName());
 			Button.setIcon(scaleIcon);
 			Button.setPreferredSize(new Dimension(170, 70));
 			// Lưu tableID vào thuộc tính của button để dễ truy xuất sau này
 			Button.putClientProperty("tableID", table.getTableID());
 			Button.setFont(new Font("Segoe UI", Font.BOLD, 15));
-			// 1 dòng này để xét màu background button được trên LookFeel
-			Button.setBorderPainted(false);
+			Button.setShowBorder(false);
+			Button.setUseGradient(true);
 			///////////////////////////////////////
 			if (table.getStatus().equalsIgnoreCase("Trống")){
-				Button.setBackground(new Color(144, 238, 144));
-				new HoverEffect(Button, new Color(144, 238, 144), new Color(104, 198, 104));
+//				Button.setBackground(new Color(144, 238, 144));
+//				new HoverEffect(Button, new Color(144, 238, 144), new Color(104, 198, 104));
 			}
 			else if (table.getStatus().equalsIgnoreCase("Có khách")) {
-				Button.setBackground(new Color(236, 112, 99));
-				new HoverEffect(Button, new Color(236, 112, 99), new Color(196, 72, 59));
+				Color[] color = new Color[]{new Color(196, 72, 59), new Color(232, 51, 51), new Color(255, 255, 255)};
+				Button.setGradientColors(color);
 			}
 			else if (table.getStatus().equalsIgnoreCase("Bảo trì")) {
-				Button.setBackground(new Color(255, 250, 205));
-				new HoverEffect(Button, new Color(255, 250, 205), new Color(215, 210, 165));
+				Color[] color = new Color[]{new Color(215, 210, 165), new Color(255, 250, 205), new Color(255, 255, 255)};
+				Button.setGradientColors(color);
 			}
 			Button.addActionListener(ac);
 			tableButtons.add(Button);
