@@ -9,10 +9,7 @@ import View.ManagerView.ManagerTable.TablePanel;
 import View.ManagerView.ManagerShift.manageOrderAndSalary;
 import View.StaffView.GamePanel;
 import View.StaffView.RollCall;
-import View.StaffView.StaffInforJpanel;
-import View.StaffView.StaffJPanel;
 import View.StaffView.Table_JPanel;
-import View.StaffView.TakeAwayJPanel;
 import View.Window.WelcomeScreen;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -122,10 +119,6 @@ public class ManagerJFrameController {
                         case "DOANH THU":
                             // Thêm logic cho DOANH THU (chưa được triển khai)
                             contentPanel.add(manageOrderAndSalary, BorderLayout.CENTER);
-                            break;
-                        case "<html>THÔNG TIN NHÂN<br>VIÊN</html>":
-                            StaffInforJpanel staffInfoPanel = new StaffInforJpanel(manager, true);
-                            contentPanel.add(staffInfoPanel, BorderLayout.CENTER);
                             break;
                         case "ĐĂNG XUẤT":
                             // Thêm logic đăng xuất (ví dụ: đóng frame, quay về màn hình đăng nhập)
