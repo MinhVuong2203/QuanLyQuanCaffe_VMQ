@@ -1,8 +1,10 @@
 package View.StaffView;
 
+import Utils.*;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
@@ -35,6 +37,7 @@ public class StaffInforJpanel extends JPanel {
     private JLabel lblAvatar;
     private String imagePath;
     private JButton btnChooseImage;
+    private JCheckBox showMK;
     private int empID;
     
     public JTextField getTxtHoTen() {
@@ -221,6 +224,20 @@ public class StaffInforJpanel extends JPanel {
         txtPassword.setBounds(180, 420, 200, 50);
         infoPanel.add(lblPassword);
         infoPanel.add(txtPassword);
+
+        // Checkbox để hiển thị mật khẩu
+        showMK = new JCheckBox();
+        showMK.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        showMK.setBounds(390, 420, 20, 20);
+        showMK.setVisible(false);
+        infoPanel.add(showMK);
+        showMK.addActionListener(e -> {
+            if (showMK.isSelected()) {
+                txtPassword.setEchoChar((char) 0); // Hiển thị mật khẩu
+            } else {
+                txtPassword.setEchoChar('●'); // Ẩn mật khẩu
+            }
+        });
 
         // Panel hình ảnh nhân viên (đặt bên phải)
         JPanel avatarPanel = new JPanel();
@@ -436,6 +453,7 @@ public class StaffInforJpanel extends JPanel {
         txtUsername.setEditable(true);
         txtPassword.setEditable(true);
         txtNgaySinh.setEditable(true);
+        showMK.setVisible(true);
         // Hiển thị nút đổi ảnh
         btnChooseImage.setVisible(true);
         System.out.println("empID: " + empID);
@@ -445,12 +463,13 @@ public class StaffInforJpanel extends JPanel {
     public void saveChanges() throws ClassNotFoundException, IOException, SQLException {
         // Lấy thông tin đã chỉnh sửa từ các trường
         // String[] updatedInfo = getUserInfo();
+        String hasPass = ConvertInto.hashPassword(txtPassword.getText()); 
         IEmployeeRespository employeeRespository = new EmployeeRespository();
         employeeRespository.requestUpdateInforEmployee(
                 empID,
                 txtPhone.getText(),
                 txtUsername.getText(),
-                txtPassword.getText(),
+                hasPass,
                 txtNgaySinh.getText(),
                 imagePath);
         // Hiển thị thông báo thành công
@@ -463,6 +482,9 @@ public class StaffInforJpanel extends JPanel {
         txtCCCD.setEditable(false);
         txtPhone.setEditable(false);
         txtRole.setEditable(false);
+        txtUsername.setEditable(false);
+        txtPassword.setEditable(false);
+        showMK.setVisible(false);
         // Ẩn nút đổi ảnh
         btnChooseImage.setVisible(false);
     }

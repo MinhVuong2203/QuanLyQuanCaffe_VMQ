@@ -3,7 +3,6 @@ package View.ManagerView.ManagerStaff;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -114,14 +113,14 @@ public class RequestDialog extends JDialog {
         btnAccept.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                handleAcceptRequest();
+                AcceptRequest();
             }
         });
 
         btnReject.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                handleRejectRequest();
+                RejectRequest();
             }
         });
 
@@ -248,7 +247,7 @@ public class RequestDialog extends JDialog {
         }
     }
 
-    private void handleAcceptRequest() {
+    private void AcceptRequest() {
         if (selectedChangeID == -1) {
             JOptionPane.showMessageDialog(this,
                     "Vui lòng chọn một yêu cầu để duyệt!",
@@ -294,7 +293,7 @@ public class RequestDialog extends JDialog {
         }
     }
 
-    private void handleRejectRequest() {
+    private void RejectRequest() {
         if (selectedChangeID == -1) {
             JOptionPane.showMessageDialog(this,
                     "Vui lòng chọn một yêu cầu để từ chối!",
