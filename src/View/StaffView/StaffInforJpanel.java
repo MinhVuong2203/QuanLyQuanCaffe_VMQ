@@ -228,7 +228,9 @@ public class StaffInforJpanel extends JPanel {
         // Checkbox để hiển thị mật khẩu
         showMK = new JCheckBox();
         showMK.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        showMK.setBounds(390, 420, 20, 20);
+        showMK.setBounds(390, 420, 50, 50);
+        showMK.setBackground(Color.WHITE);
+        showMK.setFocusPainted(false);  
         showMK.setVisible(false);
         infoPanel.add(showMK);
         showMK.addActionListener(e -> {
@@ -239,7 +241,7 @@ public class StaffInforJpanel extends JPanel {
             }
         });
 
-        // Panel hình ảnh nhân viên (đặt bên phải)
+        // Panel hình ảnh nhân viên
         JPanel avatarPanel = new JPanel();
         avatarPanel.setLayout(null);
         avatarPanel.setBackground(Color.WHITE);
@@ -372,18 +374,6 @@ public class StaffInforJpanel extends JPanel {
         }
     }
 
-    // Phương thức để lấy thông tin từ các trường
-    public String[] getUserInfo() {
-        String[] info = new String[6];
-        info[0] = txtHoTen.getText();
-        info[1] = cboGioiTinh.getSelectedItem().toString();
-        info[2] = txtNgaySinh.getText();
-        info[3] = txtCCCD.getText();
-        info[4] = txtPhone.getText();
-        info[5] = txtRole.getText();
-        return info;
-    }
-
     public void chooseFile() {
         try {
             // Tạo file chooser
@@ -428,11 +418,6 @@ public class StaffInforJpanel extends JPanel {
 
                     // Hiển thị ảnh đã chọn
                     displayImage(imagePath);
-
-                    // Cập nhật hình ảnh vào cơ sở dữ liệu
-                    // (Chú ý: Bạn có thể muốn chuyển phần này vào phương thức saveChanges)
-                    // IEmployeeRespository employeeRespository = new EmployeeRespository();
-                    // employeeRespository.updateEmployeeImage(empID, imagePath);
                 } else {
                     JOptionPane.showMessageDialog(this,
                             "Vui lòng chọn tệp hình ảnh hợp lệ (*.jpg, *.jpeg, *.png, *.gif, *.bmp)",
@@ -462,8 +447,11 @@ public class StaffInforJpanel extends JPanel {
     // Phương thức để lưu thông tin đã yêu cầu chỉnh sửa
     public void saveChanges() throws ClassNotFoundException, IOException, SQLException {
         // Lấy thông tin đã chỉnh sửa từ các trường
-        // String[] updatedInfo = getUserInfo();
-        String hasPass = ConvertInto.hashPassword(txtPassword.getText()); 
+        // Lấy thông tin từ JPasswordField
+        char[] passwordChars = txtPassword.getPassword();
+        String password = new String(passwordChars);
+        String hasPass = ConvertInto.hashPassword(password); 
+
         IEmployeeRespository employeeRespository = new EmployeeRespository();
         employeeRespository.requestUpdateInforEmployee(
                 empID,
@@ -473,7 +461,7 @@ public class StaffInforJpanel extends JPanel {
                 txtNgaySinh.getText(),
                 imagePath);
         // Hiển thị thông báo thành công
-        JOptionPane.showMessageDialog(this, "Thông tin đã được cập nhật thành công!");
+        JOptionPane.showMessageDialog(this, "Yêu cầu cập nhật thông tin thành công!");
 
         // Vô hiệu hóa các trường sau khi lưu
         txtHoTen.setEditable(false);
