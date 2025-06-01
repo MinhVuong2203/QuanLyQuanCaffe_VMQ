@@ -65,7 +65,7 @@ public class StaffManagerController implements ActionListener {
             } catch (ClassNotFoundException | IOException | SQLException e1) {
                 System.out.println("Error: " + e1.getMessage());
             }
-        } else if (command.equals("Yêu cầu cập nhật")) {
+        } else if (command.equals("<html>Yêu cầu<br>cập nhật</html>")) {
             System.out.println("Bạn đã nhấn: " + command);
             // Hiển thị cửa sổ yêu cầu cập nhật
             RequestDialog dialog = new RequestDialog(staffManagerJPanel);

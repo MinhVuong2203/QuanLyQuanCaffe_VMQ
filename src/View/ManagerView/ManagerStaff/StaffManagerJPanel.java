@@ -191,7 +191,7 @@ public class StaffManagerJPanel extends JPanel {
         westPanel.add(btnSua);
         btnSua.addActionListener(ac);
 
-        JButton bbtnYeuCau = new JButton("Yêu cầu cập nhật");
+        JButton bbtnYeuCau = new JButton("<html>Yêu cầu<br>cập nhật</html>");
         bbtnYeuCau.setForeground(new Color(255, 255, 255));
         bbtnYeuCau.setBackground(new Color(0, 128, 255));
         bbtnYeuCau.setFont(new Font("Tahoma", Font.BOLD, 16));
