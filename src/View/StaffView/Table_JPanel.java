@@ -7,6 +7,7 @@ import Repository.Order.OrderRepository;
 import Repository.Table.ITableRespository;
 import Repository.Table.TableRepository;
 import Components.CustomRoundedButton;
+import Components.GradientPanel;
 import Components.HoverEffect;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -33,7 +34,7 @@ public class Table_JPanel extends JPanel {
 	public Table table = new Table();
 	public JButton orderButton;
 	public int tableID;
-	public JPanel rightPanel;
+	public GradientPanel rightPanel;
 	public JPanel firstPanel;
 	public JButton btnNewButton;
 	public JLabel imgLabel;
@@ -119,7 +120,7 @@ public class Table_JPanel extends JPanel {
 
 		// phải
 		ActionListener acRight = new TableRightController(this);
-		rightPanel = new JPanel();
+		rightPanel = new GradientPanel();
 		rightPanel.setLayout(null);
 		rightPanel.setPreferredSize(new Dimension(600, 500));
 		rightPanel.setBackground(new Color(254, 250, 220));
@@ -143,11 +144,6 @@ public class Table_JPanel extends JPanel {
 		TableLabel.setFont(new Font("Snap ITC", Font.PLAIN, 60));
 		TableLabel.setBounds(353, 36, 247, 91);
 		rightPanel.add(TableLabel);
-
-//		JLabel lblNewLabel_2 = new JLabel("Giờ đến:");
-//		lblNewLabel_2.setFont(new Font("Segoe UI", Font.PLAIN, 22));
-//		lblNewLabel_2.setBounds(53, 337, 87, 26);
-//		rightPanel.add(lblNewLabel_2);
 
 		
 		TimeLabel = new JLabel();
@@ -216,7 +212,22 @@ public class Table_JPanel extends JPanel {
 					this.btnNewButton.setBackground(new Color(181, 147, 118));
 					this.btnNewButton.setBorderPainted(false);
 					new HoverEffect(btnNewButton, new Color(181, 147, 118), new Color(150, 120, 80));
-					this.rightPanel.setBackground(new Color(144, 238, 144));
+					
+					// Khai báo trực tiếp chuỗi 10 màu
+			        Color[] colors = {
+			            new Color(144, 238, 144), // Màu 1
+			            new Color(155, 240, 155), // Màu 2
+			            new Color(167, 242, 167), // Màu 3
+			            new Color(178, 244, 178), // Màu 4
+			            new Color(190, 246, 190), // Màu 5
+			            new Color(201, 248, 201), // Màu 6
+			            new Color(212, 250, 212), // Màu 7
+			            new Color(224, 252, 224), // Màu 8
+			            new Color(235, 254, 235), // Màu 9
+			            new Color(255, 255, 255)  // Màu 10
+			        };
+			        this.rightPanel.setColors(colors);
+			        this.rightPanel.setAngle(90);
 					this.TimeLabel.setText("");
 					if (orderButton != null && orderButton.getParent() != null) {
 						rightPanel.remove(orderButton);
@@ -228,7 +239,20 @@ public class Table_JPanel extends JPanel {
 					this.btnNewButton.setBackground(new Color(168, 179, 100));
 					this.btnNewButton.setBorderPainted(false);
 					new HoverEffect(btnNewButton, new Color(168, 179, 100), new Color(120, 140, 60));			
-					this.rightPanel.setBackground(new Color(236, 112, 99));
+					Color[] colors = {
+				            new Color(236, 112, 99),  // Màu 1
+				            new Color(238, 126, 114), // Màu 2
+				            new Color(240, 140, 129), // Màu 3
+				            new Color(243, 154, 144), // Màu 4
+				            new Color(245, 168, 159), // Màu 5
+				            new Color(247, 182, 174), // Màu 6
+				            new Color(249, 196, 189), // Màu 7
+				            new Color(251, 210, 204), // Màu 8
+				            new Color(253, 224, 219), // Màu 9
+				            new Color(255, 255, 255)  // Màu 10
+				        };
+					this.rightPanel.setColors(colors);
+				    this.rightPanel.setAngle(90);
 					OrderRepository o = new OrderRepository();
 					String timeOr = o.getTimeByTableID(this.tableID);
 					this.TimeLabel.setText("Giờ đến: " + timeOr);
@@ -251,7 +275,20 @@ public class Table_JPanel extends JPanel {
 					new HoverEffect(btnNewButton, new Color(86, 210, 219), new Color(40, 180, 190));
 					this.TimeLabel.setText("");
 					
-					this.rightPanel.setBackground(new Color(254, 250, 220));
+					Color[] colors = {
+				            new Color(254, 250, 220), // Màu 1
+				            new Color(254, 251, 223), // Màu 2
+				            new Color(254, 251, 226), // Màu 3
+				            new Color(254, 252, 229), // Màu 4
+				            new Color(254, 252, 232), // Màu 5
+				            new Color(255, 253, 235), // Màu 6
+				            new Color(255, 253, 238), // Màu 7
+				            new Color(255, 254, 241), // Màu 8
+				            new Color(255, 254, 244), // Màu 9
+				            new Color(255, 255, 255)  // Màu 10
+				        };
+					this.rightPanel.setColors(colors);
+				    this.rightPanel.setAngle(90);
 					if (orderButton != null && orderButton.getParent() != null) {
 						rightPanel.remove(orderButton);
 					}

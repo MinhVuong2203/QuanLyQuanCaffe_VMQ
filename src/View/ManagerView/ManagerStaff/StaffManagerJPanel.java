@@ -134,6 +134,50 @@ public class StaffManagerJPanel extends JPanel {
         topPanel.setPreferredSize(new Dimension(50, 60));
         add(topPanel, BorderLayout.NORTH);
         topPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 14));
+        
+                JButton btnThem = new JButton("Thêm");
+                topPanel.add(btnThem);
+                btnThem.setForeground(new Color(255, 255, 255));
+                btnThem.setBackground(new Color(0, 255, 0));
+                btnThem.setFont(new Font("Tahoma", Font.BOLD, 16));
+                btnThem.setPreferredSize(new Dimension(110, 40));
+                btnThem.setOpaque(true);
+                btnThem.setContentAreaFilled(true);
+                btnThem.setBorderPainted(false);
+                btnThem.addActionListener(ac);
+        
+                JButton btnSua = new JButton("Cập nhật");
+                topPanel.add(btnSua);
+                btnSua.setForeground(new Color(255, 255, 255));
+                btnSua.setBackground(new Color(255, 128, 64));
+                btnSua.setFont(new Font("Tahoma", Font.BOLD, 16));
+                btnSua.setPreferredSize(new Dimension(110, 40));
+                btnSua.setOpaque(true);
+                btnSua.setContentAreaFilled(true);
+                btnSua.setBorderPainted(false);
+                btnSua.addActionListener(ac);
+        
+                JButton bbtnYeuCau = new JButton("<html>Yêu cầu<br>cập nhật</html>");
+                topPanel.add(bbtnYeuCau);
+                bbtnYeuCau.setForeground(new Color(255, 255, 255));
+                bbtnYeuCau.setBackground(new Color(0, 128, 255));
+                bbtnYeuCau.setFont(new Font("Tahoma", Font.BOLD, 16));
+                bbtnYeuCau.setPreferredSize(new Dimension(110, 40));
+                bbtnYeuCau.setOpaque(true);
+                bbtnYeuCau.setContentAreaFilled(true);
+                bbtnYeuCau.setBorderPainted(false);
+                bbtnYeuCau.addActionListener(ac);
+        
+                JButton btnNghi = new JButton("Nghỉ việc");
+                topPanel.add(btnNghi);
+                btnNghi.setForeground(new Color(255, 255, 255));
+                btnNghi.setBackground(new Color(255, 0, 0));
+                btnNghi.setFont(new Font("Tahoma", Font.BOLD, 16));
+                btnNghi.setPreferredSize(new Dimension(110, 40));
+                btnNghi.setOpaque(true);
+                btnNghi.setContentAreaFilled(true);
+                btnNghi.setBorderPainted(false);
+                btnNghi.addActionListener(ac);
 
         JLabel lblNewLabel = new JLabel("Tìm kiếm:");
         lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 16));
@@ -160,58 +204,6 @@ public class StaffManagerJPanel extends JPanel {
         textField.setColumns(10);
         textField.getDocument().addDocumentListener(fd);
         topPanel.add(textField);
-
-        // WEST
-        JPanel westPanel = new JPanel();
-        westPanel.setBackground(new Color(240, 210, 230));
-        westPanel.setBounds(0, 0, 100, 525);
-        westPanel.setPreferredSize(new Dimension(140, 200));
-        this.add(westPanel, BorderLayout.WEST);
-        westPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 20));
-
-        JButton btnThem = new JButton("Thêm");
-        btnThem.setForeground(new Color(255, 255, 255));
-        btnThem.setBackground(new Color(0, 255, 0));
-        btnThem.setFont(new Font("Tahoma", Font.BOLD, 16));
-        btnThem.setPreferredSize(new Dimension(110, 40));
-        btnThem.setOpaque(true);
-        btnThem.setContentAreaFilled(true);
-        btnThem.setBorderPainted(false);
-        btnThem.addActionListener(ac);
-        westPanel.add(btnThem);
-
-        JButton btnSua = new JButton("Cập nhật");
-        btnSua.setForeground(new Color(255, 255, 255));
-        btnSua.setBackground(new Color(255, 128, 64));
-        btnSua.setFont(new Font("Tahoma", Font.BOLD, 16));
-        btnSua.setPreferredSize(new Dimension(110, 40));
-        btnSua.setOpaque(true);
-        btnSua.setContentAreaFilled(true);
-        btnSua.setBorderPainted(false);
-        westPanel.add(btnSua);
-        btnSua.addActionListener(ac);
-
-        JButton bbtnYeuCau = new JButton("<html>Yêu cầu<br>cập nhật</html>");
-        bbtnYeuCau.setForeground(new Color(255, 255, 255));
-        bbtnYeuCau.setBackground(new Color(0, 128, 255));
-        bbtnYeuCau.setFont(new Font("Tahoma", Font.BOLD, 16));
-        bbtnYeuCau.setPreferredSize(new Dimension(110, 40));
-        bbtnYeuCau.setOpaque(true);
-        bbtnYeuCau.setContentAreaFilled(true);
-        bbtnYeuCau.setBorderPainted(false);
-        westPanel.add(bbtnYeuCau);
-        bbtnYeuCau.addActionListener(ac);
-
-        JButton btnNghi = new JButton("Nghỉ việc");
-        btnNghi.setForeground(new Color(255, 255, 255));
-        btnNghi.setBackground(new Color(255, 0, 0));
-        btnNghi.setFont(new Font("Tahoma", Font.BOLD, 16));
-        btnNghi.setPreferredSize(new Dimension(110, 40));
-        btnNghi.setOpaque(true);
-        btnNghi.setContentAreaFilled(true);
-        btnNghi.setBorderPainted(false);
-        westPanel.add(btnNghi);
-        btnNghi.addActionListener(ac);
     }
 
     public Employee getEmployeeSelected() throws IOException, ClassNotFoundException, SQLException {

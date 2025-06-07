@@ -391,13 +391,14 @@ public class EmployeeShiftPanel extends JPanel {
                     }
                 };
                 shiftTable.setModel(model);
-
+                
+                           
                 // Trang trí bảng
                 shiftTable.setFont(new Font("Arial", Font.PLAIN, 14));
                 shiftTable.setRowHeight(30);
                 shiftTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
                 shiftTable.getTableHeader().setFont(new Font("Arial", Font.BOLD, 16));
-
+                
                 //Đặt chiều rộng cột
                 shiftTable.getColumnModel().getColumn(0).setMinWidth(70); // cột ID
                 shiftTable.getColumnModel().getColumn(1).setMinWidth(170); // cột ten nhân viên
@@ -408,6 +409,8 @@ public class EmployeeShiftPanel extends JPanel {
 
                 this.setConditionalRowColorsByRole(shiftTable); // Đặt màu cho các hàng dựa trên vai trò
 
+                shiftTable.setGridColor(Color.DARK_GRAY);
+                shiftTable.setShowGrid(true);
                 // Sự kiện double click vào ô ca làm việc
                 EmployeeShiftController.attachShiftSelectionHandler(shiftTable, columnNames);
 

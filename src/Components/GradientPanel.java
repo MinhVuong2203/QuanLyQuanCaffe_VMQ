@@ -9,6 +9,7 @@ public class GradientPanel extends JPanel {
     private float[] fractions;
     private float angle;
 
+    public GradientPanel() {}
     // Constructor với fractions tự động
     public GradientPanel(Color[] colors, float angle) {
         this.colors = validateColors(colors);

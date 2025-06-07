@@ -302,7 +302,7 @@ public class AddOrFixEmployeeJDialog extends JDialog {
 		comboBox = new JComboBox();
 		comboBox.setModel(new DefaultComboBoxModel(new String[] {"Chọn vị trí", "phục vụ", "pha chế", "thu ngân"}));
 		comboBox.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		comboBox.setBounds(141, 315, 106, 26);
+		comboBox.setBounds(141, 315, 129, 26);
 		contentPanel.add(comboBox);
 		
 		JLabel lblNewLabel = new JLabel("VNĐ");
