@@ -560,7 +560,7 @@ public class TakeAwayJPanel extends JPanel {
             Document document = new Document(pdf);
 
             // Tạo font từ file trong hệ thống
-            PdfFont font = PdfFontFactory.createFont("c:/windows/fonts/Segoe UI.ttf", PdfEncodings.IDENTITY_H);
+            PdfFont font = PdfFontFactory.createFont("c:/windows/fonts/arial.ttf", PdfEncodings.IDENTITY_H);
 
             // Thêm thông tin cửa hàng và hóa đơn
             document.add(

@@ -484,7 +484,7 @@ public class Payment_Interface extends JPanel {
             Document document = new Document(pdf);
 
             // Tạo font từ file trong hệ thống
-            PdfFont font = PdfFontFactory.createFont("c:/windows/fonts/Segoe UI.ttf", PdfEncodings.IDENTITY_H);
+            PdfFont font = PdfFontFactory.createFont("c:/windows/fonts/arial.ttf", PdfEncodings.IDENTITY_H);
 
             // Thêm thông tin cửa hàng và hóa đơn
             document.add(
@@ -589,10 +589,10 @@ public class Payment_Interface extends JPanel {
             
             // Thêm QR code nếu có
             try {
-                ImageData imageData = ImageDataFactory.create("src/image/System_Image/QR_Payment.jpg");
+                ImageData imageData = ImageDataFactory.create("src\\image\\QRcode\\QR_Hoa_Don_" + orderID + ".png");
                 Image qrImage = new Image(imageData);
-                qrImage.setWidth(100);
-                qrImage.setHeight(100);
+                qrImage.setWidth(150);
+                qrImage.setHeight(150);
                 qrImage.setHorizontalAlignment(HorizontalAlignment.CENTER);
                 document.add(qrImage);
                 document.add(new Paragraph("Quét mã để thanh toán")

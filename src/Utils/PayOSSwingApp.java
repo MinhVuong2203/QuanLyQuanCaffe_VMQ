@@ -29,6 +29,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
@@ -184,7 +185,16 @@ public class PayOSSwingApp {
                         if (qrImageUrl.startsWith("http")) {
                             BufferedImage qrImage = ImageIO.read(new URL(qrImageUrl));
 // Chỉnh kích thướt
-                            qrIcon = new ImageIcon(qrImage);
+                            Image scaledImage = qrImage.getScaledInstance(250, 250, Image.SCALE_SMOOTH);
+                            qrIcon = new ImageIcon(scaledImage);
+                            
+                            // Lưu hình ảnh về file cục bộ
+                            String Folder = "src/image/QRcode/";
+                            String image = "QR_Hoa_Don_" + orderId + ".png";
+                            File outputFile = new File(Folder, image);
+                            outputFile.getParentFile().mkdirs(); // đảm bảo thư mục tồn tại                            
+                            ImageIO.write(qrImage, "png", outputFile);
+                            
                             SwingUtilities.invokeLater(() -> {
                                 this.payment_Interface.qrCodeLabel.setIcon(qrIcon);
                                 status = true; // Đã tạo mã QR
