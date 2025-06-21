@@ -22,6 +22,7 @@ import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
+import Components.GradientPanel;
 import Controller.StaffController.GamePanelController;
 import Model.Customer;
 import Repository.Customer.CustomerRepository;
@@ -56,8 +57,22 @@ public class GamePanel extends JPanel {
 
     public GamePanel() throws ClassNotFoundException, IOException, SQLException {
         setLayout(new BorderLayout(0, 0));
-        JPanel panel_Center = new JPanel();
-        panel_Center.setBackground(new Color(192, 192, 192));
+        
+        Color[] colors = {
+        	    new Color(74, 144, 226),   
+        	    new Color(82, 130, 229),   
+        	    new Color(90, 116, 232),   
+        	    new Color(98, 102, 235),   
+        	    new Color(106, 88, 238),  
+        	    new Color(114, 74, 241),  
+        	    new Color(122, 60, 244),    
+        	    new Color(130, 46, 247),   
+        	    new Color(138, 32, 250),  
+        	    new Color(144, 19, 254)   
+        	};
+        GradientPanel panel_Center = new GradientPanel(colors, 45);
+        
+
         add(panel_Center, BorderLayout.CENTER);
         panel_Center.setLayout(null);
 
@@ -311,7 +326,6 @@ public class GamePanel extends JPanel {
 
         // Trường nhập số xu cược
         bet_text = new JTextField();
-        bet_text.setBackground(new Color(128, 255, 255));
         bet_text.setForeground(new Color(255, 0, 0));
         bet_text.setFont(new Font("Arial", Font.BOLD, 14));
         bet_text.setBounds(749, 543, 100, 34);

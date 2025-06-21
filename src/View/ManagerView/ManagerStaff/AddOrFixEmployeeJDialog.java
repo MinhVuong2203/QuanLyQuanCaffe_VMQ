@@ -357,13 +357,13 @@ public class AddOrFixEmployeeJDialog extends JDialog {
 		usernameErrol = new JLabel();
 		usernameErrol.setForeground(Color.RED);
 		usernameErrol.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		usernameErrol.setBounds(141, 346, 201, 20);
+		usernameErrol.setBounds(56, 346, 286, 20);
 		contentPanel.add(usernameErrol);
 		
 		passwordErrol = new JLabel();
 		passwordErrol.setForeground(Color.RED);
 		passwordErrol.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		passwordErrol.setBounds(425, 346, 164, 20);
+		passwordErrol.setBounds(352, 346, 237, 20);
 		contentPanel.add(passwordErrol);
 
 		JButton iconLb = new JButton();

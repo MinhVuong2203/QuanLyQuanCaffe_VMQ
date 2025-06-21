@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Locale;
 import javax.swing.*;
 
+import Components.GradientPanel;
+
 public class RollCall extends JPanel {
     private IEmployeeRespository employeeRepository = new EmployeeRespository();
     private List<Employee> employees = employeeRepository.getAllEmployees();
@@ -58,10 +60,34 @@ public class RollCall extends JPanel {
         scrollPane_listInfor = new JScrollPane(listInfor);
         scrollPane_listInfor.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
-        callRollPanel = new JPanel();
+        Color[] colors = {
+        	    new Color(200, 160, 160),
+        	    new Color(201, 166, 161),
+        	    new Color(202, 172, 162),
+        	    new Color(203, 178, 163),
+        	    new Color(204, 184, 164),
+        	    new Color(205, 190, 165),
+        	    new Color(206, 196, 166),
+        	    new Color(207, 202, 167),
+        	    new Color(208, 208, 168),
+        	    new Color(209, 214, 169),
+        	    new Color(210, 220, 170),
+        	    new Color(211, 226, 171),
+        	    new Color(212, 232, 172),
+        	    new Color(213, 238, 173),
+        	    new Color(214, 244, 174),
+        	    new Color(215, 250, 175),
+        	    new Color(216, 255, 176),
+        	    new Color(217, 255, 177),
+        	    new Color(218, 255, 178),
+        	    new Color(220, 255, 179)
+        	};
+        callRollPanel = new GradientPanel(colors, 135);
         callRollPanel.setLayout(null);
         callRollPanel.setPreferredSize(new Dimension(600, 845));
-        callRollPanel.setBackground(Color.WHITE);
+        
+//        callRollPanel.setBackground(Color.WHITE);
+        
 
         // Thêm listener cho list
         listInfor.addListSelectionListener(e -> {
