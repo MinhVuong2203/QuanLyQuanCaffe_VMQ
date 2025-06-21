@@ -68,7 +68,15 @@ public class StaffJFrameController {
                             addTakeAwayButton.addActionListener(new ActionListener() {
                                 @Override
                                 public void actionPerformed(ActionEvent e) {
-                                    staffJFrame.addNewTakeAwayTab(takeAwayTabbedPane, employee.getId());
+                                    try {
+                                        staffJFrame.addNewTakeAwayTab(takeAwayTabbedPane, employee.getId());
+                                    } catch (Exception ex) {
+                                        ex.printStackTrace();
+                                        JOptionPane.showMessageDialog(staffJFrame,
+                                                "Lỗi khi thêm tab mới: " + ex.getMessage(),
+                                                "Lỗi",
+                                                JOptionPane.ERROR_MESSAGE);
+                                    }
                                 }
                             });
 
@@ -79,7 +87,18 @@ public class StaffJFrameController {
                             contentPanel.add(controlPanel, BorderLayout.NORTH);
                             contentPanel.add(takeAwayTabbedPane, BorderLayout.CENTER);
 
-                            staffJFrame.addNewTakeAwayTab(takeAwayTabbedPane, employee.getId());
+                            // Tạo tab đầu tiên sau khi giao diện đã sẵn sàng
+                            SwingUtilities.invokeLater(() -> {
+                                try {
+                                    staffJFrame.addNewTakeAwayTab(takeAwayTabbedPane, employee.getId());
+                                } catch (Exception ex) {
+                                    ex.printStackTrace();
+                                    JOptionPane.showMessageDialog(staffJFrame,
+                                            "Lỗi khi tạo tab đầu tiên: " + ex.getMessage(),
+                                            "Lỗi",
+                                            JOptionPane.ERROR_MESSAGE);
+                                }
+                            });
                             break;
                         case "ĐIỂM DANH":
                             contentPanel.add(new RollCall(), BorderLayout.CENTER);
@@ -94,12 +113,12 @@ public class StaffJFrameController {
                             StaffInforJpanel staffInfoPanel = new StaffInforJpanel(employee);
                             // Thiết lập thông tin nhân viên từ đối tượng employee
                             // staffInfoPanel.setUserInfo(
-                            //         employee.getName(),
-                            //         employee.getGender(),
-                            //         employee.getBirthDate(),
-                            //         employee.getCCCD(),
-                            //         employee.getPhone(),
-                            //         employee.getRole());
+                            // employee.getName(),
+                            // employee.getGender(),
+                            // employee.getBirthDate(),
+                            // employee.getCCCD(),
+                            // employee.getPhone(),
+                            // employee.getRole());
                             contentPanel.add(staffInfoPanel, BorderLayout.CENTER);
                             break;
                         case "ĐĂNG XUẤT":

@@ -18,6 +18,8 @@ import java.util.Map;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 
+import org.apache.poi.ss.formula.functions.T;
+
 import Model.Customer;
 import Model.Product;
 import Repository.Customer.CustomerRepository;
@@ -31,6 +33,7 @@ import Repository.Product.ProductRespository;
 import Utils.JdbcUtils;
 import View.StaffView.Table_JPanel;
 import View.StaffView.TakeAwayJPanel;
+
 
 public class TakeAwayController implements ActionListener {
     private TakeAwayJPanel takeAwayJPanel;
@@ -165,7 +168,19 @@ public class TakeAwayController implements ActionListener {
             }
 
             // Lấy ID đơn hàng
+            IProductRespository productRespository = new ProductRespository();
+            int tempOrderId = productRespository.initTempOrderId();
+            takeAwayJPanel.setTempOrderId(tempOrderId);
+            System.out.println("tempOrderId: " + tempOrderId);
             int orderID = takeAwayJPanel.getTempOrderId();
+            System.out.println("orderID: " + orderID);
+            if (orderID <= 0) {
+                JOptionPane.showMessageDialog(takeAwayJPanel,
+                        "Lỗi khi tạo đơn hàng mới!",
+                        "Lỗi",
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
 
             // Lưu chi tiết đơn hàng vào DB trước khi thanh toán
             saveOrderDetailsToDatabase(orderID);
@@ -214,7 +229,6 @@ public class TakeAwayController implements ActionListener {
 
             if (confirm == JOptionPane.YES_OPTION) {
                 // Cập nhật trạng thái đơn hàng
-                IProductRespository productRespository = new ProductRespository();
                 productRespository.updateOrderStatus(orderID, "Đã thanh toán");
 
                 // Thêm thông tin thanh toán vào bảng Payment

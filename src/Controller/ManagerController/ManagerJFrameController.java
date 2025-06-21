@@ -85,7 +85,15 @@ public class ManagerJFrameController {
                             addTakeAwayButton.addActionListener(new ActionListener() {
                                 @Override
                                 public void actionPerformed(ActionEvent e) {
-                                    managerJFrame.addNewTakeAwayTab(takeAwayTabbedPane, manager.getId());
+                                    try {
+                                        managerJFrame.addNewTakeAwayTab(takeAwayTabbedPane, manager.getId());
+                                    } catch (Exception ex) {
+                                        ex.printStackTrace();
+                                        JOptionPane.showMessageDialog(managerJFrame,
+                                                "Lỗi khi thêm tab mới: " + ex.getMessage(),
+                                                "Lỗi",
+                                                JOptionPane.ERROR_MESSAGE);
+                                    }
                                 }
                             });
 
@@ -96,7 +104,17 @@ public class ManagerJFrameController {
                             contentPanel.add(controlPanel, BorderLayout.NORTH);
                             contentPanel.add(takeAwayTabbedPane, BorderLayout.CENTER);
 
-                            managerJFrame.addNewTakeAwayTab(takeAwayTabbedPane, manager.getId());
+                            SwingUtilities.invokeLater(() -> {
+                                try {
+                                    managerJFrame.addNewTakeAwayTab(takeAwayTabbedPane, manager.getId());
+                                } catch (Exception ex) {
+                                    ex.printStackTrace();
+                                    JOptionPane.showMessageDialog(managerJFrame,
+                                            "Lỗi khi tạo tab đầu tiên: " + ex.getMessage(),
+                                            "Lỗi",
+                                            JOptionPane.ERROR_MESSAGE);
+                                }
+                            });
                             break;
                         case "ĐIỂM DANH":
                             contentPanel.add(new RollCall(), BorderLayout.CENTER);

@@ -3,6 +3,9 @@ package View.StaffView;
 import Controller.StaffController.StaffJFrameController;
 import Model.Employee;
 import Model.Table;
+import Repository.Product.IProductRespository;
+import Repository.Product.ProductRespository;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
@@ -37,9 +40,8 @@ public class StaffJFrame extends JFrame {
     private Timer mouseTracker;
     private StaffJPanel staffInterface;
     private Panel menuPanel;
-	private JButton btnTheme;
-	private boolean themeLight = true;
-	
+    private JButton btnTheme;
+    private boolean themeLight = true;
 
     private static final Map<JTabbedPane, Integer> tabbedPaneCounters = new HashMap<>();
 
@@ -54,14 +56,14 @@ public class StaffJFrame extends JFrame {
 
         // Panel Header (Thông tin nhân viên)
         Color[] color = {
-        	    new Color(228, 196, 245),
-        	    new Color(231, 196, 235),
-        	    new Color(234, 196, 226),
-        	    new Color(237, 196, 216),
-        	    new Color(240, 196, 207),
-        	    new Color(243, 196, 207),
-        	    new Color(245, 196, 202)
-        	};
+                new Color(228, 196, 245),
+                new Color(231, 196, 235),
+                new Color(234, 196, 226),
+                new Color(237, 196, 216),
+                new Color(240, 196, 207),
+                new Color(243, 196, 207),
+                new Color(245, 196, 202)
+        };
         GradientPanel panel = new GradientPanel(color, 45);
         panel.setLayout(null);
         panel.setPreferredSize(new Dimension(250, 100));
@@ -83,10 +85,6 @@ public class StaffJFrame extends JFrame {
         lblTime.setFont(new Font("Segoe UI", Font.PLAIN, 16));
         clock();
         panel.add(lblTime);
-        
-       
-       
-        
 
         JLabel lblNewLabel = new JLabel();
         lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -128,29 +126,30 @@ public class StaffJFrame extends JFrame {
 
         StaffJFrameController controller = new StaffJFrameController(this, contentPanel, employee); // Hành động
 
-        String[] buttonLabels = { "BÁN HÀNG", "MANG VỀ", "ĐIỂM DANH", "ĐĂNG KÝ CA" ,"MINI GAME", "<html>THÔNG TIN CÁ <br>NHÂN</html>", "ĐĂNG XUẤT" };
+        String[] buttonLabels = { "BÁN HÀNG", "MANG VỀ", "ĐIỂM DANH", "ĐĂNG KÝ CA", "MINI GAME",
+                "<html>THÔNG TIN CÁ <br>NHÂN</html>", "ĐĂNG XUẤT" };
         String[] iconButtonLabels = { "src\\image\\SideBar_Image\\Sell.png",
-								      "src\\image\\SideBar_Image\\TakeAway.png",
-								      "src\\image\\SideBar_Image\\DiemDanh.png",
-								      "src\\image\\SideBar_Image\\RegisterWork.png",
-								      "src\\image\\SideBar_Image\\game_img.png",
-                                      "src\\image\\SideBar_Image\\StaffInfor.png",
-								      "src\\image\\SideBar_Image\\SignOut.png" };
+                "src\\image\\SideBar_Image\\TakeAway.png",
+                "src\\image\\SideBar_Image\\DiemDanh.png",
+                "src\\image\\SideBar_Image\\RegisterWork.png",
+                "src\\image\\SideBar_Image\\game_img.png",
+                "src\\image\\SideBar_Image\\StaffInfor.png",
+                "src\\image\\SideBar_Image\\SignOut.png" };
         int index_iconButtonLabels = 0;
         for (String label : buttonLabels) {
             CustomRoundedButton button = new CustomRoundedButton(label);
             button.setRadius(0);
             button.setScaleFactor(0.9);
             button.setDefaultBackground(new Color(39, 174, 96));
-            button.setHoverBackground(new Color(20,150,70));
+            button.setHoverBackground(new Color(20, 150, 70));
             button.setPressedBackground(new Color(70, 200, 130));
             button.setDefaultForeground(Color.WHITE);
             button.setHoverForeground(Color.WHITE);
             button.setPressedForeground(Color.WHITE);
             button.setDefaultBorderColor(new Color(39, 174, 96));
             button.setHoverBackground(new Color(39, 174, 96));
-            button.setPressedBorderColor(new Color(39, 174, 96));             
-            button.setFont(new Font("Segoe UI", Font.BOLD, 14)); 
+            button.setPressedBorderColor(new Color(39, 174, 96));
+            button.setFont(new Font("Segoe UI", Font.BOLD, 14));
             button.setHorizontalAlignment(SwingConstants.LEFT);
             // Thêm icon
             int width = 42, height = 42;
@@ -167,37 +166,37 @@ public class StaffJFrame extends JFrame {
             menuPanel.add(button);
         }
         sidebar.add(menuPanel, BorderLayout.CENTER);
-        
+
         btnTheme = new JButton();
         btnTheme.setBounds(1300, 10, 70, 60);
         btnTheme.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-        btnTheme.setHorizontalTextPosition(SwingConstants.CENTER);    // icon ở trên
-        btnTheme.setVerticalTextPosition(SwingConstants.BOTTOM);      // Chữ ở dưới
-        btnTheme.setIconTextGap(2);  // Khoảng cách giữa icon và chữ
+        btnTheme.setHorizontalTextPosition(SwingConstants.CENTER); // icon ở trên
+        btnTheme.setVerticalTextPosition(SwingConstants.BOTTOM); // Chữ ở dưới
+        btnTheme.setIconTextGap(2); // Khoảng cách giữa icon và chữ
         btnTheme.setContentAreaFilled(false);
         btnTheme.setFocusPainted(false);
         this.btnThemeLight();
         btnTheme.addActionListener(e -> {
-     	   try {
-     			if (this.themeLight == true) {
-     				this.btnThemeDark();							
- 					UIManager.setLookAndFeel(new FlatDarkLaf());
- 		            UIManager.put("Label.foreground", Color.BLACK);
- 		            UIManager.put("Button.foreground", Color.BLACK);
- 		            UIManager.put("Table.foreground", Color.BLACK);
- 				} else {
- 					this.btnThemeLight();				
- 					UIManager.setLookAndFeel(new FlatLightLaf());
- 				}
-     			SwingUtilities.updateComponentTreeUI(this);  // this là JFrame hoặc JPanel
-     			this.repaint();  // Làm mới
-     	        this.revalidate();  // Cập nhật layout
- 			} catch (UnsupportedLookAndFeelException e1) {		
- 				e1.printStackTrace();
- 			}	   
+            try {
+                if (this.themeLight == true) {
+                    this.btnThemeDark();
+                    UIManager.setLookAndFeel(new FlatDarkLaf());
+                    UIManager.put("Label.foreground", Color.BLACK);
+                    UIManager.put("Button.foreground", Color.BLACK);
+                    UIManager.put("Table.foreground", Color.BLACK);
+                } else {
+                    this.btnThemeLight();
+                    UIManager.setLookAndFeel(new FlatLightLaf());
+                }
+                SwingUtilities.updateComponentTreeUI(this); // this là JFrame hoặc JPanel
+                this.repaint(); // Làm mới
+                this.revalidate(); // Cập nhật layout
+            } catch (UnsupportedLookAndFeelException e1) {
+                e1.printStackTrace();
+            }
         });
         panel.add(btnTheme);
-        
+
         // JSplitPane để sidebar có thể thay đổi kích thước
         splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, sidebar, contentPanel);
         splitPane.setDividerSize(5);
@@ -285,6 +284,11 @@ public class StaffJFrame extends JFrame {
      */
     public int addNewTakeAwayTab(JTabbedPane tabbedPane, int empID) {
         try {
+            // Tạo tempOrderId riêng biệt cho mỗi tab trước khi khởi tạo panel
+            // IProductRespository productDao = new ProductRespository();
+            // final int tempOrderId = productDao.initTempOrderId();
+            // System.out.println("Đã tạo tempOrderId mới: " + tempOrderId + " cho tab mới");
+
             // Lấy và tăng counter cho tabbedPane cụ thể
             Integer currentCount = tabbedPaneCounters.getOrDefault(tabbedPane, 0);
             currentCount++;
@@ -294,7 +298,11 @@ public class StaffJFrame extends JFrame {
             SwingWorker<TakeAwayJPanel, Void> worker = new SwingWorker<TakeAwayJPanel, Void>() {
                 @Override
                 protected TakeAwayJPanel doInBackground() throws Exception {
-                    return new TakeAwayJPanel(empID);
+                    // Tạo panel với khởi tạo thông thường
+                    TakeAwayJPanel panel = new TakeAwayJPanel(empID);
+                    // Ghi đè tempOrderId với ID đã tạo trước đó
+                    // panel.setTempOrderId(tempOrderId);
+                    return panel;
                 }
 
                 @Override
@@ -431,7 +439,7 @@ public class StaffJFrame extends JFrame {
                         tabbedPane.repaint();
 
                     } catch (Exception ex) {
-                        
+
                         JOptionPane.showMessageDialog(tabbedPane,
                                 "Lỗi khi tạo tab mang về: " + ex.getMessage(),
                                 "Lỗi", JOptionPane.ERROR_MESSAGE);
@@ -454,6 +462,8 @@ public class StaffJFrame extends JFrame {
 
     private void disposeResources(TakeAwayJPanel panel) {
         try {
+            // Xóa dữ liệu đơn hàng tạm thời trước
+            panel.clearTempOrder();
             // Xóa listeners
             for (MouseListener listener : panel.getMouseListeners()) {
                 panel.removeMouseListener(listener);
@@ -477,17 +487,19 @@ public class StaffJFrame extends JFrame {
             ex.printStackTrace();
         }
     }
-    
+
     public void btnThemeLight() {
-    	this.btnTheme.setIcon(new ImageIcon(new ImageIcon("src\\image\\System_Image\\sun.png").getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH)));
-    	this.btnTheme.setText("Sáng"); 	
-    	this.themeLight = true;
+        this.btnTheme.setIcon(new ImageIcon(new ImageIcon("src\\image\\System_Image\\sun.png").getImage()
+                .getScaledInstance(30, 30, Image.SCALE_SMOOTH)));
+        this.btnTheme.setText("Sáng");
+        this.themeLight = true;
     }
-    
+
     public void btnThemeDark() {
-    	this.btnTheme.setIcon(new ImageIcon(new ImageIcon("src\\image\\System_Image\\moon.png").getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH)));
-    	this.btnTheme.setText("Tối");
-    	this.themeLight = false;
+        this.btnTheme.setIcon(new ImageIcon(new ImageIcon("src\\image\\System_Image\\moon.png").getImage()
+                .getScaledInstance(30, 30, Image.SCALE_SMOOTH)));
+        this.btnTheme.setText("Tối");
+        this.themeLight = false;
     }
 
     public JLabel getLblTime() {

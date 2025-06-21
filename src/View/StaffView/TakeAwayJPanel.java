@@ -73,7 +73,7 @@ public class TakeAwayJPanel extends JPanel {
     public String customerPhone;
 
     private Map<Product, Integer> tempOrderProducts = new HashMap<>(); // Lưu tạm các món được chọn
-    private int tempOrderId = productDao.initTempOrderId();
+    private int tempOrderId;
     private JTextField textField_Points;
     private JTextField textField_Discount;
     private double discountAmount = 0.0;
@@ -88,6 +88,9 @@ public class TakeAwayJPanel extends JPanel {
         imgMap = new HashMap<>();
 
         addData();
+
+        // this.tempOrderId = productDao.initTempOrderId();
+        // System.out.println("TakeAwayJPanel mới được tạo với tempOrderID: " + this.tempOrderId);
         // phải
         order = new JPanel();
         order.setPreferredSize(new Dimension(540, 845));
@@ -705,7 +708,7 @@ public class TakeAwayJPanel extends JPanel {
         try {
             // Tạo ID đơn hàng mới
             IProductRespository productRepository = new ProductRespository();
-            int newOrderId = productRepository.initTempOrderId(); 
+            int newOrderId = productRepository.initTempOrderId();
 
             System.out.println("Tạo đơn hàng mới với ID: " + newOrderId +
                     " (ID cũ: " + this.tempOrderId + ")");
@@ -842,6 +845,7 @@ public class TakeAwayJPanel extends JPanel {
 
     public void setTempOrderId(int tempOrderId) {
         this.tempOrderId = tempOrderId;
+        System.out.println("Đã đặt tempOrderId: " + tempOrderId + " cho panel");
     }
 
     public JLabel getLabel_TKKH() {
