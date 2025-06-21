@@ -42,8 +42,17 @@ public class StaffJFrame extends JFrame {
     private Panel menuPanel;
     private JButton btnTheme;
     private boolean themeLight = true;
+    private JLabel lblName;
 
     private static final Map<JTabbedPane, Integer> tabbedPaneCounters = new HashMap<>();
+
+    public JLabel getLblName() {
+        return lblName;
+    }
+
+    public void setLblName(JLabel lblName) {
+        this.lblName = lblName;
+    }
 
     public StaffJFrame(Employee employee) throws IOException, ClassNotFoundException, SQLException {
         setTitle("Giao Diện Thu Ngân - Quán Cafe");
@@ -53,7 +62,7 @@ public class StaffJFrame extends JFrame {
         setLocationRelativeTo(null);
         setResizable(false);
         getContentPane().setLayout(new BorderLayout());
-
+        
         // Panel Header (Thông tin nhân viên)
         Color[] color = {
                 new Color(228, 196, 245),
@@ -69,10 +78,17 @@ public class StaffJFrame extends JFrame {
         panel.setPreferredSize(new Dimension(250, 100));
         getContentPane().add(panel, BorderLayout.NORTH);
 
-        JLabel lblName = new JLabel(employee.getName());
+        lblName = new JLabel(employee.getName());
         lblName.setFont(new Font("Segoe UI", Font.BOLD, 16));
         lblName.setBounds(103, 12, 195, 22);
         panel.add(lblName);
+        lblName.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                StaffInforJDialog staffInforJDialog = new StaffInforJDialog(employee);
+                staffInforJDialog.setVisible(true);
+            }
+        });
 
         JLabel lblID = new JLabel("ID: " + employee.getId());
         lblID.setForeground(Color.RED);
@@ -127,13 +143,13 @@ public class StaffJFrame extends JFrame {
         StaffJFrameController controller = new StaffJFrameController(this, contentPanel, employee); // Hành động
 
         String[] buttonLabels = { "BÁN HÀNG", "MANG VỀ", "ĐIỂM DANH", "ĐĂNG KÝ CA", "MINI GAME",
-                "<html>THÔNG TIN CÁ <br>NHÂN</html>", "ĐĂNG XUẤT" };
+                /* "<html>THÔNG TIN CÁ <br>NHÂN</html>",*/ "ĐĂNG XUẤT" };
         String[] iconButtonLabels = { "src\\image\\SideBar_Image\\Sell.png",
                 "src\\image\\SideBar_Image\\TakeAway.png",
                 "src\\image\\SideBar_Image\\DiemDanh.png",
                 "src\\image\\SideBar_Image\\RegisterWork.png",
                 "src\\image\\SideBar_Image\\game_img.png",
-                "src\\image\\SideBar_Image\\StaffInfor.png",
+                // "src\\image\\SideBar_Image\\StaffInfor.png",
                 "src\\image\\SideBar_Image\\SignOut.png" };
         int index_iconButtonLabels = 0;
         for (String label : buttonLabels) {

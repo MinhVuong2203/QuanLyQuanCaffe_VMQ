@@ -5,11 +5,11 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.sql.SQLException;
 
-import View.StaffView.StaffInforJpanel;
+import View.StaffView.StaffInforJDialog;
 
 public class StaffInforController implements ActionListener {
-    private StaffInforJpanel staffInforJpanel;
-    public StaffInforController(StaffInforJpanel staffInforJpanel) {
+    private StaffInforJDialog staffInforJpanel;
+    public StaffInforController(StaffInforJDialog staffInforJpanel) {
         this.staffInforJpanel = staffInforJpanel;
     }
 

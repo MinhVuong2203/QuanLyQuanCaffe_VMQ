@@ -10,6 +10,7 @@ import View.ManagerView.ManagerTable.TablePanel;
 import View.ManagerView.ManagerShift.manageOrderAndSalary;
 import View.StaffView.GamePanel;
 import View.StaffView.RollCall;
+import View.StaffView.StaffInforJDialog;
 import View.StaffView.StaffJPanel;
 import View.StaffView.Table_JPanel;
 import View.StaffView.TakeAwayJPanel;
@@ -81,6 +82,14 @@ public class ManagerJFrame extends JFrame {
         lblName.setFont(new Font("Segoe UI", Font.BOLD, 16));
         lblName.setBounds(103, 12, 195, 22);
         panel.add(lblName);
+        lblName.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                // Hiển thị thông tin nhân viên khi nhấp vào tên
+                StaffInforJDialog staffInfoDialog = new StaffInforJDialog(manager);
+                staffInfoDialog.setVisible(true);
+            }
+        });
 
         JLabel lblID = new JLabel("ID: " + manager.getId());
         lblID.setForeground(Color.RED);

@@ -4,7 +4,7 @@ import Model.Employee;
 import View.StaffView.GamePanel;
 import View.StaffView.RegisterWorkJPanel;
 import View.StaffView.RollCall;
-import View.StaffView.StaffInforJpanel;
+import View.StaffView.StaffInforJDialog;
 import View.StaffView.StaffJFrame;
 import View.StaffView.StaffJPanel;
 import View.StaffView.Table_JPanel;
@@ -42,7 +42,8 @@ public class StaffJFrameController {
                     }
                     ((JButton) e.getSource()).setBackground(new Color(88, 214, 141));
 
-                    if (!command.equalsIgnoreCase("ĐĂNG XUẤT"))
+                    if (!command.equalsIgnoreCase("ĐĂNG XUẤT") &&
+                            !command.equalsIgnoreCase("<html>THÔNG TIN CÁ <br>NHÂN</html>"))
                         contentPanel.removeAll();
                     switch (command) {
                         case "BÁN HÀNG":
@@ -109,18 +110,10 @@ public class StaffJFrameController {
                         case "MINI GAME":
                             contentPanel.add(new GamePanel(), BorderLayout.CENTER);
                             break;
-                        case "<html>THÔNG TIN CÁ <br>NHÂN</html>":
-                            StaffInforJpanel staffInfoPanel = new StaffInforJpanel(employee);
-                            // Thiết lập thông tin nhân viên từ đối tượng employee
-                            // staffInfoPanel.setUserInfo(
-                            // employee.getName(),
-                            // employee.getGender(),
-                            // employee.getBirthDate(),
-                            // employee.getCCCD(),
-                            // employee.getPhone(),
-                            // employee.getRole());
-                            contentPanel.add(staffInfoPanel, BorderLayout.CENTER);
-                            break;
+                        // case "<html>THÔNG TIN CÁ <br>NHÂN</html>":
+                        //     StaffInforJDialog staffInforJDialog = new StaffInforJDialog(employee);
+                        //     staffInforJDialog.setVisible(true);
+                        //     break;
                         case "ĐĂNG XUẤT":
                             // Thêm logic đăng xuất (ví dụ: đóng frame, quay về màn hình đăng nhập)
                             int confirm = JOptionPane.showConfirmDialog(staffJFrame,

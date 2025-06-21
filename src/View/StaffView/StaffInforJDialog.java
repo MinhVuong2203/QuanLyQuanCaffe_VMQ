@@ -6,6 +6,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -23,7 +24,7 @@ import java.awt.*;
 import java.io.IOException;
 import java.sql.SQLException;
 
-public class StaffInforJpanel extends JPanel {
+public class StaffInforJDialog extends JDialog {
     private JPanel infoPanel;
     private JTextField txtHoTen;
     private JComboBox<String> cboGioiTinh;
@@ -96,7 +97,7 @@ public class StaffInforJpanel extends JPanel {
         this.btnUpdateInfo = btnCapNhat;
     }
 
-    public StaffInforJpanel(Employee employee) {
+    public StaffInforJDialog(Employee employee) {
         initComponents();
         this.empID = employee.getId();
         setUserInfo();
@@ -119,6 +120,12 @@ public class StaffInforJpanel extends JPanel {
     }
 
     private void initComponents() {
+        setTitle("Thông tin cá nhân");
+        setSize(800, 650);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        setResizable(false);
+        setModal(true);
         setLayout(new BorderLayout());
 
         // Panel chính
@@ -134,7 +141,7 @@ public class StaffInforJpanel extends JPanel {
 
         // Panel chứa thông tin với Absolute Layout
         infoPanel = new JPanel();
-        infoPanel.setLayout(null); // Sử dụng null để tạo Absolute Layout
+        infoPanel.setLayout(null);
         infoPanel.setBackground(Color.WHITE);
         infoPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
 
@@ -345,7 +352,6 @@ public class StaffInforJpanel extends JPanel {
             IEmployeeRespository employeeRespository = new EmployeeRespository();
             // Lấy thông tin nhân viên từ cơ sở dữ liệu
             Employee employee = employeeRespository.getEmployeeInfor(empID);
-
             if (employee != null) {
                 // Hiển thị thông tin lên giao diện
                 txtHoTen.setText(employee.getName());
@@ -358,8 +364,12 @@ public class StaffInforJpanel extends JPanel {
                 txtPassword.setText(employee.getPassword());
 
                 // Hiển thị ảnh nhân viên từ đường dẫn lưu trong đối tượng employee
-                imagePath = employee.getImage(); // Giả sử Employee có phương thức getImage() trả về đường dẫn
+                imagePath = employee.getImage();
                 displayImage(imagePath);
+
+                if (employee.getRole().equals("Quản lí")) {
+                    btnUpdateInfo.setVisible(false);
+                }
             } else {
                 // Xử lý khi không tìm thấy thông tin
                 JOptionPane.showMessageDialog(this,
