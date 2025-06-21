@@ -73,12 +73,20 @@ public class RequestDialog extends JDialog {
         // Thêm sự kiện khi chọn một hàng
         tblRequests.getSelectionModel().addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting() && tblRequests.getSelectedRow() != -1) {
-                selectedChangeID = (int) tblRequests.getValueAt(tblRequests.getSelectedRow(), 0);
-                selectedEmployeeID = (int) tblRequests.getValueAt(tblRequests.getSelectedRow(), 1);
-
-                // Kích hoạt các nút khi có hàng được chọn
-                btnAccept.setEnabled(true);
-                btnReject.setEnabled(true);
+                if (tblRequests.getValueAt(tblRequests.getSelectedRow(), 8).equals("Chờ duyệt")) {
+                    // Nếu hàng được chọn có trạng thái "Chờ duyệt", cho phép chấp nhận hoặc từ chối
+                    selectedChangeID = (int) tblRequests.getValueAt(tblRequests.getSelectedRow(), 0);
+                    selectedEmployeeID = (int) tblRequests.getValueAt(tblRequests.getSelectedRow(), 1);
+                    btnAccept.setEnabled(true);
+                    btnReject.setEnabled(true);
+                } else {
+                    // Nếu hàng được chọn không phải "Chờ duyệt", vô hiệu hóa các nút
+                    selectedChangeID = (int) tblRequests.getValueAt(tblRequests.getSelectedRow(), 0);
+                    selectedEmployeeID = (int) tblRequests.getValueAt(tblRequests.getSelectedRow(), 1);
+                    btnAccept.setEnabled(false);
+                    btnReject.setEnabled(false);
+                    
+                }
             }
         });
 
@@ -93,6 +101,7 @@ public class RequestDialog extends JDialog {
         btnAccept.setFont(new Font("Arial", Font.BOLD, 14));
         btnAccept.setPreferredSize(new Dimension(120, 35));
         btnAccept.setBackground(new Color(46, 204, 113));
+        btnAccept.setBorderPainted(false);
         btnAccept.setForeground(Color.WHITE);
         btnAccept.setEnabled(false);
 
@@ -100,6 +109,7 @@ public class RequestDialog extends JDialog {
         btnReject.setFont(new Font("Arial", Font.BOLD, 14));
         btnReject.setPreferredSize(new Dimension(120, 35));
         btnReject.setBackground(new Color(231, 76, 60));
+        btnAccept.setBorderPainted(false);
         btnReject.setForeground(Color.WHITE);
         btnReject.setEnabled(false);
 
