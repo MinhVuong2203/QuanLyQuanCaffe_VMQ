@@ -22,6 +22,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import View.StaffView.Payment_Interface;
+import View.StaffView.TakeAwayJPanel;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -35,14 +36,17 @@ import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
 public class PayOSSwingApp {
 	private Payment_Interface payment_Interface;
+	private TakeAwayJPanel takeAwayJPanel;
 	private ImageIcon qrIcon;
 	private boolean status = false; // Chưa có tạo mã qr
     // Thay bằng thông tin PayOS của bạn
@@ -222,6 +226,177 @@ public class PayOSSwingApp {
         }
     }
 
+    public PayOSSwingApp(TakeAwayJPanel takeAwayJPanel) {
+    	this.takeAwayJPanel = takeAwayJPanel;
+    	Map<String, Object> billInfo = takeAwayJPanel.getBillInfo();
+      
+    	// Khởi tạo PayOS
+        PayOS payOS = new PayOS(CLIENT_ID, API_KEY, CHECKSUM_KEY);
+
+        String description = "Thanh toán đơn hàng";
+        int amount = ((Double) billInfo.get("finalTotal")).intValue();  // tổng tiền (đã bao gồm giảm giá)
+        int orderId = (int) billInfo.get("orderID");
+        int sl = ((List<Map<String, Object>>) billInfo.get("products")).size();
+
+        if (orderId <= 0) {
+            SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(null, "Mã đơn hàng không hợp lệ!"));
+            return;
+        }
+
+        System.out.println("Tổng: " + amount);
+        System.out.println("orderID: " + orderId);
+        System.out.println("Số lượng: " + sl);
+
+        // Kiểm tra trạng thái đơn hàng trên PayOS
+        try {
+            String paymentStatus = checkPaymentStatus(orderId);
+            if ("PENDING".equals(paymentStatus)) {
+                System.out.println("Đơn hàng " + orderId + " đã tồn tại trên PayOS và đang chờ thanh toán.");
+                if (existingOrderIds.contains((long) orderId) && qrIcon != null) {
+                    SwingUtilities.invokeLater(() -> {
+                        JOptionPane.showMessageDialog(null, "Mã QR đã tồn tại cho đơn hàng này!");
+                    });
+                    startStatusCheckThread(orderId); // Tiếp tục kiểm tra trạng thái
+                    return;
+                }
+                // Nếu không có qrIcon, thử tải lại mã QR từ checkoutUrl
+            } else if ("PAID".equals(paymentStatus)) {
+                SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(null, "Đơn hàng này đã được thanh toán!"));
+                return;
+            } else if ("CANCELLED".equals(paymentStatus) || "EXPIRED".equals(paymentStatus)) {
+                SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(null, "Đơn hàng này đã bị hủy hoặc hết hạn!"));
+                return;
+            }
+        } catch (Exception ex) {
+            System.err.println("Lỗi kiểm tra trạng thái đơn hàng: " + ex.getMessage());
+        }
+
+        try {
+            List<ItemData> items = new ArrayList<>();
+            List<Map<String, Object>> products = (List<Map<String, Object>>) billInfo.get("products"); 
+            for (int i = 0; i < sl; i++) {
+                items.add(ItemData.builder()
+                        .name(products.get(i).get("productName") + "")
+                        .quantity((Integer) products.get(i).get("quantity"))
+                        .price(((Double) products.get(i).get("unitPrice")).intValue())
+                        .build());
+            }
+
+            // Tạo returnUrl và cancelUrl với query parameters
+            String returnUrlWithParams = RETURN_URL + "?orderId=" + orderId +
+                    "&amount=" + amount +
+                    "&accountNumber=" + URLEncoder.encode(ACCOUNT_NUMBER, StandardCharsets.UTF_8) +
+                    "&description=" + URLEncoder.encode(description, StandardCharsets.UTF_8);
+
+            String cancelUrlWithParams = CANCEL_URL + "?orderId=" + orderId +
+                    "&amount=" + amount +
+                    "&accountNumber=" + URLEncoder.encode(ACCOUNT_NUMBER, StandardCharsets.UTF_8) +
+                    "&description=" + URLEncoder.encode(description, StandardCharsets.UTF_8);
+
+            // Tạo PaymentData
+            PaymentData paymentData = PaymentData.builder()
+                    .orderCode((long) orderId)
+                    .amount(amount)
+                    .description(description)
+                    .items(items)
+                    .returnUrl(returnUrlWithParams)
+                    .cancelUrl(cancelUrlWithParams)
+                    .build();
+
+            // Tạo link thanh toán
+            CheckoutResponseData paymentResult;
+            try {
+                paymentResult = payOS.createPaymentLink(paymentData);
+            } catch (PayOSException ex) {
+                if (ex.getMessage().contains("Đơn thanh toán đã tồn tại")) {
+                    System.out.println("Đơn hàng " + orderId + " đã tồn tại, tải lại mã QR.");
+                    // Tải lại mã QR từ PayOS hoặc hiển thị mã hiện có
+                    if (existingOrderIds.contains((long) orderId) && qrIcon != null) {
+                        SwingUtilities.invokeLater(() -> {
+                            JOptionPane.showMessageDialog(null, "Mã QR đã tồn tại cho đơn hàng này!");
+                        });
+                        startStatusCheckThread(orderId);
+                        return;
+                    } else {
+                        // Tải lại mã QR từ checkoutUrl (cần lưu trữ checkoutUrl từ lần tạo trước)
+                        SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(null, "Không tìm thấy mã QR cục bộ, vui lòng thử lại!"));
+                        return;
+                    }
+                }
+                throw ex;
+            }
+
+            String checkoutUrl = paymentResult.getCheckoutUrl();
+
+            // Mở trình duyệt với URL thanh toán
+            if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
+                Desktop.getDesktop().browse(new URI(checkoutUrl));
+            } else {
+                SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(null, "Không thể mở trình duyệt!"));
+            }
+
+            // Tải nội dung trang từ checkoutUrl
+            try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
+                HttpGet httpGet = new HttpGet(checkoutUrl);
+                try (CloseableHttpResponse response = httpClient.execute(httpGet)) {
+                    HttpEntity entity = response.getEntity();
+                    String htmlContent = EntityUtils.toString(entity, StandardCharsets.UTF_8);
+
+                    // Parse HTML để lấy URL hình ảnh QR
+                    Document doc = Jsoup.parse(htmlContent);
+                    Element imgElement = doc.selectFirst("img[src*=vietqr.io]");
+                    if (imgElement == null) {
+                        imgElement = doc.selectFirst("img.w-\\[(?:80%|[0-9]+%\\)]");
+                    }
+                    if (imgElement == null) {
+                        imgElement = doc.selectFirst("img.max-w-\\[(?:80%|[0-9]+%\\)]");
+                    }
+                    if (imgElement != null) {
+                        String qrImageUrl = imgElement.attr("src");
+                        if (qrImageUrl.startsWith("http")) {
+                            BufferedImage qrImage = ImageIO.read(new URL(qrImageUrl));
+// Chỉnh kích thướt
+                            Image scaledImage = qrImage.getScaledInstance(250, 250, Image.SCALE_SMOOTH);
+                            qrIcon = new ImageIcon(scaledImage);
+                            
+                            // Lưu hình ảnh về file cục bộ
+                            String Folder = "src/image/QRcode/";
+                            String image = "QR_Hoa_Don_" + orderId + ".png";
+                            File outputFile = new File(Folder, image);
+                            outputFile.getParentFile().mkdirs(); // đảm bảo thư mục tồn tại                            
+                            ImageIO.write(qrImage, "png", outputFile);
+                            
+                            SwingUtilities.invokeLater(() -> {
+//                                this.payment_Interface.qrCodeLabel.setIcon(qrIcon);
+                                status = true; // Đã tạo mã QR
+                            });
+                            existingOrderIds.add((long) orderId); // Lưu orderId
+                        } else {
+                            SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(null, "Không tìm thấy URL hình ảnh QR hợp lệ!"));
+                        }
+                    } else {
+                        SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(null, "Không tìm thấy mã QR trên trang!"));
+                    }
+                }
+            }
+
+            // Bắt đầu kiểm tra trạng thái
+            startStatusCheckThread(orderId);
+
+        } catch (NumberFormatException ex) {
+            SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(null, "Vui lòng nhập số tiền hợp lệ!"));
+        } catch (IOException ex) {
+            SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(null, "Lỗi tải hình ảnh QR: " + ex.getMessage()));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(null, "Lỗi: " + ex.getMessage()));
+        }
+    	
+    }
+    
+    
+    
+    
     private String checkPaymentStatus(int orderId) throws IOException, ParseException {
         try (CloseableHttpClient statusClient = HttpClients.createDefault()) {
             HttpGet statusGet = new HttpGet(STATUS_API_URL + orderId);

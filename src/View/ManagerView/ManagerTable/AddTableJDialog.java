@@ -7,6 +7,8 @@ import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Toolkit;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
@@ -47,6 +49,14 @@ public class AddTableJDialog extends JDialog {
 		idTextField.setBounds(142, 43, 85, 19);
 		contentPanel.add(idTextField);
 		idTextField.setColumns(10);
+		idTextField.addKeyListener(new KeyAdapter() {		
+	        	@Override
+	        	public void keyPressed(KeyEvent e) {
+	        		if (e.getKeyCode() == KeyEvent.VK_DOWN){
+	        			nameTextField.requestFocusInWindow();
+	        		}            		
+	        	}
+	        });
 		
 		JLabel lblTnBn = new JLabel("Tên bàn:");
 		lblTnBn.setFont(new Font("Segoe UI", Font.BOLD, 16));
@@ -58,6 +68,14 @@ public class AddTableJDialog extends JDialog {
 		nameTextField.setColumns(10);
 		nameTextField.setBounds(142, 89, 85, 19);
 		contentPanel.add(nameTextField);
+		nameTextField.addKeyListener(new KeyAdapter() {
+	        	@Override
+	        	public void keyPressed(KeyEvent e) {
+	        		if (e.getKeyCode() == KeyEvent.VK_UP){
+	        			idTextField.requestFocusInWindow();
+	        		}            		
+	        	}
+	        });
 		
 		JLabel infoID = new JLabel();
 		infoID.setForeground(new Color(255, 0, 0));
@@ -76,6 +94,7 @@ public class AddTableJDialog extends JDialog {
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
 				JButton okButton = new JButton("OK");
+				nameTextField.addActionListener(e -> okButton.doClick());
 				okButton.setFont(new Font("Tahoma", Font.BOLD, 14));
 				okButton.setActionCommand("OK");
 				buttonPane.add(okButton);

@@ -8,6 +8,9 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -119,11 +122,30 @@ public class LoginView extends JFrame {
         textField.setFocusBorderColor(new Color(242, 145, 145));
         contentPane.add(textField);
         textField.setColumns(10);
+        textField.addKeyListener(new KeyAdapter() {
+        	@Override
+        	public void keyPressed(KeyEvent e) {
+        		if (e.getKeyCode() == KeyEvent.VK_DOWN || e.getKeyCode() == KeyEvent.VK_ENTER) {
+        			passwordField.requestFocus();
+        		}
+        	}
+        });
 
         passwordField = new CustomPasswordField();
 		passwordField.setBounds(129, 176, 151, 26);
         passwordField.setFont(new Font("Segoe UI", Font.PLAIN, 16));
         passwordField.setFocusBorderColor(new Color(242, 145, 145));
+        passwordField.addKeyListener(new KeyAdapter() {
+        	@Override
+        	public void keyPressed(KeyEvent e) {
+        		if (e.getKeyCode() == KeyEvent.VK_UP) {
+        			textField.requestFocus();
+        		}     		
+        	}
+        });
+        
+        passwordField.addActionListener(e -> btnNewButton.doClick());
+        
 		contentPane.add(passwordField);
 
         JLabel lblNewLabel_1 = new JLabel("Tài khoản:");

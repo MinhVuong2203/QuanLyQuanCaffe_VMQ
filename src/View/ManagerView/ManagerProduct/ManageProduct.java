@@ -4,6 +4,8 @@ import Model.Product;
 import Repository.Product.ProductRespository;
 import Components.HoverEffect;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -23,6 +25,11 @@ public class ManageProduct extends JPanel {
     private ProductRespository productRespository;
     private Product selectedProduct = null;
     private JLabel lblNewLabel;
+	private JTextField txtPrice;
+	private JTextField txtSize;
+	private JButton btnAddImage;
+	private JTextField txtName;
+	private JTextField txtImage;
 
 
     {
@@ -152,21 +159,54 @@ public class ManageProduct extends JPanel {
         
             JLabel lblName = new JLabel("Tên sản phẩm:");
             lblName.setFont(new Font("Tahoma", Font.BOLD, 16));
-            JTextField txtName = new JTextField(20);
+            txtName = new JTextField(20);            
             txtName.setFont(new Font("Tahoma", Font.BOLD, 16));
+            txtName.addKeyListener(new KeyAdapter() {
+            	@Override
+            	public void keyPressed(KeyEvent e) {
+            		if (e.getKeyCode() == KeyEvent.VK_DOWN || e.getKeyCode() == KeyEvent.VK_ENTER){
+            			txtPrice.requestFocus();
+            		}            		
+            	}
+            });
+            
             JLabel lblPrice = new JLabel("Giá sản phẩm:");
             lblPrice.setFont(new Font("Tahoma", Font.BOLD, 16));
-            JTextField txtPrice = new JTextField(20);
+            txtPrice = new JTextField(20);
             txtPrice.setFont(new Font("Tahoma", Font.BOLD, 16));
+            txtPrice.addKeyListener(new KeyAdapter() {
+            	@Override
+            	public void keyPressed(KeyEvent e) {
+            		if (e.getKeyCode() == KeyEvent.VK_DOWN || e.getKeyCode() == KeyEvent.VK_ENTER){
+            			txtSize.requestFocus();
+            		}         
+            		else if (e.getKeyCode() == KeyEvent.VK_UP){
+            			txtName.requestFocus();
+            		}         
+            	}
+            });
+            
             JLabel lblSize = new JLabel("Kích thước:");
             lblSize.setFont(new Font("Tahoma", Font.BOLD, 16));
-            JTextField txtSize = new JTextField(20);
+            txtSize = new JTextField(20);
             txtSize.setFont(new Font("Tahoma", Font.BOLD, 16));
+            txtSize.addKeyListener(new KeyAdapter() {
+            	@Override
+            	public void keyPressed(KeyEvent e) {
+            		if (e.getKeyCode() == KeyEvent.VK_DOWN || e.getKeyCode() == KeyEvent.VK_ENTER){
+            			btnAddImage.doClick();
+            		} else if (e.getKeyCode() == KeyEvent.VK_UP){
+            			txtPrice.requestFocus();
+            		}                    		
+            	}
+            });
+            
             JLabel lblImage = new JLabel("Hình ảnh:");
             lblImage.setFont(new Font("Tahoma", Font.BOLD, 16));
-            JTextField txtImage = new JTextField(20);
+            txtImage = new JTextField(20);
+            
             txtImage.setFont(new Font("Tahoma", Font.BOLD, 16));
-            JButton btnAddImage = new JButton("Chọn ảnh");
+            btnAddImage = new JButton("Chọn ảnh");
             btnAddImage.setFont(new Font("Tahoma", Font.BOLD, 16));
             btnAddImage.addActionListener(e1 -> {
                 JFileChooser fileChooser = new JFileChooser();

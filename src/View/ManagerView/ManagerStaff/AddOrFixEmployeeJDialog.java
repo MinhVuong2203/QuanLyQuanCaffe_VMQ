@@ -34,6 +34,8 @@ import com.toedter.calendar.JDateChooser;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class AddOrFixEmployeeJDialog extends JDialog {
 
@@ -118,6 +120,14 @@ public class AddOrFixEmployeeJDialog extends JDialog {
 		nameTextField.setBounds(141, 31, 201, 26);
 		contentPanel.add(nameTextField);
 		nameTextField.setColumns(10);
+		nameTextField.addKeyListener(new KeyAdapter() {
+        	@Override
+        	public void keyPressed(KeyEvent e) {
+        		if (e.getKeyCode() == KeyEvent.VK_DOWN){
+        			phoneTextField.requestFocusInWindow();
+        		}     
+        	}
+        });
 		
 		JLabel lblNewLabel_1_1 = new JLabel("Số điện thoại:");
 		lblNewLabel_1_1.setFont(new Font("Tahoma", Font.PLAIN, 16));
@@ -129,6 +139,17 @@ public class AddOrFixEmployeeJDialog extends JDialog {
 		phoneTextField.setColumns(10);
 		phoneTextField.setBounds(141, 81, 201, 26);
 		contentPanel.add(phoneTextField);
+		phoneTextField.addKeyListener(new KeyAdapter() {
+        	@Override
+        	public void keyPressed(KeyEvent e) {
+        		if (e.getKeyCode() == KeyEvent.VK_DOWN){
+        			CCCDtextField.requestFocusInWindow();
+        		}     
+        		else if (e.getKeyCode() == KeyEvent.VK_UP) {
+        			nameTextField.requestFocusInWindow();
+        		}
+        	}
+        });
 		
 		JLabel lblNewLabel_1_2 = new JLabel("CCCD:");
 		lblNewLabel_1_2.setFont(new Font("Tahoma", Font.PLAIN, 16));
@@ -140,6 +161,17 @@ public class AddOrFixEmployeeJDialog extends JDialog {
 		CCCDtextField.setColumns(10);
 		CCCDtextField.setBounds(141, 131, 201, 26);
 		contentPanel.add(CCCDtextField);
+		CCCDtextField.addKeyListener(new KeyAdapter() {
+        	@Override
+        	public void keyPressed(KeyEvent e) {
+        		if (e.getKeyCode() == KeyEvent.VK_DOWN){
+        			BirthdayTextField.getDateEditor().getUiComponent().requestFocusInWindow();
+        		}     
+        		else if (e.getKeyCode() == KeyEvent.VK_UP) {
+        			phoneTextField.requestFocusInWindow();
+        		}
+        	}
+        });
 		
 		JLabel lblNewLabel_1_3 = new JLabel("Ngày sinh:");
 		lblNewLabel_1_3.setFont(new Font("Tahoma", Font.PLAIN, 16));
@@ -151,6 +183,18 @@ public class AddOrFixEmployeeJDialog extends JDialog {
 		BirthdayTextField.setDateFormatString("yyyy-MM-dd"); // Thiết lập định dạng ngày
 		((JTextField) BirthdayTextField.getDateEditor().getUiComponent()).setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		contentPanel.add(BirthdayTextField);
+		BirthdayTextField.addKeyListener(new KeyAdapter() {
+        	@Override
+        	public void keyPressed(KeyEvent e) {
+        		if (e.getKeyCode() == KeyEvent.VK_DOWN){
+        			luongTextField.requestFocusInWindow();
+        		}     
+        		else if (e.getKeyCode() == KeyEvent.VK_UP) {
+        			CCCDtextField.requestFocusInWindow();
+        		}
+        	}
+        });
+		
 		
 		JLabel lblNewLabel_1_4 = new JLabel("Giới tính:");
 		lblNewLabel_1_4.setFont(new Font("Tahoma", Font.PLAIN, 16));
@@ -169,6 +213,17 @@ public class AddOrFixEmployeeJDialog extends JDialog {
 		((AbstractDocument) luongTextField.getDocument()).setDocumentFilter(new NumberDocumentFilter());
 		contentPanel.add(luongTextField);
 		luongTextField.setHorizontalAlignment(SwingConstants.RIGHT);
+		luongTextField.addKeyListener(new KeyAdapter() {
+        	@Override
+        	public void keyPressed(KeyEvent e) {
+        		if (e.getKeyCode() == KeyEvent.VK_DOWN){
+        			usernameTextField.requestFocusInWindow();
+        		}     
+        		else if (e.getKeyCode() == KeyEvent.VK_UP) {
+        			BirthdayTextField.getDateEditor().getUiComponent().requestFocusInWindow();
+        		}
+        	}
+        });
 
 
 			JButton btnPlus = new JButton();
@@ -210,6 +265,17 @@ public class AddOrFixEmployeeJDialog extends JDialog {
 		usernameTextField.setColumns(10);
 		usernameTextField.setBounds(141, 363, 169, 26);
 		contentPanel.add(usernameTextField);
+		usernameTextField.addKeyListener(new KeyAdapter() {
+        	@Override
+        	public void keyPressed(KeyEvent e) {
+        		if (e.getKeyCode() == KeyEvent.VK_DOWN){
+        			passwordTextField.requestFocusInWindow();
+        		}     
+        		else if (e.getKeyCode() == KeyEvent.VK_UP) {
+        			luongTextField.requestFocusInWindow();
+        		}
+        	}
+        });
 		
 		JLabel lblNewLabel_1_7 = new JLabel("Password:");
 		lblNewLabel_1_7.setFont(new Font("Tahoma", Font.PLAIN, 16));
@@ -221,6 +287,17 @@ public class AddOrFixEmployeeJDialog extends JDialog {
 		passwordTextField.setColumns(10);
 		passwordTextField.setBounds(420, 363, 169, 26);
 		contentPanel.add(passwordTextField);
+		passwordTextField.addKeyListener(new KeyAdapter() {
+        	@Override
+        	public void keyPressed(KeyEvent e) {
+//        		if (e.getKeyCode() == KeyEvent.VK_DOWN){
+//        			BirthdayTextField.requestFocus();
+//        		}     
+        		if (e.getKeyCode() == KeyEvent.VK_UP) {
+        			usernameTextField.requestFocusInWindow();
+        		}
+        	}
+        });
 		
 		ButtonGroup groupbtn = new ButtonGroup();
 			rdbtnNam = new JRadioButton("Nam");

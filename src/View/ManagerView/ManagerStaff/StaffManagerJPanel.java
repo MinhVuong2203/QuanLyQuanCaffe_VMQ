@@ -2,6 +2,7 @@ package View.ManagerView.ManagerStaff;
 
 import Controller.ManagerController.FilterDocumentListener;
 import Controller.ManagerController.StaffManagerController;
+import Controller.StaffController.FixEmployeeController;
 import Model.Employee;
 import Repository.Employee.EmployeeRespository;
 import Repository.Employee.IEmployeeRespository;
@@ -12,6 +13,8 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
@@ -66,7 +69,7 @@ public class StaffManagerJPanel extends JPanel {
 
             table.setModel(new DefaultTableModel(data, columnNames) {
                 private static final long serialVersionUID = 1L;
-                boolean[] columnEditables = new boolean[] { false, true, true, true, true, true, true, true, true, true };
+                boolean[] columnEditables = new boolean[] {false, false, false, false, false, false, false, false, false, false};
 
                 public boolean isCellEditable(int row, int column) {
                     return columnEditables[column];
@@ -78,6 +81,8 @@ public class StaffManagerJPanel extends JPanel {
             table.getTableHeader().setPreferredSize(new Dimension(100, 40));
             table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 
+            table.addMouseListener(new FixEmployeeController(this));
+            
             // Renderer cho header
             table.getTableHeader().setDefaultRenderer(new DefaultTableCellRenderer() {
                 @Override

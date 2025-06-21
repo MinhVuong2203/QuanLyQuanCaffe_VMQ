@@ -7,6 +7,8 @@ import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Toolkit;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.sql.SQLException;
 
@@ -67,7 +69,14 @@ public class ChangePasswordView extends JDialog {
         newPasswordField.setBounds(42, 72, 240, 26);
         contentPanel.add(newPasswordField);
         newPasswordField.setColumns(10);
-        
+        newPasswordField.addKeyListener(new KeyAdapter() {
+        	@Override
+        	public void keyPressed(KeyEvent e) {
+        		if (e.getKeyCode() == KeyEvent.VK_DOWN || e.getKeyCode() == KeyEvent.VK_ENTER){
+        			confirmPasswordField.requestFocus();
+        		}            		
+        	}
+        });
         newPasswordToggleButton = new JButton();
         newPasswordToggleButton.setIcon(new ImageIcon(new ImageIcon("src\\image\\System_Image\\eye_closed.png").getImage().getScaledInstance(40, 40, java.awt.Image.SCALE_SMOOTH)));
         newPasswordToggleButton.setBounds(290, 72, 25, 26); // Đặt ngay bên phải newPasswordField
@@ -85,7 +94,15 @@ public class ChangePasswordView extends JDialog {
         confirmPasswordField.setColumns(10);
         confirmPasswordField.setBounds(167, 177, 240, 26);
         contentPanel.add(confirmPasswordField);
-
+        confirmPasswordField.addKeyListener(new KeyAdapter() {
+        	@Override
+        	public void keyPressed(KeyEvent e) {
+        		if (e.getKeyCode() == KeyEvent.VK_UP){
+        			newPasswordField.requestFocus();
+        		}            		
+        	}
+        });
+        
         confirmPasswordToggleButton = new JButton();
         confirmPasswordToggleButton.setIcon(new ImageIcon(new ImageIcon("src\\image\\System_Image\\eye_closed.png").getImage().getScaledInstance(40, 40, java.awt.Image.SCALE_SMOOTH))); // Đường dẫn đến biểu tượng mắt đóng
         confirmPasswordToggleButton.setBounds(415, 177, 25, 26); // Đặt ngay bên phải confirmPasswordField

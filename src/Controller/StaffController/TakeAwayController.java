@@ -31,6 +31,7 @@ import Repository.Payment.PaymentRepository;
 import Repository.Product.IProductRespository;
 import Repository.Product.ProductRespository;
 import Utils.JdbcUtils;
+import Utils.PayOSSwingApp;
 import View.StaffView.Table_JPanel;
 import View.StaffView.TakeAwayJPanel;
 
@@ -38,6 +39,8 @@ import View.StaffView.TakeAwayJPanel;
 public class TakeAwayController implements ActionListener {
     private TakeAwayJPanel takeAwayJPanel;
     private LocalDateTime time = LocalDateTime.now();
+    
+    public String paymentMethod;
 
     public TakeAwayController(TakeAwayJPanel takeAwayJPanel) {
         this.takeAwayJPanel = takeAwayJPanel;
@@ -203,7 +206,7 @@ public class TakeAwayController implements ActionListener {
                 return;
             }
 
-            String paymentMethod = paymentOptions[paymentMethodIndex];
+            paymentMethod = paymentOptions[paymentMethodIndex];
 
             // Tạo thông báo xác nhận
             StringBuilder confirmMessage = new StringBuilder();
@@ -281,7 +284,6 @@ public class TakeAwayController implements ActionListener {
                 }
 
                 // In hóa đơn
-                // ** Quan trọng: In sau khi đã lưu đầy đủ thông tin
                 takeAwayJPanel.printBill();
 
                 // Thông báo thành công

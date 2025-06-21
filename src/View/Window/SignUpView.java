@@ -5,6 +5,9 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -76,6 +79,14 @@ public class SignUpView extends JFrame {
 		textField_Ten.setBounds(170, 121, 168, 28);
 		contentPane.add(textField_Ten);
 		textField_Ten.setColumns(10);
+		textField_Ten.addKeyListener(new KeyAdapter() {
+	        	@Override
+	        	public void keyPressed(KeyEvent e) {
+	        		if (e.getKeyCode() == KeyEvent.VK_DOWN || e.getKeyCode() == KeyEvent.VK_ENTER){
+	        			textField_SDT.requestFocus();
+	        		}     		
+	        	}
+	        });
 		
 		JLabel Label_SDT = new JLabel("Số điện thoại:");
 		Label_SDT.setFont(new Font("Segoe UI", Font.PLAIN, 16));
@@ -87,6 +98,14 @@ public class SignUpView extends JFrame {
 		textField_SDT.setBounds(170, 159, 168, 28);
 		contentPane.add(textField_SDT);
 		textField_SDT.setColumns(10);
+		textField_SDT.addKeyListener(new KeyAdapter() {
+	        	@Override
+	        	public void keyPressed(KeyEvent e) {
+	        		if (e.getKeyCode() == KeyEvent.VK_UP) {
+	        			textField_Ten.requestFocus();
+	        		}     		
+	        	}
+	        });
 		
 		ActionListener ac = new SignUpController(this);
 
@@ -111,6 +130,8 @@ public class SignUpView extends JFrame {
 		btnNewButton.setOpaque(true);
 		btnNewButton.setContentAreaFilled(true);
 		btnNewButton.setBorderPainted(false); 
+		
+		textField_SDT.addActionListener(e -> btnNewButton.doClick());
 		
 		JLabel background = new JLabel("");
 		background.setFont(new Font("Segoe UI", Font.PLAIN, 16));

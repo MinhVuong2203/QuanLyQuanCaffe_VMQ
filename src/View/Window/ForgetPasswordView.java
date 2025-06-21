@@ -5,6 +5,8 @@ import java.awt.Font;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 
 import javax.swing.ImageIcon;
@@ -93,13 +95,21 @@ public class ForgetPasswordView extends JFrame {
 				} catch (ClassNotFoundException | IOException e1) {
 					e1.printStackTrace();
 				}
-	        });
+	        });	
 
 	        textField = new JTextField();
 	        textField.setBounds(131, 124, 186, 26);
 	        textField.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 	        contentPane.add(textField);
 	        textField.setColumns(10);
+	        textField.addKeyListener(new KeyAdapter() {
+	        	@Override
+	        	public void keyPressed(KeyEvent e) {
+	        		if (e.getKeyCode() == KeyEvent.VK_DOWN || e.getKeyCode() == KeyEvent.VK_ENTER){
+	        			cccdTF.requestFocus();
+	        		}     		
+	        	}
+	        });
 
 	        JLabel lblNewLabel_1 = new JLabel("Tài khoản:");
 	        lblNewLabel_1.setFont(new Font("Segoe UI", Font.PLAIN, 18));
@@ -160,12 +170,33 @@ public class ForgetPasswordView extends JFrame {
 	        capchaTF.setColumns(10);
 	        capchaTF.setBounds(131, 231, 98, 26);
 	        contentPane.add(capchaTF);
+	        capchaTF.addKeyListener(new KeyAdapter() {
+	        	@Override
+	        	public void keyPressed(KeyEvent e) {
+	        		if (e.getKeyCode() == KeyEvent.VK_UP){
+	        			emailTF.requestFocus();
+	        		}     		
+	        	}
+	        });
+	        
+	        capchaTF.addActionListener(e -> btnFP.doClick());
 	        
 	        cccdTF = new JTextField();
 	        cccdTF.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 	        cccdTF.setColumns(10);
 	        cccdTF.setBounds(131, 160, 186, 26);
 	        contentPane.add(cccdTF);
+	        cccdTF.addKeyListener(new KeyAdapter() {
+	        	@Override
+	        	public void keyPressed(KeyEvent e) {
+	        		if (e.getKeyCode() == KeyEvent.VK_DOWN || e.getKeyCode() == KeyEvent.VK_ENTER){
+	        			emailTF.requestFocus();
+	        		}     
+	        		else if (e.getKeyCode() == KeyEvent.VK_UP) {
+	        			textField.requestFocus();
+	        		}
+	        	}
+	        });
 	        
 	        JLabel lblNewLabel_2_2 = new JLabel("Email nhận:");
 	        lblNewLabel_2_2.setFont(new Font("Segoe UI", Font.PLAIN, 18));
@@ -177,6 +208,17 @@ public class ForgetPasswordView extends JFrame {
 	        emailTF.setColumns(10);
 	        emailTF.setBounds(131, 196, 186, 26);
 	        contentPane.add(emailTF);
+	        emailTF.addKeyListener(new KeyAdapter() {
+	        	@Override
+	        	public void keyPressed(KeyEvent e) {
+	        		if (e.getKeyCode() == KeyEvent.VK_DOWN || e.getKeyCode() == KeyEvent.VK_ENTER){
+	        			capchaTF.requestFocus();
+	        		}  
+	        		else if (e.getKeyCode() == KeyEvent.VK_UP) {
+	        			cccdTF.requestFocus();
+	        		}
+	        	}
+	        });
 	        
 	        JLabel lblNewLabel_3 = new JLabel("\r\n");
 	        lblNewLabel_3.setFont(new Font("Segoe UI", Font.PLAIN, 10));

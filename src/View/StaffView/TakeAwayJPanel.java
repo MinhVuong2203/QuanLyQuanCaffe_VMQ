@@ -51,6 +51,8 @@ public class TakeAwayJPanel extends JPanel {
     private IProductRespository productDao = new ProductRespository();
     private List<Product> products = productDao.getArrayListProductFromSQL(); // Lấy danh sách sản phẩm từ database
 
+    private TakeAwayController ac;
+    
     // DefaultListModel để quản lý danh sách
     private DefaultListModel<String> menuModel;
     private DefaultListModel<String> placedModel;
@@ -78,6 +80,8 @@ public class TakeAwayJPanel extends JPanel {
     private JTextField textField_Discount;
     private double discountAmount = 0.0;
     private Customer currentCustomer = null;
+    
+    private Map<String, Object> billInfo;
 
     public TakeAwayJPanel(int empID) throws IOException, ClassNotFoundException, SQLException {
         setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -124,7 +128,7 @@ public class TakeAwayJPanel extends JPanel {
         scrollPane_dishSelected.setBounds(0, 73, 540, 415);
         order.add(scrollPane_dishSelected);
 
-        ActionListener ac = new TakeAwayController(this);
+        ac = new TakeAwayController(this);
 
         JButton Button_Pay = new JButton("Thanh toán");
         Button_Pay.setFont(new Font("Segoe UI", Font.BOLD, 16));
@@ -540,11 +544,15 @@ public class TakeAwayJPanel extends JPanel {
             // Lấy thông tin hóa đơn
             IProductRespository productRespository = new ProductRespository();
             int orderID = getTempOrderId();
-            Map<String, Object> billInfo = productRespository.getBillInfoByOrderID(orderID);
-
+            billInfo = productRespository.getBillInfoByOrderID(orderID);                     
+            
             if (billInfo.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Không có dữ liệu hóa đơn cho bàn này.");
                 return;
+            }
+            
+            if (ac.paymentMethod.equalsIgnoreCase("Chuyển khoản")) {
+            	PayOSSwingApp payOSSwingApp = new PayOSSwingApp(this);
             }
 
             // Tạo thư mục Invoices nếu chưa tồn tại
@@ -667,10 +675,10 @@ public class TakeAwayJPanel extends JPanel {
 
             // Thêm QR code nếu có
             try {
-                ImageData imageData = ImageDataFactory.create("src/image/System_Image/QR_Payment.jpg");
+                ImageData imageData = ImageDataFactory.create("src\\image\\QRcode\\QR_Hoa_Don_" + orderID + ".png");
                 com.itextpdf.layout.element.Image qrImage = new com.itextpdf.layout.element.Image(imageData);
-                qrImage.setWidth(100);
-                qrImage.setHeight(100);
+                qrImage.setWidth(150);
+                qrImage.setHeight(150);
                 qrImage.setHorizontalAlignment(HorizontalAlignment.CENTER);
                 document.add(qrImage);
                 document.add(new Paragraph("Quét mã để thanh toán")
@@ -887,4 +895,13 @@ public class TakeAwayJPanel extends JPanel {
     public void setCurrentCustomer(Customer currentCustomer) {
         this.currentCustomer = currentCustomer;
     }
+    
+    public Map<String, Object> getBillInfo(){
+    	return this.billInfo;
+    }
+    
+    public void setBillInfo(Map<String, Object> bill) {
+    	this.billInfo = bill;
+    }
+    
 }
