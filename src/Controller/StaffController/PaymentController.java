@@ -70,7 +70,9 @@ public class PaymentController implements ActionListener {
 
                 if (confirm == JOptionPane.YES_OPTION) {
                     Map<String, Object> billInfo = productRespository.getBillInfoByTableID(paymentInterface.tableID);
-                    Double totalAmount = (Double) billInfo.get("totalPrice");
+                    Double totalPrice = (Double) billInfo.get("totalPrice");
+                    Double discount = (Double) billInfo.get("discount");
+                    Double Amount = totalPrice - discount;
 
                     Date now = new Date();
                     SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -78,21 +80,20 @@ public class PaymentController implements ActionListener {
 
                     // Thêm thanh toán vào database
                     IPaymentRepository paymentRepository = new PaymentRepository();
-                    int paymentID = paymentRepository.addPayment(orderID, paymentMethod, totalAmount, paymentTime);
+                    int paymentID = paymentRepository.addPayment(orderID, paymentMethod, Amount, paymentTime);
 
                     if (paymentID > 0) {
                         // Cập nhật trạng thái bàn và đơn hàng
                         productRespository.updateTableStatus(paymentInterface.tableID, "Trống");
                         // In hóa đơn
                         paymentInterface.printBill();
-                        
+
                         productRespository.updateOrderStatus(orderID, "Đã thanh toán");
 
                         JOptionPane.showMessageDialog(paymentInterface,
                                 "Thanh toán thành công bằng " + paymentMethod + "!",
                                 "Thông báo",
                                 JOptionPane.INFORMATION_MESSAGE);
-
 
                         // Quay lại màn hình bàn
                         BackToTable();
