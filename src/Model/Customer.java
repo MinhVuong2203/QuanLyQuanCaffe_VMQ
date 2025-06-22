@@ -2,6 +2,8 @@ package Model;
 public class Customer extends Person{
     private double points;
     
+    public Customer() {}
+    
     public Customer(int id, String name, String phone, double points) {
         super(id, name, phone);
         this.points = points;
@@ -14,6 +16,8 @@ public class Customer extends Person{
     public void setPoints(double newPoints) {
         this.points = newPoints;
     }
+    
+    
 
     @Override
     public String toString() {

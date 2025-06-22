@@ -135,4 +135,22 @@ public class CustomerRepository implements ICustomerRespository {
             stmt.executeUpdate();
         }
     }
+   
+    @Override
+    public Customer getCustomerById(int ID) throws SQLException{
+        String sql = "SELECT customerID, name, phone, point FROM Customer WHERE customerID = ?";
+        try (Connection connection = jdbcUtils.connect();
+             PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, ID);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    String phone = rs.getString("phone");
+                    String name = rs.getString("name");       
+                    double point = rs.getDouble("point");
+                    return new Customer(ID, name, phone, point);
+                }
+            }
+        }
+        return null; // Không tìm thấy khách hàng
+    }
 }

@@ -9,13 +9,20 @@ public class Order {
     private int employeeID; 
     private int customerID; // customerID = 0 là khách vãng lai
     private int tableID; 
-
+    private String orderTime; 
     private String status; // "Đang chờ", "Đã thanh toán", "Đã hủy"
-
+    
     // Phương thức để add
     Map<Product, Integer> products; // Sản phẩm và số lượng
     private Payment payments;
+    private Customer customer;
 
+    public Order() {
+    	this.products = new HashMap<>();
+        this.payments = new Payment();
+        this.customer = new Customer();
+    }
+    
     public Order(int orderID1, int employeeID1, int customerID1, int tableID1, String status1, Map<Product, Integer> products1) {
         this.orderID = orderID1;
         this.employeeID = employeeID1;
@@ -30,12 +37,23 @@ public class Order {
         this.orderID = orderID;
         this.employeeID = employeeID;
         this.customerID = customerID;
-
         this.status = status;
         this.products = new HashMap<>();
     }
+    
+    
 
-    // Thêm sản phẩm vào đơn hàng
+    public Order(int orderID, int employeeID, int customerID, int tableID, String orderTime, String status, Payment payments) {
+		this.orderID = orderID;
+		this.employeeID = employeeID;
+		this.customerID = customerID;
+		this.tableID = tableID;
+		this.setOrderTime(orderTime);
+		this.status = status;	
+	}
+
+
+	// Thêm sản phẩm vào đơn hàng
     public void addOderDeTailProduct(Product product, int quantity) {
         products.put(product, products.getOrDefault(product, 0) + quantity);
     }
@@ -134,4 +152,35 @@ public class Order {
         }
         return totalPrice;
     }
+
+
+	public String getOrderTime() {
+		return orderTime;
+	}
+
+
+	public void setOrderTime(String orderTime) {
+		this.orderTime = orderTime;
+	}
+
+
+	
+
+	@Override
+	public String toString() {
+		return "Order [orderID=" + orderID + ", employeeID=" + employeeID + ", customerID=" + customerID + ", tableID="
+				+ tableID + ", orderTime=" + orderTime + ", status=" + status + ", products=" + products + ", payments="
+				+ payments + ", customer=" + customer + "]";
+	}
+
+	public Map<Product, Integer> getProducts() { return products; }
+
+	public Customer getCustomer() {
+		return customer;
+	}
+
+	public void setCustomer(Customer customer) {
+		this.customer = customer;
+	}
+
 }

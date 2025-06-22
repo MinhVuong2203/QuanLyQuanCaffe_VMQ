@@ -12,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -108,4 +109,57 @@ public class OrderRepository implements IOrderRepository {
             stmt.executeUpdate();
         }
     }
+    
+    @Override
+    public Order getOrderByOrderID(int orderID)
+            throws SQLException, ClassNotFoundException, IOException{
+    	 String sql = "SELECT orderID, employeeID, customerID, tableID, status FROM Orders WHERE orderID = " + orderID;
+         try (Connection connection = jdbcUtils.connect();
+              PreparedStatement stmt = connection.prepareStatement(sql);
+              ResultSet rs = stmt.executeQuery()) {
+             if (rs.next()) {
+                 int employeeID = rs.getInt("employeeID");
+                 int customerID = rs.getInt("customerID");
+                 int tableID = rs.getInt("tableID");
+                 String status = rs.getString("status");
+                 Map<Product, Integer> products;
+ 				try {
+ 					products = productRepository.getProductsByOrderID(orderID);
+ 					Order order = new Order(orderID, employeeID, customerID, tableID, status, products);		
+ 					return order;
+ 				} catch (SQLException e) {
+ 					e.printStackTrace();
+ 				}
+             }
+         }   	
+         return null;
+    }
+    
+//    @Override
+//    public Map<Product, Integer> getProductsByOrderID(int orderID) throws SQLException{
+//    	Map<Product, Integer> products = new HashMap<>();
+//    	 String sql = """
+//                 SELECT p.productID, p.name, p.price, p.size, p.image, od.quantity
+//                 FROM OrderDetail od
+//                 JOIN Product p ON od.productID = p.productID
+//                 WHERE od.orderID = ?
+//                 """;
+//         try (Connection connection = jdbcUtils.connect();
+//                 PreparedStatement stmt = connection.prepareStatement(sql)) {
+//             stmt.setInt(1, orderID);
+//             try (ResultSet rs = stmt.executeQuery()) {
+//                 while (rs.next()) {
+//                     Product product = new Product();
+//                     product.setProductID(rs.getInt("productID"));
+//                     product.setName(rs.getString("name"));
+//                     product.setPrice(rs.getDouble("price"));
+//                     product.setSize(rs.getString("size"));
+//                     product.setImage(rs.getString("image"));
+//                     int quantity = rs.getInt("quantity");
+//                     products.put(product, quantity);
+//                 }
+//             }
+//         }
+//         return products; 	    	
+//    }
 }

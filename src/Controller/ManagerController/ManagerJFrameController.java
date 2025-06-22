@@ -3,6 +3,7 @@ package Controller.ManagerController;
 import Model.Manager;
 import View.ManagerView.ManagerJFrame;
 import View.ManagerView.ManagerProduct.ManageProduct;
+import View.ManagerView.ManagerRevenue.RevenueJPanel;
 import View.ManagerView.ManagerShift.EmployeeShiftPanel;
 import View.ManagerView.ManagerStaff.StaffManagerJPanel;
 import View.ManagerView.ManagerTable.TablePanel;
@@ -40,9 +41,7 @@ public class ManagerJFrameController {
         this.staffManagerJPanel = staffManagerJPanel;
         this.manager = manager;
         this.manageOrderAndSalary = manageOrderAndSalary;
-        this.managerProduct = managerProduct;
-        
-        
+        this.managerProduct = managerProduct;   
     }
 
     public ActionListener getButtonActionListener(String command) {
@@ -136,7 +135,7 @@ public class ManagerJFrameController {
                             break;
                         case "DOANH THU":
                             // Thêm logic cho DOANH THU (chưa được triển khai)
-                            contentPanel.add(manageOrderAndSalary, BorderLayout.CENTER);
+                            contentPanel.add(new RevenueJPanel(), BorderLayout.CENTER);
                             break;
                         case "ĐĂNG XUẤT":
                             // Thêm logic đăng xuất (ví dụ: đóng frame, quay về màn hình đăng nhập)
