@@ -398,6 +398,7 @@ public class EmployeeShiftPanel extends JPanel {
                 shiftTable.setRowHeight(30);
                 shiftTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
                 shiftTable.getTableHeader().setFont(new Font("Arial", Font.BOLD, 16));
+   
                 
                 //Đặt chiều rộng cột
                 shiftTable.getColumnModel().getColumn(0).setMinWidth(70); // cột ID

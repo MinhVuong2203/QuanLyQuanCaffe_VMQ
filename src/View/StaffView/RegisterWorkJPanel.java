@@ -28,6 +28,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -190,6 +191,15 @@ public class RegisterWorkJPanel extends JPanel {
             };
             shiftTable.setModel(model);
 
+            DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
+            renderer.setBorder(BorderFactory.createLineBorder(Color.BLACK)); // Border màu đen
+            renderer.setHorizontalAlignment(SwingConstants.CENTER); // Căn giữa nội dung
+
+            // Áp dụng renderer cho tất cả các cột
+            for (int i = 0; i < shiftTable.getColumnCount(); i++) {
+            	shiftTable.getColumnModel().getColumn(i).setCellRenderer(renderer);
+            }
+            
             shiftTable.setRowSelectionAllowed(false);
             shiftTable.setCellSelectionEnabled(true);
             shiftTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
