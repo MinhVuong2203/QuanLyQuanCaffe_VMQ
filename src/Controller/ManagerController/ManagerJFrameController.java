@@ -8,6 +8,7 @@ import View.ManagerView.ManagerShift.EmployeeShiftPanel;
 import View.ManagerView.ManagerStaff.StaffManagerJPanel;
 import View.ManagerView.ManagerTable.TablePanel;
 import View.ManagerView.ManagerShift.manageOrderAndSalary;
+import View.ManagerView.ManagerShift.salaryManagementJPanel;
 import View.StaffView.GamePanel;
 import View.StaffView.RollCall;
 import View.StaffView.Table_JPanel;
@@ -26,22 +27,25 @@ public class ManagerJFrameController {
     private TablePanel tablePanel;
     private StaffManagerJPanel staffManagerJPanel;
     private ManageProduct managerProduct;
- 
+
     private Manager manager;
     private manageOrderAndSalary manageOrderAndSalary;
+    private salaryManagementJPanel salaryManagementJPanel;
 
     private JTabbedPane takeAwayTabbedPane;
 
-
-    public ManagerJFrameController(ManagerJFrame managerJFrame, JPanel contentPanel, Manager manager , EmployeeShiftPanel employeeShiftPanel, TablePanel tablePanel,StaffManagerJPanel staffManagerJPanel, ManageProduct managerProduct, manageOrderAndSalary manageOrderAndSalary) {
-        this.managerJFrame = managerJFrame;   
+    public ManagerJFrameController(ManagerJFrame managerJFrame, JPanel contentPanel, Manager manager,
+            EmployeeShiftPanel employeeShiftPanel, TablePanel tablePanel, StaffManagerJPanel staffManagerJPanel,
+            ManageProduct managerProduct, manageOrderAndSalary manageOrderAndSalary, salaryManagementJPanel salaryManagementJPanel) {
+        this.managerJFrame = managerJFrame;
         this.contentPanel = contentPanel;
         this.employeeShiftPanel = employeeShiftPanel;
         this.tablePanel = tablePanel;
         this.staffManagerJPanel = staffManagerJPanel;
         this.manager = manager;
         this.manageOrderAndSalary = manageOrderAndSalary;
-        this.managerProduct = managerProduct;   
+        this.managerProduct = managerProduct;
+        this.salaryManagementJPanel = salaryManagementJPanel;
     }
 
     public ActionListener getButtonActionListener(String command) {
@@ -56,10 +60,11 @@ public class ManagerJFrameController {
                         }
                     }
                     ((JButton) e.getSource()).setBackground(new Color(88, 214, 141));
-                    
+
                     // Xử lý hành động
-                    if (!command.equalsIgnoreCase("ĐĂNG XUẤT")) contentPanel.removeAll();
-                    
+                    if (!command.equalsIgnoreCase("ĐĂNG XUẤT"))
+                        contentPanel.removeAll();
+
                     switch (command) {
                         case "BÁN HÀNG":
                             contentPanel.add(new Table_JPanel(manager.getId()), BorderLayout.CENTER);
@@ -121,7 +126,7 @@ public class ManagerJFrameController {
                         case "MINI GAME":
                             contentPanel.add(new GamePanel(), BorderLayout.CENTER);
                             break;
-                        case "XẾP LỊCH":                     	
+                        case "XẾP LỊCH":
                             contentPanel.add(employeeShiftPanel, BorderLayout.CENTER);
                             break;
                         case "BÀN":
@@ -133,6 +138,9 @@ public class ManagerJFrameController {
                         case "SẢN PHẨM":
                             contentPanel.add(managerProduct, BorderLayout.CENTER);
                             break;
+                        case "LƯƠNG":
+                            contentPanel.add(salaryManagementJPanel, BorderLayout.CENTER);
+                            break;
                         case "DOANH THU":
                             // Thêm logic cho DOANH THU (chưa được triển khai)
                             contentPanel.add(new RevenueJPanel(), BorderLayout.CENTER);
@@ -140,15 +148,15 @@ public class ManagerJFrameController {
                         case "ĐĂNG XUẤT":
                             // Thêm logic đăng xuất (ví dụ: đóng frame, quay về màn hình đăng nhập)
                             int confirm = JOptionPane.showConfirmDialog(managerJFrame,
-                                    "Bạn có chắc chắn muốn đăng xuất?", "Xác nhận đăng xuất", 
+                                    "Bạn có chắc chắn muốn đăng xuất?", "Xác nhận đăng xuất",
                                     JOptionPane.YES_NO_OPTION);
                             if (confirm == JOptionPane.YES_OPTION) {
                                 managerJFrame.dispose();
-                                SwingUtilities.invokeLater(() -> new WelcomeScreen());  // WelcomeScrren
+                                SwingUtilities.invokeLater(() -> new WelcomeScreen()); // WelcomeScrren
                             }
                             break;
                     }
-                    
+
                     contentPanel.revalidate();
                     contentPanel.repaint();
                 } catch (ClassNotFoundException ex) {
