@@ -2,10 +2,13 @@ package View.ManagerView.ManagerProduct;
 
 import Model.Product;
 import Repository.Product.ProductRespository;
+import Utils.ConvertInto;
 import Components.HoverEffect;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -13,6 +16,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
+import javax.swing.border.Border;
 
 public class ManageProduct extends JPanel {
     private JTextField searchField;
@@ -27,9 +31,13 @@ public class ManageProduct extends JPanel {
     private JLabel lblNewLabel;
 	private JTextField txtPrice;
 	private JTextField txtSize;
-	private JButton btnAddImage;
 	private JTextField txtName;
-	private JTextField txtImage;
+	private JPanel panel;
+	private JLabel lbImage;
+	private JPanel panel_1;
+	private JPanel panel_2;
+	private JPanel panel_3;
+	private String pathNewImage = null;
 
 
     {
@@ -149,9 +157,9 @@ public class ManageProduct extends JPanel {
         btnAdd.addActionListener(e -> {
             // Logic to add a new product
             JDialog addProductDialog = new JDialog((Frame) SwingUtilities.getWindowAncestor(this), "Thêm sản phẩm", true);
-            addProductDialog.setSize(400, 350);
+            addProductDialog.setSize(427, 307);
             addProductDialog.setLocationRelativeTo(this);
-            BorderLayout borderLayout = new BorderLayout();
+            BorderLayout borderLayout = new BorderLayout(10,10);
             borderLayout.setVgap(20);
             borderLayout.setHgap(20);
             addProductDialog.getContentPane().setLayout(borderLayout);
@@ -193,34 +201,10 @@ public class ManageProduct extends JPanel {
             txtSize.addKeyListener(new KeyAdapter() {
             	@Override
             	public void keyPressed(KeyEvent e) {
-            		if (e.getKeyCode() == KeyEvent.VK_DOWN || e.getKeyCode() == KeyEvent.VK_ENTER){
-            			btnAddImage.doClick();
-            		} else if (e.getKeyCode() == KeyEvent.VK_UP){
+            		if (e.getKeyCode() == KeyEvent.VK_UP){
             			txtPrice.requestFocus();
             		}                    		
             	}
-            });
-            
-            JLabel lblImage = new JLabel("Hình ảnh:");
-            lblImage.setFont(new Font("Tahoma", Font.BOLD, 16));
-            txtImage = new JTextField(20);
-            
-            txtImage.setFont(new Font("Tahoma", Font.BOLD, 16));
-            btnAddImage = new JButton("Chọn ảnh");
-            btnAddImage.setFont(new Font("Tahoma", Font.BOLD, 16));
-            btnAddImage.addActionListener(e1 -> {
-                JFileChooser fileChooser = new JFileChooser();
-                fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-                int returnValue = fileChooser.showOpenDialog(addProductDialog);
-                if (returnValue == JFileChooser.APPROVE_OPTION) {
-                    File selectedFile = fileChooser.getSelectedFile();
-                
-                    // Lấy đường dẫn tương đối từ thư mục gốc project
-                    Path projectPath = Paths.get(System.getProperty("user.dir"));
-                    Path filePath = selectedFile.toPath();
-                    Path relativePath = projectPath.relativize(filePath);
-                    txtImage.setText(relativePath.toString());
-                    }
             });
         
             JButton btnAddProduct = new JButton("Thêm sản phẩm");
@@ -230,10 +214,13 @@ public class ManageProduct extends JPanel {
                 String name = txtName.getText();
                 String priceStr = txtPrice.getText();
                 String size = txtSize.getText();
-                String image = txtImage.getText();
                 
-                if (name.isEmpty() || priceStr.isEmpty() || size.isEmpty() || image.isEmpty()) {
+                if (name.isEmpty() || priceStr.isEmpty() || size.isEmpty()) {
                     JOptionPane.showMessageDialog(addProductDialog, "Vui lòng điền đầy đủ thông tin", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                if (pathNewImage == null) {
+                	JOptionPane.showMessageDialog(addProductDialog, "Vui lòng chọn hình ảnh cho sản phẩm", "Lỗi", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
                 
@@ -247,9 +234,13 @@ public class ManageProduct extends JPanel {
                     
                     
                     int nextId = productRespository.getNextProductId();
+                    String image = "src\\image\\Product_image\\" + name +".png";
                     Product newProduct = new Product(nextId, name, price, size, image);
                     
                     productRespository.addProduct(newProduct);
+                    // Thêm hình ảnh vào project
+                    ConvertInto.copyImageToProject(pathNewImage, image);
+                    
                     products.add(newProduct);
                     allProducts.add(newProduct);
                     showProducts(products);
@@ -264,23 +255,69 @@ public class ManageProduct extends JPanel {
                 }
             });
         
-            JPanel inputPanel = new JPanel(new GridLayout(5, 2, 0, 10));
+            JPanel inputPanel = new JPanel();
+            inputPanel.setLayout(new GridLayout(6, 1, 0, 5));
+            
             inputPanel.add(lblName);
             inputPanel.add(txtName);
             inputPanel.add(lblPrice);
             inputPanel.add(txtPrice);
             inputPanel.add(lblSize);
             inputPanel.add(txtSize);
-            inputPanel.add(lblImage);
-            inputPanel.add(txtImage);
-            inputPanel.add(new JLabel()); // trống cho đẹp
-            inputPanel.add(btnAddImage);
         
             addProductDialog.getContentPane().add(inputPanel, BorderLayout.CENTER);
         
             JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
             buttonPanel.add(btnAddProduct);
             addProductDialog.getContentPane().add(buttonPanel, BorderLayout.SOUTH);
+            
+            panel = new JPanel();
+            addProductDialog.getContentPane().add(panel, BorderLayout.EAST);
+            panel.setLayout(new BorderLayout(10, 10));
+            panel.setPreferredSize(new Dimension(200, 100));
+            
+            lbImage = new JLabel("Chọn ảnh");
+            lbImage.setFont(new Font("Segoe UI", Font.BOLD, 16));
+            lbImage.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 1));
+            lbImage.setHorizontalAlignment(SwingConstants.CENTER);
+            lbImage.addMouseListener(new MouseAdapter()
+			 {
+            	@Override
+            	public void mouseClicked(MouseEvent e) {
+            	
+//            		 JFileChooser fc = new JFileChooser();
+//            	        int returnValue = fc.showOpenDialog(null);
+//            	        if (returnValue == JFileChooser.APPROVE_OPTION) {
+//            	            Path filePath = fc.getSelectedFile().toPath(); // lấy path file nguồn;
+//            	            this.addEmployeeJDialog.setImageLabel(filePath.toString());
+//            	            this.addEmployeeJDialog.setDefaultImg(filePath.toString());
+//            	        } else {
+//            	            System.out.println("File selection cancelled.");
+//            	        }
+            		
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+                int returnValue = fileChooser.showOpenDialog(addProductDialog);
+                if (returnValue == JFileChooser.APPROVE_OPTION) {
+                    Path selectedFile = fileChooser.getSelectedFile().toPath();
+                    pathNewImage = selectedFile.toAbsolutePath().toString();
+                    if (pathNewImage != null)
+                    lbImage.setText("");
+                    lbImage.setIcon(new ImageIcon(new ImageIcon(pathNewImage).getImage().getScaledInstance(lbImage.getWidth(), lbImage.getHeight(), Image.SCALE_SMOOTH)));     
+                    }
+            	}
+            });
+            
+            panel.add(lbImage, BorderLayout.CENTER);
+            
+            panel_3 = new JPanel();
+            panel.add(panel_3, BorderLayout.EAST);
+            
+            panel_1 = new JPanel();
+            addProductDialog.getContentPane().add(panel_1, BorderLayout.NORTH);
+            
+            panel_2 = new JPanel();
+            addProductDialog.getContentPane().add(panel_2, BorderLayout.WEST);
         
             addProductDialog.setVisible(true);
         });
@@ -312,6 +349,17 @@ public class ManageProduct extends JPanel {
             
             JButton btnChooseImage = new JButton("Chọn ảnh");
             btnChooseImage.addActionListener(e1 -> {
+            	
+//            	 JFileChooser fc = new JFileChooser();
+//                 int returnValue = fc.showOpenDialog(null);
+//                 if (returnValue == JFileChooser.APPROVE_OPTION) {
+//                     Path filePath = fc.getSelectedFile().toPath(); // lấy path file nguồn;
+//                     this.addEmployeeJDialog.setImageLabel(filePath.toString());
+//                     this.addEmployeeJDialog.setDefaultImg(filePath.toString());
+//                 } else {
+//                     System.out.println("File selection cancelled.");
+//                 }
+            	
                 JFileChooser fileChooser = new JFileChooser();
                 fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
                 int returnValue = fileChooser.showOpenDialog(editProductDialog);
