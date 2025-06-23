@@ -127,6 +127,7 @@ public class StaffJPanelController implements ActionListener {
                         "Đã tạo đơn hàng mới",
                         "Thông báo",
                         JOptionPane.INFORMATION_MESSAGE);
+                BackToTable();
             } else if (str.equals("Kiểm tra điểm")) {
                 String phone = staffJPanel.getTextField_TKKH().getText().trim();
                 if (phone.isEmpty() || phone.equals("0000000000")) {
@@ -251,6 +252,27 @@ public class StaffJPanelController implements ActionListener {
             e1.printStackTrace();
         } catch (SQLException e1) {
             e1.printStackTrace();
+        }
+    }
+    public void BackToTable() {
+        try {
+            Table_JPanel tablePanel = new Table_JPanel(staffJPanel.getEmpID());
+            tablePanel.id = staffJPanel.getEmpID();
+
+            // Tìm container cha
+            var parent = staffJPanel.getParent();
+            if (parent != null) {
+                parent.removeAll();
+                parent.add(tablePanel);
+                parent.revalidate();
+                parent.repaint();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(staffJPanel,
+                    "Lỗi khi quay lại màn hình bàn: " + e.getMessage(),
+                    "Lỗi",
+                    JOptionPane.ERROR_MESSAGE);
         }
     }
 }
