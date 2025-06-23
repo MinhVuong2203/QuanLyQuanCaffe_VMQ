@@ -6,7 +6,7 @@ public class HashMK {
             "quy1234@",
             "minh123@",
             "vuong123@",
-            "pass1234@",
+            "Pass1234@",
             "trinh1234@@",
             "Ngotrang123@",
             "pass12344321",
