@@ -377,8 +377,8 @@ public class salaryManagementJPanel extends JPanel {
             }
 
             // Tạo Map để lưu thông tin tổng hợp theo mã nhân viên
-            Map<Integer, Double> employeeTotalHours = new HashMap<>();
-            Map<Integer, Double> employeeHourlyRate = new HashMap<>();
+            Map<Integer, Double> employeeTotalHours = new HashMap<>();//Lưu tổng số giờ làm việc
+            Map<Integer, Double> employeeHourlyRate = new HashMap<>();// Lưu mức lương theo giờ
             Map<Integer, String> employeeNames = new HashMap<>();
             Map<Integer, String> employeeRoles = new HashMap<>();
 
@@ -620,8 +620,8 @@ public class salaryManagementJPanel extends JPanel {
             tableModel.setRowCount(0);
 
             // Tạo Map để lưu thông tin tổng hợp theo mã nhân viên
-            Map<Integer, Double> employeeTotalHours = new HashMap<>();
-            Map<Integer, Double> employeeHourlyRate = new HashMap<>();
+            Map<Integer, Double> employeeTotalHours = new HashMap<>();//Lưu tổng số giờ làm
+            Map<Integer, Double> employeeHourlyRate = new HashMap<>();//Lưu mức lương theo giờ
             Map<Integer, String> employeeNames = new HashMap<>();
             Map<Integer, String> employeeRoles = new HashMap<>();
 
