@@ -70,11 +70,11 @@ public class OrderRepository implements IOrderRepository {
     }
 
     @Override
-    public List<Order> getOrdersBetweenDates(LocalDate fromDate, LocalDate toDate) throws SQLException {
+       public List<Map<Order,Integer>>  getOrdersBetweenDates(LocalDate fromDate, LocalDate toDate) throws SQLException , IOException, ClassNotFoundException {
         if (fromDate == null || toDate == null || fromDate.isAfter(toDate)) {
             throw new IllegalArgumentException("Ngày không hợp lệ");
         }
-        List<Order> orderList = new ArrayList<>();
+        List<Map<Order, Integer>> orderList = new ArrayList<>();
         String sql = "SELECT orderID, employeeID, customerID, tableID, status FROM Orders WHERE orderTime BETWEEN ? AND ?";
         try (Connection connection = jdbcUtils.connect();
              PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -87,9 +87,12 @@ public class OrderRepository implements IOrderRepository {
                     int customerID = rs.getInt("customerID");
                     int tableID = rs.getInt("tableID");
                     String status = rs.getString("status");
+                    int discount = rs.getInt("Discount");
                     Map<Product, Integer> products = productRepository.getProductsByOrderID(orderID);
                     Order order = new Order(orderID, employeeID, customerID, tableID, status, products);
-                    orderList.add(order);
+                    Map<Order, Integer> orderDiscountMap = new java.util.HashMap<>();
+                    orderDiscountMap.put(order, discount);
+                    orderList.add(orderDiscountMap);
                 }
             }
         }

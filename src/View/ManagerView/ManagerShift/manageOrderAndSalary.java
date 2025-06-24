@@ -1,20 +1,19 @@
-
 package View.ManagerView.ManagerShift;
 
+import Components.HoverEffect;
 import Model.Employee;
 import Model.EmployeeShift;
 import Model.Order;
 import Repository.Employee.EmployeeRespository;
 import Repository.EmployeeShift.EmployeeShiftRepository;
 import Repository.Order.OrderRepository;
-import Components.HoverEffect;
 import java.awt.*;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.time.Duration;
 import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
+import java.util.Comparator;
 import java.util.List;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -22,31 +21,31 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
-
+import javax.swing.table.TableRowSorter;
+import com.toedter.calendar.JDateChooser;
 
 public class manageOrderAndSalary extends JPanel {
     private JComboBox<String> comboBox;
+    private JComboBox<String> sortComboBox;
     private JTable invoiceTable, salaryTable;
     private JLabel totalLabel;
-    private LocalDate fromDate = null;
-    private LocalDate toDate = null;
-    DecimalFormat df = new DecimalFormat("#,###");
-
-
+    private JDateChooser fromDateChooser;
+    private JDateChooser toDateChooser;
+    private JTabbedPane tabbedPane;
+    private DecimalFormat df = new DecimalFormat("#,###");
     private OrderRepository orderRepository;
     private EmployeeRespository employeeRepository;
     private EmployeeShiftRepository employeeShiftRepository;
-
     private DefaultTableModel invoiceModel;
     private DefaultTableModel salaryModel;
+    private LocalDate fromDate = LocalDate.now().minusWeeks(1); // Khởi tạo mặc định
+    private LocalDate toDate = LocalDate.now(); // Khởi tạo mặc định
+    private TableRowSorter<DefaultTableModel> invoiceSorter;
+    private TableRowSorter<DefaultTableModel> salarySorter;
 
     public manageOrderAndSalary() {
         setLayout(new BorderLayout());
         setBackground(Color.WHITE);
-        
-
-        fromDate = LocalDate.of(2000, 1, 1);
-        toDate = LocalDate.of(2100, 1, 1);
 
         try {
             orderRepository = new OrderRepository();
@@ -58,7 +57,6 @@ public class manageOrderAndSalary extends JPanel {
         }
 
         JPanel headerPanel = new JPanel(new BorderLayout());
-
         JPanel panel_top = new JPanel(null);
         panel_top.setPreferredSize(new Dimension(100, 150));
 
@@ -67,22 +65,41 @@ public class manageOrderAndSalary extends JPanel {
         lblFromDate.setBounds(272, 24, 78, 22);
         panel_top.add(lblFromDate);
 
-        JTextField fromDateField = new JTextField(fromDate.toString());
-        fromDateField.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-        fromDateField.setBounds(360, 24, 165, 28);
-        fromDateField.setToolTipText("Định dạng: yyyy-MM-dd");
-        panel_top.add(fromDateField);
-
         JLabel lblToDate = new JLabel("Đến ngày:");
         lblToDate.setFont(new Font("Segoe UI", Font.BOLD, 18));
         lblToDate.setBounds(740, 24, 89, 22);
         panel_top.add(lblToDate);
 
-        JTextField toDateField = new JTextField(toDate.toString());
-        toDateField.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-        toDateField.setBounds(838, 24, 165, 28);
-        toDateField.setToolTipText("Định dạng: yyyy-MM-dd");
-        panel_top.add(toDateField);
+        fromDateChooser = new JDateChooser();
+        fromDateChooser.setDate(java.sql.Date.valueOf(fromDate));
+        fromDateChooser.setDateFormatString("yyyy-MM-dd");
+        fromDateChooser.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+        fromDateChooser.setBounds(360, 24, 165, 28);
+        fromDateChooser.setBackground(Color.WHITE);
+        fromDateChooser.setBorder(BorderFactory.createLineBorder(new Color(0, 120, 215), 1));
+        panel_top.add(fromDateChooser);
+
+        toDateChooser = new JDateChooser();
+        toDateChooser.setDate(java.sql.Date.valueOf(toDate));
+        toDateChooser.setDateFormatString("yyyy-MM-dd");
+        toDateChooser.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+        toDateChooser.setBounds(838, 24, 165, 28);
+        toDateChooser.setBackground(Color.WHITE);
+        toDateChooser.setBorder(BorderFactory.createLineBorder(new Color(0, 120, 215), 1));
+        panel_top.add(toDateChooser);
+
+        JTextField searchField = new JTextField(20);
+        searchField.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+        searchField.setBounds(50, 70, 200, 28);
+        panel_top.add(searchField);
+
+        JButton searchButton = new JButton("Tìm kiếm");
+        searchButton.setBackground(new Color(0, 255, 128));
+        searchButton.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        searchButton.setBounds(260, 70, 100, 28);
+        searchButton.setBorderPainted(false);
+        panel_top.add(searchButton);
+        new HoverEffect(searchButton, new Color(0, 255, 128), new Color(0, 200, 100));
 
         String[] listTime = {"Chọn", "1 tuần", "2 tuần", "3 tuần", "4 tuần"};
         JComboBox<String> dateBox = new JComboBox<>(listTime);
@@ -94,15 +111,22 @@ public class manageOrderAndSalary extends JPanel {
             if (!selected.equals("Chọn")) {
                 int weeks = Integer.parseInt(selected.split(" ")[0]);
                 try {
-                    LocalDate newFromDate = LocalDate.parse(fromDateField.getText());
-                    LocalDate newToDate = newFromDate.plusWeeks(weeks);
-                    toDateField.setText(newToDate.toString());
+                    LocalDate from = fromDateChooser.getDate().toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate();
+                    LocalDate newToDate = from.plusWeeks(weeks);
+                    toDateChooser.setDate(java.sql.Date.valueOf(newToDate));
                 } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(null, "Định dạng ngày không hợp lệ (yyyy-MM-dd).", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Lỗi định dạng ngày!", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
         panel_top.add(dateBox);
+
+        String[] sortOptions = {"Không sắp xếp", "Doanh thu giảm dần", "Mã nhân viên", "Tên nhân viên"};
+        sortComboBox = new JComboBox<>(sortOptions);
+        sortComboBox.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        sortComboBox.setBounds(370, 70, 200, 28);
+        sortComboBox.addActionListener(e -> applySorting());
+        panel_top.add(sortComboBox);
 
         JButton btnDongY = new JButton("Đồng ý");
         btnDongY.setBackground(new Color(0, 255, 128));
@@ -113,8 +137,8 @@ public class manageOrderAndSalary extends JPanel {
         new HoverEffect(btnDongY, new Color(0, 255, 128), new Color(0, 200, 100));
         btnDongY.addActionListener(e -> {
             try {
-                LocalDate newFromDate = LocalDate.parse(fromDateField.getText());
-                LocalDate newToDate = LocalDate.parse(toDateField.getText());
+                LocalDate newFromDate = fromDateChooser.getDate().toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate();
+                LocalDate newToDate = toDateChooser.getDate().toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate();
                 if (newToDate.isBefore(newFromDate)) {
                     JOptionPane.showMessageDialog(this, "Vui lòng chọn khoảng ngày hợp lệ!", "Lỗi", JOptionPane.ERROR_MESSAGE);
                     return;
@@ -122,8 +146,8 @@ public class manageOrderAndSalary extends JPanel {
                 fromDate = newFromDate;
                 toDate = newToDate;
                 updateTableDisplay();
-            } catch (DateTimeParseException ex) {
-                JOptionPane.showMessageDialog(this, "Định dạng ngày không hợp lệ (yyyy-MM-dd).", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Vui lòng chọn ngày hợp lệ!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             }
         });
 
@@ -137,47 +161,48 @@ public class manageOrderAndSalary extends JPanel {
 
         headerPanel.add(panel_top, BorderLayout.CENTER);
         headerPanel.add(topPanel, BorderLayout.SOUTH);
-
         add(headerPanel, BorderLayout.NORTH);
 
         String[] invoiceCols = {"ID hóa đơn", "ID nhân viên", "ID khách hàng", "Giá", "Giá giảm", "Tổng tiền mỗi hóa đơn"};
-        JTableHeader header = new JTableHeader();
-        header.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        invoiceModel = new DefaultTableModel(invoiceCols, 0){
+        invoiceModel = new DefaultTableModel(invoiceCols, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
-            }};
+            }
+        };
         invoiceTable = new JTable(invoiceModel);
         invoiceTable.setFont(new Font("Segoe UI", Font.PLAIN, 16));
         invoiceTable.setRowHeight(30);
         styleTable(invoiceTable);
         invoiceTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        invoiceSorter = new TableRowSorter<>(invoiceModel);
+        invoiceTable.setRowSorter(invoiceSorter);
 
         JPanel invoicePanel = new JPanel(new BorderLayout());
         invoicePanel.setBackground(Color.WHITE);
         JScrollPane invoiceScrollPane = new JScrollPane(invoiceTable);
-        invoiceScrollPane.setBorder(new EmptyBorder(0, 10, 0, 0)); 
+        invoiceScrollPane.setBorder(new EmptyBorder(0, 10, 0, 0));
         invoicePanel.add(invoiceScrollPane, BorderLayout.CENTER);
 
         String[] salaryCols = {"ID nhân viên", "Tên nhân viên", "Thời gian làm (giờ)", "Lương/giờ", "Tổng tiền"};
-        JTableHeader salaryHeader = new JTableHeader();
-        salaryHeader.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        salaryModel = new DefaultTableModel(salaryCols, 0){
+        salaryModel = new DefaultTableModel(salaryCols, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
-            }};
+            }
+        };
         salaryTable = new JTable(salaryModel);
         salaryTable.setFont(new Font("Segoe UI", Font.PLAIN, 16));
         salaryTable.setRowHeight(30);
         styleTable(salaryTable);
         salaryTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        salarySorter = new TableRowSorter<>(salaryModel);
+        salaryTable.setRowSorter(salarySorter);
 
         JPanel salaryPanel = new JPanel(new BorderLayout());
         salaryPanel.setBackground(Color.WHITE);
         JScrollPane salaryScrollPane = new JScrollPane(salaryTable);
-        salaryScrollPane.setBorder(new EmptyBorder(0, 10, 0, 0)); 
+        salaryScrollPane.setBorder(new EmptyBorder(0, 10, 0, 0));
         salaryPanel.add(salaryScrollPane, BorderLayout.CENTER);
 
         JPanel totalPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -187,49 +212,54 @@ public class manageOrderAndSalary extends JPanel {
         totalLabel.setOpaque(true);
         totalLabel.setBackground(Color.PINK);
         totalLabel.setFont(new Font("Segoe UI", Font.BOLD, 18));
-        
         totalPanel.add(totalLabel);
         salaryPanel.add(totalPanel, BorderLayout.SOUTH);
 
-        JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, invoicePanel, salaryPanel);
-        splitPane.setResizeWeight(0.5);
-        splitPane.setDividerSize(8);
-        splitPane.setContinuousLayout(true);
-        splitPane.setBorder(new EmptyBorder(0, 10, 0, 0)); // Thêm lề trái 10px
-        add(splitPane, BorderLayout.CENTER);
+        tabbedPane = new JTabbedPane();
+        tabbedPane.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        tabbedPane.addTab("Hóa đơn", invoicePanel);
+        tabbedPane.addTab("Lương nhân viên", salaryPanel);
+        add(tabbedPane, BorderLayout.CENTER);
+
+        searchButton.addActionListener(e -> {
+            String keyword = searchField.getText().trim().toLowerCase();
+            if (keyword.isEmpty()) {
+                invoiceSorter.setRowFilter(null);
+                salarySorter.setRowFilter(null);
+            } else {
+                RowFilter<DefaultTableModel, Object> filter = RowFilter.regexFilter("(?i)" + keyword);
+                if (tabbedPane.getSelectedIndex() == 0) {
+                    invoiceSorter.setRowFilter(filter);
+                } else {
+                    salarySorter.setRowFilter(filter);
+                }
+            }
+        });
+
         updateTableDisplay();
+        applySorting();
     }
 
     private void styleTable(JTable table) {
         table.setFillsViewportHeight(true);
         table.getTableHeader().setBackground(Color.PINK);
         table.setBackground(Color.WHITE);
-        
-        // Căn lề trái cho nội dung các ô
         DefaultTableCellRenderer leftRenderer = new DefaultTableCellRenderer();
         leftRenderer.setHorizontalAlignment(SwingConstants.LEFT);
         for (int i = 0; i < table.getColumnCount(); i++) {
             table.getColumnModel().getColumn(i).setCellRenderer(leftRenderer);
         }
-        
-        // Đặt kích thước ưu tiên cho bảng
         table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         table.setPreferredScrollableViewportSize(new Dimension(1200, 200));
     }
 
     private void updateTableDisplay() {
         String selected = (String) comboBox.getSelectedItem();
-        invoiceTable.setVisible("Tất cả".equals(selected) || "Khách".equals(selected));
-        salaryTable.setVisible("Tất cả".equals(selected) || "Lương nhân viên".equals(selected));
-        
-        // Cập nhật kích thước các cột khi thay đổi hiển thị
         resizeTableColumns(invoiceTable);
         resizeTableColumns(salaryTable);
-        
         getData();
+        applySorting();
     }
-    
-    
 
     private void getData() {
         try {
@@ -237,7 +267,6 @@ public class manageOrderAndSalary extends JPanel {
             double totalSalary = 0;
 
             invoiceModel.setRowCount(0);
-
             List<Order> orders = orderRepository.getOrdersBetweenDates(fromDate, toDate);
             for (Order order : orders) {
                 Object[] rowData = {
@@ -276,9 +305,6 @@ public class manageOrderAndSalary extends JPanel {
                 salaryModel.addRow(row);
             }
 
-            
-            
-
             String selected = (String) comboBox.getSelectedItem();
             if ("Khách".equals(selected)) {
                 setTotalLabelColor(totalInvoice);
@@ -290,8 +316,6 @@ public class manageOrderAndSalary extends JPanel {
                 setTotalLabelColor(totalInvoice + totalSalary);
                 totalLabel.setText(formatCurrency(totalInvoice + totalSalary));
             }
-            
-
         } catch (Exception e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(this, "Lỗi khi lấy dữ liệu: " + e.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
@@ -303,15 +327,15 @@ public class manageOrderAndSalary extends JPanel {
             amount = -amount;
             if (amount >= 1_000_000_000) {
                 double tr = amount / 1_000_000_000.0;
-                return String.format("-"+"%.2f Tỷ", tr);
+                return String.format("-%.2f Tỷ", tr);
             } else if (amount >= 1_000_000) {
                 double tr = amount / 1_000_000.0;
-                return String.format("-"+"%.2f Tr.", tr);
+                return String.format("-%.2f Tr.", tr);
             } else if (amount >= 1_000) {
                 double tr = amount / 1_000.0;
-                return String.format("-"+"%.2f K", tr);
+                return String.format("-%.2f K", tr);
             } else {
-                return String.format("-"+"%.2f", amount);
+                return String.format("-%.2f", amount);
             }
         }
         if (amount >= 1_000_000_000) {
@@ -327,6 +351,7 @@ public class manageOrderAndSalary extends JPanel {
             return String.format("%.2f", amount);
         }
     }
+
     private void setTotalLabelColor(double total) {
         if (total < 0) {
             totalLabel.setForeground(Color.RED);
@@ -334,38 +359,41 @@ public class manageOrderAndSalary extends JPanel {
             totalLabel.setForeground(Color.BLACK);
         }
     }
-    
 
     private void resizeTableColumns(JTable table) {
-        final int maxWidth = 500; // Giới hạn độ rộng tối đa
+        final int maxWidth = 500;
         table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         for (int column = 0; column < table.getColumnCount(); column++) {
-            int width = 400; // độ rộng tối thiểu
+            int width = 400;
             for (int row = 0; row < table.getRowCount(); row++) {
                 TableCellRenderer renderer = table.getCellRenderer(row, column);
                 Component comp = table.prepareRenderer(renderer, row, column);
                 width = Math.max(comp.getPreferredSize().width + 10, width);
             }
-
             TableCellRenderer headerRenderer = table.getTableHeader().getDefaultRenderer();
             Component headerComp = headerRenderer.getTableCellRendererComponent(table, table.getColumnName(column), false, false, 0, column);
             width = Math.max(width, headerComp.getPreferredSize().width + 10);
-
             if (width > maxWidth) {
                 width = maxWidth;
             }
-
             table.getColumnModel().getColumn(column).setPreferredWidth(width);
         }
     }
 
-//     public static void main(String[] args) {
-//         JFrame frame = new JFrame("Manage Order and Salary");
-//         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//         frame.setSize(1300, 700);
-//         frame.add(new manageOrderAndSalary());
-//         frame.setVisible(true);
-
-    
-// }
+    private void applySorting() {
+        String selectedSort = (String) sortComboBox.getSelectedItem();
+        if ("Doanh thu giảm dần".equals(selectedSort) && tabbedPane.getSelectedIndex() == 0) {
+            invoiceSorter.setComparator(5, Comparator.comparingDouble(o -> -((Number) o).doubleValue()));
+            invoiceSorter.sort();
+        } else if ("Mã nhân viên".equals(selectedSort) && tabbedPane.getSelectedIndex() == 1) {
+            salarySorter.setComparator(0, Comparator.comparingInt(o -> ((Number) o).intValue()));
+            salarySorter.sort();
+        } else if ("Tên nhân viên".equals(selectedSort) && tabbedPane.getSelectedIndex() == 1) {
+            salarySorter.setComparator(1, Comparator.comparing(o -> o.toString()));
+            salarySorter.sort();
+        } else {
+            invoiceSorter.setSortKeys(null);
+            salarySorter.setSortKeys(null);
+        }
+    }
 }
