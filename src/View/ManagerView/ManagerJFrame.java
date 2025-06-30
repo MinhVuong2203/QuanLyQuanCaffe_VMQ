@@ -4,11 +4,11 @@ import Controller.ManagerController.ManagerJFrameController;
 import Model.Manager;
 import View.ManagerView.ManagerProduct.ManageProduct;
 import View.ManagerView.ManagerShift.EmployeeShiftPanel;
-import View.ManagerView.ManagerShift.manageOrderAndSalary;
+//import View.ManagerView.ManagerShift.manageOrderAndSalary;
 import View.ManagerView.ManagerShift.salaryManagementJPanel;
 import View.ManagerView.ManagerStaff.StaffManagerJPanel;
 import View.ManagerView.ManagerTable.TablePanel;
-import View.ManagerView.ManagerShift.manageOrderAndSalary;
+//import View.ManagerView.ManagerShift.manageOrderAndSalary;
 import View.StaffView.GamePanel;
 import View.StaffView.RollCall;
 import View.StaffView.StaffInforJDialog;
@@ -152,7 +152,7 @@ public class ManagerJFrame extends JFrame {
                                                                           // lại vẫn còn dữ liệu
         ManageProduct managerProduct = new ManageProduct(); // Tạo đối tượng ManageProduct để quay lại vẫn còn dữ liệu
 
-        manageOrderAndSalary manageOrderAndSalary = new manageOrderAndSalary();
+//        manageOrderAndSalary manageOrderAndSalary = new manageOrderAndSalary();
         salaryManagementJPanel salaryManagementJPanel = new salaryManagementJPanel();
 
         btnTheme = new JButton();
@@ -181,7 +181,7 @@ public class ManagerJFrame extends JFrame {
                 SwingUtilities.updateComponentTreeUI(tablePanel);
                 SwingUtilities.updateComponentTreeUI(staffManagerJPanel);
                 SwingUtilities.updateComponentTreeUI(managerProduct);
-                SwingUtilities.updateComponentTreeUI(manageOrderAndSalary);
+//                SwingUtilities.updateComponentTreeUI(manageOrderAndSalary);
                 this.repaint(); // Làm mới
                 this.revalidate(); // Cập nhật layout
             } catch (UnsupportedLookAndFeelException e1) {
@@ -228,7 +228,7 @@ public class ManagerJFrame extends JFrame {
             button.setIcon(scaleIcon_first_img);
 
             ManagerJFrameController controller = new ManagerJFrameController(this, contentPanel, manager,
-                    employeeShiftPanel, tablePanel, staffManagerJPanel, managerProduct, manageOrderAndSalary,
+                    employeeShiftPanel, tablePanel, staffManagerJPanel, managerProduct,
                     salaryManagementJPanel); // Hành
                                             // động
 

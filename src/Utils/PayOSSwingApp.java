@@ -50,9 +50,9 @@ public class PayOSSwingApp {
 	private ImageIcon qrIcon;
 	private boolean status = false; // Chưa có tạo mã qr
     // Thay bằng thông tin PayOS của bạn
-    private static final String CLIENT_ID = "f2e4df16-ac49-4a3a-a030-54d815f18415";
-    private static final String API_KEY = "6643c6b0-ce9e-4fc0-928b-e1ed2e528ad3";
-    private static final String CHECKSUM_KEY = "5009a62e42c9ab673a958422a4d6b12ff5c82d361e15a5b8ebdc5d442411a709";
+    private static final String CLIENT_ID = "đã che";
+    private static final String API_KEY = "đã che";
+    private static final String CHECKSUM_KEY = "đã che";
     // URL đã đẩy lên Netlify
     private static final String RETURN_URL = "https://caffeevmq-success.netlify.app/";
     private static final String CANCEL_URL = "https://caffeevmq-cancel.netlify.app/";

@@ -7,7 +7,7 @@ import View.ManagerView.ManagerRevenue.RevenueJPanel;
 import View.ManagerView.ManagerShift.EmployeeShiftPanel;
 import View.ManagerView.ManagerStaff.StaffManagerJPanel;
 import View.ManagerView.ManagerTable.TablePanel;
-import View.ManagerView.ManagerShift.manageOrderAndSalary;
+//import View.ManagerView.ManagerShift.manageOrderAndSalary;
 import View.ManagerView.ManagerShift.salaryManagementJPanel;
 import View.StaffView.GamePanel;
 import View.StaffView.RollCall;
@@ -29,21 +29,21 @@ public class ManagerJFrameController {
     private ManageProduct managerProduct;
 
     private Manager manager;
-    private manageOrderAndSalary manageOrderAndSalary;
+//    private manageOrderAndSalary manageOrderAndSalary;
     private salaryManagementJPanel salaryManagementJPanel;
 
     private JTabbedPane takeAwayTabbedPane;
 
     public ManagerJFrameController(ManagerJFrame managerJFrame, JPanel contentPanel, Manager manager,
             EmployeeShiftPanel employeeShiftPanel, TablePanel tablePanel, StaffManagerJPanel staffManagerJPanel,
-            ManageProduct managerProduct, manageOrderAndSalary manageOrderAndSalary, salaryManagementJPanel salaryManagementJPanel) {
+            ManageProduct managerProduct, salaryManagementJPanel salaryManagementJPanel) {
         this.managerJFrame = managerJFrame;
         this.contentPanel = contentPanel;
         this.employeeShiftPanel = employeeShiftPanel;
         this.tablePanel = tablePanel;
         this.staffManagerJPanel = staffManagerJPanel;
         this.manager = manager;
-        this.manageOrderAndSalary = manageOrderAndSalary;
+
         this.managerProduct = managerProduct;
         this.salaryManagementJPanel = salaryManagementJPanel;
     }

@@ -103,7 +103,6 @@ AFTER INSERT, UPDATE
 AS
 BEGIN
     SET NOCOUNT ON; -- Ngăn hiển thị số hàng bị ảnh hưởng
-
     UPDATE es
     SET es.salary = CASE 
                         WHEN i.status = N'Đã điểm danh' THEN i.hourWorked * i.hourWage
